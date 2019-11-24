@@ -1,0 +1,20 @@
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<html>
+    <body>
+
+        <div id="react"></div>
+
+        @{
+            // Set to false to test SSR only.
+            if(true)
+            {
+                <script src="~/js/main-client.js"></script>
+            }
+        }
+
+    </body>
+</html>
