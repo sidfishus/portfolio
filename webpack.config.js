@@ -29,6 +29,7 @@ const sharedConfig = {
                             ],
 							plugins: [
 								"@babel/plugin-proposal-object-rest-spread",
+								"react-hot-loader/babel"
 							]
 						}
 					},
@@ -46,6 +47,7 @@ const sharedConfig = {
 const clientConfig = merge(sharedConfig, {
 	entry: {
 		"main-client": [
+			"react-hot-loader/patch",
             "@babel/polyfill",
             "core-js",
 			"./ClientApp/boot-client.tsx"
@@ -53,6 +55,9 @@ const clientConfig = merge(sharedConfig, {
     },
     output: {
 		path: path.join(__dirname,"/wwwroot/js"),
+		// Key for hot module replacement (below). Corresponds to the
+		// WebpackDevMiddlewareOptions.HotModuleReplacementEndpoint option directory
+		publicPath: "/wwwroot/"
 	},
 	devtool: "eval-source-map",
 });
@@ -60,6 +65,7 @@ const clientConfig = merge(sharedConfig, {
 const serverBundleConfig = merge(sharedConfig, {
 	entry: {
 		"main-server": [
+			"react-hot-loader/patch",
             "@babel/polyfill",
             "core-js",
 			"./ClientApp/boot-server.tsx"
