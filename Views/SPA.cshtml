@@ -1,16 +1,23 @@
 
+@{/* Key for SSR to work */}
+@addTagHelper *, Microsoft.AspNetCore.SpaServices
+
 @{
     ViewData["Title"] = "Login";
+
+    dynamic prerenderData = new
+    {
+    };
 }
 
 <html>
     <body>
 
-        <div id="react"></div>
+        <div id="react" asp-prerender-module="Server/main-server" asp-prerender-data="prerenderData"></div>
 
         @{
-            // Set to false to test SSR only.
-            if(true)
+            string ssrOnly=Environment.GetEnvironmentVariable("SSR_Only");
+            if(ssrOnly == null || ssrOnly=="0")
             {
                 <script src="~/js/main-client.js"></script>
             }

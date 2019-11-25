@@ -28,7 +28,7 @@ const sharedConfig = {
                                 "@babel/preset-react"
                             ],
 							plugins: [
-								"transform-object-rest-spread",
+								"@babel/plugin-proposal-object-rest-spread",
 							]
 						}
 					},
