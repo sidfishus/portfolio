@@ -15,8 +15,12 @@ namespace react_spa
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        public IHostingEnvironment Environment { get; }
+
+        public Startup(IHostingEnvironment environment,IConfiguration configuration)
         {
+            Environment = environment;
             Configuration = configuration;
         }
 
@@ -34,6 +38,17 @@ namespace react_spa
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // For debugging server side javascript via Node
+            services.AddNodeServices(options =>
+            {
+                if (Environment.IsDevelopment())
+                {
+                    options.InvocationTimeoutMilliseconds=1000000;
+                    options.LaunchWithDebugging = true;
+                    options.DebuggingPort = 9250;
+                }
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
