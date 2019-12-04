@@ -12,5 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="TextParse_ChrisSid" Version="1.0.0" />
+    <PackageReference Include="SharedCS_ChrisSid" Version="1.0.1" />
   </ItemGroup>
 </Project>
