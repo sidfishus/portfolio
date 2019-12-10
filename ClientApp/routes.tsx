@@ -1,6 +1,8 @@
 
 import * as React from "react";
 import { Route, Switch, RouteComponentProps } from "react-router-dom";
+import { TextParse } from "./Components/Text Parse";
+import { StdPage } from "./Components/Standard Page";
 
 export type IPrerenderData = {
 };
@@ -20,13 +22,19 @@ const NoRoutingMatch = (props: IRoutedCompProps) => {
     );
 };
 
+const TextParseRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <TextParse />}
+        />
+    );
+};
+
 export const Routes = (props: IRoutesProps) => {
 
     const routes = (
         <Switch>
-            {/*
-            <Route exact path="/account/login" render={(renderProps: RouteComponentProps<any>) => <LoginRouted {...renderProps} {...props} />} />
-            */}
+            <Route exact path="/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParseRouted {...renderProps} {...props} />} />
             <Route render={(renderProps: RouteComponentProps<any>) => <NoRoutingMatch {...renderProps} {...props} />} />
         </Switch>
     );
