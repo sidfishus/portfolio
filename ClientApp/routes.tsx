@@ -25,7 +25,7 @@ const NoRoutingMatch = (props: IRoutedCompProps) => {
 const TextParseRouted = (props: IRoutedCompProps) => {
     return (
         <StdPage
-            pageRender={() => <TextParse />}
+            pageRender={() => <TextParse {...props} />}
         />
     );
 };

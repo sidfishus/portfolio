@@ -4,6 +4,14 @@ export enum eStatementType {
     String_Comp = 0,
     // Skip whitespace operation
     SkipWS_Op = 1,
+
+    // Keep this as the last item
+    phCount = 2,
+};
+
+export interface ITextParseStatementState {
+    statement: TextParseStatement;
+    SetStatement: (input: TextParseStatement) => void;
 };
 
 // Parse statement base class
@@ -15,6 +23,22 @@ export abstract class TextParseStatement {
     public type: eStatementType;
     public name: string;
     public description?: string;
+
+    public static GetName(stmt: TextParseStatement): string {
+        return stmt.name;
+    }
+
+    public static SetName(stmt: TextParseStatement, name: string): void {
+        stmt.name=name;
+    }
+
+    public static GetDescription(stmt: TextParseStatement): string | null {
+        return stmt.description;
+    }
+
+    public static SetDescription(stmt: TextParseStatement, description?: string): void {
+        stmt.description=description;
+    }
 
     constructor(copy?: TextParseStatement) {
         if(copy) {
@@ -34,6 +58,18 @@ export class StringComparisonStatement extends TextParseStatement {
     public str: string;
     public caseSensitive: boolean;
 
+    public static SetStr(stmt: StringComparisonStatement, str: string): void {
+        stmt.str=str;
+    }
+
+    public static GetStr(stmt: StringComparisonStatement): string {
+        return stmt.str;
+    }
+
+    public static ValidateStr(stmt: StringComparisonStatement): boolean {
+        return (stmt.str !== null && stmt.str !== "");
+    }
+
     constructor(copy?: StringComparisonStatement) {
         super(copy);
         if(copy) {
@@ -48,7 +84,11 @@ export class StringComparisonStatement extends TextParseStatement {
     }
 
     CanSave(): boolean {
-        return this.str!=="";
+        if(!StringComparisonStatement.ValidateStr(this)) {
+            return false;
+        }
+
+        return true;
     }
 
     TypeDescription(): string {
@@ -75,7 +115,7 @@ export class SkipWSStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Skip Whitespace";
+        return "Skip Whitespace Operation";
     }
 
     Copy(): SkipWSStatement {

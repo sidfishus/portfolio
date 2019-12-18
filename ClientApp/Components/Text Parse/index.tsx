@@ -1,7 +1,8 @@
 
-import React, {useState, SyntheticEvent} from "react";
+import React, {useState, useRef} from "react";
 import { Dropdown, Label, Form, Segment, Container, Input, Checkbox, List, Button } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement } from "./StatementTypes";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState } from "./StatementTypes";
+import { IRoutedCompProps } from "../../routes";
 
 
 interface ITextParseProps {
@@ -20,6 +21,7 @@ interface IAddInsertParseStatementCtrlProps {
     selStatementIndex?: number;
     selectedStatementType: eStatementType;
     SetSelStatementIndex: (idx?: number) => void;
+    nameIndexes: Array<number | undefined>;
 };
 
 interface ITypeDropdownProps {
@@ -31,9 +33,12 @@ interface ITypeExplanationProps {
     selectedStatementType: eStatementType;
 };
 
-interface IParseStatementInputCtrlProps {
-    statement: TextParseStatement;
-    SetStatement: (input: TextParseStatement) => void;
+interface IParseStatementInputCtrlProps extends ITextParseStatementState {
+    placeholder: string;
+    title: string;
+    GetValue: (statement: TextParseStatement) => string;
+    SetValue: (statement: TextParseStatement, value: string) => void;
+    Validate?: (statement: TextParseStatement) => boolean;
 };
 
 //sidtodo reuse functionality?
@@ -49,17 +54,22 @@ const UpdateStatement =
     });
 
     SetStatements(updated);
-}
+};
 
-export const TextParse: React.FunctionComponent<ITextParseProps> = (props: ITextParseProps) => {
+export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompProps> = (props) => {
 
     // The list of statements
-    const [statements, SetStatements] = useState(new Array<TextParseStatement>());
+    const [statements, SetStatements] = useState(() => new Array<TextParseStatement>());
 
     // Selected statement index
     const [selStatementIndex, SetSelStatementIndex] = useState(null);
 
     const [newSelectedStatementType, SetNewSelectedStatementType] = useState(eStatementType.String_Comp);
+
+    // When a new item is created, it is created with a default name and an index. This array holds the indexes.
+    // As names are created the indexes come from this array, and are incremented accordingly. There is an index
+    // per statement type
+    const nameIndexes = useRef(new Array<number|undefined>(eStatementType.phCount));
 
 
     let typeSpecificJsx=null;
@@ -104,6 +114,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps> = (props: IText
                         selStatementIndex={selStatementIndex}
                         selectedStatementType={newSelectedStatementType}
                         SetSelStatementIndex={SetSelStatementIndex}
+                        nameIndexes={nameIndexes.current}
                     />
 
                     <TypeDropdownCtrl
@@ -123,16 +134,32 @@ export const TextParse: React.FunctionComponent<ITextParseProps> = (props: IText
                             <Label attached="top">Update Parse Statement</Label>
                             <Form.Field>
 
-                                <ListNameInputCtrl
+                                <UpdateInputCtrl
                                     {...props}
                                     statement={selectedStatement}
                                     SetStatement={_UpdateStatement}
+                                    GetValue={TextParseStatement.GetName}
+                                    SetValue={TextParseStatement.SetName}
+                                    placeholder="Name..."
+                                    title="Enter a short name to uniquely identify this statement."
                                 />
 
-                                {typeSpecificJsx!== null &&
-                                    <Segment>
+                                <UpdateInputCtrl
+                                    {...props}
+                                    statement={selectedStatement}
+                                    SetStatement={_UpdateStatement}
+                                    GetValue={TextParseStatement.GetDescription}
+                                    SetValue={TextParseStatement.SetDescription}
+                                    placeholder="Description... (optional)"
+                                    title="Describe the purpose of this statement."
+                                />
+
+                                {typeSpecificJsx &&
+                                    <>
+                                        <br />
+                                        <br />
                                         {typeSpecificJsx}
-                                    </Segment>
+                                    </>
                                 }
                             </Form.Field>
                         </Segment>
@@ -180,16 +207,18 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
 
 const AddInsertParseStatement = (ctrlProps: ITextParseProps & IAddInsertParseStatementCtrlProps) : void => {
 
+    const { nameIndexes, statements, selStatementIndex, selectedStatementType } = ctrlProps;
+
     const isAdd = 
-        !(ctrlProps.statements.length>0 &&
-        ctrlProps.selStatementIndex!==null &&
-        (ctrlProps.selStatementIndex+1)!==ctrlProps.statements.length
+        !(statements.length>0 &&
+        selStatementIndex!==null &&
+        (selStatementIndex+1)!==statements.length
     );
 
     // Create the new statement based on type.
     let newStatement: TextParseStatement;
 
-    switch(ctrlProps.selectedStatementType) {
+    switch(selectedStatementType) {
         case eStatementType.String_Comp:
             newStatement = new StringComparisonStatement();
             break;
@@ -199,12 +228,25 @@ const AddInsertParseStatement = (ctrlProps: ITextParseProps & IAddInsertParseSta
             break;
     }
 
+    // Generate a default name
+    let newIndex;
+    if(nameIndexes[selectedStatementType] === undefined) {
+        newIndex = 1;
+    }
+    else {
+        newIndex = nameIndexes[selectedStatementType] + 1;
+    }
+
+    nameIndexes[selectedStatementType] = newIndex;
+
+    newStatement.name=`${newStatement.TypeDescription()} ${newIndex}`;
+
     // Add/insert it
     let updatedStatements: Array<TextParseStatement>;
     let newSelIndex: number;
     if(isAdd) {
         // Copy the existing array
-        updatedStatements = ctrlProps.statements.map(stmt => {
+        updatedStatements = statements.map(stmt => {
             return stmt.Copy();
         });
 
@@ -293,35 +335,27 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
     );
 };
 
-const StringComparisonInputCtrl: React.FunctionComponent<ITextParseProps & IParseStatementInputCtrlProps> =
+const StringComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState> =
     (props) => {
 
     const { SetStatement } = props;
     const statement = props.statement as StringComparisonStatement;
 
-    let inputPropsAdd={};
-    if(!statement.CanSave()) {
-        inputPropsAdd = {
-            ...inputPropsAdd,
-            error: true
-        };
-    }
+    //sidtodo can't save ctrl
 
     const placeHolderText="Text to compare against...";
 
     return (
         <>
-            <Input
+
+            <UpdateInputCtrl
+                statement={statement}
+                SetStatement={SetStatement}
                 placeholder={placeHolderText}
-                value={statement.str}
-                onChange={e => {
-                    const updated=new StringComparisonStatement(statement);
-                    updated.str=e.target.value;
-                    
-                    SetStatement(updated);
-                }}
                 title={placeHolderText}
-                {...inputPropsAdd}
+                GetValue={StringComparisonStatement.GetStr}
+                SetValue={StringComparisonStatement.SetStr}
+                Validate={StringComparisonStatement.ValidateStr}
             />
 
             <br />
@@ -342,22 +376,33 @@ const StringComparisonInputCtrl: React.FunctionComponent<ITextParseProps & IPars
     );
 };
 
-const ListNameInputCtrl: React.FunctionComponent<ITextParseProps & IParseStatementInputCtrlProps> =
+const UpdateInputCtrl: React.FunctionComponent<ITextParseProps & IParseStatementInputCtrlProps> =
     (props) => {
 
-    const { statement, SetStatement } = props;
+    const { statement, SetStatement, placeholder, GetValue, SetValue, title, Validate } = props;
+
+    let additionalProps = {};
+    if(Validate) {
+        if(!Validate(statement)) {
+            additionalProps = {
+                ...additionalProps,
+                error: true
+            };
+        }
+    }
 
     return (
         <Input
-            placeholder="Name..."
-            value={statement.name}
+            placeholder={placeholder}
+            value={GetValue(statement)}
             onChange={e => {
                 const updated=statement.Copy();
-                updated.name=e.target.value;
+                SetValue(updated,e.target.value);
                 
                 SetStatement(updated);
             }}
-            title="Enter a short name to uniquely identify this statement"
+            title={title}
+            {...additionalProps}
         />
     );
 }
