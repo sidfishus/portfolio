@@ -19,10 +19,11 @@ export abstract class TextParseStatement {
     public abstract CanSave(): boolean;
     public abstract TypeDescription(): string; // This is static but you can't use abstract and static together in TS
     public abstract Copy(): TextParseStatement;
+    public abstract Description(): string;
 
     public type: eStatementType;
     public name: string;
-    public description?: string;
+    public keyedDescription?: string;
 
     public static GetName(stmt: TextParseStatement): string {
         return stmt.name;
@@ -32,24 +33,46 @@ export abstract class TextParseStatement {
         stmt.name=name;
     }
 
-    public static GetDescription(stmt: TextParseStatement): string | null {
-        return stmt.description;
+    public static GetKeyedDescription(stmt: TextParseStatement): string {
+        return ((stmt.keyedDescription) ? stmt.keyedDescription : "");
     }
 
-    public static SetDescription(stmt: TextParseStatement, description?: string): void {
-        stmt.description=description;
+    public static SetKeyedDescription(stmt: TextParseStatement, description?: string): void {
+        stmt.keyedDescription=description;
+    }
+
+    public Heading(): string {
+
+        const { keyedDescription, name, Description } = this;
+
+        if(keyedDescription) {
+            return keyedDescription;
+        }
+
+        const description = Description();
+        if(description) {
+            return description;
+        }
+
+        return name;
     }
 
     constructor(copy?: TextParseStatement) {
         if(copy) {
             this.type=copy.type;
             this.name=copy.name;
-            this.description=copy.description;
+            this.keyedDescription=copy.keyedDescription;
         }
         else {
             this.name="";
-            this.description=null;
+            this.keyedDescription=null;
         }
+
+        this.Heading=this.Heading.bind(this);
+        this.CanSave=this.CanSave.bind(this);
+        this.TypeDescription=this.TypeDescription.bind(this);
+        this.Copy=this.Copy.bind(this);
+        this.Description=this.Description.bind(this);
     }
 };
 
@@ -99,6 +122,16 @@ export class StringComparisonStatement extends TextParseStatement {
         const copy=new StringComparisonStatement(this);
         return copy;
     }
+
+    Description(): string {
+        const { CanSave, str, caseSensitive} = this;
+        
+        if(!CanSave()) {
+            return null;
+        }
+
+        return `Compare against string '${str}' (case ${((!caseSensitive)?"in":"")}sensitive)`;
+    }
 };
 
 export class SkipWSStatement extends TextParseStatement {
@@ -121,5 +154,15 @@ export class SkipWSStatement extends TextParseStatement {
     Copy(): SkipWSStatement {
         const copy=new SkipWSStatement(this);
         return copy;
+    }
+
+    Description(): string {
+        const { CanSave } = this;
+        
+        if(!CanSave()) {
+            return null;
+        }
+
+        return "Skip whitespace";
     }
 };

@@ -1,6 +1,6 @@
 
 import React, {useState, useRef} from "react";
-import { Dropdown, Label, Form, Segment, Container, Input, Checkbox, List, Button } from "semantic-ui-react";
+import { Dropdown, Label, Form, Segment, Container, Input, Checkbox, List, Button, Icon } from "semantic-ui-react";
 import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 
@@ -144,12 +144,15 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                                     title="Enter a short name to uniquely identify this statement."
                                 />
 
+                                <br />
+                                <br />
+
                                 <UpdateInputCtrl
                                     {...props}
                                     statement={selectedStatement}
                                     SetStatement={_UpdateStatement}
-                                    GetValue={TextParseStatement.GetDescription}
-                                    SetValue={TextParseStatement.SetDescription}
+                                    GetValue={TextParseStatement.GetKeyedDescription}
+                                    SetValue={TextParseStatement.SetKeyedDescription}
                                     placeholder="Description... (optional)"
                                     title="Describe the purpose of this statement."
                                 />
@@ -181,7 +184,7 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
 
     const items=props.statements.map((stmt,idx) => {
 
-        const name=((stmt.name)?stmt.name : `(New ${stmt.TypeDescription()}..)`);
+        const heading=stmt.Heading();
 
         return (
             <List.Item
@@ -189,7 +192,10 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
                 active={props.selStatementIndex === idx}
                 onClick={() => OnSelectStatement(props, idx)}
             >
-                <List.Header>{name}</List.Header>
+                <Icon name="like" color={((stmt.CanSave())?"green":"red")} />
+                <List.Content>
+                    <List.Header color="blue">{heading}</List.Header>
+                </List.Content>
             </List.Item>
         );
     });
@@ -402,6 +408,7 @@ const UpdateInputCtrl: React.FunctionComponent<ITextParseProps & IParseStatement
                 SetStatement(updated);
             }}
             title={title}
+            type="."
             {...additionalProps}
         />
     );
