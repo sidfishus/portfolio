@@ -1,4 +1,6 @@
 
+import { SemanticICONS } from "semantic-ui-react";
+
 export enum eStatementType {
     // String comparison
     String_Comp = 0,
@@ -20,6 +22,7 @@ export abstract class TextParseStatement {
     public abstract TypeDescription(): string; // This is static but you can't use abstract and static together in TS
     public abstract Copy(): TextParseStatement;
     public abstract Description(): string;
+    public abstract Icon(): SemanticICONS;
 
     public type: eStatementType;
     public name: string;
@@ -73,6 +76,7 @@ export abstract class TextParseStatement {
         this.TypeDescription=this.TypeDescription.bind(this);
         this.Copy=this.Copy.bind(this);
         this.Description=this.Description.bind(this);
+        this.Icon=this.Icon.bind(this);
     }
 };
 
@@ -132,6 +136,10 @@ export class StringComparisonStatement extends TextParseStatement {
 
         return `Compare against string '${str}' (case ${((!caseSensitive)?"in":"")}sensitive)`;
     }
+
+    Icon(): SemanticICONS {
+        return "pencil";
+    }
 };
 
 export class SkipWSStatement extends TextParseStatement {
@@ -164,5 +172,9 @@ export class SkipWSStatement extends TextParseStatement {
         }
 
         return "Skip whitespace";
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right";
     }
 };

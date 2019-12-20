@@ -107,15 +107,6 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         selStatementIndex={selStatementIndex}
                         SetSelStatementIndex={SetSelStatementIndex}
                     />
-                    <AddInsertParseStatementCtrl
-                        {...props}
-                        statements={statements}
-                        SetStatements={SetStatements}
-                        selStatementIndex={selStatementIndex}
-                        selectedStatementType={newSelectedStatementType}
-                        SetSelStatementIndex={SetSelStatementIndex}
-                        nameIndexes={nameIndexes.current}
-                    />
 
                     <TypeDropdownCtrl
                         {...props}
@@ -126,6 +117,19 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                     <TypeExplanationCtrl
                         {...props}
                         selectedStatementType={newSelectedStatementType}
+                    />
+
+                    <br />
+                    <br />
+
+                    <AddInsertParseStatementCtrl
+                        {...props}
+                        statements={statements}
+                        SetStatements={SetStatements}
+                        selStatementIndex={selStatementIndex}
+                        selectedStatementType={newSelectedStatementType}
+                        SetSelStatementIndex={SetSelStatementIndex}
+                        nameIndexes={nameIndexes.current}
                     />
 
                     {selStatementIndex !== null &&
@@ -180,7 +184,7 @@ const OnSelectStatement = (ctrlProps: ITextParseProps & IStatementListCtrlProps,
 
 const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementListCtrlProps> = (props) => {
 
-    //sidtodo icons in the list
+    //sidtodo try with table instead of list.
 
     const items=props.statements.map((stmt,idx) => {
 
@@ -192,7 +196,7 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
                 active={props.selStatementIndex === idx}
                 onClick={() => OnSelectStatement(props, idx)}
             >
-                <Icon name="like" color={((stmt.CanSave())?"green":"red")} />
+                <Icon name={stmt.Icon()} color={((stmt.CanSave())?"green":"red")} />
                 <List.Content>
                     <List.Header color="blue">{heading}</List.Header>
                 </List.Content>
@@ -211,15 +215,11 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
     );
 };
 
-const AddInsertParseStatement = (ctrlProps: ITextParseProps & IAddInsertParseStatementCtrlProps) : void => {
+const AddInsertParseStatement =
+    (ctrlProps: ITextParseProps & IAddInsertParseStatementCtrlProps,
+    isInsert: boolean) : void => {
 
     const { nameIndexes, statements, selStatementIndex, selectedStatementType } = ctrlProps;
-
-    const isAdd = 
-        !(statements.length>0 &&
-        selStatementIndex!==null &&
-        (selStatementIndex+1)!==statements.length
-    );
 
     // Create the new statement based on type.
     let newStatement: TextParseStatement;
@@ -235,33 +235,57 @@ const AddInsertParseStatement = (ctrlProps: ITextParseProps & IAddInsertParseSta
     }
 
     // Generate a default name
-    let newIndex;
+    let newNameIndex;
     if(nameIndexes[selectedStatementType] === undefined) {
-        newIndex = 1;
+        newNameIndex = 1;
     }
     else {
-        newIndex = nameIndexes[selectedStatementType] + 1;
+        newNameIndex = nameIndexes[selectedStatementType] + 1;
     }
 
-    nameIndexes[selectedStatementType] = newIndex;
+    nameIndexes[selectedStatementType] = newNameIndex;
 
-    newStatement.name=`${newStatement.TypeDescription()} ${newIndex}`;
+    newStatement.name=`${newStatement.TypeDescription()} ${newNameIndex}`;
 
-    // Add/insert it
+    //// Add/insert it
+    // Get the new index
+    let newSelIndex;
+    if(statements.length == 0) {
+        newSelIndex = 0;
+    } else {
+        newSelIndex = ((isInsert) ? selStatementIndex : selStatementIndex + 1);
+    }
+
     let updatedStatements: Array<TextParseStatement>;
-    let newSelIndex: number;
-    if(isAdd) {
+    if(newSelIndex>=statements.length) {
+        // Add
+
         // Copy the existing array
         updatedStatements = statements.map(stmt => {
             return stmt.Copy();
         });
 
         // Add the new one
-        newSelIndex=updatedStatements.length;
         updatedStatements.push(newStatement);
-    }
-    //sidtodo insert
+    } else {
+        // Insert
 
+        // Copy the ones up to the insert index
+        updatedStatements = new Array<TextParseStatement>();
+        for(let i=0;i<newSelIndex; ++i) {
+            updatedStatements.push(statements[i]);
+        }
+
+        // Add the new one
+        updatedStatements.push(newStatement);
+
+        // Add the ones above it
+        for(let i=newSelIndex; i<statements.length; ++i) {
+            updatedStatements.push(statements[i]);
+        }
+    }
+
+    // Update the state
     ctrlProps.SetStatements(updatedStatements);
     ctrlProps.SetSelStatementIndex(newSelIndex);
 }
@@ -269,11 +293,19 @@ const AddInsertParseStatement = (ctrlProps: ITextParseProps & IAddInsertParseSta
 const AddInsertParseStatementCtrl: React.FunctionComponent<ITextParseProps & IAddInsertParseStatementCtrlProps> = (props) => {
 
     return (
-        <Button
-            onClick={() => AddInsertParseStatement(props)}
-        >
-            Insert
-        </Button>
+        <>
+            <Button
+                onClick={() => AddInsertParseStatement(props,true)}
+            >
+                Insert
+            </Button>
+
+            <Button
+                onClick={() => AddInsertParseStatement(props,false)}
+            >
+                Add
+            </Button>
+        </>
     );
 };
 
