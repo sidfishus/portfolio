@@ -2,13 +2,16 @@
 import { SemanticICONS } from "semantic-ui-react";
 
 export enum eStatementType {
+
     // String comparison
     String_Comp = 0,
     // Skip whitespace operation
     SkipWS_Op = 1,
+    // Or comparison
+    Or_Comp = 2,
 
-    // Keep this as the last item
-    phCount = 2,
+    // Keep this as the last item because it's used to determine the number of statement types
+    phCount = 3,
 };
 
 export interface ITextParseStatementState {
@@ -23,6 +26,10 @@ export abstract class TextParseStatement {
     public abstract Copy(): TextParseStatement;
     public abstract Description(): string;
     public abstract Icon(): SemanticICONS;
+    public abstract Children(): TextParseStatement[] | null;
+
+    public abstract SetSelectedChildIdx(idx: number): void;
+    public abstract GetSelectedChildIdx(): number;
 
     public type: eStatementType;
     public name: string;
@@ -140,6 +147,19 @@ export class StringComparisonStatement extends TextParseStatement {
     Icon(): SemanticICONS {
         return "pencil";
     }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetSelectedChildIdx(idx: number | null): void
+    {
+    }
+    
+    GetSelectedChildIdx(): number | null
+    {
+        return null;
+    }
 };
 
 export class SkipWSStatement extends TextParseStatement {
@@ -177,4 +197,78 @@ export class SkipWSStatement extends TextParseStatement {
     Icon(): SemanticICONS {
         return "angle double right";
     }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetSelectedChildIdx(idx: number | null): void
+    {
+    }
+    
+    GetSelectedChildIdx(): number | null
+    {
+        return null;
+    }
 };
+
+export class OrComparisonStatement extends TextParseStatement {
+
+    children: Array<TextParseStatement>;
+    selectedChildIdx: number;
+
+    constructor(copy?: OrComparisonStatement,copyChildren: boolean=false) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.Or_Comp;
+            this.children = new Array<TextParseStatement>();
+            this.selectedChildIdx=null;
+        } else {
+            if(copyChildren) this.children = copy.children.map(item => item.Copy());
+            else this.children=null;
+
+            this.selectedChildIdx=copy.selectedChildIdx;
+        }
+    }
+
+    CanSave(): boolean {
+        return false;
+    }
+
+    TypeDescription(): string {
+        return "Or Comparison";
+    }
+
+    Copy(): OrComparisonStatement {
+        const copy=new OrComparisonStatement(this);
+        return copy;
+    }
+
+    Description(): string {
+        const { CanSave } = this;
+        
+        if(!CanSave()) {
+            return null;
+        }
+
+        return "Or Comparison"; //sidtodo
+    }
+
+    Icon(): SemanticICONS {
+        return "unordered list";
+    }
+
+    Children(): TextParseStatement[] | null {
+        return this.children;
+    }
+
+    SetSelectedChildIdx(idx: number | null): void
+    {
+        this.selectedChildIdx=idx;
+    }
+    
+    GetSelectedChildIdx(): number | null
+    {
+        return this.selectedChildIdx;
+    }
+}
