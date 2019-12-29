@@ -8,22 +8,28 @@ import { IRoutedCompProps } from "../../routes";
 interface ITextParseProps {
 };
 
+interface ISelectedStatement {
+    UID: number;
+    type: eStatementType;
+};
+
 interface IStatementListCtrlProps {
     statements: Array<TextParseStatement>;
     SetStatements: (statements: Array<TextParseStatement>) => void;
-    selStatementIndex?: number;
-    SetSelStatementIndex: (idx?: number) => void;
+    selStatement?: ISelectedStatement;
+    SetSelStatement: (statement: TextParseStatement) => void;
 };
 
 interface IAddInsertParseStatementCtrlProps {
     statements: Array<TextParseStatement>;
     SetStatements: (
         statements: Array<TextParseStatement>,
-        idx?: number
+        selStmt?: TextParseStatement
     ) => void;
-    selStatementIndex?: number;
     selectedStatementType: eStatementType;
     nameIndexes: Array<number | undefined>;
+    selStmtIndex?: number;
+    insert: boolean;
 };
 
 interface ITypeDropdownProps {
@@ -47,21 +53,125 @@ interface IOrComparisonInputCtrlProps {
     nameIndexes: Array<number | undefined>;
     subSelectedStatementType: eStatementType;
     SetSubSelectedStatementType: (type?: eStatementType) => void;
+    SetSelStatement: (statement: TextParseStatement) => void;
+};
+
+// Clicking a list item when it has a parent causes the parent's on Item click to be called at the same
+// time which means the parent becomes selected. This gets around this issue.
+//sidtodo improve comment
+const fSelectStatement:
+    (SetSelStatement: (selStmt: ISelectedStatement) => void) =>
+    (newSelStatement: TextParseStatement) => void = SetSelStatement => {
+
+    let updateCalled=false;
+
+    return newSelStatement => {
+
+        if(!updateCalled) {
+            // This will trigger the first time an item is clicked but not subsequent clicks
+            SetSelStatement({
+                UID: newSelStatement.UID,
+                type: newSelStatement.type
+            });
+
+            updateCalled=true;
+        }
+    };
 };
 
 // Update a single statement within a list of statements and return a copy of everything
 const UpdateStatement =
     (stmt: TextParseStatement,
-    idx: number,
+    selStmt: ISelectedStatement,
     statements: Array<TextParseStatement>,
     SetStatements: (statements: Array<TextParseStatement>) => void
 ): void => {
-    const updated=statements.map((iterStmt,iterIdx) => {
-        if(iterIdx === idx) return stmt;
-        return iterStmt.Copy();
+
+    const updated=statements.map((iterStmt) => {
+        return UpdateStatement_Inner(stmt, iterStmt, selStmt);
     });
 
     SetStatements(updated);
+
+};
+
+// Given a text parse statement, update the entire state
+const UpdateStatement_Inner = (
+    updatedStmt: TextParseStatement,
+    iterStmt: TextParseStatement,
+    selStmt: ISelectedStatement,
+) => {
+
+    // If this statement and none of it's children are selected, simply do a copy
+    const selected=GetSelectedStatementNested(selStmt,iterStmt);
+    if(!selected) {
+        return iterStmt.Copy(true);
+    }
+
+    let copy;
+    if(CompareSelectedStatement(selStmt,iterStmt)) {
+        // The iter statement is the selected one.
+        copy = updatedStmt;
+    } else {
+        // One of it's children is the selected one. Copy the statement excluding the children
+        copy = iterStmt.Copy(false); 
+    }
+
+    let children=updatedStmt.Children();
+    if(children) {
+
+        // Update the children manually by updating the one that's changed
+        children=children.map((iterChild) => {
+            return UpdateStatement_Inner(updatedStmt,iterChild,selStmt);
+        });
+    }
+
+    copy.SetChildren(children);
+
+    return copy;
+};
+
+const CompareSelectedStatement = (
+    selStmt: ISelectedStatement,
+    stmt: TextParseStatement
+): boolean => {
+
+    return ((stmt.type === selStmt.type && stmt.UID===selStmt.UID)?true:false);
+};
+
+const GetSelectedStatementNested = (
+    selStmt: ISelectedStatement,
+    stmt: TextParseStatement
+): TextParseStatement | null => {
+
+    if(CompareSelectedStatement(selStmt,stmt)) {
+        return stmt;
+    }
+
+    const children=stmt.Children();
+    if(children) {
+        const [selected]=GetSelectedStatementFromListNested(selStmt,children);
+        if(selected) return selected;
+    }
+
+    return null;
+};
+
+const GetSelectedStatementFromListNested =
+    (selStmt: ISelectedStatement,
+    statements: Array<TextParseStatement>
+): [TextParseStatement|null,number|null] => {
+
+    if(selStmt===null || statements === null) return [null,null];
+
+    for(let i=0;i<statements.length; ++i) {
+        const iterStmt=statements[i];
+
+        const selected=GetSelectedStatementNested(selStmt,iterStmt);
+        if(selected) return [selected,i];
+    }
+
+    return [null,null];
 };
 
 export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompProps> = (props) => {
@@ -69,8 +179,14 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     // The list of statements
     const [statements, SetStatements] = useState(() => new Array<TextParseStatement>());
 
-    // Selected statement index
-    const [selStatementIndex, SetSelStatementIndex] = useState(null);
+    // Selected statement
+    let selStatement: ISelectedStatement;
+    let SetSelStatement: (stmt: TextParseStatement) => void;
+    {
+        const state=useState<ISelectedStatement>(null);
+        selStatement=state[0];
+        SetSelStatement=fSelectStatement(state[1]);
+    }
 
     const [newSelectedStatementType, SetNewSelectedStatementType] = useState(eStatementType.String_Comp);
     const [subSelectedStatementType, SetSubSelectedStatementType] = useState(eStatementType.String_Comp);
@@ -81,12 +197,13 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     const nameIndexes = useRef(new Array<number|undefined>(eStatementType.phCount));
 
     let typeSpecificJsx=null;
-    let selectedStatement=null;
-    const _UpdateStatement = (stmt: TextParseStatement) => UpdateStatement(stmt,selStatementIndex,statements,SetStatements);
 
-    if(selStatementIndex !== null) {
+    const [selectedStatement,topLevelSelStmtIndex]=GetSelectedStatementFromListNested(selStatement,statements);
 
-        selectedStatement=statements[selStatementIndex];
+    const _UpdateStatement = (stmt: TextParseStatement) => UpdateStatement(stmt,selStatement,statements,SetStatements);
+    
+    if(selectedStatement !== null) {
+
         switch(selectedStatement.type) {
 
             case eStatementType.String_Comp:
@@ -107,6 +224,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         nameIndexes={nameIndexes.current}
                         subSelectedStatementType={subSelectedStatementType}
                         SetSubSelectedStatementType={SetSubSelectedStatementType}
+                        SetSelStatement={SetSelStatement}
                     />;
                 break;
         }
@@ -124,24 +242,25 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         {...props}
                         statements={statements}
                         SetStatements={SetStatements}
-                        selStatementIndex={selStatementIndex}
-                        SetSelStatementIndex={SetSelStatementIndex}
+                        selStatement={selStatement}
+                        SetSelStatement={SetSelStatement}
                     />
 
                     <AddNewParseStatementCtrls
                         {...props}
                         statements={statements}
-                        SetStatements={(statements, idx) => {
+                        SetStatements={(statements, selStmt) => {
+                            SetSelStatement(selStmt);
                             SetStatements(statements);
-                            SetSelStatementIndex(idx);
                         }}
-                        selStatementIndex={selStatementIndex}
                         selectedStatementType={newSelectedStatementType}
                         nameIndexes={nameIndexes.current}
                         SetSelectedStatementType={SetNewSelectedStatementType}
+                        selStmtIndex={topLevelSelStmtIndex}
+                        insert={true}
                     />
 
-                    {selStatementIndex !== null &&
+                    {selStatement !== null &&
                         <>
                         <Segment padded>
                             <Label attached="top">Update Parse Statement</Label>
@@ -187,17 +306,14 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     );
 };
 
-const OnSelectStatement = (ctrlProps: ITextParseProps & IStatementListCtrlProps, idx: number): void => {
-    ctrlProps.SetSelStatementIndex(idx);
-};
-
 const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps & IStatementListCtrlProps & { stmt: TextParseStatement,idx: number }> = (props) => {
 
-    const { stmt, idx } = props;
+    const { stmt, SetSelStatement, selStatement, idx } = props;
 
     const heading=stmt.Heading();
 
     const children=stmt.Children();
+    
     const childrenListItems=((children) ? children.map((iterStmt,idx) => {
         return StatementListItemRenderStatement({
             ...props,
@@ -211,8 +327,10 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
     return (
         <List.Item
             key={idx}
-            active={props.selStatementIndex === idx}
-            onClick={() => OnSelectStatement(props, idx)}
+            active={CompareSelectedStatement(selStatement,stmt)}
+            onClick={() => {
+                SetSelStatement(stmt);
+            }}
         >
             <Icon name={stmt.Icon()} color={((stmt.CanSave())?"green":"red")} />
             <List.Content>
@@ -236,7 +354,7 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
     const items=props.statements.map((stmt,idx) => StatementListItemRenderStatement({
         ...props,
         stmt: stmt,
-        idx: idx
+        idx: idx,
     }));
 
     return (
@@ -252,19 +370,14 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
 
 const AddNewParseStatementCtrls: React.FunctionComponent<ITextParseProps & ITypeDropdownProps & IAddInsertParseStatementCtrlProps> = (props) => {
     
-    const { selectedStatementType, SetSelectedStatementType, statements, SetStatements, selStatementIndex,nameIndexes } = props;
-    
     return (
         <>
             <TypeDropdownCtrl
                 {...props}
-                selectedStatementType={selectedStatementType}
-                SetSelectedStatementType={SetSelectedStatementType}
             />
 
             <TypeExplanationCtrl
                 {...props}
-                selectedStatementType={selectedStatementType}
             />
 
             <br />
@@ -272,11 +385,6 @@ const AddNewParseStatementCtrls: React.FunctionComponent<ITextParseProps & IType
 
             <AddInsertParseStatementCtrl
                 {...props}
-                statements={statements}
-                SetStatements={SetStatements}
-                selStatementIndex={selStatementIndex}
-                selectedStatementType={selectedStatementType}
-                nameIndexes={nameIndexes}
             />
         </>
     );
@@ -286,7 +394,7 @@ const AddInsertParseStatement =
     (ctrlProps: ITextParseProps & IAddInsertParseStatementCtrlProps,
     isInsert: boolean) : void => {
 
-    const { nameIndexes, statements, selStatementIndex, selectedStatementType, SetStatements } = ctrlProps;
+    const { nameIndexes, statements, selectedStatementType, SetStatements, selStmtIndex } = ctrlProps;
 
     // Create the new statement based on type.
     let newStatement: TextParseStatement;
@@ -317,6 +425,7 @@ const AddInsertParseStatement =
     nameIndexes[selectedStatementType] = newNameIndex;
 
     newStatement.name=`${newStatement.TypeDescription()} ${newNameIndex}`;
+    newStatement.UID = newNameIndex;
 
     //// Add/insert it
     // Get the new index
@@ -324,7 +433,7 @@ const AddInsertParseStatement =
     if(statements.length == 0) {
         newSelIndex = 0;
     } else {
-        newSelIndex = ((isInsert) ? selStatementIndex : selStatementIndex + 1);
+        newSelIndex = ((isInsert) ? selStmtIndex : selStmtIndex + 1);
     }
 
     let updatedStatements: Array<TextParseStatement>;
@@ -333,7 +442,7 @@ const AddInsertParseStatement =
 
         // Copy the existing array
         updatedStatements = statements.map(stmt => {
-            return stmt.Copy();
+            return stmt.Copy(true);
         });
 
         // Add the new one
@@ -356,18 +465,22 @@ const AddInsertParseStatement =
         }
     }
 
-    SetStatements(updatedStatements, newSelIndex);
+    SetStatements(updatedStatements, newStatement);
 }
 
 const AddInsertParseStatementCtrl: React.FunctionComponent<ITextParseProps & IAddInsertParseStatementCtrlProps> = (props) => {
 
+    const {insert} = props;
+    
     return (
         <>
-            <Button
-                onClick={() => AddInsertParseStatement(props,true)}
-            >
-                Insert
-            </Button>
+            {insert &&
+                <Button
+                    onClick={() => AddInsertParseStatement(props,true)}
+                >
+                    Insert
+                </Button>
+            }
 
             <Button
                 onClick={() => AddInsertParseStatement(props,false)}
@@ -491,26 +604,28 @@ const StringComparisonInputCtrl: React.FunctionComponent<ITextParseProps & IText
 
 const OrComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & IOrComparisonInputCtrlProps> = (props) => {
 
-    const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement } = props;
+    const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
 
     const orStatement = props.statement as OrComparisonStatement;
+
+    const children=orStatement.Children();
 
     return (
         <AddNewParseStatementCtrls
             {...props}
-            statements={orStatement.Children()}
-            SetStatements={(statements, idx) => {
+            statements={children}
+            SetStatements={(statements, selStmt) => {
 
                 const copy=new OrComparisonStatement(orStatement,false);
                 copy.children=statements;
-                copy.selectedChildIdx=idx;
+                SetSelStatement(selStmt);
                 SetStatement(copy);
             }}
-
-            selStatementIndex={orStatement.selectedChildIdx}
             selectedStatementType={subSelectedStatementType}
             nameIndexes={nameIndexes}
             SetSelectedStatementType={SetSubSelectedStatementType}
+            selStmtIndex={((children)?children.length-1:-1)}
+            insert={false}
         />
     );
 };
@@ -535,7 +650,7 @@ const UpdateInputCtrl: React.FunctionComponent<ITextParseProps & IParseStatement
             placeholder={placeholder}
             value={GetValue(statement)}
             onChange={e => {
-                const updated=statement.Copy();
+                const updated=statement.Copy(true);
                 SetValue(updated,e.target.value);
                 
                 SetStatement(updated);

@@ -23,14 +23,13 @@ export interface ITextParseStatementState {
 export abstract class TextParseStatement {
     public abstract CanSave(): boolean;
     public abstract TypeDescription(): string; // This is static but you can't use abstract and static together in TS
-    public abstract Copy(): TextParseStatement;
+    public abstract Copy(copyChildren: boolean): TextParseStatement;
     public abstract Description(): string;
     public abstract Icon(): SemanticICONS;
     public abstract Children(): TextParseStatement[] | null;
+    public abstract SetChildren(children?: TextParseStatement[]): void;
 
-    public abstract SetSelectedChildIdx(idx: number): void;
-    public abstract GetSelectedChildIdx(): number;
-
+    public UID: number; // Unique ID to reference this statement / type
     public type: eStatementType;
     public name: string;
     public keyedDescription?: string;
@@ -67,15 +66,25 @@ export abstract class TextParseStatement {
         return name;
     }
 
-    constructor(copy?: TextParseStatement) {
+    constructor(
+        copy?: TextParseStatement,
+        copyChildren: boolean=false,
+    ) {
         if(copy) {
             this.type=copy.type;
             this.name=copy.name;
             this.keyedDescription=copy.keyedDescription;
+            this.UID=copy.UID;
+            
+            if(copyChildren) {
+                const children=copy.Children();
+                if(children) this.SetChildren(children.map(item => item.Copy(true)));
+            }
         }
         else {
             this.name="";
             this.keyedDescription=null;
+            this.UID=null;
         }
 
         this.Heading=this.Heading.bind(this);
@@ -104,7 +113,9 @@ export class StringComparisonStatement extends TextParseStatement {
         return (stmt.str !== null && stmt.str !== "");
     }
 
-    constructor(copy?: StringComparisonStatement) {
+    constructor(
+        copy?: StringComparisonStatement
+    ) {
         super(copy);
         if(copy) {
             this.str=copy.str;
@@ -129,7 +140,7 @@ export class StringComparisonStatement extends TextParseStatement {
         return "String Comparison";
     }
 
-    Copy(): StringComparisonStatement {
+    Copy(copyChildren: boolean): StringComparisonStatement {
         const copy=new StringComparisonStatement(this);
         return copy;
     }
@@ -152,13 +163,7 @@ export class StringComparisonStatement extends TextParseStatement {
         return null;
     }
 
-    SetSelectedChildIdx(idx: number | null): void
-    {
-    }
-    
-    GetSelectedChildIdx(): number | null
-    {
-        return null;
+    SetChildren(children?: TextParseStatement[]): void {
     }
 };
 
@@ -179,7 +184,7 @@ export class SkipWSStatement extends TextParseStatement {
         return "Skip Whitespace Operation";
     }
 
-    Copy(): SkipWSStatement {
+    Copy(copyChildren: boolean): SkipWSStatement {
         const copy=new SkipWSStatement(this);
         return copy;
     }
@@ -202,32 +207,23 @@ export class SkipWSStatement extends TextParseStatement {
         return null;
     }
 
-    SetSelectedChildIdx(idx: number | null): void
-    {
-    }
-    
-    GetSelectedChildIdx(): number | null
-    {
-        return null;
+    SetChildren(children?: TextParseStatement[]): void {
     }
 };
 
 export class OrComparisonStatement extends TextParseStatement {
 
     children: Array<TextParseStatement>;
-    selectedChildIdx: number;
 
-    constructor(copy?: OrComparisonStatement,copyChildren: boolean=false) {
-        super(copy);
+    constructor(
+        copy?: OrComparisonStatement,
+        copyChildren: boolean=true) {
+
+        super(copy, copyChildren);
         if(!copy) {
+
             this.type=eStatementType.Or_Comp;
             this.children = new Array<TextParseStatement>();
-            this.selectedChildIdx=null;
-        } else {
-            if(copyChildren) this.children = copy.children.map(item => item.Copy());
-            else this.children=null;
-
-            this.selectedChildIdx=copy.selectedChildIdx;
         }
     }
 
@@ -239,8 +235,8 @@ export class OrComparisonStatement extends TextParseStatement {
         return "Or Comparison";
     }
 
-    Copy(): OrComparisonStatement {
-        const copy=new OrComparisonStatement(this);
+    Copy(copyChildren: boolean): OrComparisonStatement {
+        const copy=new OrComparisonStatement(this, copyChildren);
         return copy;
     }
 
@@ -262,13 +258,7 @@ export class OrComparisonStatement extends TextParseStatement {
         return this.children;
     }
 
-    SetSelectedChildIdx(idx: number | null): void
-    {
-        this.selectedChildIdx=idx;
-    }
-    
-    GetSelectedChildIdx(): number | null
-    {
-        return this.selectedChildIdx;
+    SetChildren(children?: TextParseStatement[]): void {
+        this.children=children;
     }
 }
