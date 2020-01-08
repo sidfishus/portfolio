@@ -39,7 +39,10 @@ const sharedConfig = {
 		]
 	},
 	resolve: {
-		extensions: ['.js', '.tsx', '.ts', '.jsx']
+		extensions: ['.js', '.tsx', '.ts', '.jsx'],
+		alias: {
+			"react-dom": "@hot-loader/react-dom"
+		}
     },
 	stats: { modules: false }, /* This changes the run webpack output */
 };
@@ -47,7 +50,7 @@ const sharedConfig = {
 const clientConfig = merge(sharedConfig, {
 	entry: {
 		"main-client": [
-			"react-hot-loader/patch",
+			"@hot-loader/react-dom",
             "@babel/polyfill",
             "core-js",
 			"./ClientApp/boot-client.tsx"
@@ -65,7 +68,7 @@ const clientConfig = merge(sharedConfig, {
 const serverBundleConfig = merge(sharedConfig, {
 	entry: {
 		"main-server": [
-			"react-hot-loader/patch",
+			"@hot-loader/react-dom",
             "@babel/polyfill",
             "core-js",
 			"./ClientApp/boot-server.tsx"

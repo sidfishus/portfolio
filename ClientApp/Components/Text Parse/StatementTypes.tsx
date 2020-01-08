@@ -9,14 +9,71 @@ export enum eStatementType {
     SkipWS_Op = 1,
     // Or comparison
     Or_Comp = 2,
+    // Statement list
+    StatementList_Comp=3,
+    
+    // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
-    // Keep this as the last item because it's used to determine the number of statement types
-    phCount = 3,
+    // Note: Keep this as the last item because it's used to determine the number of statement types
+    phCount = 4,
 };
+
+// Information regarding the statement types
+export interface IStatementTypeInfo {
+    isComparison: boolean;
+    comparisonOnlyChildren: boolean; // Can only have children which are comparison type statements?
+};
+
+// The index corresponds to the 'eStatementType' enum
+export const StatementTypeInfo:IStatementTypeInfo[] = [
+
+    //String_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false,
+    },
+
+    //SkipWS_Op
+    {
+        isComparison: false,
+        comparisonOnlyChildren: false,
+    },
+
+    //Or_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: true,
+    },
+
+    //StatementList_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false,
+    },
+];
 
 export interface ITextParseStatementState {
     statement: TextParseStatement;
     SetStatement: (input: TextParseStatement) => void;
+};
+
+const NumberOfLevelsDeep = (iterChild: TextParseStatement,currentDepth: number): number => {
+
+    const children=iterChild.Children();
+    if(!children || children.length === 0) {
+        return currentDepth;
+    }
+
+    let rv=currentDepth+1;
+    children.forEach((iterChild) => {
+        const iterNumberOfLevelsDeep=NumberOfLevelsDeep(iterChild,rv);
+
+        if(iterNumberOfLevelsDeep>rv) {
+            rv= iterNumberOfLevelsDeep;
+        }
+    });
+
+    return rv;
 };
 
 // Parse statement base class
@@ -28,6 +85,7 @@ export abstract class TextParseStatement {
     public abstract Icon(): SemanticICONS;
     public abstract Children(): TextParseStatement[] | null;
     public abstract SetChildren(children?: TextParseStatement[]): void;
+    public abstract GenerateCode(log: string, fAddStatement: (stmtCode: string) => string): string; // 'log' is reserved in case in the future we decide to use it
 
     public UID: number; // Unique ID to reference this statement / type
     public type: eStatementType;
@@ -76,9 +134,17 @@ export abstract class TextParseStatement {
             this.keyedDescription=copy.keyedDescription;
             this.UID=copy.UID;
             
+            let initChildren=false;
             if(copyChildren) {
                 const children=copy.Children();
-                if(children) this.SetChildren(children.map(item => item.Copy(true)));
+                if(children) {
+                    this.SetChildren(children.map(item => item.Copy(true)));
+                    initChildren=true;
+                }
+            }
+            
+            if(!initChildren) {
+                this.SetChildren(new Array<TextParseStatement>());
             }
         }
         else {
@@ -93,6 +159,11 @@ export abstract class TextParseStatement {
         this.Copy=this.Copy.bind(this);
         this.Description=this.Description.bind(this);
         this.Icon=this.Icon.bind(this);
+    }
+
+    NumberOfLevelsDeep(): number {
+
+        return NumberOfLevelsDeep(this,1);
     }
 };
 
@@ -165,6 +236,21 @@ export class StringComparisonStatement extends TextParseStatement {
 
     SetChildren(children?: TextParseStatement[]): void {
     }
+
+    //sidtodo: test with quotes in the string.
+    //sidtodo: test with quotes in the name.
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        const { caseSensitive, str, name } = this;
+
+        //TODO library function.
+        const caseSensitiveStr= ((caseSensitive)?"true":"false");
+
+        return fAddStatement(`new StringComparison(${log},new Options(${log}){CaseSensitive=${caseSensitiveStr}},"${str}","${name}")`);
+    }
 };
 
 export class SkipWSStatement extends TextParseStatement {
@@ -209,6 +295,21 @@ export class SkipWSStatement extends TextParseStatement {
 
     SetChildren(children?: TextParseStatement[]): void {
     }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        const { name } = this;
+
+        return
+            `{
+                var skipWS=new TokenComparison.SkipWhitespace(${log});
+                skipWS.Name="${name}";
+                ${fAddStatement("skipWS")}
+            }`;
+    }
 };
 
 export class OrComparisonStatement extends TextParseStatement {
@@ -228,7 +329,9 @@ export class OrComparisonStatement extends TextParseStatement {
     }
 
     CanSave(): boolean {
-        return false;
+        // Must have at least 2 children
+        const { children } = this;
+        return children && children.length>1;
     }
 
     TypeDescription(): string {
@@ -241,13 +344,9 @@ export class OrComparisonStatement extends TextParseStatement {
     }
 
     Description(): string {
-        const { CanSave } = this;
-        
-        if(!CanSave()) {
-            return null;
-        }
+        const { children } = this;
 
-        return "Or Comparison"; //sidtodo
+        return `Or statement consisting of ${children.length} comparison(s)`;
     }
 
     Icon(): SemanticICONS {
@@ -260,5 +359,117 @@ export class OrComparisonStatement extends TextParseStatement {
 
     SetChildren(children?: TextParseStatement[]): void {
         this.children=children;
+    }
+
+    AddStatement(code: string): string {
+        return `orComp.Add(${code});`;
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        const {children, name}=this;
+
+        let rv:string =
+            `{
+                var orComp=new OrComparison(${log});
+                orComp.Name="${name}";
+            `;
+
+        for(let i=0;i<children.length;++i) {
+
+            const iterChild=children[i];
+
+            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement));
+        }
+
+        rv=rv.concat(
+            `${fAddStatement("orComp")}
+            }`);
+        
+        return rv;
+
+    }
+}
+
+export class StatementListComparisonStatement extends TextParseStatement {
+
+    children: Array<TextParseStatement>;
+
+    constructor(
+        copy?: StatementListComparisonStatement,
+        copyChildren: boolean=true) {
+
+        super(copy, copyChildren);
+        if(!copy) {
+
+            this.type=eStatementType.StatementList_Comp;
+            this.children = new Array<TextParseStatement>();
+        }
+    }
+
+    CanSave(): boolean {
+        // Must have at least 1 child
+        const { children } = this;
+        return children && children.length>0;
+    }
+
+    TypeDescription(): string {
+        return "Statement List";
+    }
+
+    Copy(copyChildren: boolean): StatementListComparisonStatement {
+        const copy=new StatementListComparisonStatement(this, copyChildren);
+        return copy;
+    }
+
+    Description(): string {
+        const { children } = this;
+
+        return `Statement list consisting of ${children.length} statement(s)`;
+    }
+
+    Icon(): SemanticICONS {
+        return "list ol";
+    }
+
+    Children(): TextParseStatement[] | null {
+        return this.children;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+        this.children=children;
+    }
+
+    AddStatement(code: string): string {
+        return `stmtListInner.Add(${code});`;
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+        const {children, name}=this;
+
+        let rv:string =
+            `{
+                var stmtListInner = new StatementList(${log});
+                stmtListInner.Name="${name}";
+            `;
+
+        for(let i=0;i<children.length;++i) {
+
+            const iterChild=children[i];
+
+            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement));
+        }
+
+        rv=rv.concat(
+            `${fAddStatement("stmtListInner")}
+            }`);
+        
+        return rv;
     }
 }

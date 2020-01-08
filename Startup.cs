@@ -77,11 +77,13 @@ namespace react_spa
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                // Doesn't appear to be needed?
+                // routes.MapRoute(
+                //     name: "default",
+                //     template: "{controller=Home}/{action=Index}/{id?}"
+				// );
 
-                // Replaces the 'URL rewrite' functionality in IIS
+                // Replaces the 'URL rewrite' functionality in IIS and is necessary for clientside navigation to work
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });

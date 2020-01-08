@@ -37,7 +37,6 @@
             "name": ".NET Debug",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": ".NET Build",
             "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/react spa.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
