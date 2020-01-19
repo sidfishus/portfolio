@@ -11,11 +11,18 @@ export enum eStatementType {
     Or_Comp = 2,
     // Statement list
     StatementList_Comp=3,
+    // Advance until to the end operation
+    AdvanceToEnd_Op=4,
+    // End of string comparison
+    EndOfString_Comp=5,
+    // Start of string comparison
+    StartOfString_Comp=6,
     
     // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
     // Note: Keep this as the last item because it's used to determine the number of statement types
-    phCount = 4,
+    // In C++ you can assert this kind of thing statically at compile type
+    phCount = 7,
 };
 
 // Information regarding the statement types
@@ -46,6 +53,24 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
     },
 
     //StatementList_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false,
+    },
+
+    // AdvanceToEnd_Op
+    {
+        isComparison: false,
+        comparisonOnlyChildren: false,
+    },
+
+    //EndOfString_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false,
+    },
+
+    // StartOfString_Comp
     {
         isComparison: true,
         comparisonOnlyChildren: false,
@@ -303,12 +328,14 @@ export class SkipWSStatement extends TextParseStatement {
 
         const { name } = this;
 
-        return
+        var code=
             `{
-                var skipWS=new TokenComparison.SkipWhitespace(${log});
+                var skipWS=TokenComparison.SkipWhitespace(${log});
                 skipWS.Name="${name}";
                 ${fAddStatement("skipWS")}
             }`;
+
+        return code;
     }
 };
 
@@ -473,3 +500,186 @@ export class StatementListComparisonStatement extends TextParseStatement {
         return rv;
     }
 }
+
+export class AdvanceToEndStatement extends TextParseStatement {
+
+    constructor(copy?: AdvanceToEndStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.AdvanceToEnd_Op;
+        }
+    }
+
+    CanSave(): boolean {
+        return true;
+    }
+
+    TypeDescription(): string {
+        return "Advance to the End Operation";
+    }
+
+    Copy(copyChildren: boolean): AdvanceToEndStatement {
+        const copy=new AdvanceToEndStatement(this);
+        return copy;
+    }
+
+    Description(): string {
+        const { CanSave } = this;
+        
+        if(!CanSave()) {
+            return null;
+        }
+
+        return "Advance to the end";
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right";
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        const { name } = this;
+
+        var code=
+            `{
+                var advanceToEnd=new AdvanceToTheEnd(${log});
+                advanceToEnd.Name="${name}";
+                ${fAddStatement("advanceToEnd")}
+            }`;
+
+        return code;
+    }
+};
+
+export class EndOfStringComparisonStatement extends TextParseStatement {
+
+    constructor(copy?: EndOfStringComparisonStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.EndOfString_Comp;
+        }
+    }
+
+    CanSave(): boolean {
+        return true;
+    }
+
+    TypeDescription(): string {
+        return "End of String Comparison";
+    }
+
+    Copy(copyChildren: boolean): EndOfStringComparisonStatement {
+        const copy=new EndOfStringComparisonStatement(this);
+        return copy;
+    }
+
+    Description(): string {
+        const { CanSave } = this;
+        
+        if(!CanSave()) {
+            return null;
+        }
+
+        return "Compare against the end of the string";
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        const { name } = this;
+
+        var code=
+            `{
+                var isEndOfStringComp=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == str.Length);
+                isEndOfStringComp.Name="${name}";
+                ${fAddStatement("isEndOfStringComp")}
+            }`;
+
+        return code;
+    }
+};
+
+export class StartOfStringComparisonStatement extends TextParseStatement {
+
+    constructor(copy?: StartOfStringComparisonStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.StartOfString_Comp;
+        }
+    }
+
+    CanSave(): boolean {
+        return true;
+    }
+
+    TypeDescription(): string {
+        return "Start of String Comparison";
+    }
+
+    Copy(copyChildren: boolean): StartOfStringComparisonStatement {
+        const copy=new StartOfStringComparisonStatement(this);
+        return copy;
+    }
+
+    Description(): string {
+        const { CanSave } = this;
+        
+        if(!CanSave()) {
+            return null;
+        }
+
+        return "Validate that the position is at the beginning of the string.";
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        const { name } = this;
+
+        var code=
+            `{
+                var isStartOfStringComp=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == 0);
+                isStartOfStringComp.Name="${name}";
+                ${fAddStatement("isStartOfStringComp")}
+            }`;
+
+        return code;
+    }
+};

@@ -1,10 +1,10 @@
 
 import React, {useState, useRef, Fragment} from "react";
-import { Dropdown, Label, Form, Segment, Container, Input, Checkbox, Modal, Button, Icon, Table } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo } from "./StatementTypes";
+import { Dropdown, Label, Form, Segment, Container, Input, Checkbox, Modal, Button, Icon, Table, Dimmer, Loader, List, Message } from "semantic-ui-react";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
-import { Extract } from "./ExecuteParse";
+import { Extract, Match } from "./ExecuteParse";
 
 
 interface ITextParseProps {
@@ -95,8 +95,9 @@ interface IModalState {
 
 enum eParseOutputType {
     potMatch=1,
-    potExtract=2,
-    potReplace=3
+    potExtractSingle=2,
+    potExtractAll=3,
+    potReplace=4
 };
 
 interface IParseInputTextCtrlProps {
@@ -114,7 +115,33 @@ interface IExecuteParseButtonCtrlProps {
     statements: Array<TextParseStatement>;
     type: eParseOutputType;
     input: string;
+    disabled: boolean; // True when a parse is in progress
     SetParseInProgress: (inProgress: boolean) => void;
+    SetExtractResults: (result: IParseExtractResult) => void;
+    SetCompileErrors: (errs: string[]) => void;
+    SetGeneralError: (error: string) => void;
+    SetMatchResult: (res: number) => void;
+};
+
+interface IParseOutputGeneralErrorCtrlProps {
+    msg: string;
+};
+
+interface ICompileErrorsCtrlProps {
+    compileErrors: string[];
+}
+
+interface IParseExtractResult {
+    success: boolean;
+    extracted: string[];
+};
+
+interface IExtractResultsCtrlProps {
+    extractResults: IParseExtractResult;
+};
+
+interface IMatchResultCtrlProps {
+    matchResult: number;
 };
 
 // Select a row in the statement list control
@@ -430,6 +457,18 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     // Parse in progress?
     const [parseInProgress,SetParseInProgress] = useState<boolean>(false);
 
+    // Extract results
+    const [extractResults,SetExtractResults] = useState<IParseExtractResult>(null);
+
+    // Parse output compile errors
+    const [compileErrors,SetCompileErrors] = useState<string[]>(null);
+
+    // General error message
+    const [generalError,SetGeneralError] = useState<string>(null);
+
+    // Match result - number of matching entries
+    const [matchResult,SetMatchResult] = useState<number>(null);
+
     // When a new item is created, it is created with a default name and an index. This array holds the indexes.
     // As names are created the indexes come from this array, and are incremented accordingly. There is an index
     // per statement type
@@ -607,36 +646,262 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         SetType={SetOutputType}
                     />
 
+                    {generalError &&
+                        <ParseOutputGeneralError
+                            {...props}
+                            msg={generalError}
+                        />
+                    }
+
+                    {compileErrors &&
+                        <CompileErrors
+                            {...props}
+                            compileErrors={compileErrors}
+                        />
+                    }
+
+                    {extractResults &&
+                        <ExtractResults
+                            {...props}
+                            extractResults={extractResults}
+                        />
+                    }
+
+                    {matchResult!==null &&
+                        <MatchResult
+                            {...props}
+                            matchResult={matchResult}
+                        />
+                    }
+
                     <ExecuteParseButton
                         {...props}
                         statements={statements}
                         type={outputType}
                         input={parseInputText}
                         SetParseInProgress={SetParseInProgress}
+                        SetExtractResults={SetExtractResults}
+                        disabled={parseInProgress}
+                        SetCompileErrors={SetCompileErrors}
+                        SetGeneralError={SetGeneralError}
+                        SetMatchResult={SetMatchResult}
                     />
+
+                    {parseInProgress &&
+                        <Loader active inline />
+                    }
                 </Segment>
             </Form>
         </Container>
     );
 };
 
+const MatchResult: React.FunctionComponent<ITextParseProps & IMatchResultCtrlProps> = (props) => {
+
+    const { matchResult } = props;
+
+    let msgProps;
+    if(matchResult>0) {
+        msgProps = { positive: true};
+
+    } else {
+        msgProps = {negative: true};
+    }
+
+    let content;
+    if(matchResult>0) {
+        content=(
+            <>
+                {"The input text matches the parse statement list "}<b>{matchResult}</b>{" time(s)"}
+            </>
+        );
+
+    } else {
+        content =(
+            <>{"The input text does not match the parse statement list"}</>
+        );
+    }
+
+    return (
+        <Message {...msgProps}>
+            <Message.Header>{`${((matchResult>0)?"Match":"No match")}`}</Message.Header>
+            <Message.Content>
+                {content}
+            </Message.Content>
+        </Message>
+    );
+};
+
+const ExtractResults: React.FunctionComponent<ITextParseProps & IExtractResultsCtrlProps> = (props) => {
+
+    const { extractResults } = props;
+
+    if(extractResults.success) {
+        return (
+            <>
+                <Message positive>
+                    <Message.Header>{`The extract yielded ${extractResults.extracted.length} result(s)`}</Message.Header>
+                    <Message.Content>
+                        The code has been output to the console for further investigation if necessary:
+                    </Message.Content>
+                    <Message.List>
+                        {extractResults.extracted.map((iterRes,idx) => {
+                            return (
+                                <List.Item key={idx}>
+                                    {iterRes}
+                                </List.Item>
+                            );
+                        })}
+                    </Message.List>
+                </Message>
+            </>
+        );
+    }
+
+    return (
+        <Message negative>
+            <Message.Header>Extract yielded no results</Message.Header>
+            <Message.Content>The full text parse statement code has been output to the console if further investigation is required.</Message.Content>
+        </Message>
+    );
+};
+
+const CompileErrors: React.FunctionComponent<ITextParseProps & ICompileErrorsCtrlProps> = (props) => {
+
+    const { compileErrors } = props;
+
+    return (
+        <>
+            <Message negative>
+                <Message.Header>Compilation Failure</Message.Header>
+                <Message.Content>
+                    The code produced for the parse statements fails to compile.
+                    This is most likely due to a bug in this application.
+                    The full code has been output to the console for further investigation.
+                    Compile errors:
+                </Message.Content>
+
+                <Message.List>
+                    {compileErrors.map((error,idx) => {
+                        return <Message.Item key={idx}>{error}</Message.Item>
+                    })}
+                </Message.List>
+            </Message>
+        </>
+    );
+};
+
+const ParseOutputGeneralError: React.FunctionComponent<ITextParseProps & IParseOutputGeneralErrorCtrlProps> = (props) => {
+
+    const { msg } = props;
+
+    return (
+        <Message negative>
+            <Message.Header>Execution Failure</Message.Header>
+            <Message.Content>{msg}</Message.Content>
+        </Message>
+    );
+};
+
+//TODO: I've not given the task result a type out of laziness - it would mean replicating the
+// parse controller model types. This can be automated using a tool like Swagger.
+const HandleParseTask = (
+    task: Promise<any>,
+    fSucceededWithResult: (data: any) => boolean,
+    fHandleSuccessWithResult: (data: any) => void,
+    fHandleSuccessWithNoResult: () => void,
+    SetCompileErrors: (errors: string[]) => void,
+    SetGeneralError: (error: string) => void,
+    SetParseInProgress: (inProg: boolean) => void
+): void => {
+
+    task.then(res => {
+
+        const { data } = res;
+
+        if(data.FullCode) {
+            console.log(data.FullCode);
+        }
+    
+        if(fSucceededWithResult(data)) {
+            fHandleSuccessWithResult(data);
+        }
+        else if(data.CompileErrors && data.CompileErrors.length>0) {
+            SetCompileErrors(data.CompileErrors);
+    
+        } else if(data.ExecuteError) {
+            SetGeneralError(data.ExecuteError + " The generated code has been logged to the console.");
+        } else {
+            fHandleSuccessWithNoResult();
+        }
+    
+        SetParseInProgress(false);
+
+    }).catch(res => {
+        SetParseInProgress(false);
+
+        SetGeneralError(
+            "There was an unexpected error whilst executing the parse. " +
+            ((res.response && res.response.data)?res.response.data:res)
+        );
+    });
+};
+
 const ExecuteParseButtonClick = (
     input: string,
     type: eParseOutputType,
     statements: Array<TextParseStatement>,
-    SetParseInProgress: (inProgress: boolean) => void
+    SetParseInProgress: (inProgress: boolean) => void,
+    SetExtractResults: (results: IParseExtractResult) => void,
+    SetCompileErrors: (errors: string[]) => void,
+    SetGeneralError: (error: string) => void,
+    SetMatchResult: (res: number) => void
 ) => {
+
+    // Makes the code terser
+    const _HandleParseTask = (
+        task: Promise<any>,
+        fSucceededWithResult: (data: any) => boolean,
+        fHandleSuccessWithResult: (data: any) => void,
+        fHandleSuccessWithNoResult: () => void,
+    ) => HandleParseTask(
+        task,
+        fSucceededWithResult,
+        fHandleSuccessWithResult,
+        fHandleSuccessWithNoResult,
+        SetCompileErrors,
+        SetGeneralError,
+        SetParseInProgress);
 
     switch(type) {
         case eParseOutputType.potMatch:
+
+            _HandleParseTask(
+                Match(input, statements),
+                (data) => data.NumMatching>0,
+                (data) => SetMatchResult(data.NumMatching),
+                () => SetMatchResult(0)
+            );
             break;
 
-        case eParseOutputType.potExtract:
-            //sidtodo return a promise from Extract??
-            // var task=Extract(..)
-            // task.then().catch() ??
-            //sidtodo: not sure is a good idea because we don't want the catch to return a http error
-            Extract(input, statements);
+        case eParseOutputType.potExtractSingle:
+        case eParseOutputType.potExtractAll:
+
+            const isSingle = (type == eParseOutputType.potExtractSingle);
+
+            const fHandleSuccess = (hasResult: boolean, dataOptional: any) => {
+                SetExtractResults({
+                    success: hasResult,
+                    extracted: ((hasResult)?dataOptional.ExtractedText:null)
+                })  
+            };
+
+            _HandleParseTask(
+                Extract(input, statements, isSingle),
+                (data) => data.ExtractedText && data.ExtractedText.length>0,
+                (data) => fHandleSuccess(true, data),
+                () => fHandleSuccess(false,null)
+            );
             break;
 
         case eParseOutputType.potReplace:
@@ -645,30 +910,41 @@ const ExecuteParseButtonClick = (
 
     // Update the UI
     SetParseInProgress(true);
+
+    // Clear the slate
+    SetExtractResults(null);
+    SetCompileErrors(null);
+    SetGeneralError(null);
+    SetMatchResult(null);
 };
 
 const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecuteParseButtonCtrlProps> = (props) => {
 
-    const { statements, type, input, SetParseInProgress } = props;
+    const { statements, type, input, SetParseInProgress, SetExtractResults, disabled,
+        SetCompileErrors, SetGeneralError, SetMatchResult } = props;
 
     let buttonCaption="";
     let canExecute=false;
-    if(input ===null || input==="") {
-        buttonCaption="Please enter parse input before attempting to parse.";
-    }
 
-    else if(!statements.length) {
-        buttonCaption="Please create some parse statements before attempting to parse."
+    if(!disabled) {
 
-    } else {
-        // Validate the input for all ofthe statements
-        for(let i=0;i<statements.length;++i) {
+        if(input ===null || input==="") {
+            buttonCaption="Please enter parse input before attempting to parse.";
+        }
 
-            const iterStmt=statements[i];
-            canExecute=iterStmt.CanSave();
-            if(!canExecute) {
-                buttonCaption=`One or more parse statements have missing data and/or are not valid. First failing statement found: ${iterStmt.Heading()}`;
-                break;
+        else if(!statements.length) {
+            buttonCaption="Please create some parse statements before attempting to parse."
+
+        } else {
+            // Validate the input for all ofthe statements
+            for(let i=0;i<statements.length;++i) {
+
+                const iterStmt=statements[i];
+                canExecute=iterStmt.CanSave();
+                if(!canExecute) {
+                    buttonCaption=`One or more parse statements have missing data and/or are not valid. First failing statement found: ${iterStmt.Heading()}`;
+                    break;
+                }
             }
         }
     }
@@ -676,14 +952,15 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
     return (
         <>
             <Button
-                color={((canExecute)? "green": "red")}
+                color={((canExecute || disabled)? "green": "red")}
                 disabled={!canExecute}
-                onClick={() => ExecuteParseButtonClick(input, type, statements, SetParseInProgress)}
+                onClick={() => ExecuteParseButtonClick(input, type, statements, SetParseInProgress, SetExtractResults,
+                    SetCompileErrors, SetGeneralError, SetMatchResult)}
             >
-                Execute Parse
+                {((disabled)?"Parse in Progress..":"Execute Parse")}
             </Button>
 
-            {!canExecute &&
+            {!canExecute && !disabled &&
                 <Label pointing="left">
                     {buttonCaption}
                 </Label>
@@ -712,7 +989,8 @@ const ParseOutputType: React.FunctionComponent<ITextParseProps & IParseOutputTyp
     const { type, SetType } = props;
 
     const matchIsChecked=(type === eParseOutputType.potMatch);
-    const extractIsChecked=(type === eParseOutputType.potExtract);
+    const extractSingleIsChecked=(type === eParseOutputType.potExtractSingle);
+    const extractAllIsChecked=(type === eParseOutputType.potExtractAll);
     const replaceIsChecked=(type === eParseOutputType.potReplace);
 
     return (
@@ -727,7 +1005,7 @@ const ParseOutputType: React.FunctionComponent<ITextParseProps & IParseOutputTyp
 
                 {matchIsChecked &&
                     <Label pointing="left">
-                        //sidtodo
+                        Determine whether the input text matches the parse statement list.
                     </Label>
                 }
             </Form.Field>
@@ -735,14 +1013,29 @@ const ParseOutputType: React.FunctionComponent<ITextParseProps & IParseOutputTyp
             <Form.Field>
                 <Checkbox
                     radio
-                    label="Extract"
-                    checked={extractIsChecked}
-                    onChange={() => SetType(eParseOutputType.potExtract)}
+                    label="Extract Single"
+                    checked={extractSingleIsChecked}
+                    onChange={() => SetType(eParseOutputType.potExtractSingle)}
                 />
 
-                {extractIsChecked &&
+                {extractSingleIsChecked &&
                     <Label pointing="left">
-                        Extract all text matching the parse statement list into a list.
+                        Extract the first item matching the parse statement list.
+                    </Label>
+                }
+            </Form.Field>
+
+            <Form.Field>
+                <Checkbox
+                    radio
+                    label="Extract All"
+                    checked={extractAllIsChecked}
+                    onChange={() => SetType(eParseOutputType.potExtractAll)}
+                />
+
+                {extractAllIsChecked &&
+                    <Label pointing="left">
+                        Extract all items matching the parse statement list into a list.
                     </Label>
                 }
             </Form.Field>
@@ -846,7 +1139,7 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
                             });
                         }} />}
                         title="Confirm Delete"
-                        message={`Are you sure you want to clear this text parse statement? This action cannot be undone.`}
+                        message={`Are you sure you want to delete this text parse statement? This action cannot be undone.`}
                         onYes={() => {
                             SetModalState(null);
                             RemoveStatement(stmt);
@@ -966,6 +1259,18 @@ const AddInsertParseStatement =
         case eStatementType.StatementList_Comp:
             newStatement = new StatementListComparisonStatement();
             break;
+
+        case eStatementType.AdvanceToEnd_Op:
+            newStatement=new AdvanceToEndStatement();
+            break;
+
+        case eStatementType.EndOfString_Comp:
+            newStatement = new EndOfStringComparisonStatement();
+            break;
+
+        case eStatementType.StartOfString_Comp:
+            newStatement = new StartOfStringComparisonStatement();
+            break;
     }
 
     // Generate a default name
@@ -1070,6 +1375,24 @@ const TypeDropdownCtrl_Options = [
         text: "Statement list",
         value: eStatementType.StatementList_Comp
     },
+
+    {
+        key: eStatementType.AdvanceToEnd_Op,
+        text: "Advance to the end",
+        value: eStatementType.AdvanceToEnd_Op
+    },
+
+    {
+        key: eStatementType.EndOfString_Comp,
+        text: "End of string comparison",
+        value: eStatementType.EndOfString_Comp
+    },
+
+    {
+        key: eStatementType.StartOfString_Comp,
+        text: "Start of string comparison",
+        value: eStatementType.StartOfString_Comp
+    },
 ];
 
 const TypeDropdownCtrl: React.FunctionComponent<ITextParseProps & ITypeDropdownProps> = (props) => {
@@ -1130,6 +1453,19 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
             text="Perform an ordered list of text parse statements. The first comparison which fails to match will " +
                 "cause the statement list to stop and the overall status will be considered as not matching. Useful " +
                 "for creating aggregate comparison statements.";
+            break;
+
+        case eStatementType.AdvanceToEnd_Op:
+            text="Advance until the end of the input string. Can be used to force a match on a single item as "+
+                "opposed to continueing after every match and will improve performance.";
+            break;
+
+        case eStatementType.EndOfString_Comp:
+            text="Compare the current position to the end of the input string. Can be used to force an exact match.";
+            break;
+
+        case eStatementType.StartOfString_Comp:
+            text="Compare the current position to the beginning of the input string. Can be used to force an exact match.";
             break;
     }
 

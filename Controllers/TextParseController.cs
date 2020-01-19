@@ -7,6 +7,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using react_spa.Models;
+using System.Threading.Tasks;
 
 namespace react_spa.Controllers
 {
@@ -15,20 +17,37 @@ namespace react_spa.Controllers
     public class TextParseController : BaseController
     {
         [HttpPost("ExecuteExtract")]
-        public ActionResult<List<string>> ExecuteExtract(ExecuteExtractModel model)
+        public async Task<ActionResult<TextParseExtractModel>> ExecuteExtract(ExecuteExtractModel model)
         {
-            return ControllerFunction<List<string>>(() => {
+            return await ControllerFunctionAsync<TextParseExtractModel>(async() => {
 
-                var rv=(List<string>)CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements);
+                var rv=new TextParseExtractModel();
+
+                rv.ExtractedText=(List<string>) await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv);
                 return rv;
             });
         }
 
-        //sidtodo execute as a task with a max of 10 seconds or so to prevent abuse / malicious code injection
-        private object CompileAndExecuteCode(
+        [HttpPost("ExecuteMatch")]
+        public async Task<ActionResult<TextParseMatchModel>> ExecuteMatch(ExecuteMatchModel model)
+        {
+            return await ControllerFunctionAsync<TextParseMatchModel>(async() => {
+
+                var rv=new TextParseMatchModel();
+
+                var numMatching=await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv);
+                if(numMatching!=null) {
+                    rv.NumMatching=(int) numMatching;
+                }
+                return rv;
+            });
+        }
+
+        private async Task<object> CompileAndExecuteCode(
             string clientCode,
             string returnVariableName,
-            string[] usingStatements) {
+            string[] usingStatements,
+            TextParseResultBase output) {
 
             // Custom using statements
             var usingStatementStr ="";
@@ -58,7 +77,7 @@ namespace react_spa.Controllers
                     }}
                 }}";
 
-            Console.WriteLine(code); //sidtodo remove
+            output.FullCode=code;
 
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
 
@@ -93,21 +112,50 @@ namespace react_spa.Controllers
                     //// Invoke the function
                     Type type = assembly.GetType("Sid.CompileAndExecuteCode");
                     object obj = Activator.CreateInstance(type);
-                    return type.InvokeMember("Go",
-                        BindingFlags.Default | BindingFlags.InvokeMethod,
-                        null,
-                        obj,
-                        null);
-                }
 
-                IEnumerable<Diagnostic> failures = result.Diagnostics.Where(diagnostic => 
-                    diagnostic.IsWarningAsError || 
-                    diagnostic.Severity == DiagnosticSeverity.Error);
+                    object rv=null;
 
-                foreach (Diagnostic diagnostic in failures)
-                {
-                    Console.Error.WriteLine("{0} {1}: {2}", diagnostic.Id, diagnostic.Location, diagnostic.GetMessage());
-                    //sidtodo errors
+                    // Run the task
+                    await Task.WhenAny(Task.Run(() => {
+                        try
+                        {
+                            rv=type.InvokeMember("Go",
+                                BindingFlags.Default | BindingFlags.InvokeMethod,
+                                null,
+                                obj,
+                                null);
+                        }
+                        catch(Exception e) {
+                            output.ExecuteError=e.ToString();
+                        }
+                    }),Task.Delay(10000));
+
+                    if(rv!=null) {
+                        return rv;
+                    }
+
+                    if(output.ExecuteError==null) {
+                        // Timed out
+                        output.ExecuteError=
+                            "The generated text parse code did not execute within the allotted timeframe (10 seconds). "+
+                            "The process has been stopped prematurely. Keep in mind that this error could be the "+
+                            "result of an infinite loop caused by the combination of the parse statements used. Running "+
+                            "the generated text parse code through the debugger will help with diagnosing the problem.";
+                    }
+
+                } else {
+                    // Get the compile errors
+                    IEnumerable<Diagnostic> failures = result.Diagnostics.Where(diagnostic => 
+                        diagnostic.IsWarningAsError || 
+                        diagnostic.Severity == DiagnosticSeverity.Error);
+
+                    output.CompileErrors = new List<string>();
+
+                    foreach (Diagnostic diagnostic in failures)
+                    {
+                        output.CompileErrors.Add(string.Format("{0} {1}: {2}",
+                            diagnostic.Id, diagnostic.Location, diagnostic.GetMessage()));
+                    }
                 }
 
                 return null;
