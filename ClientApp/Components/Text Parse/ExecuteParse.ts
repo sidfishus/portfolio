@@ -9,9 +9,45 @@ import axios, { AxiosResponse } from "axios";
 // read/write/execute the parse statements. Writing the C# code directly means the Javascript client has access to
 // all of the features available in the C# Text Parse library.
 
-//sidtodo test with " in the input
+export const EncodeString = (str: string): string => {
+    return `@"${str.replace(`"`,`""`)}"`;
+};
 
-export const Extract = (input: string, statements: Array<TextParseStatement>, matchFirstOnly: boolean): Promise<AxiosResponse> => {
+export const Replace = (input: string, statements: Array<TextParseStatement>, replaceFormat: string): Promise<AxiosResponse> => {
+
+    // Create the code
+    const code: string=
+        `var parser = new Parser(null);
+
+        var matching = new List<string>();
+
+        var stmtList = new StatementList(null);
+
+        Dictionary<string, Capture> capturing = new Dictionary<string, Capture>();
+
+        ${CodeForStatements(statements, "stmtList")}
+                
+        // Do the parse
+        int matchingCount;
+        react_spa.Controllers.ReplaceRV rv;
+        rv.ReplacedText=parser.Replace(${EncodeString(input)}, ${EncodeString(replaceFormat)}, stmtList, capturing, null, out matchingCount, null);
+        rv.NumMatching=matchingCount;`;
+
+    const usingStatements: string[] = [
+        "System.Collections.Generic"
+    ];
+
+    // Call the API to do the execution
+    const url=CreateAPIURL("TextParse/ExecuteReplace");
+    return axios.post(url, {
+        Code: code,
+        ReturnVariableName: "rv",
+        UsingStatements: usingStatements
+    });
+
+};
+
+export const Extract = (input: string, statements: Array<TextParseStatement>, matchFirstOnly: boolean, replaceFormat: string): Promise<AxiosResponse> => {
 
     let firstOnlyConditional="";
     if(matchFirstOnly) {
@@ -20,32 +56,49 @@ export const Extract = (input: string, statements: Array<TextParseStatement>, ma
         stmtList.Add(new AdvanceToTheEnd(null));`;
     }
 
+    let stmtListName;
+    let capturingSetupConditional="";
+    let onMatchBody;
+    if(replaceFormat) {
+        stmtListName="stmtList";
+        onMatchBody=`matching.Add(parser.ReplaceMatchFromString(${EncodeString(replaceFormat)}, capturing));`;
+
+    } else {
+        // Capture everything
+        stmtListName="captureStmtList";
+        capturingSetupConditional=`
+        var captureStmtList=new StatementList(null);
+        {
+            var captureAll=new Capture(null);
+            captureAll.Name="AllCapture";
+            stmtList.Add(captureAll);
+            captureAll.Comparison=captureStmtList;
+            capturing.Add("All",captureAll);
+        }`;
+
+        onMatchBody=`matching.Add(capturing["All"].Captured);`;
+    }
+
     // Create the code
     const code: string=
         `var parser = new Parser(null);
 
         var matching = new List<string>();
-        
-        System.Func<RunState, string, int, string> onMatch = (runState, input, unused) => {
-            int begin=(int)runState.GetVariable("ValueBegin");
-            int end= (int)runState.GetVariable("ValueEnd");
-
-            matching.Add(input.Substring(begin,end-begin));
-            return "";
-        };
 
         var stmtList = new StatementList(null);
-        // Store the position at the beginning of the match
-        stmtList.Add(new StorePosAsVariable(null, "ValueBegin"));
 
-        ${CodeForStatements(statements)}
-        
-        // Remember the position immediately after the match
-        stmtList.Add(new StorePosAsVariable(null, "ValueEnd"));${firstOnlyConditional}
+        Dictionary<string, Capture> capturing = new Dictionary<string, Capture>();
+
+        System.Func<RunState, string, int, string> onMatch = (runState, input, unused) => {
+            ${onMatchBody}
+            return "";
+        };${capturingSetupConditional}
+
+        ${CodeForStatements(statements, stmtListName)}${firstOnlyConditional}
                 
         // Do the parse
         int matchingCount;
-        parser.Extract(@"${input}", null, stmtList, null, null, out matchingCount, onMatch);`;
+        parser.Extract(${EncodeString(input)}, null, stmtList, null, null, out matchingCount, onMatch);`;
 
     const usingStatements: string[] = [
         "System.Collections.Generic"
@@ -56,7 +109,7 @@ export const Extract = (input: string, statements: Array<TextParseStatement>, ma
     return axios.post(url, {
         Code: code,
         ReturnVariableName: "matching",
-        UsingStatements: usingStatements
+        UsingStatements: usingStatements,
     });
 };
 
@@ -67,11 +120,11 @@ export const Match = (input: string, statements: Array<TextParseStatement>): Pro
 
         var stmtList = new StatementList(null);
 
-        ${CodeForStatements(statements)}
+        ${CodeForStatements(statements, "stmtList")}
         
         // Do the parse
         int matchingCount;
-        parser.Extract(@"${input}", null, stmtList, null, null, out matchingCount, (a,b,c)=>null);`;
+        parser.Extract(${EncodeString(input)}, null, stmtList, null, null, out matchingCount, (a,b,c)=>null);`;
 
     const usingStatements: string[] = [];
 
@@ -84,18 +137,20 @@ export const Match = (input: string, statements: Array<TextParseStatement>): Pro
     });
 };
 
-const CodeForStatements_AddStatement: (stmtCode: string) => string = (stmtCode: string): string => {
+const CodeForStatements_AddStatement: (stmtCode: string, stmtListName: string) => string = (stmtCode: string, stmtListName: string): string => {
 
-    return `stmtList.Add(${stmtCode});`;
+    return `${stmtListName}.Add(${stmtCode});`;
 };
 
-const CodeForStatements = (statements: Array<TextParseStatement>): string => {
+const CodeForStatements = (statements: Array<TextParseStatement>, stmtListName: string): string => {
     let rv="";
 
     const log: string="null";
 
+    const AddStatement=(code: string) => CodeForStatements_AddStatement(code, stmtListName);
+
     statements.forEach(iterStmt => {
-        var stmtCode=iterStmt.GenerateCode(log, CodeForStatements_AddStatement);
+        var stmtCode=iterStmt.GenerateCode(log, AddStatement);
         rv=rv.concat(stmtCode);
     });
 

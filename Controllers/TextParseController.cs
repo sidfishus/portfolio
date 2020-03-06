@@ -12,10 +12,36 @@ using System.Threading.Tasks;
 
 namespace react_spa.Controllers
 {
+    public struct ReplaceRV {
+        public string ReplacedText;
+        public int NumMatching;
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class TextParseController : BaseController
     {
+        
+        [HttpPost("ExecuteReplace")]
+        public async Task<ActionResult<TextParseReplaceModel>> ExecuteReplace(ExecuteReplaceModel model)
+        {
+            return await ControllerFunctionAsync<TextParseReplaceModel>(async() => {
+
+                var rv=new TextParseReplaceModel();
+
+                var replaceRVObj=await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv,true);
+                if(replaceRVObj!=null) {
+
+                    var replaceRV=(ReplaceRV)replaceRVObj;
+                    rv.NumMatching=replaceRV.NumMatching;
+                    if(rv.NumMatching>0) {
+                        rv.ReplacedText=replaceRV.ReplacedText;
+                    }
+                }
+                return rv;
+            });
+        }
+
         [HttpPost("ExecuteExtract")]
         public async Task<ActionResult<TextParseExtractModel>> ExecuteExtract(ExecuteExtractModel model)
         {
@@ -23,7 +49,7 @@ namespace react_spa.Controllers
 
                 var rv=new TextParseExtractModel();
 
-                rv.ExtractedText=(List<string>) await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv);
+                rv.ExtractedText=(List<string>) await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv,false);
                 return rv;
             });
         }
@@ -35,7 +61,7 @@ namespace react_spa.Controllers
 
                 var rv=new TextParseMatchModel();
 
-                var numMatching=await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv);
+                var numMatching=await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv,false);
                 if(numMatching!=null) {
                     rv.NumMatching=(int) numMatching;
                 }
@@ -47,7 +73,8 @@ namespace react_spa.Controllers
             string clientCode,
             string returnVariableName,
             string[] usingStatements,
-            TextParseResultBase output) {
+            TextParseResultBase output,
+            bool loadThisDLL) {
 
             // Custom using statements
             var usingStatementStr ="";
@@ -82,20 +109,26 @@ namespace react_spa.Controllers
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
 
             string assemblyName = System.IO.Path.GetRandomFileName();
-            MetadataReference[] references = new MetadataReference[]
+            MetadataReference[] referencesHardcoded = new MetadataReference[]
             {
                 MetadataReference.CreateFromFile(typeof(Sid.Log.ILog).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Sid.Parse.TextPatternParser.Parser).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location),
                 MetadataReference.CreateFromFile(Assembly.Load("System.Runtime, Version=0.0.0.0").Location),
-                MetadataReference.CreateFromFile(Assembly.Load("System.Collections, Version=0.0.0.0").Location)
+                MetadataReference.CreateFromFile(Assembly.Load("System.Collections, Version=0.0.0.0").Location),
             };
+
+            var fullReferences=referencesHardcoded.ToList();
+
+            if(loadThisDLL) {
+                fullReferences.Add(MetadataReference.CreateFromFile(typeof(react_spa.Controllers.ReplaceRV).Assembly.Location));
+            }
 
             CSharpCompilation compilation = CSharpCompilation.Create(
                 assemblyName,
                 syntaxTrees: new[] { syntaxTree },
-                references: references,
+                references: fullReferences,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             using (var ms = new System.IO.MemoryStream())

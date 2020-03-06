@@ -1,5 +1,6 @@
 
 import { SemanticICONS } from "semantic-ui-react";
+import { EncodeString} from "./ExecuteParse";
 
 export enum eStatementType {
 
@@ -17,12 +18,16 @@ export enum eStatementType {
     EndOfString_Comp=5,
     // Start of string comparison
     StartOfString_Comp=6,
+    // Capturing
+    Capture_Comp=7,
+    // Is white space comparison
+    IsWhitespace_Comp=8,
     
     // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
     // Note: Keep this as the last item because it's used to determine the number of statement types
     // In C++ you can assert this kind of thing statically at compile type
-    phCount = 7,
+    phCount = 9,
 };
 
 // Information regarding the statement types
@@ -75,11 +80,55 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
         isComparison: true,
         comparisonOnlyChildren: false,
     },
+
+    // Capture_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false,
+    },
+
+    // IsWhitespace_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false
+    }
 ];
 
 export interface ITextParseStatementState {
     statement: TextParseStatement;
     SetStatement: (input: TextParseStatement) => void;
+};
+
+const CanSaveChildren = (
+    children: TextParseStatement[],
+    fullStmtList: TextParseStatement[]
+): boolean => {
+
+    if(!children) return true;
+    const childThatCantSave=children.find(iterChild => !iterChild.CanSave(fullStmtList));
+
+    return ((childThatCantSave)?false:true);
+};
+
+// Statement names must be unique.
+// Returns true if this statement's name is unique across them all.
+const CanSaveUniqueName = (
+    stmt: TextParseStatement,
+    stmtList: TextParseStatement[]
+): boolean => {
+
+    const stmtNameLower=stmt.name.toLowerCase();
+
+    const duplicateNameStmt: TextParseStatement= stmtList.find(iterStmt => {
+
+        if(iterStmt.UID !== stmt.UID) {
+            if(iterStmt.name.toLowerCase() === stmtNameLower) return true;
+            if(iterStmt.Children() && !CanSaveUniqueName(stmt, iterStmt.Children())) return true;
+        }
+        return false;
+    });
+
+    return ((duplicateNameStmt)?false:true);
 };
 
 const NumberOfLevelsDeep = (iterChild: TextParseStatement,currentDepth: number): number => {
@@ -103,7 +152,17 @@ const NumberOfLevelsDeep = (iterChild: TextParseStatement,currentDepth: number):
 
 // Parse statement base class
 export abstract class TextParseStatement {
-    public abstract CanSave(): boolean;
+
+    public CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren: boolean=true
+    ): boolean {
+        if(!checkChildren || CanSaveChildren(this.Children(),stmtList)) {
+            if(!stmtList || CanSaveUniqueName(this, stmtList)) return true;
+        }
+        return false;
+    }
+
     public abstract TypeDescription(): string; // This is static but you can't use abstract and static together in TS
     public abstract Copy(copyChildren: boolean): TextParseStatement;
     public abstract Description(): string;
@@ -224,12 +283,15 @@ export class StringComparisonStatement extends TextParseStatement {
         }
     }
 
-    CanSave(): boolean {
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
         if(!StringComparisonStatement.ValidateStr(this)) {
             return false;
         }
 
-        return true;
+        return super.CanSave(stmtList, checkChildren);
     }
 
     TypeDescription(): string {
@@ -244,7 +306,7 @@ export class StringComparisonStatement extends TextParseStatement {
     Description(): string {
         const { CanSave, str, caseSensitive} = this;
         
-        if(!CanSave()) {
+        if(!CanSave(null, false)) {
             return null;
         }
 
@@ -262,8 +324,6 @@ export class StringComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    //sidtodo: test with quotes in the string.
-    //sidtodo: test with quotes in the name.
     GenerateCode(
         log: string,
         fAddStatement: (stmtCode: string) => string
@@ -274,7 +334,7 @@ export class StringComparisonStatement extends TextParseStatement {
         //TODO library function.
         const caseSensitiveStr= ((caseSensitive)?"true":"false");
 
-        return fAddStatement(`new StringComparison(${log},new Options(${log}){CaseSensitive=${caseSensitiveStr}},"${str}","${name}")`);
+        return fAddStatement(`new StringComparison(${log},new Options(${log}){CaseSensitive=${caseSensitiveStr}},${EncodeString(str)},"${name}")`);
     }
 };
 
@@ -287,8 +347,11 @@ export class SkipWSStatement extends TextParseStatement {
         }
     }
 
-    CanSave(): boolean {
-        return true;
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+        return super.CanSave(stmtList, checkChildren);
     }
 
     TypeDescription(): string {
@@ -303,7 +366,7 @@ export class SkipWSStatement extends TextParseStatement {
     Description(): string {
         const { CanSave } = this;
         
-        if(!CanSave()) {
+        if(!CanSave(null,false)) {
             return null;
         }
 
@@ -355,10 +418,17 @@ export class OrComparisonStatement extends TextParseStatement {
         }
     }
 
-    CanSave(): boolean {
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
         // Must have at least 2 children
         const { children } = this;
-        return children && children.length>1;
+        if(children && children.length>1) {
+            return super.CanSave(stmtList, checkChildren);
+        }
+
+        return false;
     }
 
     TypeDescription(): string {
@@ -437,10 +507,16 @@ export class StatementListComparisonStatement extends TextParseStatement {
         }
     }
 
-    CanSave(): boolean {
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
         // Must have at least 1 child
         const { children } = this;
-        return children && children.length>0;
+        if(children && children.length>0) {
+            return super.CanSave(stmtList, checkChildren);
+        }
+        return false;
     }
 
     TypeDescription(): string {
@@ -510,10 +586,6 @@ export class AdvanceToEndStatement extends TextParseStatement {
         }
     }
 
-    CanSave(): boolean {
-        return true;
-    }
-
     TypeDescription(): string {
         return "Advance to the End Operation";
     }
@@ -526,7 +598,7 @@ export class AdvanceToEndStatement extends TextParseStatement {
     Description(): string {
         const { CanSave } = this;
         
-        if(!CanSave()) {
+        if(!CanSave(null, false)) {
             return null;
         }
 
@@ -571,10 +643,6 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
         }
     }
 
-    CanSave(): boolean {
-        return true;
-    }
-
     TypeDescription(): string {
         return "End of String Comparison";
     }
@@ -587,7 +655,7 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
     Description(): string {
         const { CanSave } = this;
         
-        if(!CanSave()) {
+        if(!CanSave(null, false)) {
             return null;
         }
 
@@ -632,10 +700,6 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
         }
     }
 
-    CanSave(): boolean {
-        return true;
-    }
-
     TypeDescription(): string {
         return "Start of String Comparison";
     }
@@ -648,7 +712,7 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
     Description(): string {
         const { CanSave } = this;
         
-        if(!CanSave()) {
+        if(!CanSave(null, false)) {
             return null;
         }
 
@@ -678,6 +742,153 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
                 var isStartOfStringComp=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == 0);
                 isStartOfStringComp.Name="${name}";
                 ${fAddStatement("isStartOfStringComp")}
+            }`;
+
+        return code;
+    }
+};
+
+export class CaptureComparisonStatement extends TextParseStatement {
+
+    children: Array<TextParseStatement>;
+
+    constructor(
+        copy?: StatementListComparisonStatement,
+        copyChildren: boolean=true) {
+
+        super(copy, copyChildren);
+        if(!copy) {
+
+            this.type=eStatementType.Capture_Comp;
+            this.children = new Array<TextParseStatement>();
+        }
+    }
+
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+        // Must have at least 1 child
+        const { children } = this;
+        if(children && children.length>0) {
+            return super.CanSave(stmtList, checkChildren);
+        }
+        return false;
+    }
+
+    TypeDescription(): string {
+        return "Capture";
+    }
+
+    Copy(copyChildren: boolean): CaptureComparisonStatement {
+        const copy=new CaptureComparisonStatement(this, copyChildren);
+        return copy;
+    }
+
+    Description(): string {
+        const { children } = this;
+
+        return `Capture statement consisting of ${children.length} statement(s)`;
+    }
+
+    Icon(): SemanticICONS {
+        return "list ol"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return this.children;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+        this.children=children;
+    }
+
+    AddStatement(code: string): string {
+        return `captureStmtList.Add(${code});`;
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+        const {children, name}=this;
+
+        let rv:string =
+            `{
+                var captureInner = new Capture(${log});
+                captureInner.Name="${name}";
+                ${fAddStatement("captureInner")}
+
+                var captureStmtList=new StatementList(${log});
+                captureInner.Comparison=captureStmtList;
+                capturing.Add("${name}", captureInner);
+                `;
+
+        for(let i=0;i<children.length;++i) {
+
+            const iterChild=children[i];
+
+            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement));
+        }
+
+        rv=rv.concat(`
+            }`);
+        
+        return rv;
+    }
+};
+
+export class IsWhitespaceComparisonStatement extends TextParseStatement {
+
+    constructor(copy?: IsWhitespaceComparisonStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.IsWhitespace_Comp;
+        }
+    }
+
+    TypeDescription(): string {
+        return "Is Whitespace Comparison";
+    }
+
+    Copy(copyChildren: boolean): IsWhitespaceComparisonStatement {
+        const copy=new IsWhitespaceComparisonStatement(this);
+        return copy;
+    }
+
+    Description(): string {
+        const { CanSave } = this;
+        
+        if(!CanSave(null, false)) {
+            return null;
+        }
+
+        return "Validate that the current text is white space.";
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        const { name } = this;
+
+        var code=
+            `{
+                var isWhitespaceComp=TokenComparison.IsWhitespace(${log});
+                isWhitespaceComp.Name="${name}";
+                ${fAddStatement("isWhitespaceComp")}
             }`;
 
         return code;

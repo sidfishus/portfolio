@@ -1,10 +1,12 @@
 
 import React, {useState, useRef, Fragment} from "react";
-import { Dropdown, Label, Form, Segment, Container, Input, Checkbox, Modal, Button, Icon, Table, Dimmer, Loader, List, Message } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement } from "./StatementTypes";
+import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox, Modal, Button, Icon, Table, Loader, List, Message, Header, ButtonProps, DropdownItemProps, TableRowProps } from "semantic-ui-react";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
-import { Extract, Match } from "./ExecuteParse";
+import { Extract, Match, Replace } from "./ExecuteParse";
+import { TextParseFunction, CreateTextParsefunction, CopyTextParsefunction, ICustomFunctionOperand, eCustomFunctionOperandType, eCustomFunctionOperator, CopyCustomFunctionOperand } from "./CustomFunctions";
+import { MapAndRemoveIndex } from "../../Library/ContainerMethods";
 
 
 interface ITextParseProps {
@@ -73,6 +75,13 @@ interface IStatementListComparisonInputCtrlProps {
     SetSelStatement: (statement: TextParseStatement) => void;
 };
 
+interface ICaptureComparisonInputCtrlProps {
+    nameIndexes: Array<number | undefined>;
+    subSelectedStatementType: eStatementType;
+    SetSubSelectedStatementType: (type?: eStatementType) => void;
+    SetSelStatement: (statement: TextParseStatement) => void;
+};
+
 interface IModalCtrlProps {
     title: string;
     message: string;
@@ -86,11 +95,13 @@ interface IModalCtrlProps {
 enum eModalType {
     mtClearAllStatements=1,
     mtClearSingleStatement=2,
+    mtDeleteCustomFunction=3,
 };
 
 interface IModalState {
     type: eModalType;
     selStmt?: ISelectedStatement;
+    funcIdx?: number;
 };
 
 enum eParseOutputType {
@@ -121,6 +132,13 @@ interface IExecuteParseButtonCtrlProps {
     SetCompileErrors: (errs: string[]) => void;
     SetGeneralError: (error: string) => void;
     SetMatchResult: (res: number) => void;
+    replaceFormat: string;
+    SetReplaceResult: (result: IParseReplaceResult) => void;
+    updatePending: boolean;
+    functions: Array<TextParseFunction>;
+    firstFailingStatement: TextParseStatement;
+    firstFailingFunction: TextParseFunction;
+    parseInputError: string;
 };
 
 interface IParseOutputGeneralErrorCtrlProps {
@@ -136,6 +154,11 @@ interface IParseExtractResult {
     extracted: string[];
 };
 
+interface IParseReplaceResult {
+    numMatching: number;
+    replacedText: string;
+}
+
 interface IExtractResultsCtrlProps {
     extractResults: IParseExtractResult;
 };
@@ -143,6 +166,76 @@ interface IExtractResultsCtrlProps {
 interface IMatchResultCtrlProps {
     matchResult: number;
 };
+
+interface IReplaceFormatCtrlProps {
+    replaceFormat: string;
+    SetReplaceFormat: (fmt: string) => void;
+    updater: SimpleDelayer;
+};
+
+interface IReplaceResultCtrlProps {
+    replaceResult: IParseReplaceResult;
+};
+
+interface ICustomFunctionsProps {
+    functions: Array<TextParseFunction>;
+    SetFunctions: (functions: TextParseFunction[]) => void;
+    SetModalState: (state: IModalState) => void;
+    modalState: IModalState;
+    selFunctionIdx: number;
+    SetSelFunctionIdx: (idx: number) => void;
+    SetCustomFunction: (func: TextParseFunction) => void;
+    updater: SimpleDelayer;
+    fGetVariables: () => string[];
+    updatePending: boolean;
+    firstFailingFunction: TextParseFunction;
+};
+
+interface ICustomFunctionCtrlProps {
+    placeholder: string;
+    title: string;
+    value: string;
+    SetValue: (func: TextParseFunction, value: string) => void;
+    Validate?: () => boolean;
+    updater: SimpleDelayer;
+    ctrlName: string;
+    customFunction: TextParseFunction;
+    SetCustomFunction: (func: TextParseFunction) => void;
+    funcIdx: number;
+};
+
+interface ICustomFunctionsOperandDropdownProps {
+    fGetVariables: () => string[];
+    functions: TextParseFunction[];
+    selFunctionIdx: number; // The index of the function currently being displayed
+    data: ICustomFunctionOperand;
+    customFunction: TextParseFunction;
+    SetCustomFunction: (func: TextParseFunction) => void;
+    SetOperand: (func: TextParseFunction, operand: ICustomFunctionOperand) => void;
+    // Used for defining a unique key for the react ctrl
+    name: string;
+    updater: SimpleDelayer;
+    updatePending: boolean;
+};
+
+interface ICustomFunctionsOperatorDropdownProps {
+    SetCustomFunction: (func: TextParseFunction) => void;
+    function: TextParseFunction;
+};
+
+interface IInputModalProps {
+    open: boolean;
+    headerIcon: string;
+    headerText: string;
+    valid?: boolean;
+    value: string;
+    onChange: (value: string) => void;
+    okAvailable?: boolean;
+    onOk: () => void;
+    onCancel: () => void;
+};
+
+// ~interface
 
 // Select a row in the statement list control
 const fSelectStatement: (
@@ -333,6 +426,22 @@ const UpdateStatement =
 
 };
 
+const UpdateCustomFunction = (
+    func: TextParseFunction,
+    selFunctionIdx: number,
+    functions: TextParseFunction[],
+    SetFunctions: (functionList: TextParseFunction[]) => void
+): void => {
+
+    const updated=functions.map((iterFunc, iterFuncIdx) => {
+        if(iterFuncIdx===selFunctionIdx) return func;
+
+        return CopyTextParsefunction(iterFunc);
+    });
+
+    SetFunctions(updated);
+};
+
 // Given a text parse statement, update the entire state
 const UpdateStatement_Inner = (
     updatedStmt: TextParseStatement,
@@ -474,6 +583,25 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     // per statement type
     const nameIndexes = useRef(new Array<number|undefined>(eStatementType.phCount));
 
+    // Replace format
+    const [replaceFormat,SetReplaceFormat] = useState<string>("");
+
+    // Replace format
+    const [replaceResult,SetReplaceResult] = useState<IParseReplaceResult>(null);
+
+    // The list of functions
+    const [functions, SetFunctions] = useState(() => new Array<TextParseFunction>());
+
+    // Selected function
+    const [selFunctionIdx, SetSelFunctionIdx] = useState<number>(null);
+
+    // Is there an update/ value change pending? Used for enabling/disabling OK buttons
+    const [updatePending, SetUpdatePending] = useState<boolean>(false);
+
+    // Update the state with a delay so that the UI experience is more seemless. Needs to be used alongside
+    // 'defaultValue' (uncontrolled)
+    const updater=useRef(new SimpleDelayer(200,() => SetUpdatePending(true),() => SetUpdatePending(false))).current;
+
     //// Events/mutators
 
     let typeSpecificJsx=null;
@@ -498,10 +626,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
             null
         );
 
-    //// Non persisting variables
-    // Update the state with a delay so that the UI experience is more seemless. Needs to be used alongside
-    // 'defaultValue' (uncontrolled)
-    const updater=new SimpleDelayer(200);
+    const _UpdateCustomFunction = (func: TextParseFunction) => UpdateCustomFunction(func,selFunctionIdx,functions,SetFunctions);
     
     //// Render
     
@@ -544,155 +669,269 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         SetSelStatement={SetSelStatement}
                     />;
                 break;
+
+            case eStatementType.Capture_Comp:
+                typeSpecificJsx =
+                    <CaptureComparisonInputCtrl
+                        {...props}
+                        statement={selectedStatement}
+                        SetStatement={_UpdateStatement}
+                        nameIndexes={nameIndexes.current}
+                        subSelectedStatementType={subSelectedStatementType}
+                        SetSubSelectedStatementType={SetSubSelectedStatementType}
+                        SetSelStatement={SetSelStatement}
+                    />;
+                break;
         }
     }
+
+    const firstFailingStatement=statements.find(iterStmt => !iterStmt.CanSave(statements));
+    const firstFailingFunction=functions.find((iterFunc, funcIdx) => !iterFunc.IsValid(functions, funcIdx));
+    const parseInputError=((parseInputText!==null && parseInputText!=="")?null:"Please enter parse input before attempting to parse.");
 
     //sidtodo checkbox to show full description
     //sidtood checkbox to show description from the type (i.e. string comparison against 'blah'.)
 
     return (
-        <Container>
-            <Form>
-                <Segment padded>
-                    <Label attached="top">Parse Statement List</Label>
-                    <StatementListCtrl
+        <>
+            <Container>
+                <Form>
+                    <CustomFunctions
                         {...props}
-                        statements={statements}
-                        SetStatements={SetStatements}
-                        selStatement={selStatement}
-                        SetSelStatement={SetSelStatement}
-                        ChangeStatementOrder={_ChangeStatementOrder}
-                        RemoveStatement={_RemoveStatement}
+                        functions={functions}
+                        SetFunctions={SetFunctions}
                         modalState={modalState}
                         SetModalState={SetModalState}
+                        selFunctionIdx={selFunctionIdx}
+                        SetSelFunctionIdx={SetSelFunctionIdx}
+                        SetCustomFunction={_UpdateCustomFunction}
+                        updater={updater}
+                        fGetVariables={fGetVariables}
+                        updatePending={updatePending}
+                        firstFailingFunction={firstFailingFunction}
                     />
+                    <Segment padded>
+                        <Label attached="top" icon={((!statements.length || firstFailingStatement)?"cancel":"check")} content="Parse Statement List" />
+                        <StatementListCtrl
+                            {...props}
+                            statements={statements}
+                            SetStatements={SetStatements}
+                            selStatement={selStatement}
+                            SetSelStatement={SetSelStatement}
+                            ChangeStatementOrder={_ChangeStatementOrder}
+                            RemoveStatement={_RemoveStatement}
+                            modalState={modalState}
+                            SetModalState={SetModalState}
+                        />
 
-                    <AddNewParseStatementCtrls
-                        {...props}
-                        statements={statements}
-                        SetStatements={(statements, selStmt) => {
-                            SetSelStatement(selStmt);
-                            SetStatements(statements);
-                        }}
-                        selectedStatementType={newSelectedStatementType}
-                        nameIndexes={nameIndexes.current}
-                        SetSelectedStatementType={SetNewSelectedStatementType}
-                        selStmtIndex={topLevelSelStmtIndex}
-                        insert={true}
-                        comparisonOnly={false}
-                    />
+                        <AddNewParseStatementCtrls
+                            {...props}
+                            statements={statements}
+                            SetStatements={(statements, selStmt) => {
+                                SetSelStatement(selStmt);
+                                SetStatements(statements);
+                            }}
+                            selectedStatementType={newSelectedStatementType}
+                            nameIndexes={nameIndexes.current}
+                            SetSelectedStatementType={SetNewSelectedStatementType}
+                            selStmtIndex={topLevelSelStmtIndex}
+                            insert={true}
+                            comparisonOnly={false}
+                        />
 
-                    {selStatement !== null &&
-                        <>
-                        <Segment padded>
-                            <Label attached="top">Update Parse Statement</Label>
-                            <Form.Field>
+                        {selStatement !== null &&
+                            <Segment padded>
+                                <Label attached="top">Update Parse Statement</Label>
+                                <Form.Field>
 
-                                <UpdateInputCtrl
-                                    {...props}
-                                    statement={selectedStatement}
-                                    SetStatement={_UpdateStatement}
-                                    GetValue={TextParseStatement.GetName}
-                                    SetValue={TextParseStatement.SetName}
-                                    placeholder="Name..."
-                                    title="Enter a short name to uniquely identify this statement."
-                                    updater={updater}
-                                    name="name"
-                                />
+                                    <UpdateInputCtrl
+                                        {...props}
+                                        statement={selectedStatement}
+                                        SetStatement={_UpdateStatement}
+                                        GetValue={TextParseStatement.GetName}
+                                        SetValue={TextParseStatement.SetName}
+                                        placeholder="Name..."
+                                        title="Enter a short name to uniquely identify this statement."
+                                        updater={updater}
+                                        name="name"
+                                        Validate={ValidateStatementName(statements)}
+                                    />
+                                </Form.Field>
 
-                                <br />
-                                <br />
+                                <Form.Field>
 
-                                <UpdateInputCtrl
-                                    {...props}
-                                    statement={selectedStatement}
-                                    SetStatement={_UpdateStatement}
-                                    GetValue={TextParseStatement.GetKeyedDescription}
-                                    SetValue={TextParseStatement.SetKeyedDescription}
-                                    placeholder="Description... (optional)"
-                                    title="Describe the purpose of this statement."
-                                    updater={updater}
-                                    name="descr"
-                                />
+                                    <UpdateInputCtrl
+                                        {...props}
+                                        statement={selectedStatement}
+                                        SetStatement={_UpdateStatement}
+                                        GetValue={TextParseStatement.GetKeyedDescription}
+                                        SetValue={TextParseStatement.SetKeyedDescription}
+                                        placeholder="Description... (optional)"
+                                        title="Describe the purpose of this statement."
+                                        updater={updater}
+                                        name="descr"
+                                    />
+
+                                </Form.Field>
 
                                 {typeSpecificJsx &&
-                                    <>
-                                        <br />
-                                        <br />
+                                    <Form.Field>
                                         {typeSpecificJsx}
-                                    </>
+                                    </Form.Field>
                                 }
-                            </Form.Field>
-                        </Segment>
-                        </>
-                    }
-                </Segment>
+                                
+                            </Segment>
+                        }
+                    </Segment>
 
-                <Segment padded>
-                    <Label attached="top">Parse Input</Label>
-                    <ParseInputText
-                        {...props}
-                        text={parseInputText}
-                        SetText={text => updater.DelayedCall(() => SetParseInputText(text))}
-                        onBlur={updater.ImmediateCall}
-                    />
-                </Segment>
-
-                <Segment padded>
-                    <Label attached="top">Parse Output</Label>
-                    <ParseOutputType
-                        {...props}
-                        type={outputType}
-                        SetType={SetOutputType}
-                    />
-
-                    {generalError &&
-                        <ParseOutputGeneralError
+                    <Segment padded>
+                        <Label attached="top" content="Parse Input" icon={((parseInputError!== null)?"remove":"check")}/>
+                        <ParseInputText
                             {...props}
-                            msg={generalError}
+                            text={parseInputText}
+                            SetText={text => updater.DelayedCall(() => SetParseInputText(text))}
+                            onBlur={updater.ImmediateCall}
                         />
-                    }
+                    </Segment>
 
-                    {compileErrors &&
-                        <CompileErrors
+                    <Segment padded>
+                        <Label attached="top">Parse Output</Label>
+                        <ParseOutputType
                             {...props}
-                            compileErrors={compileErrors}
+                            type={outputType}
+                            SetType={SetOutputType}
                         />
-                    }
 
-                    {extractResults &&
-                        <ExtractResults
+                        {outputType!=eParseOutputType.potMatch &&
+                            <ParseOutputReplaceFormat
+                                {...props}
+                                replaceFormat={replaceFormat}
+                                SetReplaceFormat={SetReplaceFormat}
+                                updater={updater}
+                            />
+                        }
+
+                        {generalError &&
+                            <ParseOutputGeneralError
+                                {...props}
+                                msg={generalError}
+                            />
+                        }
+
+                        {compileErrors &&
+                            <CompileErrors
+                                {...props}
+                                compileErrors={compileErrors}
+                            />
+                        }
+
+                        {extractResults &&
+                            <ExtractResults
+                                {...props}
+                                extractResults={extractResults}
+                            />
+                        }
+
+                        {matchResult!==null &&
+                            <MatchResult
+                                {...props}
+                                matchResult={matchResult}
+                            />
+                        }
+
+                        {replaceResult!=null &&
+                            <ReplaceResult
+                                {...props}
+                                replaceResult={replaceResult}
+                            />
+                        }
+
+                        <ExecuteParseButton
                             {...props}
-                            extractResults={extractResults}
+                            statements={statements}
+                            type={outputType}
+                            input={parseInputText}
+                            SetParseInProgress={SetParseInProgress}
+                            SetExtractResults={SetExtractResults}
+                            disabled={parseInProgress}
+                            SetCompileErrors={SetCompileErrors}
+                            SetGeneralError={SetGeneralError}
+                            SetMatchResult={SetMatchResult}
+                            replaceFormat={replaceFormat}
+                            SetReplaceResult={SetReplaceResult}
+                            updatePending={updatePending}
+                            functions={functions}
+                            firstFailingStatement={firstFailingStatement}
+                            firstFailingFunction={firstFailingFunction}
+                            parseInputError={parseInputError}
                         />
-                    }
 
-                    {matchResult!==null &&
-                        <MatchResult
-                            {...props}
-                            matchResult={matchResult}
+                        {parseInProgress &&
+                            <Loader active inline />
+                        }
+                    </Segment>
+                </Form>
+            </Container>
+        </>
+    );
+};
+
+const ReplaceResult: React.FunctionComponent<ITextParseProps & IReplaceResultCtrlProps> = (props) => {
+
+    const { replaceResult } = props;
+
+    if(replaceResult.numMatching>0) {
+        return (
+            <Message positive>
+                <Message.Header>{`${replaceResult.numMatching} matching entrie(s) were replaced`}</Message.Header>
+                <Message.Content>
+                    <>
+                        {"The code has been output to the console for further investigation if necessary:"}
+                        <br />
+                        <br />
+                        <textarea
+                            value={replaceResult.replacedText}
+                            disabled
                         />
-                    }
+                    </>
+                </Message.Content>
+            </Message>
+        );
+    }
 
-                    <ExecuteParseButton
-                        {...props}
-                        statements={statements}
-                        type={outputType}
-                        input={parseInputText}
-                        SetParseInProgress={SetParseInProgress}
-                        SetExtractResults={SetExtractResults}
-                        disabled={parseInProgress}
-                        SetCompileErrors={SetCompileErrors}
-                        SetGeneralError={SetGeneralError}
-                        SetMatchResult={SetMatchResult}
-                    />
+    return (
+        <Message negative>
+            <Message.Header>No text was replaced</Message.Header>
+            <Message.Content>The full text parse statement code has been output to the console if further investigation is required.</Message.Content>
+        </Message>
+    );
+};
 
-                    {parseInProgress &&
-                        <Loader active inline />
+const ParseOutputReplaceFormat: React.FunctionComponent<ITextParseProps & IReplaceFormatCtrlProps> = (props) => {
+
+    const { SetReplaceFormat, replaceFormat, updater } = props;
+
+    return (
+        <>
+            <Form.Field>
+
+                <textarea
+                    placeholder="Replace format e.g. 'capture1Name' static text 'capture2Name'"
+                    defaultValue={replaceFormat}
+                    onChange={e => {
+                        const value=e.target.value;
+
+                        updater.DelayedCall(() => {
+                            SetReplaceFormat(value);
+                        });
+                    }}
+                    onBlur={updater.ImmediateCall}
+                    title={"Replace matching entries according to this format. "+
+                        "Use 'capture statement name' to reference captured text."
                     }
-                </Segment>
-            </Form>
-        </Container>
+                />
+            </Form.Field>
+        </>
     );
 };
 
@@ -855,7 +1094,9 @@ const ExecuteParseButtonClick = (
     SetExtractResults: (results: IParseExtractResult) => void,
     SetCompileErrors: (errors: string[]) => void,
     SetGeneralError: (error: string) => void,
-    SetMatchResult: (res: number) => void
+    SetMatchResult: (res: number) => void,
+    replaceFormat: string,
+    SetReplaceResult: (result: IParseReplaceResult) => void
 ) => {
 
     // Makes the code terser
@@ -887,24 +1128,42 @@ const ExecuteParseButtonClick = (
         case eParseOutputType.potExtractSingle:
         case eParseOutputType.potExtractAll:
 
-            const isSingle = (type == eParseOutputType.potExtractSingle);
+            {
+                const isSingle = (type == eParseOutputType.potExtractSingle);
 
-            const fHandleSuccess = (hasResult: boolean, dataOptional: any) => {
-                SetExtractResults({
-                    success: hasResult,
-                    extracted: ((hasResult)?dataOptional.ExtractedText:null)
-                })  
-            };
+                const fHandleSuccess = (dataOptional: any): void => {
+                    SetExtractResults({
+                        success: (dataOptional!==null),
+                        extracted: ((dataOptional)?dataOptional.ExtractedText:null)
+                    })  
+                };
 
-            _HandleParseTask(
-                Extract(input, statements, isSingle),
-                (data) => data.ExtractedText && data.ExtractedText.length>0,
-                (data) => fHandleSuccess(true, data),
-                () => fHandleSuccess(false,null)
-            );
+                _HandleParseTask(
+                    Extract(input, statements, isSingle, replaceFormat),
+                    (data) => data.ExtractedText && data.ExtractedText.length>0,
+                    (data) => fHandleSuccess(data),
+                    () => fHandleSuccess(null)
+                );
+            }
             break;
 
         case eParseOutputType.potReplace:
+
+            {
+                const fHandleSuccess = (dataOptional: any): void => {
+                    SetReplaceResult({
+                        numMatching: ((dataOptional)?dataOptional.NumMatching:0),
+                        replacedText: ((dataOptional)?dataOptional.ReplacedText:"")
+                    });
+                };
+
+                _HandleParseTask(
+                    Replace(input, statements, replaceFormat),
+                    (data) => data.NumMatching>0,
+                    (data) => fHandleSuccess(data),
+                    () => fHandleSuccess(null)
+                );
+            }
             break;
     }
 
@@ -916,51 +1175,39 @@ const ExecuteParseButtonClick = (
     SetCompileErrors(null);
     SetGeneralError(null);
     SetMatchResult(null);
+    SetReplaceResult(null);
 };
 
 const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecuteParseButtonCtrlProps> = (props) => {
 
     const { statements, type, input, SetParseInProgress, SetExtractResults, disabled,
-        SetCompileErrors, SetGeneralError, SetMatchResult } = props;
+        SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult, updatePending,
+        functions, firstFailingStatement, firstFailingFunction, parseInputError } = props;
 
     let buttonCaption="";
     let canExecute=false;
 
-    if(!disabled) {
+    if(!disabled && !updatePending) {
 
-        if(input ===null || input==="") {
-            buttonCaption="Please enter parse input before attempting to parse.";
-        }
-
-        else if(!statements.length) {
-            buttonCaption="Please create some parse statements before attempting to parse."
-
-        } else {
-            // Validate the input for all ofthe statements
-            for(let i=0;i<statements.length;++i) {
-
-                const iterStmt=statements[i];
-                canExecute=iterStmt.CanSave();
-                if(!canExecute) {
-                    buttonCaption=`One or more parse statements have missing data and/or are not valid. First failing statement found: ${iterStmt.Heading()}`;
-                    break;
-                }
-            }
-        }
+        if(parseInputError!==null) buttonCaption=parseInputError;
+        else if(!statements.length) buttonCaption="Please create some parse statements before attempting to parse.";
+        else if(firstFailingStatement) buttonCaption=`One or more parse statements have missing data and/or are not valid. First failing statement found: ${firstFailingStatement.Heading()}`;
+        else if (firstFailingFunction) buttonCaption=`One or more custom functions have missing data and/or are not valid. First failing custom function found: ${firstFailingFunction.Name()}`;
+        else canExecute=true;
     }
 
     return (
         <>
             <Button
                 color={((canExecute || disabled)? "green": "red")}
-                disabled={!canExecute}
+                disabled={!canExecute || updatePending}
                 onClick={() => ExecuteParseButtonClick(input, type, statements, SetParseInProgress, SetExtractResults,
-                    SetCompileErrors, SetGeneralError, SetMatchResult)}
+                    SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult)}
             >
                 {((disabled)?"Parse in Progress..":"Execute Parse")}
             </Button>
 
-            {!canExecute && !disabled &&
+            {!canExecute && !disabled && !updatePending &&
                 <Label pointing="left">
                     {buttonCaption}
                 </Label>
@@ -1050,7 +1297,7 @@ const ParseOutputType: React.FunctionComponent<ITextParseProps & IParseOutputTyp
 
                 {replaceIsChecked &&
                     <Label pointing="left">
-                        //sidtodo
+                        Replace entries matching the parse statement list according to the replace format and retain any text which does not match.
                     </Label>
                 }
             </Form.Field>
@@ -1065,7 +1312,7 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
     stmtCount: number
 }> = (props) => {
 
-    const { stmt, SetSelStatement, selStatement, idx, level, stmtCount, ChangeStatementOrder, RemoveStatement, modalState, SetModalState } = props;
+    const { stmt, SetSelStatement, selStatement, idx, level, stmtCount, ChangeStatementOrder, RemoveStatement, modalState, SetModalState, statements } = props;
 
     const paddingBlankSpace=((level>1)?" ".repeat(10*(level-1)) : "");
 
@@ -1084,7 +1331,8 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
     }) : null);
 
     let rowExtraProps;
-    if(stmt.CanSave()) {
+    const canSave=stmt.CanSave(statements);
+    if(canSave) {
         rowExtraProps={positive: true};
     } else {
         rowExtraProps={negative: true};
@@ -1121,7 +1369,7 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
                     }}
                 >
                     {paddingBlankSpace}
-                    <Icon name={stmt.Icon()} color={((stmt.CanSave())?"green":"red")} />
+                    <Icon name={stmt.Icon()} color={((canSave)?"green":"red")} />
                     {"   "} 
                     {heading}
                 </Table.Cell>
@@ -1271,6 +1519,14 @@ const AddInsertParseStatement =
         case eStatementType.StartOfString_Comp:
             newStatement = new StartOfStringComparisonStatement();
             break;
+
+        case eStatementType.Capture_Comp:
+            newStatement = new CaptureComparisonStatement();
+            break;
+
+        case eStatementType.IsWhitespace_Comp:
+            newStatement = new IsWhitespaceComparisonStatement();
+            break;
     }
 
     // Generate a default name
@@ -1393,6 +1649,18 @@ const TypeDropdownCtrl_Options = [
         text: "Start of string comparison",
         value: eStatementType.StartOfString_Comp
     },
+
+    {
+        key: eStatementType.Capture_Comp,
+        text: "Capture",
+        value: eStatementType.Capture_Comp
+    },
+
+    {
+        key: eStatementType.IsWhitespace_Comp,
+        text: "Is whitespace comparison",
+        value: eStatementType.IsWhitespace_Comp
+    }
 ];
 
 const TypeDropdownCtrl: React.FunctionComponent<ITextParseProps & ITypeDropdownProps> = (props) => {
@@ -1466,6 +1734,15 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
 
         case eStatementType.StartOfString_Comp:
             text="Compare the current position to the beginning of the input string. Can be used to force an exact match.";
+            break;
+
+        case eStatementType.Capture_Comp:
+            text="Perform a statement list and capture the matching text. "+
+                "The matching text can be referenced within the replace format using the specified name.";
+            break;
+
+        case eStatementType.IsWhitespace_Comp:
+            text="Validate whether the current text is whitespace.";
             break;
     }
 
@@ -1548,6 +1825,36 @@ const OrComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextPars
     );
 };
 
+const CaptureComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & ICaptureComparisonInputCtrlProps> = (props) => {
+
+    const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
+
+    const statementList = props.statement as CaptureComparisonStatement;
+
+    const children=statementList.Children();
+
+    return (
+        <AddNewParseStatementCtrls
+            {...props}
+            statements={children}
+            SetStatements={(statements, selStmt) => {
+
+                const copy=new CaptureComparisonStatement(statementList,false);
+                copy.children=statements;
+                SetSelStatement(selStmt);
+                SetStatement(copy);
+            }}
+            selectedStatementType={subSelectedStatementType}
+            nameIndexes={nameIndexes}
+            SetSelectedStatementType={SetSubSelectedStatementType}
+            selStmtIndex={((children)?children.length-1:-1)}
+            insert={false}
+            comparisonOnly={false}
+        />
+    );
+
+};
+
 const StatementListComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & IStatementListComparisonInputCtrlProps> = (props) => {
 
     const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
@@ -1588,38 +1895,64 @@ const UpdateInputCtrl: React.FunctionComponent<ITextParseProps & IParseStatement
 
     const { statement, SetStatement, placeholder, GetValue, SetValue, title, Validate, updater, name } = props;
 
-    let additionalProps = {};
-    if(Validate) {
-        if(!Validate(statement)) {
-            additionalProps = {
-                ...additionalProps,
-                error: true
-            };
-        }
-    }
-
     return (
-        <Input
-            key={CreateStatementKey(statement,name)}
-            placeholder={placeholder}
-            defaultValue={GetValue(statement)}
-            onChange={e => {
-                const value=e.target.value;
-
-                updater.DelayedCall(() => {
+        <>
+            {InputCtrl(
+                CreateStatementKey(statement,name),
+                placeholder,
+                GetValue(statement),
+                (value: string) => {
                     const updated=statement.Copy(true);
                     SetValue(updated,value);
                     
                     SetStatement(updated);
+                },
+                updater,
+                title,
+                ".",
+                ((Validate)? !Validate(statement) : false)
+            )}
+        </>
+    );
+};
+
+const InputCtrl = (
+    key: string,
+    placeholder: string,
+    defaultValue: string|number,
+    SetValue: (value: string) => void,
+    updater: SimpleDelayer,
+    title: string,
+    type: string,
+    error: boolean): JSX.Element => {
+
+    let additionalProps = {};
+    if(error!==null && error) {
+        additionalProps = {
+            ...additionalProps,
+            error: true
+        };
+    }
+
+    return (
+        <Input
+            key={key}
+            placeholder={placeholder}
+            defaultValue={defaultValue}
+            onChange={e => {
+                const value=e.target.value;
+
+                updater.DelayedCall(() => {
+                    SetValue(value);
                 });
             }}
             title={title}
-            type="."
+            type={type}
             onBlur={updater.ImmediateCall}
             {...additionalProps}
         />
     );
-}
+};
 
 const TextParseModal: React.FunctionComponent<IModalCtrlProps> = (props) => {
 
@@ -1660,4 +1993,642 @@ const TextParseModal: React.FunctionComponent<IModalCtrlProps> = (props) => {
             </Modal.Actions>
         </Modal>
     );
+};
+
+//TODO: library function
+const IsAlpha = (chr: char): boolean => {
+
+    if(
+        (chr>='0' && chr<='9') ||
+        (chr>='a' && chr<='z') ||
+        (chr>='A' && chr<='Z') ||
+        (chr==' ')
+    ){
+        return true;
+    }
+
+    return false;
+};
+
+const ValidateStatementName = (stmtList: TextParseStatement[]) => (stmt: TextParseStatement): boolean => {
+
+    if(stmt.name === null || stmt.name === "") return false;
+
+    // Invalid character?
+    if(stmt.name.find(iterChr => !IsAlpha(iterChr)) return false;
+
+    //sidtodo here: check for duplicates
+};
+
+const CreateCustomFunctionName = (functions: TextParseFunction[], currentIndex: number=functions.length+1): string => {
+
+    // Make sure it's unique.
+    let newName: string=`CustomFunc ${currentIndex}`;
+    const newNameLower=newName.toLowerCase();
+
+    for(let i=0;i<functions.length;++i) {
+        if(functions[i].Name().toLowerCase() === newNameLower) {
+            return CreateCustomFunctionName(functions,currentIndex+1);
+        }
+    }
+
+    return newName;
+}
+
+const AddCustomFunction = (props: ITextParseProps & ICustomFunctionsProps): void => {
+
+    const { SetFunctions, functions, SetSelFunctionIdx } = props;
+
+    const updatedFunctions=[
+        ...functions.map(iterObj => CopyTextParsefunction(iterObj)),
+        CreateTextParsefunction(CreateCustomFunctionName(functions))
+    ];
+
+    SetFunctions(updatedFunctions);
+
+    SetSelFunctionIdx(updatedFunctions.length-1);
+};
+
+const UpdateCustomFunctionCtrl: React.FunctionComponent<ITextParseProps & ICustomFunctionCtrlProps> =
+    (props) => {
+
+    const { placeholder, value, SetValue, title, Validate, updater, ctrlName, customFunction, SetCustomFunction, funcIdx } = props;
+
+    return (
+        <>
+            {InputCtrl(
+                `func-${ctrlName}-${funcIdx}`,
+                placeholder,
+                value,
+                (value: string) => {
+                    const updated=CopyTextParsefunction(customFunction);
+                    SetValue(updated,value);
+                    
+                    SetCustomFunction(updated);
+                },
+                updater,
+                title,
+                ".",
+                ((Validate)? !Validate() : false)
+            )}
+        </>
+    );
+};
+
+const ValidateFuncName = (selFunctionIdx: number, functions: TextParseFunction[]) => {
+
+    const thisNameAsLower=functions[selFunctionIdx].Name().toLowerCase();
+
+    if(thisNameAsLower==="") return false;
+
+    for(let i=0;i<functions.length;++i) {
+
+        if(i!==selFunctionIdx) {
+            const matches=(functions[i].Name().toLowerCase() === thisNameAsLower);
+            if(matches) return false;
+        }
+    }
+
+    return true;
+};
+
+const CustomFunctionsOperatorDropdown: React.FunctionComponent<ITextParseProps & ICustomFunctionsOperatorDropdownProps> = (props) => {
+
+    const { function: customFunction, SetCustomFunction } = props;
+
+    // These must be in the same order of the 'eCustomFunctionOperator' enum
+    const options=[
+        {
+            icon: "plus",
+            description: "Add",
+        },
+
+        {
+            icon: "minus",
+            description: "Subtract",
+        },
+
+        {
+            icon: "times",
+            description: "Multiply",
+        },
+
+        {
+            icon: "percent",
+            description: "Divide",
+        },
+    ];
+
+    let selIcon=undefined;
+    if(customFunction.Operator() !== null) {
+        selIcon = options[customFunction.Operator()-1].icon;
+    }
+
+    const onClick = (operator: eCustomFunctionOperator) => {
+
+        const updatedFunction=CopyTextParsefunction(customFunction);
+
+        updatedFunction.SetOperator(operator);
+        SetCustomFunction(updatedFunction);
+    };
+
+    return (
+        <Dropdown
+            icon={selIcon}
+            inline
+            pointing="top left"
+        >
+            <Dropdown.Menu>
+                {options.map((iterOption, i) => {
+                    const operatorEnum=i+1;
+                    return (
+                        <Dropdown.Item
+                            icon={iterOption.icon}
+                            description={iterOption.description}
+                            key={i}
+                            value={operatorEnum}
+                            onClick={() => onClick(operatorEnum)}
+                        />
+                    );
+                })}
+            </Dropdown.Menu>
+        </Dropdown>
+    );
+};
+
+enum eCustomFunctionOperandOptions {
+    length= 1,
+    currentPosition= 2,
+    arbitraryValue=3,
+    selectArbitraryValue=4,
+    variablesBegin= 100,
+    variablesEnd= 9999,
+    functionsBegin= 10000,
+    functionsEnd= 19999
+};
+
+const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & ICustomFunctionsOperandDropdownProps> = (props) => {
+
+    const { fGetVariables, functions, selFunctionIdx, data, customFunction, SetOperand, SetCustomFunction, name, updater, updatePending } = props;
+
+    const functionOptions=MapAndRemoveIndex(functions,selFunctionIdx,(iterFunc,idx) => {
+        const value=eCustomFunctionOperandOptions.functionsBegin+idx;
+        return {
+            key: value,
+            text: `${iterFunc.Name()} (function)`,
+            value: value,
+            selected: ((data && data.type === eCustomFunctionOperandType.variable && data.functionName === iterFunc.Name())?true:false)
+        };
+    });
+
+    const variables: string[] = fGetVariables();
+
+    let optionalArbitraryValueOption: DropdownItemProps[]=[];
+    if(data && data.type===eCustomFunctionOperandType.arbitraryValue) {
+        optionalArbitraryValueOption.push({
+            key: eCustomFunctionOperandOptions.arbitraryValue,
+            value: eCustomFunctionOperandOptions.arbitraryValue,
+            text: data.arbitraryValue,
+            active: true,
+            selected: true
+        });
+    }
+
+    const options: DropdownItemProps[] = [
+        {
+            key: eCustomFunctionOperandOptions.length,
+            text: "Length of input string",
+            value: eCustomFunctionOperandOptions.length,
+            selected: ((data && data.type === eCustomFunctionOperandType.length)?true:false)
+        },
+
+        {
+            key: eCustomFunctionOperandOptions.currentPosition,
+            text: "Current position / index (0 based)",
+            value: eCustomFunctionOperandOptions.currentPosition,
+            selected: ((data && data.type === eCustomFunctionOperandType.currentPosition)?true:false)
+        },
+
+        ...optionalArbitraryValueOption,
+
+        {
+            key: eCustomFunctionOperandOptions.selectArbitraryValue,
+            text: "(Select arbitrary value)...",
+            value: eCustomFunctionOperandOptions.selectArbitraryValue,
+            active: false,
+            selected: false
+        },
+
+        ...variables.map((varName,iterIdx) => {
+            const value=eCustomFunctionOperandOptions.variablesBegin+iterIdx;
+            return {
+                key: value,
+                text: `${varName} (variable)`,
+                value: value,
+                selected: ((data && data.type === eCustomFunctionOperandType.variable && data.variableName === varName)?true:false)
+            }
+        }),
+
+        ...functionOptions
+    ];
+
+    const keyBase=`${name}${selFunctionIdx}`;
+
+    //// Selected index / text
+    let selValue=undefined;
+    let selText=undefined;
+    if(data && data.type!==undefined) {
+        switch(data.type) {
+            case eCustomFunctionOperandType.length:
+                selValue = eCustomFunctionOperandOptions.length;
+                break;
+
+            case eCustomFunctionOperandType.currentPosition:
+                selValue = eCustomFunctionOperandOptions.currentPosition;
+                break;
+
+            case eCustomFunctionOperandType.arbitraryValue:
+                selValue= eCustomFunctionOperandOptions.arbitraryValue;
+                break;
+
+            case eCustomFunctionOperandType.variable:
+
+                for(let i=0;i<variables.length; ++i) {
+                    if(variables[i] === data.variableName) {
+                        selValue = eCustomFunctionOperandOptions.variablesBegin+i;
+                        break;
+                    }
+                }
+                break;
+
+            case eCustomFunctionOperandType.function:
+                for(let i=0;i<functions.length; ++i) {
+                    if(functions[i].Name() === data.functionName) {
+                        selValue = eCustomFunctionOperandOptions.functionsBegin+i;
+                        break;
+                    }
+                }
+                break;
+        }
+    }
+
+    return (
+        <>
+            <InputModal
+                key={`${keyBase}handArbitraryValueModal`}
+                open={data && data.showArbitraryValueDialog}
+                headerIcon="pencil"
+                headerText="Please Enter the Arbitrary Value (32 Bit Signed Integer)"
+                valid={((data && IsA32BitSignedNumber(data.arbitraryValue))?true:false)}
+                value={data?.arbitraryValue}
+                onChange={(value) => updater.DelayedCall(() => {
+                    const updatedFunction=CopyTextParsefunction(customFunction);
+
+                    const updatedOperand=CopyCustomFunctionOperand(data);
+                    updatedOperand.arbitraryValue=value;
+
+                    SetOperand(updatedFunction, updatedOperand);
+                    SetCustomFunction(updatedFunction);
+                })}
+                okAvailable={!updatePending}
+                onOk={() => {
+                    const updatedFunction=CopyTextParsefunction(customFunction);
+                    const updatedOperand=CopyCustomFunctionOperand(data);
+                    updatedOperand.type=eCustomFunctionOperandType.arbitraryValue;
+                    updatedOperand.showArbitraryValueDialog = false;
+                    SetOperand(updatedFunction, updatedOperand);
+                    SetCustomFunction(updatedFunction);
+                }}
+                onCancel={() => {
+                    const updatedFunction=CopyTextParsefunction(customFunction);
+                    const updatedOperand=CopyCustomFunctionOperand(data);
+                    if(updatedOperand.type!==eCustomFunctionOperandType.arbitraryValue) {
+                        updatedOperand.arbitraryValue=undefined;
+                    }
+                    updatedOperand.showArbitraryValueDialog = false;
+                    SetOperand(updatedFunction, updatedOperand);
+                    SetCustomFunction(updatedFunction);
+                }}
+            />
+
+            <Dropdown
+                key={`${keyBase}handDropdown`}
+                error={!data || data.type===undefined}
+                options={options}
+                value={selValue}
+                text={selText}
+                pointing="top left"
+                selectOnBlur={false}
+                onChange={(e, value) => {
+                    const selIdx=(value.value as number);
+
+                    const updatedFunction=CopyTextParsefunction(customFunction);
+
+                    let updatedOperand: ICustomFunctionOperand= {
+                        showArbitraryValueDialog: false
+                    };
+
+                    switch(selIdx) {
+
+                        case eCustomFunctionOperandOptions.length:
+                            updatedOperand.type=eCustomFunctionOperandType.length;
+                            break;
+
+                        case eCustomFunctionOperandOptions.currentPosition:
+                            updatedOperand.type=eCustomFunctionOperandType.currentPosition;
+                            break;
+
+                        case eCustomFunctionOperandOptions.selectArbitraryValue:
+                            if(data) {
+                                updatedOperand=CopyCustomFunctionOperand(data);
+                                updatedOperand.showArbitraryValueDialog=true;
+                            }
+
+                            else updatedOperand={showArbitraryValueDialog: true};
+                            break;
+
+                        default:
+                            if(selIdx>=eCustomFunctionOperandOptions.variablesBegin && selIdx <= eCustomFunctionOperandOptions.variablesEnd) {
+
+                                updatedOperand.type=eCustomFunctionOperandType.variable;
+                                const variableIdx=selIdx-eCustomFunctionOperandOptions.variablesBegin;
+                                updatedOperand.variableName=variables[variableIdx];
+
+                            } else if(selIdx>=eCustomFunctionOperandOptions.functionsBegin && selIdx<=eCustomFunctionOperandOptions.functionsEnd) {
+                                updatedOperand.type=eCustomFunctionOperandType.function;
+                                const dropdownFuncIdx=selIdx-eCustomFunctionOperandOptions.functionsBegin;
+                                updatedOperand.functionName=functions[dropdownFuncIdx].Name();
+                            }
+                            break;
+                    }
+
+                    SetOperand(updatedFunction, updatedOperand);
+                    SetCustomFunction(updatedFunction);
+                }}
+            >
+            </Dropdown>
+        </>
+    );
+};
+
+const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunctionsProps> = (props) => {
+
+    const { selFunctionIdx, functions, SetCustomFunction, updater, fGetVariables, updatePending, firstFailingFunction } = props;
+
+    let selCustomFunc=null;
+    if(selFunctionIdx !== null) {
+        selCustomFunc = functions[selFunctionIdx];
+    }
+
+    return (
+        <Segment padded>
+            <Label attached="top" icon={(firstFailingFunction)?"remove":"check"} content="Custom Functions" />
+            <CustomFunctionList
+                {...props}
+            />
+            <Button
+                onClick={() => AddCustomFunction(props)}
+            >
+                Add
+            </Button>
+
+            {selFunctionIdx !== null &&
+                <Segment padded>
+                    <Label attached="top">Update Custom Function</Label>
+                    <Form.Field>
+                        <UpdateCustomFunctionCtrl
+                            ctrlName="name"
+                            placeholder="Name..."
+                            value={selCustomFunc.Name()}
+                            SetValue={(updated,value) => updated.SetName(value)}
+                            title="Please enter a unique name for the function."
+                            customFunction={selCustomFunc}
+                            SetCustomFunction={SetCustomFunction}
+                            updater={updater}
+                            Validate={() => ValidateFuncName(selFunctionIdx, functions)}
+                            funcIdx={selFunctionIdx}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <UpdateCustomFunctionCtrl
+                            ctrlName="descr"
+                            placeholder="Description... (optional)"
+                            value={selCustomFunc.Description()}
+                            SetValue={(updated,value) => updated.SetDescription(value)}
+                            title="Describe the purpose of the function."
+                            customFunction={selCustomFunc}
+                            SetCustomFunction={SetCustomFunction}
+                            updater={updater}
+                            funcIdx={selFunctionIdx}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <i>Return:</i>
+                        <br />
+                        {/* This is the only way I can get a tab to work. I'd love to know of a better way! */}
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <CustomFunctionsOperandDropdown
+                            {...props}
+                            functions={functions}
+                            fGetVariables={fGetVariables}
+                            selFunctionIdx={selFunctionIdx}
+                            customFunction={selCustomFunc}
+                            SetCustomFunction={SetCustomFunction}
+                            SetOperand={(_function,_oper) => _function.SetLeftHandOperand(_oper)}
+                            data={selCustomFunc.LeftHandOperand()}
+                            name="left"
+                            updater={updater}
+                            updatePending={updatePending}
+                        />
+
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+                        <CustomFunctionsOperatorDropdown
+                            {...props}
+                            SetCustomFunction={SetCustomFunction}
+                            function={selCustomFunc}
+                        />
+
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+                        <CustomFunctionsOperandDropdown
+                            {...props}
+                            functions={functions}
+                            fGetVariables={fGetVariables}
+                            selFunctionIdx={selFunctionIdx}
+                            customFunction={selCustomFunc}
+                            SetCustomFunction={SetCustomFunction}
+                            SetOperand={(_function,_oper) => _function.SetRightHandOperand(_oper)}
+                            data={selCustomFunc.RightHandOperand()}
+                            name="right"
+                            updater={updater}
+                            updatePending={updatePending}
+                        />
+                    </Form.Field>
+                </Segment>
+            }
+        </Segment>
+    );
+};
+
+const CustomFuncTableRowProps = (
+    func: TextParseFunction,
+    funcList: TextParseFunction[],
+    funcIdx: number
+): TableRowProps => {
+
+    if(func.IsValid(funcList, funcIdx)) return {positive: true};
+    return {negative: true};
+};
+
+const CustomFunctionList: React.FunctionComponent<ITextParseProps & ICustomFunctionsProps> = (props) => {
+
+    const { functions, SetFunctions, SetModalState, modalState, selFunctionIdx, SetSelFunctionIdx } = props;
+
+    if(!functions.length) return null;
+
+    return (
+        <Table
+            selectable
+            compact
+        >
+            <Table.Body>
+                {functions.map((iterFunc,funcIdx) => {
+
+                    const iterIsSelectedRow=(funcIdx === selFunctionIdx);
+
+                    return (
+                        <Table.Row
+                            active={iterIsSelectedRow}
+                            key={funcIdx}
+                            {...CustomFuncTableRowProps(iterFunc, functions, funcIdx)}
+                        >
+                            <Table.Cell
+                                onClick={() => SetSelFunctionIdx(funcIdx)}
+                            >
+                                <>
+                                    <b>{iterFunc.Name()}</b>
+                                    {iterFunc.Description() &&
+                                        <>
+                                            {` - ${iterFunc.Description()}`}
+                                        </>
+                                    }
+                                </>
+                            </Table.Cell>
+                            <Table.Cell textAlign="right" width={2}>
+
+                                <TextParseModal
+                                    key={`del-${funcIdx}`}
+                                    trigger={<Icon name="close" onClick={() => {
+                                        SetModalState({
+                                            type: eModalType.mtDeleteCustomFunction,
+                                            funcIdx: funcIdx
+                                        });
+                                    }} />}
+                                    title="Confirm Delete"
+                                    message={`Are you sure you want to delete this custom function? This action cannot be undone.`}
+                                    onYes={() => {
+                                        SetModalState(null);
+                                        const updatedFunctions=functions.filter((unused,innerFuncIdx) => innerFuncIdx!==funcIdx);
+                                        SetFunctions(updatedFunctions);
+
+                                        // Update the selected row if necessary
+                                        if(selFunctionIdx>funcIdx) {
+                                            SetSelFunctionIdx(selFunctionIdx-1);
+                                        }
+                                        else if(selFunctionIdx===funcIdx) {
+                                            SetSelFunctionIdx(null);
+                                        }
+                                    }}
+                                    onNo={() => SetModalState(null)}
+                                    onCancel={() => SetModalState(null)}
+                                    show={(modalState!==null && modalState.type===eModalType.mtDeleteCustomFunction && modalState.funcIdx === funcIdx)}
+                                />
+                            </Table.Cell>
+                        </Table.Row>
+                    );
+                })}
+            </Table.Body>
+        </Table>
+    );
+};
+
+//sidtodo finish
+const fGetVariables = (): string[] => {
+
+    return [
+        "test var"
+    ];
+};
+
+const InputModal: React.SFC<IInputModalProps> = (props) => {
+
+    const { open, headerIcon, headerText, valid, value, onChange, okAvailable, onOk, onCancel } = props;
+
+    let inputFieldExtraProps: InputProps={};
+    let okButtonProps: ButtonProps={};
+
+    if(valid !== undefined) {
+
+        if(!valid) {
+            inputFieldExtraProps.error=true;
+            okButtonProps.disabled=true;
+        }
+    }
+
+    if(okAvailable !== undefined && !okAvailable) {
+        okButtonProps.disabled=true;
+    }
+
+    return (
+        <Modal
+            key={`${name}handArbitraryValueModal`}
+            open={open}
+        >
+            <Header
+                icon={headerIcon}
+                content={headerText}
+            />
+            <Modal.Content>
+                <Form>
+                    <Form.Field {...inputFieldExtraProps} required>
+                        <Input defaultValue={value} onChange={e => onChange(e.target.value)} />
+                    </Form.Field>
+                </Form>
+            </Modal.Content>
+
+            <Modal.Actions>
+                <Button
+                    positive
+                    {...okButtonProps}
+                    onClick={onOk}
+                >
+                    OK
+                </Button>
+
+                <Button
+                    negative
+                    onClick={onCancel}
+                >
+                    Cancel
+                </Button>
+            </Modal.Actions>
+        </Modal>
+    );
+
+};
+
+//TODO: this is a library method
+const INT32_MAX=2147483647;
+const INT32_MIN=-2147483648;
+const IsA32BitSignedNumber = (val: string): boolean => {
+
+    const asNum=parseInt(val,10);
+    let rv=(val && val!=="" && !isNaN(asNum));
+    if(rv) {
+        rv=(asNum>=INT32_MIN && asNum<=INT32_MAX);
+    }
+    return rv;
 };
