@@ -2469,8 +2469,10 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
                 onChange={(value) => updater.DelayedCall(() => {
                     const updatedFunction=CopyTextParsefunction(customFunction);
 
-                    const updatedOperand=CopyCustomFunctionOperand(data);
-                    updatedOperand.arbitraryValue=value;
+                    const updatedOperand={
+                        ...CopyCustomFunctionOperand(data),
+                        arbitraryValue: value
+                    };
 
                     SetOperand(updatedFunction, updatedOperand);
                     SetCustomFunction(updatedFunction);
@@ -2478,19 +2480,22 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
                 okAvailable={!updatePending}
                 onOk={() => {
                     const updatedFunction=CopyTextParsefunction(customFunction);
-                    const updatedOperand=CopyCustomFunctionOperand(data);
-                    updatedOperand.type=eCustomFunctionOperandType.arbitraryValue;
-                    updatedOperand.showArbitraryValueDialog = false;
+                    const updatedOperand={
+                        ...CopyCustomFunctionOperand(data),
+                        type: eCustomFunctionOperandType.arbitraryValue,
+                        showArbitraryValueDialog: false
+                    };
                     SetOperand(updatedFunction, updatedOperand);
                     SetCustomFunction(updatedFunction);
                 }}
                 onCancel={() => {
                     const updatedFunction=CopyTextParsefunction(customFunction);
-                    const updatedOperand=CopyCustomFunctionOperand(data);
-                    if(updatedOperand.type!==eCustomFunctionOperandType.arbitraryValue) {
-                        updatedOperand.arbitraryValue=undefined;
-                    }
-                    updatedOperand.showArbitraryValueDialog = false;
+                    const updatedOperand={
+                        ...CopyCustomFunctionOperand(data),
+                        arbitraryValue:
+                            ((data.type===eCustomFunctionOperandType.arbitraryValue) ? data.arbitraryValue : undefined),
+                        showArbitraryValueDialog: false
+                    };
                     SetOperand(updatedFunction, updatedOperand);
                     SetCustomFunction(updatedFunction);
                 }}
