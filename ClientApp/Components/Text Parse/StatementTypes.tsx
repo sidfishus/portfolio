@@ -1,6 +1,8 @@
 
 import { SemanticICONS } from "semantic-ui-react";
 import { EncodeString} from "./ExecuteParse";
+import { IsAlpha, IsA32BitSignedNumber } from "../../Library/Misc";
+import { TextParseFunction } from "./CustomFunctions";
 
 export enum eStatementType {
 
@@ -22,18 +24,50 @@ export enum eStatementType {
     Capture_Comp=7,
     // Is white space comparison
     IsWhitespace_Comp=8,
+    // String offset comparison
+    StringOffset_Comp=9,
     
     // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
     // Note: Keep this as the last item because it's used to determine the number of statement types
     // In C++ you can assert this kind of thing statically at compile type
-    phCount = 9,
+    phCount = 10,
 };
 
 // Information regarding the statement types
 export interface IStatementTypeInfo {
     isComparison: boolean;
     comparisonOnlyChildren: boolean; // Can only have children which are comparison type statements?
+};
+
+export interface TextParseVariable {
+    Name: () => string;
+    Matches: (rhs: TextParseVariable) => boolean;
+    ID: number;
+};
+
+// Where a function or variable is specified as the parameter to a statement
+export interface IFunctionOrVariableSelection {
+    GetFunction: () => TextParseFunction;
+    GetVariable: () => TextParseVariable;
+    SetFunction: (func: TextParseFunction) => void;
+    SetVariable: (variable: TextParseVariable) => void;
+    MatchesFunction: (func: TextParseFunction) => boolean;
+    MatchesVariable: (variable: TextParseVariable) => boolean;
+};
+
+export const CreateFunctionOrVariableSelection = () => {
+    let _func: TextParseFunction=null;
+    let _var: TextParseVariable=null;
+
+    return {
+        GetFunction: () => _func,
+        GetVariable: () => _var,
+        SetFunction: (func: TextParseFunction) => _func = func,
+        SetVariable: (variable: TextParseVariable) => _var = variable,
+        MatchesFunction: (func: TextParseFunction) => (_func !== null && _func.Matches(func)),
+        MatchesVariable: (variable: TextParseVariable) => (_var !== null && _var.Matches(variable))
+    };
 };
 
 // The index corresponds to the 'eStatementType' enum
@@ -91,7 +125,13 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
     {
         isComparison: true,
         comparisonOnlyChildren: false
-    }
+    },
+
+    // StringOffset_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false
+    },
 ];
 
 export interface ITextParseStatementState {
@@ -112,7 +152,7 @@ const CanSaveChildren = (
 
 // Statement names must be unique.
 // Returns true if this statement's name is unique across them all.
-const CanSaveUniqueName = (
+export const CanSaveUniqueName = (
     stmt: TextParseStatement,
     stmtList: TextParseStatement[]
 ): boolean => {
@@ -156,9 +196,10 @@ export abstract class TextParseStatement {
     public CanSave(
         stmtList: TextParseStatement[],
         checkChildren: boolean=true
-    ): boolean {
+    ): boolean { 
+
         if(!checkChildren || CanSaveChildren(this.Children(),stmtList)) {
-            if(!stmtList || CanSaveUniqueName(this, stmtList)) return true;
+            if(this.CanSaveName(stmtList)) return true;
         }
         return false;
     }
@@ -248,6 +289,22 @@ export abstract class TextParseStatement {
     NumberOfLevelsDeep(): number {
 
         return NumberOfLevelsDeep(this,1);
+    }
+
+    CanSaveName(
+        stmtList: TextParseStatement[]
+    ): boolean {
+
+        const { name } = this;
+
+        if(name === null || name === "") return false;
+
+        // Invalid character?
+        if(name.split("").find(iterChr => !IsAlpha(iterChr))) return false;
+
+        if(!stmtList || CanSaveUniqueName(this, stmtList)) return true;
+
+        return false;
     }
 };
 
@@ -893,4 +950,105 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
 
         return code;
     }
+};
+
+export class StringOffsetComparisonStatement extends TextParseStatement {
+
+    public length: string;
+    public caseSensitive: boolean;
+    public offset: IFunctionOrVariableSelection;
+
+    constructor(copy?: StringOffsetComparisonStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.StringOffset_Comp;
+            this.length="";
+            this.caseSensitive=false;
+        }
+        else {
+            this.length=copy.length;
+            this.caseSensitive=copy.caseSensitive;
+        }
+    }
+
+    Copy(copyChildren: boolean): StringOffsetComparisonStatement {
+        const copy=new StringOffsetComparisonStatement(this);
+        return copy;
+    }
+
+    TypeDescription(): string {
+        return "String Offset Comparison";
+    }
+
+    public static SetLength(stmt: StringOffsetComparisonStatement, length: string): void {
+        stmt.length=length;
+    }
+
+    public static GetLength(stmt: StringOffsetComparisonStatement): string {
+        return stmt.length;
+    }
+
+    public static ValidateLength(stmt: StringOffsetComparisonStatement): boolean {
+        return IsA32BitSignedNumber(stmt.length);
+    }
+
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+        if(!StringOffsetComparisonStatement.ValidateLength(this)) {
+            return false;
+        }
+
+        return super.CanSave(stmtList, checkChildren);
+    }
+
+    Description(): string {
+        const { CanSave, length, caseSensitive } = this;
+        
+        if(!CanSave(null, false)) {
+            return null;
+        }
+
+        return `Compare the string at the current position and consisting of ${length} characters against the string `+
+            `denoted by the offset for the same length (case ${((!caseSensitive)?"in":"")}sensitive).`;
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    //sidtodo
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string
+    ): string {
+
+        return "";
+    }
+};
+
+export const TextParseVariableCreator = (): (name: string) => TextParseVariable => {
+
+    let nextId=1;
+
+    return (name: string): TextParseVariable => {
+
+        let _name=name;
+
+        const ID = nextId++;
+
+        return {
+            Name: () => _name,
+            Matches: (rhs: TextParseVariable) => (rhs.ID === ID),
+            ID: ID
+        };
+    };
 };

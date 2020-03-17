@@ -1,3 +1,4 @@
+import { TextParseVariable } from "./StatementTypes";
 
 export enum eCustomFunctionOperandType {
     length= 1,
@@ -16,11 +17,11 @@ export enum eCustomFunctionOperator {
 
 // Be mindful: if adding objects to this type in the future, ensure it is copied correctly in the copy function below.
 export interface ICustomFunctionOperand {
-    type?: eCustomFunctionOperandType;
-    variableName?: string;
-    functionName?: string;
+    type: eCustomFunctionOperandType;
+    MatchesVariable?: (variable: TextParseVariable) => boolean;
+    MatchesFunction?: (func: TextParseFunction) => boolean;
     arbitraryValue?: string;
-    showArbitraryValueDialog: boolean;
+    showArbitraryValueDialog?: boolean;
 };
 
 // At the moment of writing, a shallow copy is sufficient
@@ -30,6 +31,8 @@ export const CopyCustomFunctionOperand = (src: ICustomFunctionOperand): ICustomF
 };
 
 export interface TextParseFunction {
+    ID: number,
+
     Name: () => string;
     SetName: (name: string) => void;
 
@@ -46,10 +49,18 @@ export interface TextParseFunction {
     SetOperator: (operator: eCustomFunctionOperator) => void;
 
     IsValid: (funcList: TextParseFunction[], funcIdx: number) => boolean;
+
+    Matches: (rhs: TextParseFunction) => boolean;
 };
 
-export const CreateTextParsefunction = (ctrName: string) => {
-    return _CreateTextParsefunction(ctrName,"",null,null,eCustomFunctionOperator.add);
+export const CreateTextParseFunctionCreator = (): (ctrName: string) => TextParseFunction => {
+
+    let _nextID=1;
+
+    return (ctrName: string): TextParseFunction => {
+        return _CreateTextParsefunction(_nextID++, ctrName,"",
+            null,null,eCustomFunctionOperator.add);
+    }
 };
 
 const IsValidTextParseFunction = (
@@ -76,11 +87,14 @@ const IsValidTextParseFunction = (
 };
 
 const _CreateTextParsefunction = (
+    ID: number,
     ctrName: string,
     ctrDescr: string,
     leftHandOper: ICustomFunctionOperand,
     rightHandOper: ICustomFunctionOperand,
     operator: eCustomFunctionOperator): TextParseFunction => {
+
+    const _ID=ID;
 
     let _name: string=ctrName;
     let _descr: string=ctrDescr;
@@ -89,6 +103,8 @@ const _CreateTextParsefunction = (
     let _operator: eCustomFunctionOperator=operator;
 
     const rv: TextParseFunction = {
+        ID: _ID,
+
         Name: () => _name,
         SetName: (name: string) => {
             _name=name;
@@ -114,7 +130,9 @@ const _CreateTextParsefunction = (
             _operator=operator;
         },
 
-        IsValid: null
+        IsValid: null,
+
+        Matches: (rhs: TextParseFunction) => (rhs.ID === _ID)
     };
 
     rv.IsValid=(funcList: TextParseFunction[], funcIdx: number) => IsValidTextParseFunction(rv,funcList,funcIdx);
@@ -125,6 +143,7 @@ const _CreateTextParsefunction = (
 export const CopyTextParsefunction = (src: TextParseFunction) => {
 
     const copy=_CreateTextParsefunction(
+        src.ID,
         src.Name(),
         src.Description(),
         CopyCustomFunctionOperand(src.LeftHandOperand()),
