@@ -5,7 +5,8 @@ import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSSt
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
-import { TextParseFunction, CopyTextParsefunction, ICustomFunctionOperand, eCustomFunctionOperandType, eCustomFunctionOperator, CopyCustomFunctionOperand, CreateTextParseFunctionCreator } from "./CustomFunctions";
+import { TextParseFunction, CopyTextParsefunction, eCustomFunctionOperator, CreateTextParseFunctionCreator } from "./CustomFunctions";
+import { CopyParseOperand, IParseOperand, eParseOperandType } from "./Operands";
 import { MapAndRemoveIndex } from "../../Library/ContainerMethods";
 import { IsA32BitSignedNumber } from "../../Library/Misc";
 
@@ -222,10 +223,10 @@ interface ICustomFunctionsOperandDropdownProps {
     fGetVariables: () => TextParseVariable[];
     functions: TextParseFunction[];
     selFunctionIdx: number; // The index of the function currently being displayed
-    data: ICustomFunctionOperand;
+    data: IParseOperand;
     customFunction: TextParseFunction;
     SetCustomFunction: (func: TextParseFunction) => void;
-    SetOperand: (func: TextParseFunction, operand: ICustomFunctionOperand) => void;
+    SetOperand: (func: TextParseFunction, operand: IParseOperand) => void;
     // Used for defining a unique key for the react ctrl
     name: string;
     updater: SimpleDelayer;
@@ -1943,43 +1944,46 @@ const StringOffsetComparisonInputCtrl: React.FunctionComponent<IStringOffsetComp
     return (
         <>
 
-            <UpdateInputCtrl
-                statement={statement}
-                SetStatement={SetStatement}
-                placeholder="Length..."
-                title="How many characters to compare"
-                GetValue={StringOffsetComparisonStatement.GetLength}
-                SetValue={StringOffsetComparisonStatement.SetLength}
-                Validate={StringOffsetComparisonStatement.ValidateLength}
-                updater={updater}
-                name="length"
-            />
+            <Form.Field>
+                <UpdateInputCtrl
+                    statement={statement}
+                    SetStatement={SetStatement}
+                    placeholder="Length..."
+                    title="How many characters to compare"
+                    GetValue={StringOffsetComparisonStatement.GetLength}
+                    SetValue={StringOffsetComparisonStatement.SetLength}
+                    Validate={StringOffsetComparisonStatement.ValidateLength}
+                    updater={updater}
+                    name="length"
+                />
+            </Form.Field>
 
-            <br />
-            <br />
+            <Form.Field>
+                <FunctionAndVariableDropdownCtrl
+                    fGetVariables={fGetVariables}
+                    selection={statement.offset}
+                    functions={functions}
+                    onChange={(funcOrVariable: IFunctionOrVariableSelection) => {
+                        const updated=new StringOffsetComparisonStatement(statement);
+                        updated.offset = funcOrVariable;
+                        SetStatement(updated);
+                    }}
+                />
+            </Form.Field>
 
-            <FunctionAndVariableDropdownCtrl
-                fGetVariables={fGetVariables}
-                selection={statement.offset}
-                functions={functions}
-                onChange={(funcOrVariable: IFunctionOrVariableSelection) => {
-                    const updated=new StringOffsetComparisonStatement(statement);
-                    updated.offset = funcOrVariable;
-                    SetStatement(updated);
-                }}
-            />
+            <Form.Field>
+                <Checkbox
+                    label="Case sensitive"
+                    checked={statement.caseSensitive}
+                    onChange={() => {
 
-            <Checkbox
-                label="Case sensitive"
-                checked={statement.caseSensitive}
-                onChange={() => {
+                        const updated=new StringOffsetComparisonStatement(statement);
+                        updated.caseSensitive=!statement.caseSensitive;
 
-                    const updated=new StringOffsetComparisonStatement(statement);
-                    updated.caseSensitive=!statement.caseSensitive;
-
-                    SetStatement(updated);
-                }}
-            />
+                        SetStatement(updated);
+                    }}
+                />
+            </Form.Field>
         </>
     );
 };
@@ -1991,16 +1995,21 @@ const FunctionAndVariableDropdownCtrl : React.FunctionComponent<IFunctionAndVari
     const variableList=fGetVariables();
 
     // So we can differentiate between variables and functions
-    const variableOptionsValueOffset: number=100000;
+    enum eDropdownOptions {
+        functionsFirst = 100000,
+        functionsLast = 199999,
+        variablesFirst = 200000,
+        variablesLast = 299999
+    };
 
     let selValue=null;
 
     const options: DropdownItemProps[] = [
 
         ...functions.map((iterFunc,idx) => {
-            const value=idx;
+            const value=eDropdownOptions.functionsFirst + idx;
             const selected=(((selection && selection.MatchesFunction(iterFunc)))?true:false);
-            if(selected) selValue=selected;
+            if(selected) selValue=value;
 
             return {
                 key: value,
@@ -2011,9 +2020,9 @@ const FunctionAndVariableDropdownCtrl : React.FunctionComponent<IFunctionAndVari
         }),
 
         ...variableList.map((variable,iterIdx) => {
-            const value=variableOptionsValueOffset+iterIdx;
+            const value=eDropdownOptions.variablesFirst+iterIdx;
             const selected=(((selection && selection.MatchesVariable(variable)))?true:false);
-            if(selected) selValue=selected;
+            if(selected) selValue=value;
 
             return {
                 key: value,
@@ -2031,17 +2040,25 @@ const FunctionAndVariableDropdownCtrl : React.FunctionComponent<IFunctionAndVari
             value={selValue}
             pointing="top left"
             selectOnBlur={false}
+            title="Please select a function or variable"
+            placeholder="Select function or variable..."
             onChange={(e, value) => {
                 const selIdx=(value.value as number);
 
                 const funcOrVar: IFunctionOrVariableSelection=CreateFunctionOrVariableSelection();
 
-                if(selIdx>=variableOptionsValueOffset) {
-                    const variableIdx=selIdx-variableOptionsValueOffset;
-                    const variable=variableList[variableIdx];
-                    funcOrVar.SetVariable(variable);
+                switch(selIdx) {
+                    default:
+                        if(selIdx>=eDropdownOptions.variablesFirst && selIdx<=eDropdownOptions.variablesLast) {
+                            const variableIdx=selIdx-eDropdownOptions.variablesFirst;
+                            const variable=variableList[variableIdx];
+                            funcOrVar.SetVariable(variable);
 
-                } else funcOrVar.SetFunction(functions[selIdx]);
+                        } else if(selIdx >= eDropdownOptions.functionsFirst && selIdx <= eDropdownOptions.functionsLast) {
+                            funcOrVar.SetFunction(functions[selIdx - eDropdownOptions.functionsFirst]);
+                        }
+                        break;
+                }
 
                 onChange(funcOrVar);
             }}
@@ -2294,7 +2311,7 @@ const CustomFunctionsOperatorDropdown: React.FunctionComponent<ITextParseProps &
     );
 };
 
-enum eCustomFunctionOperandOptions {
+enum eParseOperandOptions {
     length= 1,
     currentPosition= 2,
     arbitraryValue=3,
@@ -2306,7 +2323,7 @@ enum eCustomFunctionOperandOptions {
 };
 
 const GetCustomFunctionsOperandSelIdx = (
-    data: ICustomFunctionOperand,
+    data: IParseOperand,
     variableList: TextParseVariable[],
     functions: TextParseFunction[]
 ): number | undefined => {
@@ -2314,73 +2331,73 @@ const GetCustomFunctionsOperandSelIdx = (
     if(!data || data.type===undefined) return undefined;
 
     switch(data.type) {
-        case eCustomFunctionOperandType.length:
-            return eCustomFunctionOperandOptions.length;
+        case eParseOperandType.length:
+            return eParseOperandOptions.length;
 
-        case eCustomFunctionOperandType.currentPosition:
-            return eCustomFunctionOperandOptions.currentPosition;
+        case eParseOperandType.currentPosition:
+            return eParseOperandOptions.currentPosition;
 
-        case eCustomFunctionOperandType.arbitraryValue:
-            return eCustomFunctionOperandOptions.arbitraryValue;
+        case eParseOperandType.arbitraryValue:
+            return eParseOperandOptions.arbitraryValue;
 
-        case eCustomFunctionOperandType.variable:
+        case eParseOperandType.variable:
             {
                 const foundIdx=variableList.findIndex(iterVar => data.MatchesVariable(iterVar));
-                return ((foundIdx>=0) ? eCustomFunctionOperandOptions.variablesBegin + foundIdx : undefined);
+                return ((foundIdx>=0) ? eParseOperandOptions.variablesBegin + foundIdx : undefined);
             }
 
-        case eCustomFunctionOperandType.function:
+        case eParseOperandType.function:
             {
                 const foundIdx=functions.findIndex(iterFunc => data.MatchesFunction(iterFunc));
-                return ((foundIdx >= 0) ? eCustomFunctionOperandOptions.functionsBegin + foundIdx : undefined);
+                return ((foundIdx >= 0) ? eParseOperandOptions.functionsBegin + foundIdx : undefined);
             }
     }
 };
 
 const CustomFunctionsOperandDropdown_UpdateOperand = (
     selIdx: number,
-    orgOperand: ICustomFunctionOperand,
+    orgOperand: IParseOperand,
     variableList: TextParseVariable[],
     functions: TextParseFunction[]
-): ICustomFunctionOperand => {
+): IParseOperand => {
 
     switch(selIdx) {
 
-        case eCustomFunctionOperandOptions.length:
-            return {type: eCustomFunctionOperandType.length};
+        case eParseOperandOptions.length:
+            return {type: eParseOperandType.length};
 
-        case eCustomFunctionOperandOptions.currentPosition:
-            return {type: eCustomFunctionOperandType.currentPosition};
+        case eParseOperandOptions.currentPosition:
+            return {type: eParseOperandType.currentPosition};
 
-        case eCustomFunctionOperandOptions.selectArbitraryValue:
+        case eParseOperandOptions.selectArbitraryValue:
 
             if(orgOperand) {
                 return {
-                    ...CopyCustomFunctionOperand(orgOperand),
+                    ...CopyParseOperand(orgOperand),
                     showArbitraryValueDialog: true
                 };
             }
 
             return {
-                type: eCustomFunctionOperandType.arbitraryValue,
+                type: eParseOperandType.arbitraryValue,
                 showArbitraryValueDialog: true
             };
 
         default:
-            if(selIdx>=eCustomFunctionOperandOptions.variablesBegin && selIdx <= eCustomFunctionOperandOptions.variablesEnd) {
+            if(selIdx>=eParseOperandOptions.variablesBegin && selIdx <= eParseOperandOptions.variablesEnd) {
 
-                const variableIdx=selIdx-eCustomFunctionOperandOptions.variablesBegin;
+                const variableIdx=selIdx-eParseOperandOptions.variablesBegin;
 
                 return {
-                    type: eCustomFunctionOperandType.variable,
+                    type: eParseOperandType.variable,
                     MatchesVariable: variableList[variableIdx].Matches
                 };
             }
 
-            const dropdownFuncIdx=selIdx-eCustomFunctionOperandOptions.functionsBegin;
+            const dropdownFuncIdx=selIdx-eParseOperandOptions.functionsBegin;
 
             return {
-                type: eCustomFunctionOperandType.function,
+                type: eParseOperandType.function,
                 MatchesFunction: functions[dropdownFuncIdx].Matches
             };
     }
@@ -2392,22 +2409,22 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
 
     // Don't include the selected function that we are currently editing (don't use a function as an operand to itself)
     const functionOptions=MapAndRemoveIndex(functions,selFunctionIdx,(iterFunc,idx) => {
-        const value=eCustomFunctionOperandOptions.functionsBegin+idx;
+        const value=eParseOperandOptions.functionsBegin+idx;
         return {
             key: value,
             text: `${iterFunc.Name()} (function)`,
             value: value,
-            selected: ((data && data.type === eCustomFunctionOperandType.function && data.MatchesFunction(iterFunc))?true:false)
+            selected: ((data && data.type === eParseOperandType.function && data.MatchesFunction(iterFunc))?true:false)
         };
     });
 
     const variableList: TextParseVariable[] = fGetVariables();
 
     let optionalArbitraryValueOption: DropdownItemProps[]=[];
-    if(data && data.type===eCustomFunctionOperandType.arbitraryValue) {
+    if(data && data.type===eParseOperandType.arbitraryValue) {
         optionalArbitraryValueOption.push({
-            key: eCustomFunctionOperandOptions.arbitraryValue,
-            value: eCustomFunctionOperandOptions.arbitraryValue,
+            key: eParseOperandOptions.arbitraryValue,
+            value: eParseOperandOptions.arbitraryValue,
             text: data.arbitraryValue,
             active: true,
             selected: true
@@ -2416,36 +2433,36 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
 
     const options: DropdownItemProps[] = [
         {
-            key: eCustomFunctionOperandOptions.length,
+            key: eParseOperandOptions.length,
             text: "Length of input string",
-            value: eCustomFunctionOperandOptions.length,
-            selected: ((data && data.type === eCustomFunctionOperandType.length)?true:false)
+            value: eParseOperandOptions.length,
+            selected: ((data && data.type === eParseOperandType.length)?true:false)
         },
 
         {
-            key: eCustomFunctionOperandOptions.currentPosition,
+            key: eParseOperandOptions.currentPosition,
             text: "Current position / index (0 based)",
-            value: eCustomFunctionOperandOptions.currentPosition,
-            selected: ((data && data.type === eCustomFunctionOperandType.currentPosition)?true:false)
+            value: eParseOperandOptions.currentPosition,
+            selected: ((data && data.type === eParseOperandType.currentPosition)?true:false)
         },
 
         ...optionalArbitraryValueOption,
 
         {
-            key: eCustomFunctionOperandOptions.selectArbitraryValue,
+            key: eParseOperandOptions.selectArbitraryValue,
             text: "(Select arbitrary value)...",
-            value: eCustomFunctionOperandOptions.selectArbitraryValue,
+            value: eParseOperandOptions.selectArbitraryValue,
             active: false,
             selected: false
         },
 
         ...variableList.map((variable,iterIdx) => {
-            const value=eCustomFunctionOperandOptions.variablesBegin+iterIdx;
+            const value=eParseOperandOptions.variablesBegin+iterIdx;
             return {
                 key: value,
                 text: `${variable.Name()} (variable)`,
                 value: value,
-                selected: ((data && data.type === eCustomFunctionOperandType.variable && data.MatchesVariable(variable))?true:false)
+                selected: ((data && data.type === eParseOperandType.variable && data.MatchesVariable(variable))?true:false)
             }
         }),
 
@@ -2470,7 +2487,7 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
                     const updatedFunction=CopyTextParsefunction(customFunction);
 
                     const updatedOperand={
-                        ...CopyCustomFunctionOperand(data),
+                        ...CopyParseOperand(data),
                         arbitraryValue: value
                     };
 
@@ -2481,8 +2498,8 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
                 onOk={() => {
                     const updatedFunction=CopyTextParsefunction(customFunction);
                     const updatedOperand={
-                        ...CopyCustomFunctionOperand(data),
-                        type: eCustomFunctionOperandType.arbitraryValue,
+                        ...CopyParseOperand(data),
+                        type: eParseOperandType.arbitraryValue,
                         showArbitraryValueDialog: false
                     };
                     SetOperand(updatedFunction, updatedOperand);
@@ -2491,9 +2508,9 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
                 onCancel={() => {
                     const updatedFunction=CopyTextParsefunction(customFunction);
                     const updatedOperand={
-                        ...CopyCustomFunctionOperand(data),
+                        ...CopyParseOperand(data),
                         arbitraryValue:
-                            ((data.type===eCustomFunctionOperandType.arbitraryValue) ? data.arbitraryValue : undefined),
+                            ((data.type===eParseOperandType.arbitraryValue) ? data.arbitraryValue : undefined),
                         showArbitraryValueDialog: false
                     };
                     SetOperand(updatedFunction, updatedOperand);
@@ -2508,6 +2525,8 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
                 value={selIdx}
                 pointing="top left"
                 selectOnBlur={false}
+                title="Please select an operand"
+                placeholder="..."
                 onChange={(e, value) => {
                     const selIdx=(value.value as number);
 

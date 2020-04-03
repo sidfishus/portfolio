@@ -1,33 +1,12 @@
-import { TextParseVariable } from "./StatementTypes";
 
-export enum eCustomFunctionOperandType {
-    length= 1,
-    currentPosition=2,
-    arbitraryValue=3,
-    variable=4,
-    function=5,
-};
+import { TextParseVariable } from "./StatementTypes";
+import { IParseOperand, CopyParseOperand } from "./Operands";
 
 export enum eCustomFunctionOperator {
     add=1,
     subtract=2,
     multiply=3,
     divide=4
-};
-
-// Be mindful: if adding objects to this type in the future, ensure it is copied correctly in the copy function below.
-export interface ICustomFunctionOperand {
-    type: eCustomFunctionOperandType;
-    MatchesVariable?: (variable: TextParseVariable) => boolean;
-    MatchesFunction?: (func: TextParseFunction) => boolean;
-    arbitraryValue?: string;
-    showArbitraryValueDialog?: boolean;
-};
-
-// At the moment of writing, a shallow copy is sufficient
-export const CopyCustomFunctionOperand = (src: ICustomFunctionOperand): ICustomFunctionOperand => {
-    if(!src) return null;
-    return {...src};
 };
 
 export interface TextParseFunction {
@@ -39,11 +18,11 @@ export interface TextParseFunction {
     Description: () => string;
     SetDescription: (descr: string) => void;
 
-    LeftHandOperand: () => ICustomFunctionOperand;
-    SetLeftHandOperand: (oper: ICustomFunctionOperand) => void;
+    LeftHandOperand: () => IParseOperand;
+    SetLeftHandOperand: (oper: IParseOperand) => void;
 
-    RightHandOperand: () => ICustomFunctionOperand;
-    SetRightHandOperand: (oper: ICustomFunctionOperand) => void;
+    RightHandOperand: () => IParseOperand;
+    SetRightHandOperand: (oper: IParseOperand) => void;
 
     Operator: () => eCustomFunctionOperator;
     SetOperator: (operator: eCustomFunctionOperator) => void;
@@ -90,16 +69,16 @@ const _CreateTextParsefunction = (
     ID: number,
     ctrName: string,
     ctrDescr: string,
-    leftHandOper: ICustomFunctionOperand,
-    rightHandOper: ICustomFunctionOperand,
+    leftHandOper: IParseOperand,
+    rightHandOper: IParseOperand,
     operator: eCustomFunctionOperator): TextParseFunction => {
 
     const _ID=ID;
 
     let _name: string=ctrName;
     let _descr: string=ctrDescr;
-    let _leftHandOperand: ICustomFunctionOperand=leftHandOper;
-    let _rightHandOperand: ICustomFunctionOperand=rightHandOper;
+    let _leftHandOperand: IParseOperand=leftHandOper;
+    let _rightHandOperand: IParseOperand=rightHandOper;
     let _operator: eCustomFunctionOperator=operator;
 
     const rv: TextParseFunction = {
@@ -116,12 +95,12 @@ const _CreateTextParsefunction = (
         },
 
         LeftHandOperand: () => _leftHandOperand,
-        SetLeftHandOperand: (oper: ICustomFunctionOperand) => {
+        SetLeftHandOperand: (oper: IParseOperand) => {
             _leftHandOperand=oper;
         },
 
         RightHandOperand: () => _rightHandOperand,
-        SetRightHandOperand: (oper: ICustomFunctionOperand) => {
+        SetRightHandOperand: (oper: IParseOperand) => {
             _rightHandOperand=oper;
         },
 
@@ -146,8 +125,8 @@ export const CopyTextParsefunction = (src: TextParseFunction) => {
         src.ID,
         src.Name(),
         src.Description(),
-        CopyCustomFunctionOperand(src.LeftHandOperand()),
-        CopyCustomFunctionOperand(src.RightHandOperand()),
+        CopyParseOperand(src.LeftHandOperand()),
+        CopyParseOperand(src.RightHandOperand()),
         src.Operator()
     );
 

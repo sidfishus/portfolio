@@ -964,10 +964,12 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
             this.type=eStatementType.StringOffset_Comp;
             this.length="";
             this.caseSensitive=false;
+            this.offset=null;
         }
         else {
             this.length=copy.length;
             this.caseSensitive=copy.caseSensitive;
+            this.offset=copy.offset;
         }
     }
 
@@ -1030,6 +1032,15 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string
     ): string {
+
+        /*
+        const { caseSensitive, str, name } = this;
+
+        //TODO library function.
+        const caseSensitiveStr= ((caseSensitive)?"true":"false");
+
+        return fAddStatement(`new StringComparison(${log},new Options(${log}){CaseSensitive=${caseSensitiveStr}},${EncodeString(str)},"${name}")`);
+        */
 
         return "";
     }
