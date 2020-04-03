@@ -219,7 +219,7 @@ interface ICustomFunctionCtrlProps {
     funcIdx: number;
 };
 
-interface ICustomFunctionsOperandDropdownProps {
+interface IParseOperandDropdownProps {
     fGetVariables: () => TextParseVariable[];
     functions: TextParseFunction[];
     selFunctionIdx: number; // The index of the function currently being displayed
@@ -2322,7 +2322,7 @@ enum eParseOperandOptions {
     functionsEnd= 19999
 };
 
-const GetCustomFunctionsOperandSelIdx = (
+const GetParseOperandSelIdx = (
     data: IParseOperand,
     variableList: TextParseVariable[],
     functions: TextParseFunction[]
@@ -2354,7 +2354,7 @@ const GetCustomFunctionsOperandSelIdx = (
     }
 };
 
-const CustomFunctionsOperandDropdown_UpdateOperand = (
+const ParseOperandDropdown_UpdateOperand = (
     selIdx: number,
     orgOperand: IParseOperand,
     variableList: TextParseVariable[],
@@ -2403,7 +2403,7 @@ const CustomFunctionsOperandDropdown_UpdateOperand = (
     }
 };
 
-const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & ICustomFunctionsOperandDropdownProps> = (props) => {
+const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOperandDropdownProps> = (props) => {
 
     const { fGetVariables, functions, selFunctionIdx, data, customFunction, SetOperand, SetCustomFunction, name, updater, updatePending } = props;
 
@@ -2472,7 +2472,7 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
     const keyBase=`${name}${selFunctionIdx}`;
 
     //// Selected index
-    const selIdx=GetCustomFunctionsOperandSelIdx(data, variableList, functions);
+    const selIdx=GetParseOperandSelIdx(data, variableList, functions);
 
     return (
         <>
@@ -2532,7 +2532,7 @@ const CustomFunctionsOperandDropdown: React.FunctionComponent<ITextParseProps & 
 
                     const updatedFunction=CopyTextParsefunction(customFunction);
 
-                    const updatedOperand=CustomFunctionsOperandDropdown_UpdateOperand(
+                    const updatedOperand=ParseOperandDropdown_UpdateOperand(
                         selIdx, data, variableList, functions);
 
                     SetOperand(updatedFunction, updatedOperand);
@@ -2602,7 +2602,7 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
                         <br />
                         {/* This is the only way I can get a tab to work. I'd love to know of a better way! */}
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <CustomFunctionsOperandDropdown
+                        <ParseOperandDropdown
                             {...props}
                             functions={functions}
                             fGetVariables={fGetVariables}
@@ -2626,7 +2626,7 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
 
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                        <CustomFunctionsOperandDropdown
+                        <ParseOperandDropdown
                             {...props}
                             functions={functions}
                             fGetVariables={fGetVariables}
