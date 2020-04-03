@@ -219,7 +219,7 @@ interface ICustomFunctionCtrlProps {
     funcIdx: number;
 };
 
-interface IParseOperandDropdownProps {
+interface ICustomFunctionOperandDropdownProps {
     fGetVariables: () => TextParseVariable[];
     functions: TextParseFunction[];
     selFunctionIdx: number; // The index of the function currently being displayed
@@ -227,6 +227,17 @@ interface IParseOperandDropdownProps {
     customFunction: TextParseFunction;
     SetCustomFunction: (func: TextParseFunction) => void;
     SetOperand: (func: TextParseFunction, operand: IParseOperand) => void;
+    // Used for defining a unique key for the react ctrl
+    name: string;
+    updater: SimpleDelayer;
+    updatePending: boolean;
+};
+
+interface IParseOperandDropdownProps {
+    fGetVariables: () => TextParseVariable[];
+    functions: TextParseFunction[];
+    data: IParseOperand;
+    SetOperand: (operand: IParseOperand) => void;
     // Used for defining a unique key for the react ctrl
     name: string;
     updater: SimpleDelayer;
@@ -2403,12 +2414,30 @@ const ParseOperandDropdown_UpdateOperand = (
     }
 };
 
+const CustomFunctionOperandDropdown: React.FunctionComponent<ITextParseProps & ICustomFunctionOperandDropdownProps> = (props) => {
+
+    const { selFunctionIdx, name, customFunction, SetCustomFunction } = props;
+
+    const SetOperand= (operand: IParseOperand) => {
+        const updatedFunction=CopyTextParsefunction(customFunction);
+        props.SetOperand(updatedFunction, operand);
+        SetCustomFunction(updatedFunction);
+    };
+
+    return (
+        <ParseOperandDropdown
+            {...props}
+            name={`${name}${selFunctionIdx}`}
+            SetOperand={SetOperand}
+        />
+    );
+};
+
 const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOperandDropdownProps> = (props) => {
 
-    const { fGetVariables, functions, selFunctionIdx, data, customFunction, SetOperand, SetCustomFunction, name, updater, updatePending } = props;
+    const { fGetVariables, functions, data, SetOperand, name, updater, updatePending } = props;
 
-    // Don't include the selected function that we are currently editing (don't use a function as an operand to itself)
-    const functionOptions=MapAndRemoveIndex(functions,selFunctionIdx,(iterFunc,idx) => {
+    const functionOptions=functions.map((iterFunc,idx) => {
         const value=eParseOperandOptions.functionsBegin+idx;
         return {
             key: value,
@@ -2420,7 +2449,7 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
 
     const variableList: TextParseVariable[] = fGetVariables();
 
-    let optionalArbitraryValueOption: DropdownItemProps[]=[];
+    const optionalArbitraryValueOption: DropdownItemProps[]=[];
     if(data && data.type===eParseOperandType.arbitraryValue) {
         optionalArbitraryValueOption.push({
             key: eParseOperandOptions.arbitraryValue,
@@ -2469,57 +2498,49 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
         ...functionOptions
     ];
 
-    const keyBase=`${name}${selFunctionIdx}`;
-
     //// Selected index
     const selIdx=GetParseOperandSelIdx(data, variableList, functions);
 
     return (
         <>
             <InputModal
-                key={`${keyBase}handArbitraryValueModal`}
+                key={`${name}handArbitraryValueModal`}
                 open={data && data.showArbitraryValueDialog}
                 headerIcon="pencil"
                 headerText="Please Enter the Arbitrary Value (32 Bit Signed Integer)"
                 valid={((data && IsA32BitSignedNumber(data.arbitraryValue))?true:false)}
                 value={data?.arbitraryValue}
                 onChange={(value) => updater.DelayedCall(() => {
-                    const updatedFunction=CopyTextParsefunction(customFunction);
 
                     const updatedOperand={
                         ...CopyParseOperand(data),
                         arbitraryValue: value
                     };
 
-                    SetOperand(updatedFunction, updatedOperand);
-                    SetCustomFunction(updatedFunction);
+                    SetOperand(updatedOperand);
                 })}
                 okAvailable={!updatePending}
                 onOk={() => {
-                    const updatedFunction=CopyTextParsefunction(customFunction);
                     const updatedOperand={
                         ...CopyParseOperand(data),
                         type: eParseOperandType.arbitraryValue,
                         showArbitraryValueDialog: false
                     };
-                    SetOperand(updatedFunction, updatedOperand);
-                    SetCustomFunction(updatedFunction);
+                    SetOperand(updatedOperand);
                 }}
                 onCancel={() => {
-                    const updatedFunction=CopyTextParsefunction(customFunction);
                     const updatedOperand={
                         ...CopyParseOperand(data),
                         arbitraryValue:
                             ((data.type===eParseOperandType.arbitraryValue) ? data.arbitraryValue : undefined),
                         showArbitraryValueDialog: false
                     };
-                    SetOperand(updatedFunction, updatedOperand);
-                    SetCustomFunction(updatedFunction);
+                    SetOperand(updatedOperand);
                 }}
             />
 
             <Dropdown
-                key={`${keyBase}handDropdown`}
+                key={`${name}handDropdown`}
                 error={!data || data.type===undefined}
                 options={options}
                 value={selIdx}
@@ -2530,13 +2551,10 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
                 onChange={(e, value) => {
                     const selIdx=(value.value as number);
 
-                    const updatedFunction=CopyTextParsefunction(customFunction);
-
                     const updatedOperand=ParseOperandDropdown_UpdateOperand(
                         selIdx, data, variableList, functions);
 
-                    SetOperand(updatedFunction, updatedOperand);
-                    SetCustomFunction(updatedFunction);
+                    SetOperand(updatedOperand);
                 }}
             >
             </Dropdown>
@@ -2546,12 +2564,15 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
 
 const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunctionsProps> = (props) => {
 
-    const { selFunctionIdx, functions, SetCustomFunction, updater, fGetVariables, updatePending, firstFailingFunction } = props;
+    const { selFunctionIdx, SetCustomFunction, updater, fGetVariables, updatePending, firstFailingFunction, functions } = props;
 
-    let selCustomFunc=null;
-    if(selFunctionIdx !== null) {
-        selCustomFunc = functions[selFunctionIdx];
-    }
+    const selCustomFunc=((selFunctionIdx !== null) ? props.functions[selFunctionIdx] : null);
+
+    // Remove this function from the list of functions dropdown
+    const operandFunctions=((selFunctionIdx !== null) ?
+        functions.filter((unused, iterIdx) => iterIdx !== selFunctionIdx) :
+        functions
+    );
 
     return (
         <Segment padded>
@@ -2602,9 +2623,9 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
                         <br />
                         {/* This is the only way I can get a tab to work. I'd love to know of a better way! */}
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <ParseOperandDropdown
+                        <CustomFunctionOperandDropdown
                             {...props}
-                            functions={functions}
+                            functions={operandFunctions}
                             fGetVariables={fGetVariables}
                             selFunctionIdx={selFunctionIdx}
                             customFunction={selCustomFunc}
@@ -2626,9 +2647,9 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
 
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                        <ParseOperandDropdown
+                        <CustomFunctionOperandDropdown
                             {...props}
-                            functions={functions}
+                            functions={operandFunctions}
                             fGetVariables={fGetVariables}
                             selFunctionIdx={selFunctionIdx}
                             customFunction={selCustomFunc}
