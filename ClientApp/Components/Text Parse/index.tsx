@@ -1,7 +1,7 @@
 
 import React, {useState, useRef, Fragment} from "react";
 import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox, Modal, Button, Icon, Table, Loader, List, Message, Header, ButtonProps, DropdownItemProps, TableRowProps } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, IFunctionOrVariableSelection, TextParseVariable, CreateFunctionOrVariableSelection, TextParseVariableCreator } from "./StatementTypes";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, TextParseVariable, TextParseVariableCreator } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
@@ -97,13 +97,7 @@ interface IModalCtrlProps {
 interface IStringOffsetComparisonCtrlProps extends ITextParseStatementState {
     fGetVariables: () => TextParseVariable[];
     functions: Array<TextParseFunction>;
-};
-
-interface IFunctionAndVariableDropdownCtrlProps {
-    fGetVariables: () => TextParseVariable[];
-    functions: Array<TextParseFunction>;
-    selection: IFunctionOrVariableSelection;
-    onChange: (funcOrVar: IFunctionOrVariableSelection) => void;
+    updatePending: boolean;
 };
 
 enum eModalType {
@@ -242,6 +236,8 @@ interface IParseOperandDropdownProps {
     name: string;
     updater: SimpleDelayer;
     updatePending: boolean;
+    includeLength?: boolean;
+    includeCurrentPosition?: boolean;
 };
 
 interface ICustomFunctionsOperatorDropdownProps {
@@ -724,6 +720,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         updater={updater}
                         fGetVariables={fGetVariables}
                         functions={functions}
+                        updatePending={updatePending}
                     />;
                 break;
         }
@@ -1949,7 +1946,7 @@ const StringOffsetComparisonInputCtrl: React.FunctionComponent<IStringOffsetComp
 }> =
     (props) => {
 
-    const { SetStatement, updater, fGetVariables, functions } = props;
+    const { SetStatement, updater, fGetVariables, functions, updatePending } = props;
     const statement = props.statement as StringOffsetComparisonStatement;
 
     return (
@@ -1965,18 +1962,38 @@ const StringOffsetComparisonInputCtrl: React.FunctionComponent<IStringOffsetComp
                     SetValue={StringOffsetComparisonStatement.SetLength}
                     Validate={StringOffsetComparisonStatement.ValidateLength}
                     updater={updater}
-                    name="length"
+                    name="stringoffsetcomparisonlength"
                 />
             </Form.Field>
 
             <Form.Field>
-                <FunctionAndVariableDropdownCtrl
-                    fGetVariables={fGetVariables}
-                    selection={statement.offset}
+                <ParseOperandDropdown
+                    {...props}
                     functions={functions}
-                    onChange={(funcOrVariable: IFunctionOrVariableSelection) => {
+                    fGetVariables={fGetVariables}
+                    SetOperand={_oper => {
                         const updated=new StringOffsetComparisonStatement(statement);
-                        updated.offset = funcOrVariable;
+                        updated.offset = _oper;
+                        SetStatement(updated);
+                    }}
+                    data={statement.offset}
+                    name="stringoffsetcomparisonoffset"
+                    updater={updater}
+                    updatePending={updatePending}
+                    includeLength={false}
+                    includeCurrentPosition={false}
+                />
+            </Form.Field>
+
+            <Form.Field>
+                <Checkbox
+                    label="Reverse match"
+                    checked={statement.reverse}
+                    onChange={() => {
+
+                        const updated=new StringOffsetComparisonStatement(statement);
+                        updated.reverse=!statement.reverse;
+
                         SetStatement(updated);
                     }}
                 />
@@ -1996,85 +2013,6 @@ const StringOffsetComparisonInputCtrl: React.FunctionComponent<IStringOffsetComp
                 />
             </Form.Field>
         </>
-    );
-};
-
-const FunctionAndVariableDropdownCtrl : React.FunctionComponent<IFunctionAndVariableDropdownCtrlProps> = (props) => {
-
-    const { fGetVariables, functions, selection, onChange } = props;
-
-    const variableList=fGetVariables();
-
-    // So we can differentiate between variables and functions
-    enum eDropdownOptions {
-        functionsFirst = 100000,
-        functionsLast = 199999,
-        variablesFirst = 200000,
-        variablesLast = 299999
-    };
-
-    let selValue=null;
-
-    const options: DropdownItemProps[] = [
-
-        ...functions.map((iterFunc,idx) => {
-            const value=eDropdownOptions.functionsFirst + idx;
-            const selected=(((selection && selection.MatchesFunction(iterFunc)))?true:false);
-            if(selected) selValue=value;
-
-            return {
-                key: value,
-                text: `${iterFunc.Name()} (function)`,
-                value: value,
-                selected: selected
-            };
-        }),
-
-        ...variableList.map((variable,iterIdx) => {
-            const value=eDropdownOptions.variablesFirst+iterIdx;
-            const selected=(((selection && selection.MatchesVariable(variable)))?true:false);
-            if(selected) selValue=value;
-
-            return {
-                key: value,
-                text: `${variable.Name()} (variable)`,
-                value: value,
-                selected: selected
-            }
-        }),
-    ];
-
-    return (
-        <Dropdown
-            error={!selection}
-            options={options}
-            value={selValue}
-            pointing="top left"
-            selectOnBlur={false}
-            title="Please select a function or variable"
-            placeholder="Select function or variable..."
-            onChange={(e, value) => {
-                const selIdx=(value.value as number);
-
-                const funcOrVar: IFunctionOrVariableSelection=CreateFunctionOrVariableSelection();
-
-                switch(selIdx) {
-                    default:
-                        if(selIdx>=eDropdownOptions.variablesFirst && selIdx<=eDropdownOptions.variablesLast) {
-                            const variableIdx=selIdx-eDropdownOptions.variablesFirst;
-                            const variable=variableList[variableIdx];
-                            funcOrVar.SetVariable(variable);
-
-                        } else if(selIdx >= eDropdownOptions.functionsFirst && selIdx <= eDropdownOptions.functionsLast) {
-                            funcOrVar.SetFunction(functions[selIdx - eDropdownOptions.functionsFirst]);
-                        }
-                        break;
-                }
-
-                onChange(funcOrVar);
-            }}
-        >
-        </Dropdown>
     );
 };
 
@@ -2435,7 +2373,7 @@ const CustomFunctionOperandDropdown: React.FunctionComponent<ITextParseProps & I
 
 const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOperandDropdownProps> = (props) => {
 
-    const { fGetVariables, functions, data, SetOperand, name, updater, updatePending } = props;
+    const { fGetVariables, functions, data, SetOperand, name, updater, updatePending, includeLength, includeCurrentPosition } = props;
 
     const functionOptions=functions.map((iterFunc,idx) => {
         const value=eParseOperandOptions.functionsBegin+idx;
@@ -2449,31 +2387,47 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
 
     const variableList: TextParseVariable[] = fGetVariables();
 
-    const optionalArbitraryValueOption: DropdownItemProps[]=[];
-    if(data && data.type===eParseOperandType.arbitraryValue) {
-        optionalArbitraryValueOption.push({
-            key: eParseOperandOptions.arbitraryValue,
-            value: eParseOperandOptions.arbitraryValue,
-            text: data.arbitraryValue,
-            active: true,
-            selected: true
-        });
-    }
+    const lengthOption: DropdownItemProps[] = ((includeLength === undefined || includeLength) ?
+        (
+            [{
+                key: eParseOperandOptions.length,
+                text: "Length of input string",
+                value: eParseOperandOptions.length,
+                selected: ((data && data.type === eParseOperandType.length)?true:false)
+            }]
+        ) :
+        []
+    );
+
+    const currentPosOption: DropdownItemProps[] = ((includeCurrentPosition === undefined || includeCurrentPosition) ?
+        (
+            [{
+                key: eParseOperandOptions.currentPosition,
+                text: "Current position / index (0 based)",
+                value: eParseOperandOptions.currentPosition,
+                selected: ((data && data.type === eParseOperandType.currentPosition)?true:false)
+            }]
+        ) :
+        []
+    );
+
+    const optionalArbitraryValueOption: DropdownItemProps[] = ((data && data.type===eParseOperandType.arbitraryValue) ?
+        (
+            [{
+                key: eParseOperandOptions.arbitraryValue,
+                value: eParseOperandOptions.arbitraryValue,
+                text: data.arbitraryValue,
+                active: true,
+                selected: true
+            }]
+        ) :
+        []
+    );
 
     const options: DropdownItemProps[] = [
-        {
-            key: eParseOperandOptions.length,
-            text: "Length of input string",
-            value: eParseOperandOptions.length,
-            selected: ((data && data.type === eParseOperandType.length)?true:false)
-        },
+        ...lengthOption,
 
-        {
-            key: eParseOperandOptions.currentPosition,
-            text: "Current position / index (0 based)",
-            value: eParseOperandOptions.currentPosition,
-            selected: ((data && data.type === eParseOperandType.currentPosition)?true:false)
-        },
+        ...currentPosOption,
 
         ...optionalArbitraryValueOption,
 

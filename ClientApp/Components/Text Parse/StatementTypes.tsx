@@ -2,7 +2,7 @@
 import { SemanticICONS } from "semantic-ui-react";
 import { EncodeString} from "./ExecuteParse";
 import { IsAlpha, IsA32BitSignedNumber } from "../../Library/Misc";
-import { TextParseFunction } from "./CustomFunctions";
+import { IParseOperand } from "./Operands";
 
 export enum eStatementType {
 
@@ -44,30 +44,6 @@ export interface TextParseVariable {
     Name: () => string;
     Matches: (rhs: TextParseVariable) => boolean;
     ID: number;
-};
-
-// Where a function or variable is specified as the parameter to a statement
-export interface IFunctionOrVariableSelection {
-    GetFunction: () => TextParseFunction;
-    GetVariable: () => TextParseVariable;
-    SetFunction: (func: TextParseFunction) => void;
-    SetVariable: (variable: TextParseVariable) => void;
-    MatchesFunction: (func: TextParseFunction) => boolean;
-    MatchesVariable: (variable: TextParseVariable) => boolean;
-};
-
-export const CreateFunctionOrVariableSelection = () => {
-    let _func: TextParseFunction=null;
-    let _var: TextParseVariable=null;
-
-    return {
-        GetFunction: () => _func,
-        GetVariable: () => _var,
-        SetFunction: (func: TextParseFunction) => _func = func,
-        SetVariable: (variable: TextParseVariable) => _var = variable,
-        MatchesFunction: (func: TextParseFunction) => (_func !== null && _func.Matches(func)),
-        MatchesVariable: (variable: TextParseVariable) => (_var !== null && _var.Matches(variable))
-    };
 };
 
 // The index corresponds to the 'eStatementType' enum
@@ -954,9 +930,10 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
 
 export class StringOffsetComparisonStatement extends TextParseStatement {
 
-    public length: string;
+    public length: string; //sidtodo change to operand
     public caseSensitive: boolean;
-    public offset: IFunctionOrVariableSelection;
+    public offset: IParseOperand;
+    public reverse: boolean;
 
     constructor(copy?: StringOffsetComparisonStatement) {
         super(copy);
@@ -965,11 +942,13 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
             this.length="";
             this.caseSensitive=false;
             this.offset=null;
+            this.reverse=false;
         }
         else {
             this.length=copy.length;
             this.caseSensitive=copy.caseSensitive;
             this.offset=copy.offset;
+            this.reverse=copy.reverse;
         }
     }
 
