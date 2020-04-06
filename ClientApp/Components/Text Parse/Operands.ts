@@ -16,8 +16,16 @@ export interface IParseOperand {
     MatchesVariable?: (variable: TextParseVariable) => boolean;
     MatchesFunction?: (func: TextParseFunction) => boolean;
     arbitraryValue?: string;
+    arbitraryValueUpdate?: string; // Temporary arbitrary value
     showArbitraryValueDialog?: boolean;
 };
+
+export const ParseOperandIsValid = (oper: IParseOperand) => {
+    return oper && (
+        oper.type!=eParseOperandType.arbitraryValue ||
+        (oper.type===eParseOperandType.arbitraryValue && oper.arbitraryValue!==undefined)
+    );
+}
 
 // At the moment of writing, a shallow copy is sufficient
 export const CopyParseOperand = (src: IParseOperand): IParseOperand => {

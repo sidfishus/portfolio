@@ -2,7 +2,7 @@
 import { SemanticICONS } from "semantic-ui-react";
 import { EncodeString} from "./ExecuteParse";
 import { IsAlpha, IsA32BitSignedNumber } from "../../Library/Misc";
-import { IParseOperand } from "./Operands";
+import { IParseOperand, ParseOperandIsValid } from "./Operands";
 
 export enum eStatementType {
 
@@ -930,7 +930,7 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
 
 export class StringOffsetComparisonStatement extends TextParseStatement {
 
-    public length: string; //sidtodo change to operand
+    public length: IParseOperand;
     public caseSensitive: boolean;
     public offset: IParseOperand;
     public reverse: boolean;
@@ -939,7 +939,7 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
         super(copy);
         if(!copy) {
             this.type=eStatementType.StringOffset_Comp;
-            this.length="";
+            this.length=null;
             this.caseSensitive=false;
             this.offset=null;
             this.reverse=false;
@@ -961,25 +961,13 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
         return "String Offset Comparison";
     }
 
-    public static SetLength(stmt: StringOffsetComparisonStatement, length: string): void {
-        stmt.length=length;
-    }
-
-    public static GetLength(stmt: StringOffsetComparisonStatement): string {
-        return stmt.length;
-    }
-
-    public static ValidateLength(stmt: StringOffsetComparisonStatement): boolean {
-        return IsA32BitSignedNumber(stmt.length);
-    }
-
     CanSave(
         stmtList: TextParseStatement[],
         checkChildren=true
     ): boolean {
-        if(!StringOffsetComparisonStatement.ValidateLength(this)) {
+
+        if(!ParseOperandIsValid(this.offset) || !ParseOperandIsValid(this.length))
             return false;
-        }
 
         return super.CanSave(stmtList, checkChildren);
     }

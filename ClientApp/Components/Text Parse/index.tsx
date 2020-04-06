@@ -225,6 +225,7 @@ interface ICustomFunctionOperandDropdownProps {
     name: string;
     updater: SimpleDelayer;
     updatePending: boolean;
+    title: string;
 };
 
 interface IParseOperandDropdownProps {
@@ -238,6 +239,8 @@ interface IParseOperandDropdownProps {
     updatePending: boolean;
     includeLength?: boolean;
     includeCurrentPosition?: boolean;
+    placeholder: string;
+    title: string;
 };
 
 interface ICustomFunctionsOperatorDropdownProps {
@@ -1949,40 +1952,53 @@ const StringOffsetComparisonInputCtrl: React.FunctionComponent<IStringOffsetComp
     const { SetStatement, updater, fGetVariables, functions, updatePending } = props;
     const statement = props.statement as StringOffsetComparisonStatement;
 
+    const fOperandDropdown = (
+        name: string,
+        operand: IParseOperand,
+        fUpdate: (stmt: StringOffsetComparisonStatement,_oper: IParseOperand) => void,
+        placeholder: string,
+        title: string
+    ) => {
+        return (
+            <ParseOperandDropdown
+                {...props}
+                functions={functions}
+                fGetVariables={fGetVariables}
+                SetOperand={_oper => {
+                    const updated=new StringOffsetComparisonStatement(statement);
+                    fUpdate(updated,_oper);
+                    SetStatement(updated);
+                }}
+                data={operand}
+                name={`stringoffsetcomparison${name}`}
+                updater={updater}
+                updatePending={updatePending}
+                includeLength={false}
+                includeCurrentPosition={false}
+                placeholder={placeholder}
+                title={title}
+            />
+        );
+    };
+
     return (
         <>
-
             <Form.Field>
-                <UpdateInputCtrl
-                    statement={statement}
-                    SetStatement={SetStatement}
-                    placeholder="Length..."
-                    title="How many characters to compare"
-                    GetValue={StringOffsetComparisonStatement.GetLength}
-                    SetValue={StringOffsetComparisonStatement.SetLength}
-                    Validate={StringOffsetComparisonStatement.ValidateLength}
-                    updater={updater}
-                    name="stringoffsetcomparisonlength"
-                />
+                {fOperandDropdown("offset",
+                    statement.offset,
+                    (comp, _oper) => comp.offset=_oper,
+                    "(Offset)...",
+                    "The offset index within the input string to begin comparing from"
+                )}
             </Form.Field>
 
             <Form.Field>
-                <ParseOperandDropdown
-                    {...props}
-                    functions={functions}
-                    fGetVariables={fGetVariables}
-                    SetOperand={_oper => {
-                        const updated=new StringOffsetComparisonStatement(statement);
-                        updated.offset = _oper;
-                        SetStatement(updated);
-                    }}
-                    data={statement.offset}
-                    name="stringoffsetcomparisonoffset"
-                    updater={updater}
-                    updatePending={updatePending}
-                    includeLength={false}
-                    includeCurrentPosition={false}
-                />
+                {fOperandDropdown("length",
+                    statement.length,
+                    (comp, _oper) => comp.length=_oper,
+                    "(Length)...",
+                    "How many characters to compare"
+                )}
             </Form.Field>
 
             <Form.Field>
@@ -2323,7 +2339,8 @@ const ParseOperandDropdown_UpdateOperand = (
             if(orgOperand) {
                 return {
                     ...CopyParseOperand(orgOperand),
-                    showArbitraryValueDialog: true
+                    showArbitraryValueDialog: true,
+                    arbitraryValueUpdate: orgOperand.arbitraryValue,
                 };
             }
 
@@ -2367,13 +2384,14 @@ const CustomFunctionOperandDropdown: React.FunctionComponent<ITextParseProps & I
             {...props}
             name={`${name}${selFunctionIdx}`}
             SetOperand={SetOperand}
+            placeholder="..."
         />
     );
 };
 
 const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOperandDropdownProps> = (props) => {
 
-    const { fGetVariables, functions, data, SetOperand, name, updater, updatePending, includeLength, includeCurrentPosition } = props;
+    const { fGetVariables, functions, data, SetOperand, name, updater, updatePending, includeLength, includeCurrentPosition, placeholder, title } = props;
 
     const functionOptions=functions.map((iterFunc,idx) => {
         const value=eParseOperandOptions.functionsBegin+idx;
@@ -2462,34 +2480,42 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
                 open={data && data.showArbitraryValueDialog}
                 headerIcon="pencil"
                 headerText="Please Enter the Arbitrary Value (32 Bit Signed Integer)"
-                valid={((data && IsA32BitSignedNumber(data.arbitraryValue))?true:false)}
-                value={data?.arbitraryValue}
+                valid={((data && IsA32BitSignedNumber(data.arbitraryValueUpdate))?true:false)}
+                value={data?.arbitraryValueUpdate}
                 onChange={(value) => updater.DelayedCall(() => {
 
                     const updatedOperand={
                         ...CopyParseOperand(data),
-                        arbitraryValue: value
+                        arbitraryValueUpdate: value
                     };
 
                     SetOperand(updatedOperand);
                 })}
                 okAvailable={!updatePending}
                 onOk={() => {
-                    const updatedOperand={
+                    const updatedOperand: IParseOperand={
                         ...CopyParseOperand(data),
+                        arbitraryValueUpdate: undefined,
                         type: eParseOperandType.arbitraryValue,
-                        showArbitraryValueDialog: false
+                        showArbitraryValueDialog: false,
+                        arbitraryValue: data.arbitraryValueUpdate
                     };
                     SetOperand(updatedOperand);
                 }}
                 onCancel={() => {
-                    const updatedOperand={
-                        ...CopyParseOperand(data),
-                        arbitraryValue:
-                            ((data.type===eParseOperandType.arbitraryValue) ? data.arbitraryValue : undefined),
-                        showArbitraryValueDialog: false
-                    };
-                    SetOperand(updatedOperand);
+                    // Edge case. Nothing was selected before and the user cancelled
+                    if(!data || (data.type===eParseOperandType.arbitraryValue && data.arbitraryValue ===undefined)) {
+                        SetOperand(null);
+
+                    } else {
+                        const updatedOperand: IParseOperand={
+                            ...CopyParseOperand(data),
+                            arbitraryValueUpdate: undefined,
+                            arbitraryValue: data.arbitraryValueUpdate,
+                            showArbitraryValueDialog: false
+                        };
+                        SetOperand(updatedOperand);
+                    }
                 }}
             />
 
@@ -2497,11 +2523,12 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
                 key={`${name}handDropdown`}
                 error={!data || data.type===undefined}
                 options={options}
+                text={((data)?undefined:placeholder)}
                 value={selIdx}
                 pointing="top left"
                 selectOnBlur={false}
-                title="Please select an operand"
-                placeholder="..."
+                title={title}
+                placeholder={placeholder}
                 onChange={(e, value) => {
                     const selIdx=(value.value as number);
 
@@ -2589,6 +2616,7 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
                             name="left"
                             updater={updater}
                             updatePending={updatePending}
+                            title="Left hand operand"
                         />
 
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -2613,6 +2641,7 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
                             name="right"
                             updater={updater}
                             updatePending={updatePending}
+                            title="Right hand operand"
                         />
                     </Form.Field>
                 </Segment>
