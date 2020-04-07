@@ -1,6 +1,6 @@
 
 import { TextParseVariable } from "./StatementTypes";
-import { IParseOperand, CopyParseOperand } from "./Operands";
+import { IParseOperand, CopyParseOperand, eParseOperandType } from "./Operands";
 
 export enum eCustomFunctionOperator {
     add=1,
@@ -9,6 +9,63 @@ export enum eCustomFunctionOperator {
     divide=4
 };
 
+const OperatorCode = (op: eCustomFunctionOperator): string => {
+    switch(op) {
+        case eCustomFunctionOperator.add: return "+";
+        case eCustomFunctionOperator.subtract: return "-";
+        case eCustomFunctionOperator.multiply: return "*";
+        case eCustomFunctionOperator.divide: return "/";
+    }
+};
+
+const FunctionParseOperandCode = (
+    operand: IParseOperand,
+    fGetVariables: () => TextParseVariable[],
+    functions: TextParseFunction[],
+    posVarName: string,
+    strVarName: string,
+    runStateVarName: string): string => {
+
+    switch(operand.type) {
+        case eParseOperandType.length:
+            return `${strVarName}.Length`;
+
+        case eParseOperandType.currentPosition:
+            return posVarName;
+
+        case eParseOperandType.arbitraryValue:
+            return operand.arbitraryValue;
+
+        case eParseOperandType.variable:
+            {
+                const variableList=fGetVariables();
+                const variable=variableList.find(iterVar => operand.MatchesVariable(iterVar));
+                return `(int)${runStateVarName}.GetVariable("${variable.Name()}")`;
+            }
+
+        case eParseOperandType.function:
+            {
+                const func=functions.find(iterFunc => operand.MatchesFunction(iterFunc));
+                return `(int)${runStateVarName}.CallFunction("${func.Name()}", ${posVarName}, "${strVarName}")`;
+            }
+    }
+};
+
+// Create the equivalent C# code from a custom function
+export const TextParseFunctionCode = (
+    func: TextParseFunction,
+    functions: TextParseFunction[],
+    fGetVariables: () => TextParseVariable[]): string => {
+
+    const operatorCode=OperatorCode(func.Operator());
+
+    const leftOperandCode=FunctionParseOperandCode(func.LeftHandOperand(),fGetVariables,functions, "pos", "str", "rs");
+    const rightOperandCode=FunctionParseOperandCode(func.RightHandOperand(),fGetVariables,functions, "pos", "str", "rs");
+
+    return `(int pos, string str, RunState rs) => ${leftOperandCode} ${operatorCode} ${rightOperandCode}`;
+};
+
+// A custom / user defined text parse function
 export interface TextParseFunction {
     ID: number,
 

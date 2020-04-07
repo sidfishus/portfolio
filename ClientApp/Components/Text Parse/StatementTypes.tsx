@@ -1,8 +1,9 @@
 
 import { SemanticICONS } from "semantic-ui-react";
 import { EncodeString} from "./ExecuteParse";
-import { IsAlpha, IsA32BitSignedNumber } from "../../Library/Misc";
-import { IParseOperand, ParseOperandIsValid } from "./Operands";
+import { IsAlpha } from "../../Library/Misc";
+import { IParseOperand, ParseOperandIsValid, ParseOperandCode } from "./Operands";
+import { TextParseFunction } from "./CustomFunctions";
 
 export enum eStatementType {
 
@@ -186,7 +187,13 @@ export abstract class TextParseStatement {
     public abstract Icon(): SemanticICONS;
     public abstract Children(): TextParseStatement[] | null;
     public abstract SetChildren(children?: TextParseStatement[]): void;
-    public abstract GenerateCode(log: string, fAddStatement: (stmtCode: string) => string): string; // 'log' is reserved in case in the future we decide to use it
+    public abstract GenerateCode(
+        log: string,
+        fAddStatement:
+        (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
+    ): string; // 'log' is reserved in case in the future we decide to use it
 
     public UID: number; // Unique ID to reference this statement / type
     public type: eStatementType;
@@ -359,7 +366,9 @@ export class StringComparisonStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
         const { caseSensitive, str, name } = this;
@@ -419,7 +428,9 @@ export class SkipWSStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
         const { name } = this;
@@ -497,7 +508,9 @@ export class OrComparisonStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
         const {children, name}=this;
@@ -512,7 +525,7 @@ export class OrComparisonStatement extends TextParseStatement {
 
             const iterChild=children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement));
+            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions));
         }
 
         rv=rv.concat(
@@ -585,7 +598,9 @@ export class StatementListComparisonStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
         const {children, name}=this;
 
@@ -599,7 +614,7 @@ export class StatementListComparisonStatement extends TextParseStatement {
 
             const iterChild=children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement));
+            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions));
         }
 
         rv=rv.concat(
@@ -651,7 +666,9 @@ export class AdvanceToEndStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
         const { name } = this;
@@ -708,7 +725,9 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
         const { name } = this;
@@ -765,7 +784,9 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
         const { name } = this;
@@ -842,7 +863,9 @@ export class CaptureComparisonStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
         const {children, name}=this;
 
@@ -861,7 +884,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
 
             const iterChild=children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement));
+            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions));
         }
 
         rv=rv.concat(`
@@ -912,7 +935,9 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
 
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
         const { name } = this;
@@ -994,22 +1019,26 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    //sidtodo
+    //sidtodo not tested
     GenerateCode(
         log: string,
-        fAddStatement: (stmtCode: string) => string
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
     ): string {
 
-        /*
-        const { caseSensitive, str, name } = this;
+        const {caseSensitive,reverse,length,offset}=this;
 
-        //TODO library function.
         const caseSensitiveStr= ((caseSensitive)?"true":"false");
 
-        return fAddStatement(`new StringComparison(${log},new Options(${log}){CaseSensitive=${caseSensitiveStr}},${EncodeString(str)},"${name}")`);
-        */
-
-        return "";
+        return fAddStatement(
+            `new StringOffsetComparison(
+                ${log},
+                new Options(${log}){CaseSensitive=${caseSensitiveStr}},
+                ${ParseOperandCode(length,fGetVariables,functions)},
+                ${ParseOperandCode(offset,fGetVariables,functions)},
+                ${reverse}
+            )`);
     }
 };
 

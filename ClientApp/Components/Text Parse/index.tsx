@@ -147,6 +147,7 @@ interface IExecuteParseButtonCtrlProps {
     firstFailingStatement: TextParseStatement;
     firstFailingFunction: TextParseFunction;
     parseInputError: string;
+    fGetVariables: () => TextParseVariable[]
 };
 
 interface IParseOutputGeneralErrorCtrlProps {
@@ -909,6 +910,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             firstFailingStatement={firstFailingStatement}
                             firstFailingFunction={firstFailingFunction}
                             parseInputError={parseInputError}
+                            fGetVariables={fGetVariables}
                         />
 
                         {parseInProgress &&
@@ -1141,7 +1143,9 @@ const ExecuteParseButtonClick = (
     SetGeneralError: (error: string) => void,
     SetMatchResult: (res: number) => void,
     replaceFormat: string,
-    SetReplaceResult: (result: IParseReplaceResult) => void
+    SetReplaceResult: (result: IParseReplaceResult) => void,
+    fGetVariables: () => TextParseVariable[],
+    functions: TextParseFunction[]
 ) => {
 
     // Makes the code terser
@@ -1163,7 +1167,7 @@ const ExecuteParseButtonClick = (
         case eParseOutputType.potMatch:
 
             _HandleParseTask(
-                Match(input, statements),
+                Match(input, statements, fGetVariables, functions),
                 (data) => data.NumMatching>0,
                 (data) => SetMatchResult(data.NumMatching),
                 () => SetMatchResult(0)
@@ -1184,7 +1188,7 @@ const ExecuteParseButtonClick = (
                 };
 
                 _HandleParseTask(
-                    Extract(input, statements, isSingle, replaceFormat),
+                    Extract(input, statements, isSingle, replaceFormat, fGetVariables, functions),
                     (data) => data.ExtractedText && data.ExtractedText.length>0,
                     (data) => fHandleSuccess(data),
                     () => fHandleSuccess(null)
@@ -1203,7 +1207,7 @@ const ExecuteParseButtonClick = (
                 };
 
                 _HandleParseTask(
-                    Replace(input, statements, replaceFormat),
+                    Replace(input, statements, replaceFormat, fGetVariables, functions),
                     (data) => data.NumMatching>0,
                     (data) => fHandleSuccess(data),
                     () => fHandleSuccess(null)
@@ -1227,7 +1231,7 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
 
     const { statements, type, input, SetParseInProgress, SetExtractResults, disabled,
         SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult, updatePending,
-        functions, firstFailingStatement, firstFailingFunction, parseInputError } = props;
+        functions, firstFailingStatement, firstFailingFunction, parseInputError, fGetVariables } = props;
 
     let buttonCaption="";
     let canExecute=false;
@@ -1247,7 +1251,8 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
                 color={((canExecute || disabled)? "green": "red")}
                 disabled={!canExecute || updatePending}
                 onClick={() => ExecuteParseButtonClick(input, type, statements, SetParseInProgress, SetExtractResults,
-                    SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult)}
+                    SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult,
+                    fGetVariables, functions)}
             >
                 {((disabled)?"Parse in Progress..":"Execute Parse")}
             </Button>
