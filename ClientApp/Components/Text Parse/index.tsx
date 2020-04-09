@@ -114,7 +114,7 @@ interface IModalState {
     funcIdx?: number;
 };
 
-enum eParseOutputType {
+export enum eParseOutputType {
     potMatch=1,
     potExtractSingle=2,
     potExtractAll=3,
@@ -937,6 +937,8 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             SetSelFunctionIdx={SetSelFunctionIdx}
                             CreateTextParsefunction={CreateTextParsefunction}
                             CreateParseStatement={_CreateParseStatement}
+                            SetParseInputText={SetParseInputText}
+                            SetParseOuputType={SetOutputType}
                         />
                     </Segment>
                 </Form>

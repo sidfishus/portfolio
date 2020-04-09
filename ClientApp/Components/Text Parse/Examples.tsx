@@ -6,6 +6,7 @@ import useConstant from "use-constant";
 import { Dropdown, Form, Label } from "semantic-ui-react";
 import { TextParseFunction, eCustomFunctionOperator } from "./CustomFunctions";
 import { CreateLengthOperand, CreateArbitraryValueOperand, CreateFunctionOperand } from "./Operands";
+import { eParseOutputType } from "./index";
 
 export interface IParseExamplesDropdownProps {
     parseExample: eParseExample;
@@ -16,12 +17,15 @@ export interface IParseExamplesDropdownProps {
     SetSelFunctionIdx: (idx: number) => void;
     CreateTextParsefunction: (ctrName: string) => TextParseFunction;
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement;
+    SetParseInputText: (text: string) => void;
+    SetParseOuputType: (type: eParseOutputType) => void;
 };
 
 // These are indexes in to the 'ParseExampleOptionsArray' array.
 export enum eParseExample {
     none=0,
     isPalindrome=1,
+    isPalindromeCI=2,
 };
 
 interface IParseExampleOption {
@@ -32,9 +36,13 @@ interface IParseExampleOption {
         functions: TextParseFunction[]
     ) => TextParseStatement[];
     GetFunctions?: (CreateTextParsefunction: (ctrName: string) => TextParseFunction) => TextParseFunction[];
+    ParseInput?: string;
+    ParseOuputType?: eParseOutputType;
 };
 
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {
+
+    const palindromeDescr = "Returns whether the input text is a palindrome: https://en.wikipedia.org/wiki/Palindrome";
 
     return [
         //eParseExample.none
@@ -44,17 +52,30 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
 
         //eParseExample.isPalindrome
         {
-            text: "Is Palindrome",
-            description: "Returns whether the input text is a palindrome: https://en.wikipedia.org/wiki/Palindrome",
-            GetStatements: GetIsPalindromeStatements,
+            text: "Is Palindrome (case sensitive)",
+            description: palindromeDescr,
+            GetStatements: GetIsPalindromeStatements(true),
             GetFunctions: GetIsPalindromeFunctions,
+            ParseInput: "abcba",
+            ParseOuputType: eParseOutputType.potMatch
+        },
+
+        //eParseExample.isPalindromeCI
+        {
+            text: "Is Palindrome (case insensitive)",
+            description: palindromeDescr,
+            GetStatements: GetIsPalindromeStatements(false),
+            GetFunctions: GetIsPalindromeFunctions,
+            ParseInput: "ABCDdcba",
+            ParseOuputType: eParseOutputType.potMatch
         }
     ];
 };
 
 export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IParseExamplesDropdownProps> = (props) => {
 
-    const {parseExample, SetParseExample, SetStatements, SetSelStatement, SetFunctions, SetSelFunctionIdx, CreateTextParsefunction, CreateParseStatement }=props;
+    const {parseExample, SetParseExample, SetStatements, SetSelStatement, SetFunctions, SetSelFunctionIdx,
+        CreateTextParsefunction, CreateParseStatement, SetParseInputText, SetParseOuputType }=props;
 
     const examples = useConstant(ParseExampleOptionsArray);
 
@@ -87,7 +108,9 @@ export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IP
                                             SetFunctions,
                                             SetSelFunctionIdx,
                                             CreateTextParsefunction,
-                                            CreateParseStatement
+                                            CreateParseStatement,
+                                            SetParseInputText,
+                                            SetParseOuputType
                                         );
                                     }}
                                     selected={iterEnum === parseExample}
@@ -113,7 +136,9 @@ const OnSelectParseExample = (
     SetFunctions: (functions: TextParseFunction[]) => void,
     SetSelFunctionIdx: (idx: number) => void,
     CreateTextParsefunction: (ctrName: string) => TextParseFunction,
-    CreateParseStatement: (stmtType: eStatementType) => TextParseStatement) => {
+    CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
+    SetParseInputText: (text: string) => void,
+    SetParseOuputType: (type: eParseOutputType) => void) => {
 
     const functions=(pe.GetFunctions)?pe.GetFunctions(CreateTextParsefunction):new Array<TextParseFunction>();
     SetFunctions(functions);
@@ -123,31 +148,39 @@ const OnSelectParseExample = (
     SetStatements((pe.GetStatements)?pe.GetStatements(CreateParseStatement, functions):new Array<TextParseStatement>());
     // No active selected statement
     SetSelStatement(null);
+
+    SetParseInputText((pe.ParseInput)?pe.ParseInput:"");
+
+    if(pe.ParseOuputType!==undefined)
+        SetParseOuputType(pe.ParseOuputType);
 };
 
-const GetIsPalindromeStatements = (
+const GetIsPalindromeStatements = (caseSensitive: boolean): (
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
     functions: TextParseFunction[]
-): TextParseStatement[] => {
+) => TextParseStatement[] => {
 
-    const startOfStringComp = CreateParseStatement(eStatementType.StartOfString_Comp);
-    startOfStringComp.keyedDescription="Assert is the start of the parse input string";
+    return (CreateParseStatement,functions) => {
 
-    const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
-    stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the string onwards";
-    stringOffsetComp.reverse=true;
-    stringOffsetComp.caseSensitive=false;
-    stringOffsetComp.length=CreateFunctionOperand(functions[0]);
-    stringOffsetComp.offset=CreateFunctionOperand(functions[1]);
-    
-    const advanceToTheEnd = CreateParseStatement(eStatementType.AdvanceToEnd_Op);
-    advanceToTheEnd.keyedDescription="Parsing is complete if the string offset comparison was successfull.";
+        const startOfStringComp = CreateParseStatement(eStatementType.StartOfString_Comp);
+        startOfStringComp.keyedDescription="Assert is the start of the parse input string";
 
-    return [
-        startOfStringComp,
-        stringOffsetComp,
-        advanceToTheEnd
-    ];
+        const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
+        stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the string onwards";
+        stringOffsetComp.reverse=true;
+        stringOffsetComp.caseSensitive=caseSensitive;
+        stringOffsetComp.length=CreateFunctionOperand(functions[0]);
+        stringOffsetComp.offset=CreateFunctionOperand(functions[1]);
+        
+        const advanceToTheEnd = CreateParseStatement(eStatementType.AdvanceToEnd_Op);
+        advanceToTheEnd.keyedDescription="Parsing is complete if the string offset comparison was successfull.";
+
+        return [
+            startOfStringComp,
+            stringOffsetComp,
+            advanceToTheEnd
+        ];
+    };
 };
 
 const GetIsPalindromeFunctions =
