@@ -15,7 +15,7 @@ export interface IParseOperand {
     type: eParseOperandType;
     MatchesVariable?: (variable: TextParseVariable) => boolean;
     MatchesFunction?: (func: TextParseFunction) => boolean;
-    arbitraryValue?: string;
+    arbitraryValue?: number;
     arbitraryValueUpdate?: string; // Temporary arbitrary value
     showArbitraryValueDialog?: boolean;
 };
@@ -62,4 +62,37 @@ export const ParseOperandCode = (
 export const CopyParseOperand = (src: IParseOperand): IParseOperand => {
     if(!src) return null;
     return {...src};
+};
+
+export const CreateLengthOperand = (): IParseOperand => {
+    return {
+        type: eParseOperandType.length,
+    };
+};
+
+export const CreateCurrentPositionOperand = (): IParseOperand => {
+    return {
+        type: eParseOperandType.currentPosition,
+    };
+};
+
+export const CreateFunctionOperand = (func: TextParseFunction): IParseOperand => {
+    return {
+        type: eParseOperandType.function,
+        MatchesFunction: func.Matches
+    };
+};
+
+export const CreateVariableOperand = (variable: TextParseVariable): IParseOperand => {
+    return {
+        type: eParseOperandType.variable,
+        MatchesVariable: variable.Matches
+    };
+};
+
+export const CreateArbitraryValueOperand = (value: number): IParseOperand => {
+    return {
+        type: eParseOperandType.arbitraryValue,
+        arbitraryValue: value
+    };
 };

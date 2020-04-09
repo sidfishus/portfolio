@@ -6,12 +6,14 @@ import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
 import { TextParseFunction, CopyTextParsefunction, eCustomFunctionOperator, CreateTextParseFunctionCreator } from "./CustomFunctions";
-import { CopyParseOperand, IParseOperand, eParseOperandType } from "./Operands";
+import { CopyParseOperand, IParseOperand, eParseOperandType, CreateLengthOperand, CreateCurrentPositionOperand, CreateFunctionOperand, CreateVariableOperand, CreateArbitraryValueOperand } from "./Operands";
 import { MapAndRemoveIndex } from "../../Library/ContainerMethods";
 import { IsA32BitSignedNumber } from "../../Library/Misc";
+import useConstant from "use-constant";
+import { ParseExamplesDropdown, eParseExample} from "./Examples";
 
 
-interface ITextParseProps {
+export interface ITextParseProps {
 };
 
 interface ISelectedStatement {
@@ -510,7 +512,7 @@ const CompareSelectedStatement = (
     stmt: TextParseStatement
 ): boolean => {
 
-    const rv=((stmt.type === selStmt.type && stmt.UID===selStmt.UID)?true:false);
+    const rv=((selStmt && stmt.type === selStmt.type && stmt.UID===selStmt.UID)?true:false);
 
     return rv;
 };
@@ -562,7 +564,7 @@ const CreateSelStatement = (
 
 export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompProps> = (props) => {
 
-    //// Hooks
+    //// Hooks always at the top
 
     // The list of statements
     const [statements, SetStatements] = useState(() => new Array<TextParseStatement>());
@@ -607,7 +609,8 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     // When a new item is created, it is created with a default name and an index. This array holds the indexes.
     // As names are created the indexes come from this array, and are incremented accordingly. There is an index
     // per statement type
-    const nameIndexes = useRef(new Array<number|undefined>(eStatementType.phCount));
+    //sidtodo is this a constant??? it's a useRef - it needs to be updated.
+    const nameIndexes = useConstant(() => new Array<number|undefined>(eStatementType.phCount));
 
     // Replace format
     const [replaceFormat,SetReplaceFormat] = useState<string>("");
@@ -626,13 +629,15 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
 
     // Update the state with a delay so that the UI experience is more seemless. Needs to be used alongside
     // 'defaultValue' (uncontrolled)
-    const updater=useRef(new SimpleDelayer(
+    const updater=useConstant(() => new SimpleDelayer(
         200,
         () => SetUpdatePending(true),
         () => SetUpdatePending(false)
-    )).current;
+    ));
 
-    const CreateTextParsefunction=useRef(CreateTextParseFunctionCreator()).current;
+    const CreateTextParsefunction=useConstant(CreateTextParseFunctionCreator);
+
+    const [parseExample, SetParseExample] = useState<eParseExample>(eParseExample.none);
 
     //// Events/mutators
 
@@ -659,6 +664,8 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
         );
 
     const _UpdateCustomFunction = (func: TextParseFunction) => UpdateCustomFunction(func,selFunctionIdx,functions,SetFunctions);
+
+    const _CreateParseStatement = (stmtType: eStatementType): TextParseStatement => CreateParseStatement(nameIndexes, stmtType);
     
     //// Render
     
@@ -682,7 +689,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         {...props}
                         statement={selectedStatement}
                         SetStatement={_UpdateStatement}
-                        nameIndexes={nameIndexes.current}
+                        nameIndexes={nameIndexes}
                         subSelectedStatementType={subSelectedStatementType}
                         SetSubSelectedStatementType={SetSubSelectedStatementType}
                         SetSelStatement={SetSelStatement}
@@ -695,7 +702,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         {...props}
                         statement={selectedStatement}
                         SetStatement={_UpdateStatement}
-                        nameIndexes={nameIndexes.current}
+                        nameIndexes={nameIndexes}
                         subSelectedStatementType={subSelectedStatementType}
                         SetSubSelectedStatementType={SetSubSelectedStatementType}
                         SetSelStatement={SetSelStatement}
@@ -708,7 +715,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         {...props}
                         statement={selectedStatement}
                         SetStatement={_UpdateStatement}
-                        nameIndexes={nameIndexes.current}
+                        nameIndexes={nameIndexes}
                         subSelectedStatementType={subSelectedStatementType}
                         SetSubSelectedStatementType={SetSubSelectedStatementType}
                         SetSelStatement={SetSelStatement}
@@ -778,7 +785,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                                 SetStatements(statements);
                             }}
                             selectedStatementType={newSelectedStatementType}
-                            nameIndexes={nameIndexes.current}
+                            nameIndexes={nameIndexes}
                             SetSelectedStatementType={SetNewSelectedStatementType}
                             selStmtIndex={topLevelSelStmtIndex}
                             insert={true}
@@ -892,32 +899,50 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             />
                         }
 
-                        <ExecuteParseButton
-                            {...props}
-                            statements={statements}
-                            type={outputType}
-                            input={parseInputText}
-                            SetParseInProgress={SetParseInProgress}
-                            SetExtractResults={SetExtractResults}
-                            disabled={parseInProgress}
-                            SetCompileErrors={SetCompileErrors}
-                            SetGeneralError={SetGeneralError}
-                            SetMatchResult={SetMatchResult}
-                            replaceFormat={replaceFormat}
-                            SetReplaceResult={SetReplaceResult}
-                            updatePending={updatePending}
-                            functions={functions}
-                            firstFailingStatement={firstFailingStatement}
-                            firstFailingFunction={firstFailingFunction}
-                            parseInputError={parseInputError}
-                            fGetVariables={fGetVariables}
-                        />
+                        <Form.Field>
+                            <ExecuteParseButton
+                                {...props}
+                                statements={statements}
+                                type={outputType}
+                                input={parseInputText}
+                                SetParseInProgress={SetParseInProgress}
+                                SetExtractResults={SetExtractResults}
+                                disabled={parseInProgress}
+                                SetCompileErrors={SetCompileErrors}
+                                SetGeneralError={SetGeneralError}
+                                SetMatchResult={SetMatchResult}
+                                replaceFormat={replaceFormat}
+                                SetReplaceResult={SetReplaceResult}
+                                updatePending={updatePending}
+                                functions={functions}
+                                firstFailingStatement={firstFailingStatement}
+                                firstFailingFunction={firstFailingFunction}
+                                parseInputError={parseInputError}
+                                fGetVariables={fGetVariables}
+                            />
 
-                        {parseInProgress &&
-                            <Loader active inline />
-                        }
+                            {parseInProgress &&
+                                <Loader active inline />
+                            }
+                        
+                        </Form.Field>
+
+                        <ParseExamplesDropdown
+                            {...props}
+                            parseExample={parseExample}
+                            SetParseExample={SetParseExample}
+                            SetStatements={SetStatements}
+                            SetSelStatement={SetSelStatement}
+                            SetFunctions={SetFunctions}
+                            SetSelFunctionIdx={SetSelFunctionIdx}
+                            CreateTextParsefunction={CreateTextParsefunction}
+                            CreateParseStatement={_CreateParseStatement}
+                        />
                     </Segment>
                 </Form>
+
+                
+                <Button onClick={() => console.log(document.documentElement.innerHTML)}>Log HTML</Button>
             </Container>
         </>
     );
@@ -1530,6 +1555,66 @@ const AddNewParseStatementCtrls: React.FunctionComponent<ITextParseProps & IType
             />
         </>
     );
+};
+
+const CreateParseStatement = (
+    nameIndexes: Array<number | undefined>,
+    stmtType: eStatementType
+): TextParseStatement => {
+
+    const CreateStmt = (): TextParseStatement => {
+        switch(stmtType) {
+            case eStatementType.String_Comp:
+                return new StringComparisonStatement();
+
+            case eStatementType.SkipWS_Op:
+                return new SkipWSStatement();
+
+            case eStatementType.Or_Comp:
+                return new OrComparisonStatement();
+
+            case eStatementType.StatementList_Comp:
+                return new StatementListComparisonStatement();
+
+            case eStatementType.AdvanceToEnd_Op:
+                return new AdvanceToEndStatement();
+
+            case eStatementType.EndOfString_Comp:
+                return new EndOfStringComparisonStatement();
+
+            case eStatementType.StartOfString_Comp:
+                return new StartOfStringComparisonStatement();
+
+            case eStatementType.Capture_Comp:
+                return new CaptureComparisonStatement();
+
+            case eStatementType.IsWhitespace_Comp:
+                return new IsWhitespaceComparisonStatement();
+
+            case eStatementType.StringOffset_Comp:
+                return new StringOffsetComparisonStatement();
+        }
+    }
+
+    const NewIndex = (): number => {
+        // Generate a default name
+        if(nameIndexes[stmtType] === undefined) {
+            return 1;
+        }
+        
+        return nameIndexes[stmtType] + 1;
+    };
+
+    const newIndex=NewIndex();
+
+    nameIndexes[stmtType] = newIndex;
+
+    const newStatement=CreateStmt();
+
+    newStatement.name=`${newStatement.TypeDescription()} ${newIndex}`;
+    newStatement.UID = newIndex;
+
+    return newStatement;
 };
 
 const AddInsertParseStatement =
@@ -2334,10 +2419,10 @@ const ParseOperandDropdown_UpdateOperand = (
     switch(selIdx) {
 
         case eParseOperandOptions.length:
-            return {type: eParseOperandType.length};
+            return CreateLengthOperand();
 
         case eParseOperandOptions.currentPosition:
-            return {type: eParseOperandType.currentPosition};
+            return CreateCurrentPositionOperand();
 
         case eParseOperandOptions.selectArbitraryValue:
 
@@ -2345,7 +2430,7 @@ const ParseOperandDropdown_UpdateOperand = (
                 return {
                     ...CopyParseOperand(orgOperand),
                     showArbitraryValueDialog: true,
-                    arbitraryValueUpdate: orgOperand.arbitraryValue,
+                    arbitraryValueUpdate: orgOperand.arbitraryValue.toString(),
                 };
             }
 
@@ -2359,18 +2444,12 @@ const ParseOperandDropdown_UpdateOperand = (
 
                 const variableIdx=selIdx-eParseOperandOptions.variablesBegin;
 
-                return {
-                    type: eParseOperandType.variable,
-                    MatchesVariable: variableList[variableIdx].Matches
-                };
+                return CreateVariableOperand(variableList[variableIdx]);
             }
 
             const dropdownFuncIdx=selIdx-eParseOperandOptions.functionsBegin;
 
-            return {
-                type: eParseOperandType.function,
-                MatchesFunction: functions[dropdownFuncIdx].Matches
-            };
+            return CreateFunctionOperand(functions[dropdownFuncIdx]);
     }
 };
 
@@ -2498,13 +2577,7 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
                 })}
                 okAvailable={!updatePending}
                 onOk={() => {
-                    const updatedOperand: IParseOperand={
-                        ...CopyParseOperand(data),
-                        arbitraryValueUpdate: undefined,
-                        type: eParseOperandType.arbitraryValue,
-                        showArbitraryValueDialog: false,
-                        arbitraryValue: data.arbitraryValueUpdate
-                    };
+                    const updatedOperand=CreateArbitraryValueOperand(parseInt(data.arbitraryValueUpdate));
                     SetOperand(updatedOperand);
                 }}
                 onCancel={() => {
@@ -2513,10 +2586,10 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
                         SetOperand(null);
 
                     } else {
+                        //sidtodo test. does this clear the org value properly
                         const updatedOperand: IParseOperand={
                             ...CopyParseOperand(data),
                             arbitraryValueUpdate: undefined,
-                            arbitraryValue: data.arbitraryValueUpdate,
                             showArbitraryValueDialog: false
                         };
                         SetOperand(updatedOperand);

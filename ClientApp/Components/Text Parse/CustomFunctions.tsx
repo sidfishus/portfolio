@@ -34,7 +34,7 @@ const FunctionParseOperandCode = (
             return posVarName;
 
         case eParseOperandType.arbitraryValue:
-            return operand.arbitraryValue;
+            return operand.arbitraryValue.toString();
 
         case eParseOperandType.variable:
             {
@@ -46,7 +46,7 @@ const FunctionParseOperandCode = (
         case eParseOperandType.function:
             {
                 const func=functions.find(iterFunc => operand.MatchesFunction(iterFunc));
-                return `(int)${runStateVarName}.CallFunction("${func.Name()}", ${posVarName}, "${strVarName}")`;
+                return `${runStateVarName}.CallFunction<int>("${func.Name()}", ${posVarName}, ${strVarName})`;
             }
     }
 };
