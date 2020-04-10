@@ -1,5 +1,6 @@
 
-import { TextParseStatement, TextParseVariable } from "./StatementTypes";
+import { TextParseStatement } from "./StatementTypes";
+import { TextParseVariable } from "./Variables";
 import { CreateAPIURL } from "../../Library/HttpHelper";
 import axios, { AxiosResponse } from "axios";
 import { TextParseFunction, TextParseFunctionCode } from "./CustomFunctions";

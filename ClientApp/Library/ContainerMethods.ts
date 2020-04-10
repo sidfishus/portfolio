@@ -21,3 +21,26 @@ export const MapAndRemoveIndex = <SRC_TYPE,DEST_TYPE>(
 
     return res;
 };
+
+export const FilterRecursive = <SRC_TYPE>(
+    srcArray: SRC_TYPE[],
+    fFilter: (filterItems: SRC_TYPE[], iterItem: SRC_TYPE, idx: number) => boolean,
+    fGetChildren: (iterItem: SRC_TYPE) => SRC_TYPE[],
+    filteredItems: SRC_TYPE[]=[]
+): SRC_TYPE[] => {
+
+    let filteredItemsCopy=[...filteredItems];
+
+    srcArray.forEach((iterItem, idx) => {
+
+        if(fFilter(filteredItemsCopy, iterItem, idx)) {
+            filteredItemsCopy.push(iterItem);
+        }
+
+        const children=fGetChildren(iterItem);
+        if(children)
+            filteredItemsCopy = filteredItemsCopy.concat(FilterRecursive(children, fFilter, fGetChildren, filteredItemsCopy));
+    });
+
+    return filteredItemsCopy;
+};

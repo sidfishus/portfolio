@@ -1,6 +1,6 @@
 
 import { TextParseFunction } from "./CustomFunctions";
-import { TextParseVariable } from "./StatementTypes";
+import { TextParseVariable, VariablesMatch } from "./Variables";
 
 export enum eParseOperandType {
     length= 1,
@@ -47,7 +47,7 @@ export const ParseOperandCode = (
             {
                 const variableList=fGetVariables();
                 const variable=variableList.find(iterVar => oper.MatchesVariable(iterVar));
-                return `Operand.Variable("${variable.Name()}")`;
+                return `Operand.Variable("${variable.name}")`;
             }
 
         case eParseOperandType.function:
@@ -86,7 +86,7 @@ export const CreateFunctionOperand = (func: TextParseFunction): IParseOperand =>
 export const CreateVariableOperand = (variable: TextParseVariable): IParseOperand => {
     return {
         type: eParseOperandType.variable,
-        MatchesVariable: variable.Matches
+        MatchesVariable: (rhs: TextParseVariable) => VariablesMatch(variable, rhs)
     };
 };
 

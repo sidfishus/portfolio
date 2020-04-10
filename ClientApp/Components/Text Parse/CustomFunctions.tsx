@@ -1,5 +1,5 @@
 
-import { TextParseVariable } from "./StatementTypes";
+import { TextParseVariable } from "./Variables";
 import { IParseOperand, CopyParseOperand, eParseOperandType } from "./Operands";
 
 export enum eCustomFunctionOperator {
@@ -40,7 +40,7 @@ const FunctionParseOperandCode = (
             {
                 const variableList=fGetVariables();
                 const variable=variableList.find(iterVar => operand.MatchesVariable(iterVar));
-                return `(int)${runStateVarName}.GetVariable("${variable.Name()}")`;
+                return `(int)${runStateVarName}.GetVariable("${variable.name}")`;
             }
 
         case eParseOperandType.function:

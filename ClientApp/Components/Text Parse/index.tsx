@@ -1,17 +1,16 @@
 
 import React, {useState, useRef, Fragment} from "react";
 import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox, Modal, Button, Icon, Table, Loader, List, Message, Header, ButtonProps, DropdownItemProps, TableRowProps } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, TextParseVariable, TextParseVariableCreator, StorePosAsVariableStatement } from "./StatementTypes";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
 import { TextParseFunction, CopyTextParsefunction, eCustomFunctionOperator, CreateTextParseFunctionCreator } from "./CustomFunctions";
 import { CopyParseOperand, IParseOperand, eParseOperandType, CreateLengthOperand, CreateCurrentPositionOperand, CreateFunctionOperand, CreateVariableOperand, CreateArbitraryValueOperand } from "./Operands";
-import { MapAndRemoveIndex } from "../../Library/ContainerMethods";
 import { IsA32BitSignedNumber } from "../../Library/Misc";
 import useConstant from "use-constant";
 import { ParseExamplesDropdown, eParseExample} from "./Examples";
-
+import { ffGetVariables, TextParseVariable } from "./Variables";
 
 export interface ITextParseProps {
 };
@@ -666,6 +665,9 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     const _UpdateCustomFunction = (func: TextParseFunction) => UpdateCustomFunction(func,selFunctionIdx,functions,SetFunctions);
 
     const _CreateParseStatement = (stmtType: eStatementType): TextParseStatement => CreateParseStatement(nameIndexes, stmtType);
+
+    //sidtodo: this is a usememo which updates only when the statements change.
+    const fGetVariables = ffGetVariables(statements);
     
     //// Render
     
@@ -2514,7 +2516,7 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
             const value=eParseOperandOptions.variablesBegin+iterIdx;
             return {
                 key: value,
-                text: `${variable.Name()} (variable)`,
+                text: `${variable.name} (variable)`,
                 value: value,
                 selected: ((data && data.type === eParseOperandType.variable && data.MatchesVariable(variable))?true:false)
             }
@@ -2779,17 +2781,6 @@ const CustomFunctionList: React.FunctionComponent<ITextParseProps & ICustomFunct
     );
 };
 
-//sidtodo finish
-// this is just a hack to test variable selection.
-const fGetVariables = (): TextParseVariable[] => {
-
-    const CreateTextParseVariable = TextParseVariableCreator();
-
-    return [
-        CreateTextParseVariable("test var"),
-    ];
-};
-
 const InputModal: React.SFC<IInputModalProps> = (props) => {
 
     const { open, headerIcon, headerText, valid, value, onChange, okAvailable, onOk, onCancel } = props;
@@ -2861,9 +2852,9 @@ const StorePosAsVariableInputCtrl:
             SetStatement={SetStatement}
             placeholder={placeHolderText}
             title={placeHolderText}
-            GetValue={StorePosAsVariableStatement.GetVarName}
-            SetValue={StorePosAsVariableStatement.SetVarName}
-            Validate={StorePosAsVariableStatement.ValidateVarName}
+            GetValue={SetVariableStatement.GetVarName}
+            SetValue={SetVariableStatement.SetVarName}
+            Validate={SetVariableStatement.ValidateVarName}
             updater={updater}
             name="varName"
         />

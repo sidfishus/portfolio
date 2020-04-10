@@ -4,25 +4,7 @@ import { EncodeString} from "./ExecuteParse";
 import { IsAlpha } from "../../Library/Misc";
 import { IParseOperand, ParseOperandIsValid, ParseOperandCode } from "./Operands";
 import { TextParseFunction } from "./CustomFunctions";
-
-//sidtodo move this somewhere else.
-export const TextParseVariableCreator = (): (name: string) => TextParseVariable => {
-
-    let nextId=1;
-
-    return (name: string): TextParseVariable => {
-
-        let _name=name;
-
-        const ID = nextId++;
-
-        return {
-            Name: () => _name,
-            Matches: (rhs: TextParseVariable) => (rhs.ID === ID),
-            ID: ID
-        };
-    };
-};
+import { TextParseVariable, CopyTextParseVariable } from "./Variables";
 
 export enum eStatementType {
 
@@ -60,12 +42,7 @@ export enum eStatementType {
 export interface IStatementTypeInfo {
     isComparison: boolean;
     comparisonOnlyChildren: boolean; // Can only have children which are comparison type statements?
-};
-
-export interface TextParseVariable {
-    Name: () => string;
-    Matches: (rhs: TextParseVariable) => boolean;
-    ID: number;
+    isUpdateVariable: boolean;
 };
 
 // The index corresponds to the 'eStatementType' enum
@@ -75,66 +52,77 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
     {
         isComparison: true,
         comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     //SkipWS_Op
     {
         isComparison: false,
         comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     //Or_Comp
     {
         isComparison: true,
         comparisonOnlyChildren: true,
+        isUpdateVariable: false
     },
 
     //StatementList_Comp
     {
         isComparison: true,
         comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     // AdvanceToEnd_Op
     {
         isComparison: false,
         comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     //EndOfString_Comp
     {
         isComparison: true,
         comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     // StartOfString_Comp
     {
         isComparison: true,
         comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     // Capture_Comp
     {
         isComparison: true,
         comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     // IsWhitespace_Comp
     {
         isComparison: true,
-        comparisonOnlyChildren: false
+        comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     // StringOffset_Comp
     {
         isComparison: true,
-        comparisonOnlyChildren: false
+        comparisonOnlyChildren: false,
+        isUpdateVariable: false
     },
 
     // StorePosAsVariable_Op
     {
         isComparison: false,
-        comparisonOnlyChildren: false
+        comparisonOnlyChildren: false,
+        isUpdateVariable: true
     },
 ];
 
@@ -1068,31 +1056,57 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
     }
 };
 
-export class StorePosAsVariableStatement extends TextParseStatement {
+export abstract class SetVariableStatement extends TextParseStatement {
 
-    public varName: string;
+    public variable: TextParseVariable;
+
+    constructor(copy?: SetVariableStatement) {
+        super(copy);
+        if(!copy) {
+            this.variable=null;
+        }
+        else {
+            this.variable=CopyTextParseVariable(copy.variable);
+        }
+    }
+
+    public static SetVarName(stmt: SetVariableStatement, varName: string): void {
+        stmt.variable={
+            ...stmt.variable,
+            name: varName
+        };
+    }
+
+    public static GetVarName(stmt: SetVariableStatement): string {
+        return stmt.variable?.name;
+    }
+
+    public static ValidateVarName(stmt: SetVariableStatement): boolean {
+        return (
+            stmt.variable !== null &&
+            stmt.variable.name !== null &&
+            stmt.variable.name !== ""
+        );
+    }
+
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+
+        if(!SetVariableStatement.ValidateVarName(this)) return false;
+
+        return super.CanSave(stmtList, checkChildren);
+    }
+};
+
+export class StorePosAsVariableStatement extends SetVariableStatement {
 
     constructor(copy?: StorePosAsVariableStatement) {
         super(copy);
         if(!copy) {
             this.type=eStatementType.StorePosAsVariable_Op;
-            this.varName=null;
         }
-        else {
-            this.varName=copy.varName;
-        }
-    }
-
-    public static SetVarName(stmt: StorePosAsVariableStatement, varName: string): void {
-        stmt.varName=varName;
-    }
-
-    public static GetVarName(stmt: StorePosAsVariableStatement): string {
-        return stmt.varName;
-    }
-
-    public static ValidateVarName(stmt: StorePosAsVariableStatement): boolean {
-        return (stmt.varName !== null && stmt.varName !== "");
     }
 
     Copy(copyChildren: boolean): StorePosAsVariableStatement {
@@ -1104,26 +1118,14 @@ export class StorePosAsVariableStatement extends TextParseStatement {
         return "Store Current Position";
     }
 
-    CanSave(
-        stmtList: TextParseStatement[],
-        checkChildren=true
-    ): boolean {
-
-        const { varName} =this;
-
-        if(varName===null || varName === "") return false;
-
-        return super.CanSave(stmtList, checkChildren);
-    }
-
     Description(): string {
-        const { CanSave, varName } = this;
+        const { CanSave, variable } = this;
         
         if(!CanSave(null, false)) {
             return null;
         }
 
-        return `Store the current position in a variable named '${varName}'`;
+        return `Store the current position in a variable named '${variable.name}'`;
     }
 
     Icon(): SemanticICONS {
@@ -1144,10 +1146,10 @@ export class StorePosAsVariableStatement extends TextParseStatement {
         functions: TextParseFunction[]
     ): string {
 
-        const { varName, name } = this;
+        const { variable, name } = this;
 
         return `{
-            var setVar=new StorePosAsVariable(${log}, ${EncodeString(varName)});
+            var setVar=new StorePosAsVariable(${log}, ${EncodeString(variable.name)});
             setVar.Name=${EncodeString(name)};
             ${fAddStatement("setVar")}
         }`;
