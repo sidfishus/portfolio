@@ -5,6 +5,25 @@ import { IsAlpha } from "../../Library/Misc";
 import { IParseOperand, ParseOperandIsValid, ParseOperandCode } from "./Operands";
 import { TextParseFunction } from "./CustomFunctions";
 
+//sidtodo move this somewhere else.
+export const TextParseVariableCreator = (): (name: string) => TextParseVariable => {
+
+    let nextId=1;
+
+    return (name: string): TextParseVariable => {
+
+        let _name=name;
+
+        const ID = nextId++;
+
+        return {
+            Name: () => _name,
+            Matches: (rhs: TextParseVariable) => (rhs.ID === ID),
+            ID: ID
+        };
+    };
+};
+
 export enum eStatementType {
 
     // String comparison
@@ -27,12 +46,14 @@ export enum eStatementType {
     IsWhitespace_Comp=8,
     // String offset comparison
     StringOffset_Comp=9,
+    // Store the current position in a variable
+    StorePosAsVariable_Op=10,
     
     // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
     // Note: Keep this as the last item because it's used to determine the number of statement types
     // In C++ you can assert this kind of thing statically at compile type
-    phCount = 10,
+    phCount = 11,
 };
 
 // Information regarding the statement types
@@ -107,6 +128,12 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
     // StringOffset_Comp
     {
         isComparison: true,
+        comparisonOnlyChildren: false
+    },
+
+    // StorePosAsVariable_Op
+    {
+        isComparison: false,
         comparisonOnlyChildren: false
     },
 ];
@@ -1019,7 +1046,6 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    //sidtodo not tested
     GenerateCode(
         log: string,
         fAddStatement: (stmtCode: string) => string,
@@ -1042,20 +1068,88 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
     }
 };
 
-export const TextParseVariableCreator = (): (name: string) => TextParseVariable => {
+export class StorePosAsVariableStatement extends TextParseStatement {
 
-    let nextId=1;
+    public varName: string;
 
-    return (name: string): TextParseVariable => {
+    constructor(copy?: StorePosAsVariableStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.StorePosAsVariable_Op;
+            this.varName=null;
+        }
+        else {
+            this.varName=copy.varName;
+        }
+    }
 
-        let _name=name;
+    public static SetVarName(stmt: StorePosAsVariableStatement, varName: string): void {
+        stmt.varName=varName;
+    }
 
-        const ID = nextId++;
+    public static GetVarName(stmt: StorePosAsVariableStatement): string {
+        return stmt.varName;
+    }
 
-        return {
-            Name: () => _name,
-            Matches: (rhs: TextParseVariable) => (rhs.ID === ID),
-            ID: ID
-        };
-    };
+    public static ValidateVarName(stmt: StorePosAsVariableStatement): boolean {
+        return (stmt.varName !== null && stmt.varName !== "");
+    }
+
+    Copy(copyChildren: boolean): StorePosAsVariableStatement {
+        const copy=new StorePosAsVariableStatement(this);
+        return copy;
+    }
+
+    TypeDescription(): string {
+        return "Store Current Position";
+    }
+
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+
+        const { varName} =this;
+
+        if(varName===null || varName === "") return false;
+
+        return super.CanSave(stmtList, checkChildren);
+    }
+
+    Description(): string {
+        const { CanSave, varName } = this;
+        
+        if(!CanSave(null, false)) {
+            return null;
+        }
+
+        return `Store the current position in a variable named '${varName}'`;
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
+    ): string {
+
+        const { varName, name } = this;
+
+        return `{
+            var setVar=new StorePosAsVariable(${log}, ${EncodeString(varName)});
+            setVar.Name=${EncodeString(name)};
+            ${fAddStatement("setVar")}
+        }`;
+    }
 };

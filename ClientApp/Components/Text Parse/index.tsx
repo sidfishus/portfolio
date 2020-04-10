@@ -1,7 +1,7 @@
 
 import React, {useState, useRef, Fragment} from "react";
 import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox, Modal, Button, Icon, Table, Loader, List, Message, Header, ButtonProps, DropdownItemProps, TableRowProps } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, TextParseVariable, TextParseVariableCreator } from "./StatementTypes";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, TextParseVariable, TextParseVariableCreator, StorePosAsVariableStatement } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
@@ -732,6 +732,16 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         fGetVariables={fGetVariables}
                         functions={functions}
                         updatePending={updatePending}
+                    />;
+                break;
+
+            case eStatementType.StorePosAsVariable_Op:
+                typeSpecificJsx=
+                    <StorePosAsVariableInputCtrl
+                        {...props}
+                        statement={selectedStatement}
+                        SetStatement={_UpdateStatement}
+                        updater={updater}
                     />;
                 break;
         }
@@ -1595,6 +1605,9 @@ const CreateParseStatement = (
 
             case eStatementType.StringOffset_Comp:
                 return new StringOffsetComparisonStatement();
+
+            case eStatementType.StorePosAsVariable_Op:
+                return new StorePosAsVariableStatement();
         }
     }
 
@@ -1626,63 +1639,7 @@ const AddInsertParseStatement =
     const { nameIndexes, statements, selectedStatementType, SetStatements, selStmtIndex } = ctrlProps;
 
     // Create the new statement based on type.
-    let newStatement: TextParseStatement;
-
-    switch(selectedStatementType) {
-        case eStatementType.String_Comp:
-            newStatement = new StringComparisonStatement();
-            break;
-
-        case eStatementType.SkipWS_Op:
-            newStatement= new SkipWSStatement();
-            break;
-
-        case eStatementType.Or_Comp:
-            newStatement = new OrComparisonStatement();
-            break;
-
-        case eStatementType.StatementList_Comp:
-            newStatement = new StatementListComparisonStatement();
-            break;
-
-        case eStatementType.AdvanceToEnd_Op:
-            newStatement=new AdvanceToEndStatement();
-            break;
-
-        case eStatementType.EndOfString_Comp:
-            newStatement = new EndOfStringComparisonStatement();
-            break;
-
-        case eStatementType.StartOfString_Comp:
-            newStatement = new StartOfStringComparisonStatement();
-            break;
-
-        case eStatementType.Capture_Comp:
-            newStatement = new CaptureComparisonStatement();
-            break;
-
-        case eStatementType.IsWhitespace_Comp:
-            newStatement = new IsWhitespaceComparisonStatement();
-            break;
-
-        case eStatementType.StringOffset_Comp:
-            newStatement = new StringOffsetComparisonStatement();
-            break;
-    }
-
-    // Generate a default name
-    let newNameIndex;
-    if(nameIndexes[selectedStatementType] === undefined) {
-        newNameIndex = 1;
-    }
-    else {
-        newNameIndex = nameIndexes[selectedStatementType] + 1;
-    }
-
-    nameIndexes[selectedStatementType] = newNameIndex;
-
-    newStatement.name=`${newStatement.TypeDescription()} ${newNameIndex}`;
-    newStatement.UID = newNameIndex;
+    const newStatement: TextParseStatement = CreateParseStatement(nameIndexes, selectedStatementType);
 
     //// Add/insert it
     // Get the new index
@@ -1807,7 +1764,13 @@ const TypeDropdownCtrl_Options = [
         key: eStatementType.StringOffset_Comp,
         text: "String offset comparison",
         value: eStatementType.StringOffset_Comp
-    }
+    },
+
+    {
+        key: eStatementType.StorePosAsVariable_Op,
+        text: "Store the current position in a variable",
+        value: eStatementType.StorePosAsVariable_Op
+    },
 ];
 
 const TypeDropdownCtrl: React.FunctionComponent<ITextParseProps & ITypeDropdownProps> = (props) => {
@@ -1895,6 +1858,10 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
         case eStatementType.StringOffset_Comp:
             text="Compare the string denoted by the current position and the specified length against the string "+
                 "denoted by the specified offset and the specified length.";
+            break;
+
+        case eStatementType.StorePosAsVariable_Op:
+            text="Store the current position in a variable.";
             break;
     }
 
@@ -2878,4 +2845,27 @@ const InputModal: React.SFC<IInputModalProps> = (props) => {
         </Modal>
     );
 
+};
+
+const StorePosAsVariableInputCtrl:
+    React.FunctionComponent<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
+
+    const { SetStatement, updater } = props;
+    const statement = props.statement as StorePosAsVariableStatement;
+
+    const placeHolderText="Name of variable...";
+
+    return (
+        <UpdateInputCtrl
+            statement={statement}
+            SetStatement={SetStatement}
+            placeholder={placeHolderText}
+            title={placeHolderText}
+            GetValue={StorePosAsVariableStatement.GetVarName}
+            SetValue={StorePosAsVariableStatement.SetVarName}
+            Validate={StorePosAsVariableStatement.ValidateVarName}
+            updater={updater}
+            name="varName"
+        />
+    );
 };
