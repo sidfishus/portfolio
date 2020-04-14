@@ -1,12 +1,16 @@
 
 import * as React from "react";
-import { TextParseStatement, eStatementType, StringComparisonStatement, StringOffsetComparisonStatement} from "./StatementTypes";
+import { TextParseStatement, eStatementType, StringOffsetComparisonStatement, StartOfStringComparisonStatement,
+    AdvanceStatement, StatementListComparisonStatement, IsWhitespaceComparisonStatement, SkipWSStatement, StorePosAsVariableStatement, AdvanceUntilComparisonStatement} from "./StatementTypes";
 import { ITextParseProps } from "./index";
 import useConstant from "use-constant";
 import { Dropdown, Form, Label } from "semantic-ui-react";
 import { TextParseFunction, eCustomFunctionOperator } from "./CustomFunctions";
-import { CreateLengthOperand, CreateArbitraryValueOperand, CreateFunctionOperand } from "./Operands";
+import { CreateLengthOperand, CreateArbitraryValueOperand, CreateFunctionOperand,
+    CreateCurrentPositionOperand, 
+    CreateVariableOperand} from "./Operands";
 import { eParseOutputType } from "./index";
+import { CreateTextParseVariable } from "./Variables";
 
 export interface IParseExamplesDropdownProps {
     parseExample: eParseExample;
@@ -26,6 +30,7 @@ export enum eParseExample {
     none=0,
     isPalindrome=1,
     isPalindromeCI=2,
+    extractPalindromes=3,
 };
 
 interface IParseExampleOption {
@@ -42,7 +47,8 @@ interface IParseExampleOption {
 
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {
 
-    const palindromeDescr = "Returns whether the input text is a palindrome: https://en.wikipedia.org/wiki/Palindrome";
+    const isPalindromeDescr = "Returns whether the input text is a palindrome: https://en.wikipedia.org/wiki/Palindrome";
+    const extractPalindromeInput = "Each abcba second bbb word cbbc is ppppgpppp a p palindrome qweewq";
 
     return [
         //eParseExample.none
@@ -53,7 +59,7 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.isPalindrome
         {
             text: "Is Palindrome (case sensitive)",
-            description: palindromeDescr,
+            description: isPalindromeDescr,
             GetStatements: GetIsPalindromeStatements(true),
             GetFunctions: GetIsPalindromeFunctions,
             ParseInput: "abcba",
@@ -63,11 +69,21 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.isPalindromeCI
         {
             text: "Is Palindrome (case insensitive)",
-            description: palindromeDescr,
+            description: isPalindromeDescr,
             GetStatements: GetIsPalindromeStatements(false),
             GetFunctions: GetIsPalindromeFunctions,
             ParseInput: "ABCDdcba",
             ParseOuputType: eParseOutputType.potMatch
+        },
+
+        //eParseExample.extractPalindromes
+        {
+            text: "Extract palindromes",
+            description: "Extract words which are palindromes from a sentence: https://en.wikipedia.org/wiki/Palindrome",
+            GetStatements: GetExtractPalindromesStatements(false),
+            GetFunctions: GetExtractPalindromesFunctions(false),
+            ParseInput: extractPalindromeInput,
+            ParseOuputType: eParseOutputType.potExtractAll
         }
     ];
 };
@@ -169,8 +185,8 @@ const GetIsPalindromeStatements = (caseSensitive: boolean): (
         stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the string onwards";
         stringOffsetComp.reverse=true;
         stringOffsetComp.caseSensitive=caseSensitive;
-        stringOffsetComp.length=CreateFunctionOperand(functions[0]);
-        stringOffsetComp.offset=CreateFunctionOperand(functions[1]);
+        stringOffsetComp.length=CreateFunctionOperand(functions[eIsPalindromeFunctionPos.offsetFuncLength]);
+        stringOffsetComp.offset=CreateFunctionOperand(functions[eIsPalindromeFunctionPos.offsetFuncOffset]);
         
         const advanceToTheEnd = CreateParseStatement(eStatementType.AdvanceToEnd_Op);
         advanceToTheEnd.keyedDescription="Parsing is complete if the string offset comparison was successfull.";
@@ -181,6 +197,11 @@ const GetIsPalindromeStatements = (caseSensitive: boolean): (
             advanceToTheEnd
         ];
     };
+};
+
+enum eIsPalindromeFunctionPos {
+    offsetFuncLength=0,
+    offsetFuncOffset=1
 };
 
 const GetIsPalindromeFunctions =
@@ -199,9 +220,162 @@ const GetIsPalindromeFunctions =
     offsetFuncOffset.SetOperator(eCustomFunctionOperator.subtract);
     offsetFuncOffset.SetRightHandOperand(CreateFunctionOperand(offsetFuncLength));
 
-    // The order is important here as 'GetIsPalindromeStatements' relies on it.
+    // The order is important here see 'eIsPalindromeFunctionPos'.
     return [
         offsetFuncLength,
         offsetFuncOffset
     ];
+};
+
+//sidtodo do the 'not palindromes' 
+const GetExtractPalindromesStatements = (
+    notPalindromes: boolean
+): (
+    CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
+    functions: TextParseFunction[]
+) => TextParseStatement[] => {
+
+    return (CreateParseStatement,functions) => {
+
+        const isWhitespaceComp = CreateParseStatement(eStatementType.IsWhitespace_Comp) as IsWhitespaceComparisonStatement;
+
+        // 1. Skip whitespace
+        const skipWhitespace = CreateParseStatement(eStatementType.SkipWS_Op) as SkipWSStatement;
+        skipWhitespace.keyedDescription="Skip whitespace.";
+
+        // 2. Is the start of a word - isStartOfWordComp
+        const isStartOfWordComp = CreateParseStatement(eStatementType.Or_Comp);
+        isStartOfWordComp.keyedDescription="Is the start of a word";
+        {
+
+            const isStartOfStringComp = CreateParseStatement(eStatementType.StartOfString_Comp) as StartOfStringComparisonStatement;
+            isStartOfStringComp.keyedDescription="Is the start of the input string?";
+
+            const advanceCurPosMinus1 = CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
+            advanceCurPosMinus1.keyedDescription="Set current position = current position - 1";
+            advanceCurPosMinus1.advanceWhere=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.curPosMinus1]);
+
+            const isStartOfWordStatementList=CreateParseStatement(eStatementType.StatementList_Comp) as StatementListComparisonStatement;
+            isStartOfWordStatementList.SetChildren([
+                advanceCurPosMinus1,
+                isWhitespaceComp,
+                skipWhitespace
+            ]);
+
+            isStartOfWordComp.SetChildren([
+                // Must come first
+                isStartOfStringComp, 
+                isStartOfWordStatementList
+            ]);
+        }
+
+        // 3. Store the position of the first character of the current word
+        const setFirstCharOfCurrentWordPosVariable=CreateParseStatement(eStatementType.StorePosAsVariable_Op) as StorePosAsVariableStatement;
+        setFirstCharOfCurrentWordPosVariable.keyedDescription="Hold the position of the fisrt character of the current word.";
+        setFirstCharOfCurrentWordPosVariable.variable=CreateTextParseVariable("Current Word First Char Pos");
+
+        // 4. Advance until the end of the current word / end of the entire string
+        const advanceTillEndOfWordOrInputString=CreateParseStatement(eStatementType.AdvanceUntil_Comp) as AdvanceUntilComparisonStatement;
+        advanceTillEndOfWordOrInputString.keyedDescription="Advance to the end of the current word or input string.";
+        advanceTillEndOfWordOrInputString.forwards=true;
+        {
+            const isEndOfStringComp = CreateParseStatement(eStatementType.EndOfString_Comp);
+            
+            const orComp=CreateParseStatement(eStatementType.Or_Comp);
+            orComp.SetChildren([
+                isEndOfStringComp,
+                isWhitespaceComp
+            ]);
+
+            advanceTillEndOfWordOrInputString.SetChildren([
+                orComp
+            ]);
+        }
+
+        // 5. Store the position of the end of the current word in a variable
+        const setEndOfCurrentWordPosVariable=CreateParseStatement(eStatementType.StorePosAsVariable_Op) as StorePosAsVariableStatement;
+        setEndOfCurrentWordPosVariable.keyedDescription="Hold the position of the last character + 1 of the current word.";
+        setEndOfCurrentWordPosVariable.variable=CreateTextParseVariable("Current Word Last Char + 1 Pos");
+
+        // 6. Go back to the first character of the word now we have it's dimensions
+        const goBackToBeginningOfWord=CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
+        goBackToBeginningOfWord.keyedDescription="Go back to the beginning of the current word now we have it's dimensions";
+        goBackToBeginningOfWord.advanceWhere=CreateVariableOperand(setFirstCharOfCurrentWordPosVariable.variable);
+
+        // 7. Do the string offset compare on the current word to determine if it's a palindrome or not
+        const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
+        stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the current word onwards";
+        stringOffsetComp.reverse=true;
+        stringOffsetComp.caseSensitive=true;
+        stringOffsetComp.length=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompWordLength]);
+        stringOffsetComp.offset=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompOffset]);
+
+        // 8. Skip to the end of the word
+        const goToEndOfWord=CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
+        goToEndOfWord.keyedDescription="Advance to the end of the word";
+        goToEndOfWord.advanceWhere=CreateVariableOperand(setEndOfCurrentWordPosVariable.variable);
+
+        // Put together in order
+
+        return [
+            skipWhitespace,
+            isStartOfWordComp,
+            setFirstCharOfCurrentWordPosVariable,
+            advanceTillEndOfWordOrInputString,
+            setEndOfCurrentWordPosVariable,
+            goBackToBeginningOfWord,
+            stringOffsetComp,
+            goToEndOfWord
+        ];
+    };
+};
+
+enum eExtractPalindromeFunctionPos {
+    curPosMinus1=0,
+    currentWordLength=1,
+    stringOffsetCompWordLength=2,
+    stringOffsetCompOffset=3,
+};
+
+const GetExtractPalindromesFunctions = (
+    notPalindromes: boolean
+): (
+    CreateTextParsefunction: (ctrName: string) => TextParseFunction
+ ) => TextParseFunction[] => {
+
+    return (CreateTextParsefunction): TextParseFunction[] => {
+
+        // Get the current position - 1
+        const curPosMinus1 = CreateTextParsefunction("Current Position - 1");
+        curPosMinus1.SetLeftHandOperand(CreateCurrentPositionOperand());
+        curPosMinus1.SetOperator(eCustomFunctionOperator.subtract);
+        curPosMinus1.SetRightHandOperand(CreateArbitraryValueOperand(1));
+
+        // Get the length of the current word
+        const currentWordLength=CreateTextParsefunction("Current Word Length");
+        const currentWordLastCharPlus1PosVar=CreateTextParseVariable("Current Word Last Char + 1 Pos");
+        currentWordLength.SetLeftHandOperand(CreateVariableOperand(currentWordLastCharPlus1PosVar));
+        currentWordLength.SetOperator(eCustomFunctionOperator.subtract);
+        currentWordLength.SetRightHandOperand(CreateVariableOperand(CreateTextParseVariable("Current Word First Char Pos")));
+
+        // Get the length of the current word / 2 for string offset comparison
+        const stringOffsetWordLength=CreateTextParsefunction("String Offset Comparison Word Length");
+        stringOffsetWordLength.SetLeftHandOperand(CreateFunctionOperand(currentWordLength));
+        stringOffsetWordLength.SetOperator(eCustomFunctionOperator.divide);
+        stringOffsetWordLength.SetRightHandOperand(CreateArbitraryValueOperand(2));
+
+        // Get the offset for the string offset comparison which is the middle of the current word
+        const stringOffsetCompOffset = CreateTextParsefunction("String Offset Comparison Offset");
+        stringOffsetCompOffset.SetLeftHandOperand(CreateVariableOperand(currentWordLastCharPlus1PosVar));
+        stringOffsetCompOffset.SetOperator(eCustomFunctionOperator.subtract);
+        stringOffsetCompOffset.SetRightHandOperand(CreateFunctionOperand(stringOffsetWordLength));
+
+        // Do not change the order. See 'eExtractPalindromeFunctionPos'
+        return [
+            curPosMinus1,
+            currentWordLength,
+            stringOffsetWordLength,
+            stringOffsetCompOffset
+        ];
+    };
 };

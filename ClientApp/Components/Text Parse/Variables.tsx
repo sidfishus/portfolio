@@ -7,6 +7,12 @@ export interface TextParseVariable {
     name: string;
 };
 
+export const CreateTextParseVariable = (name: string) => {
+    return {
+        name: name
+    }
+};
+
 export const CopyTextParseVariable = (variable: TextParseVariable) => {
     return {
         ...variable

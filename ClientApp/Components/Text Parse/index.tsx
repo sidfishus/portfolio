@@ -1,7 +1,7 @@
 
 import React, {useState, useRef, Fragment} from "react";
 import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox, Modal, Button, Icon, Table, Loader, List, Message, Header, ButtonProps, DropdownItemProps, TableRowProps } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement } from "./StatementTypes";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement, AdvanceUntilComparisonStatement, AdvanceStatement } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
@@ -260,6 +260,20 @@ interface IInputModalProps {
     okAvailable?: boolean;
     onOk: () => void;
     onCancel: () => void;
+};
+
+interface IAdvanceInputProps extends ITextParseStatementState {
+    fGetVariables: () => TextParseVariable[];
+    functions: Array<TextParseFunction>;
+    updatePending: boolean;
+    updater: SimpleDelayer;
+};
+
+interface IAdvanceUntilInputCtrlProps extends ITextParseStatementState {
+    nameIndexes: Array<number | undefined>;
+    subSelectedStatementType: eStatementType;
+    SetSubSelectedStatementType: (type?: eStatementType) => void;
+    SetSelStatement: (statement: TextParseStatement) => void;
 };
 
 // ~interface
@@ -746,6 +760,31 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         updater={updater}
                     />;
                 break;
+
+            case eStatementType.Advance_Op:
+                typeSpecificJsx=
+                    <AdvanceInputCtrl
+                        {...props}
+                        statement={selectedStatement}
+                        SetStatement={_UpdateStatement}
+                        updater={updater}
+                        fGetVariables={fGetVariables}
+                        functions={functions}
+                        updatePending={updatePending}
+                    />;
+
+            case eStatementType.AdvanceUntil_Comp:
+                typeSpecificJsx=
+                    <AdvanceUntilInputCtrl
+                        {...props}
+                        statement={selectedStatement}
+                        SetStatement={_UpdateStatement}
+                        nameIndexes={nameIndexes}
+                        subSelectedStatementType={subSelectedStatementType}
+                        SetSubSelectedStatementType={SetSubSelectedStatementType}
+                        SetSelStatement={SetSelStatement}
+                />;
+            break;
         }
     }
 
@@ -1610,6 +1649,12 @@ const CreateParseStatement = (
 
             case eStatementType.StorePosAsVariable_Op:
                 return new StorePosAsVariableStatement();
+
+            case eStatementType.Advance_Op:
+                return new AdvanceStatement();
+
+            case eStatementType.AdvanceUntil_Comp:
+                return new AdvanceUntilComparisonStatement();
         }
     }
 
@@ -1773,6 +1818,18 @@ const TypeDropdownCtrl_Options = [
         text: "Store the current position in a variable",
         value: eStatementType.StorePosAsVariable_Op
     },
+
+    {
+        key: eStatementType.Advance_Op,
+        text: "Advance",
+        value: eStatementType.Advance_Op
+    },
+
+    {
+        key: eStatementType.AdvanceUntil_Comp,
+        text: "Advance until comparison",
+        value: eStatementType.AdvanceUntil_Comp
+    }
 ];
 
 const TypeDropdownCtrl: React.FunctionComponent<ITextParseProps & ITypeDropdownProps> = (props) => {
@@ -1864,6 +1921,15 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
 
         case eStatementType.StorePosAsVariable_Op:
             text="Store the current position in a variable.";
+            break;
+
+        case eStatementType.Advance_Op:
+            text="Advance the current position / move elsewhere within the input string.";
+            break;
+
+        case eStatementType.AdvanceUntil_Comp:
+            text="Advance the current position one by one until the statement list matches. Effectively a 'do until' "
+                "loop.";
             break;
     }
 
@@ -2858,5 +2924,82 @@ const StorePosAsVariableInputCtrl:
             updater={updater}
             name="varName"
         />
+    );
+};
+
+const AdvanceInputCtrl: React.FunctionComponent<ITextParseProps & IAdvanceInputProps> = (props) => {
+
+    const { SetStatement, functions, fGetVariables, updater, updatePending } = props;
+    const statement = props.statement as AdvanceStatement;
+
+    return (
+        <Form.Field>
+            <ParseOperandDropdown
+                {...props}
+                functions={functions}
+                fGetVariables={fGetVariables}
+                SetOperand={_oper => {
+                    const updated=new AdvanceStatement(statement);
+                    updated.advanceWhere=_oper;
+                    SetStatement(updated);
+                }}
+                data={statement.advanceWhere}
+                name="advancestatementwhere"
+                updater={updater}
+                updatePending={updatePending}
+                includeLength={false}
+                includeCurrentPosition={false}
+                placeholder="(To Where)..."
+                title="Specify where to advance to"
+            />
+        </Form.Field>
+    );
+
+};
+
+const AdvanceUntilInputCtrl: React.FunctionComponent<ITextParseProps & IAdvanceUntilInputCtrlProps> = (props) => {
+
+    const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
+
+    const statement = props.statement as AdvanceUntilComparisonStatement;
+
+    const children=statement.Children();
+
+    return (
+        <>
+            <Form.Field>
+                <Checkbox
+                    label="Forwards"
+                    checked={statement.forwards}
+                    onChange={() => {
+
+                        const updated=new AdvanceUntilComparisonStatement(statement);
+                        updated.forwards=!statement.forwards;
+
+                        SetStatement(updated);
+                    }}
+                />
+            </Form.Field>
+
+            <Form.Field>
+                <AddNewParseStatementCtrls
+                    {...props}
+                    statements={children}
+                    SetStatements={(statements, selStmt) => {
+
+                        const copy=new AdvanceUntilComparisonStatement(statement,false);
+                        copy.children=statements;
+                        SetSelStatement(selStmt);
+                        SetStatement(copy);
+                    }}
+                    selectedStatementType={subSelectedStatementType}
+                    nameIndexes={nameIndexes}
+                    SetSelectedStatementType={SetSubSelectedStatementType}
+                    selStmtIndex={((children)?children.length-1:-1)}
+                    insert={false}
+                    comparisonOnly={false}
+                />
+            </Form.Field>
+        </>
     );
 };

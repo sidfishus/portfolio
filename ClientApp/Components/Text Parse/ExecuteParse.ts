@@ -173,6 +173,19 @@ const CodeForStatements_AddStatement: (stmtCode: string, stmtListName: string) =
     return `${stmtListName}.Add(${stmtCode});`;
 };
 
+const fCodeForStatements_GenerateVarName = (): () => string => {
+
+    let id=1;
+
+    return () => {
+        const rv=`_stmt${id}`;
+
+        ++id;
+
+        return rv;
+    }
+};
+
 const CodeForStatements = (
     statements: Array<TextParseStatement>,
     stmtListName: string,
@@ -185,8 +198,10 @@ const CodeForStatements = (
 
     const AddStatement=(code: string) => CodeForStatements_AddStatement(code, stmtListName);
 
+    const GenVarName = fCodeForStatements_GenerateVarName();
+
     statements.forEach(iterStmt => {
-        var stmtCode=iterStmt.GenerateCode(log, AddStatement, fGetVariables, functions);
+        var stmtCode=iterStmt.GenerateCode(log, AddStatement, fGetVariables, functions, GenVarName);
         rv=rv.concat(stmtCode);
     });
 

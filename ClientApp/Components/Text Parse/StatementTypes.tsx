@@ -6,6 +6,8 @@ import { IParseOperand, ParseOperandIsValid, ParseOperandCode } from "./Operands
 import { TextParseFunction } from "./CustomFunctions";
 import { TextParseVariable, CopyTextParseVariable } from "./Variables";
 
+const BooleanAsString = (bool: boolean) => ((bool)?"true":"false");
+
 export enum eStatementType {
 
     // String comparison
@@ -30,12 +32,16 @@ export enum eStatementType {
     StringOffset_Comp=9,
     // Store the current position in a variable
     StorePosAsVariable_Op=10,
+    // Advance the current position
+    Advance_Op=11,
+    // Advance the current position one by one until a comparison matches
+    AdvanceUntil_Comp=12,
     
     // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
     // Note: Keep this as the last item because it's used to determine the number of statement types
     // In C++ you can assert this kind of thing statically at compile type
-    phCount = 11,
+    phCount = 13,
 };
 
 // Information regarding the statement types
@@ -124,6 +130,20 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
         comparisonOnlyChildren: false,
         isUpdateVariable: true
     },
+
+    // Advance_Op
+    {
+        isComparison: false,
+        comparisonOnlyChildren: false,
+        isUpdateVariable: false
+    },
+
+    // AdvanceUntil_Comp
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false,
+        isUpdateVariable: false
+    }
 ];
 
 export interface ITextParseStatementState {
@@ -207,7 +227,8 @@ export abstract class TextParseStatement {
         fAddStatement:
         (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string; // 'log' is reserved in case in the future we decide to use it
 
     public UID: number; // Unique ID to reference this statement / type
@@ -383,13 +404,12 @@ export class StringComparisonStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
 
         const { caseSensitive, str, name } = this;
-
-        //TODO library function.
-        const caseSensitiveStr= ((caseSensitive)?"true":"false");
+        const caseSensitiveStr= BooleanAsString(caseSensitive);
 
         return fAddStatement(`new StringComparison(${log},new Options(${log}){CaseSensitive=${caseSensitiveStr}},${EncodeString(str)},"${name}")`);
     }
@@ -445,7 +465,8 @@ export class SkipWSStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
 
         const { name } = this;
@@ -525,7 +546,8 @@ export class OrComparisonStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
 
         const {children, name}=this;
@@ -540,7 +562,7 @@ export class OrComparisonStatement extends TextParseStatement {
 
             const iterChild=children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions));
+            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions, fGenerateVarName));
         }
 
         rv=rv.concat(
@@ -550,7 +572,36 @@ export class OrComparisonStatement extends TextParseStatement {
         return rv;
 
     }
-}
+};
+
+//sidtodo here statement names must be in same format as variable names in C#.
+//sidtodo here names of variables in the code generated in the statements is from the name property
+const CreateStatementListCode = (
+    name: string,
+    stmtList: TextParseStatement[],
+    log: string,
+    fGetVariables: () => TextParseVariable[],
+    functions: TextParseFunction[],
+    fGenerateVarName: () => string
+): string => {
+
+    const AddStatement = (code: string): string => {
+        return `${name}.Add(${code});`;
+    };
+
+    let rv:string =
+        `var ${name} = new StatementList(${log});
+        ${name}.Name="${name}";`;
+
+    for(let i=0;i<stmtList.length;++i) {
+
+        const iterChild=stmtList[i];
+
+        rv=rv.concat(iterChild.GenerateCode(log,AddStatement, fGetVariables, functions, fGenerateVarName));
+    }
+
+    return rv;
+};
 
 export class StatementListComparisonStatement extends TextParseStatement {
 
@@ -607,36 +658,26 @@ export class StatementListComparisonStatement extends TextParseStatement {
         this.children=children;
     }
 
-    AddStatement(code: string): string {
-        return `stmtListInner.Add(${code});`;
-    }
-
     GenerateCode(
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
         const {children, name}=this;
 
-        let rv:string =
-            `{
-                var stmtListInner = new StatementList(${log});
-                stmtListInner.Name="${name}";
-            `;
+        const listCode=CreateStatementListCode(
+            name,
+            children,
+            log,
+            fGetVariables,
+            functions,
+            fGenerateVarName
+        );
 
-        for(let i=0;i<children.length;++i) {
-
-            const iterChild=children[i];
-
-            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions));
-        }
-
-        rv=rv.concat(
-            `${fAddStatement("stmtListInner")}
-            }`);
-        
-        return rv;
+        return `${listCode}
+            ${fAddStatement(name)}`;
     }
 }
 
@@ -683,7 +724,8 @@ export class AdvanceToEndStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
 
         const { name } = this;
@@ -742,7 +784,8 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
 
         const { name } = this;
@@ -801,7 +844,8 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
 
         const { name } = this;
@@ -880,7 +924,8 @@ export class CaptureComparisonStatement extends TextParseStatement {
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
     ): string {
         const {children, name}=this;
 
@@ -899,7 +944,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
 
             const iterChild=children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions));
+            rv=rv.concat(iterChild.GenerateCode(log, this.AddStatement, fGetVariables, functions, fGenerateVarName));
         }
 
         rv=rv.concat(`
@@ -1043,7 +1088,7 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
 
         const {caseSensitive,reverse,length,offset}=this;
 
-        const caseSensitiveStr= ((caseSensitive)?"true":"false");
+        const caseSensitiveStr= BooleanAsString(caseSensitive);
 
         return fAddStatement(
             `new StringOffsetComparison(
@@ -1153,5 +1198,190 @@ export class StorePosAsVariableStatement extends SetVariableStatement {
             setVar.Name=${EncodeString(name)};
             ${fAddStatement("setVar")}
         }`;
+    }
+};
+
+export class AdvanceStatement extends TextParseStatement {
+
+    public advanceWhere: IParseOperand;
+
+    constructor(copy?: AdvanceStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.Advance_Op;
+        }
+    }
+
+    Copy(copyChildren: boolean): AdvanceStatement {
+        const copy=new AdvanceStatement(this);
+        return copy;
+    }
+
+    TypeDescription(): string {
+        return "Advance";
+    }
+
+    Description(): string {
+        const { CanSave } = this;
+        
+        if(!CanSave(null, false)) {
+            return null;
+        }
+
+        return "Advance";
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
+    ): string {
+
+        const { name, advanceWhere } = this;
+
+        return `{
+            var advance=new Advance(${log}, ${EncodeString(ParseOperandCode(advanceWhere, fGetVariables, functions))});
+            advance.Name=${EncodeString(name)};
+            ${fAddStatement("advance")}
+        }`;
+    }
+};
+
+export class AdvanceUntilComparisonStatement extends TextParseStatement {
+
+    children: Array<TextParseStatement>;
+    forwards: boolean; // I.e. the direction in which to move
+
+    constructor(
+        copy?: AdvanceUntilComparisonStatement,
+        copyChildren: boolean=true) {
+
+        super(copy, copyChildren);
+        if(!copy) {
+
+            this.type=eStatementType.AdvanceUntil_Comp;
+            this.children = new Array<TextParseStatement>();
+        }
+    }
+
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+        // Must have at least 1 child
+        const { children } = this;
+        if(children && children.length>0) {
+            return super.CanSave(stmtList, checkChildren);
+        }
+
+        return false;
+    }
+
+    TypeDescription(): string {
+        return "Advance Until Comparison";
+    }
+
+    Copy(copyChildren: boolean): AdvanceUntilComparisonStatement {
+        const copy=new AdvanceUntilComparisonStatement(this, copyChildren);
+        return copy;
+    }
+
+    Description(): string {
+
+        return "Advance until comparison";
+    }
+
+    Icon(): SemanticICONS { //sidtodo
+        return "unordered list";
+    }
+
+    Children(): TextParseStatement[] | null {
+        return this.children;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+        this.children=children;
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
+    ): string {
+
+        const {children, name, forwards}=this;
+
+        const AddComparison = (compCodeString: string): string => {
+            const code: string=`var ${name}=new AdvanceUntilComparison(${log}, ${compCodeString}, ${BooleanAsString(forwards)});
+            ${name}.Name=${EncodeString(name)};`;
+
+            return code;
+        };
+
+        //sidtodo current test. pretty sure this won't work.
+        const code= fAddStatement(
+            CreateStatementListIfMultipleOtherwiseReturnSingle(
+                children,
+                AddComparison,
+                log,
+                fGetVariables,
+                functions,
+                fGenerateVarName));
+
+        alert(code); //sidtodo test
+        return code;
+    }
+};
+
+// For want of a better name...
+// When generating the text parse C# code, if a statement array contains multiple statements, create a text parse
+// statement list incoorporating them and return the statement list. Otherwise return the single text parse
+// statement as is
+const CreateStatementListIfMultipleOtherwiseReturnSingle = (
+    stmtList: Array<TextParseStatement>,
+    fAddStatements: (code: string) => string,
+    log: string,
+    fGetVariables: () => TextParseVariable[],
+    functions: TextParseFunction[],
+    fGenerateVarName: () => string
+) => {
+
+    if(stmtList.length === 1)
+        //sidtodo current test
+        return stmtList[0].GenerateCode(log, fAddStatements, fGetVariables, functions, fGenerateVarName);
+
+    const stmtListVarName=fGenerateVarName();
+    const AddStmtToStmtList = CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt(stmtListVarName);
+
+    let rv = `var ${stmtListVarName}=new StatementList(${log})`;
+    stmtList.forEach(iterStmt => {
+        rv=rv.concat(iterStmt.GenerateCode(log, AddStmtToStmtList, fGetVariables, functions, fGenerateVarName));
+    });
+
+    //sidtodo current test
+    return `${rv}
+        ${fAddStatements(stmtListVarName)}`;
+};
+
+const CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt = (
+    varName: string
+): (code: string) => string => {
+
+    return (code) => {
+        return `${varName}.Add(${code});`;
     }
 };
