@@ -318,6 +318,10 @@ export abstract class TextParseStatement {
 
         if(name === null || name === "") return false;
 
+        // Can't lead with a number
+        if(name[0]>='0' && name[0]<='9')
+            return false;
+
         // Invalid character?
         if(name.split("").find(iterChr => !IsAlpha(iterChr))) return false;
 
@@ -371,7 +375,7 @@ export class StringComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "String Comparison";
+        return "StringComparison";
     }
 
     Copy(copyChildren: boolean): StringComparisonStatement {
@@ -432,7 +436,7 @@ export class SkipWSStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Skip Whitespace Operation";
+        return "SkipWhitespaceOperation";
     }
 
     Copy(copyChildren: boolean): SkipWSStatement {
@@ -473,9 +477,9 @@ export class SkipWSStatement extends TextParseStatement {
 
         var code=
             `{
-                var skipWS=TokenComparison.SkipWhitespace(${log});
-                skipWS.Name="${name}";
-                ${fAddStatement("skipWS")}
+                var ${name}=TokenComparison.SkipWhitespace(${log});
+                ${name}.Name="${name}";
+                ${fAddStatement(name)}
             }`;
 
         return code;
@@ -512,7 +516,7 @@ export class OrComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Or Comparison";
+        return "OrComparison";
     }
 
     Copy(copyChildren: boolean): OrComparisonStatement {
@@ -554,8 +558,8 @@ export class OrComparisonStatement extends TextParseStatement {
 
         let rv:string =
             `{
-                var orComp=new OrComparison(${log});
-                orComp.Name="${name}";
+                var ${name}=new OrComparison(${log});
+                ${name}.Name="${name}";
             `;
 
         for(let i=0;i<children.length;++i) {
@@ -566,7 +570,7 @@ export class OrComparisonStatement extends TextParseStatement {
         }
 
         rv=rv.concat(
-            `${fAddStatement("orComp")}
+            `${fAddStatement(name)}
             }`);
         
         return rv;
@@ -632,7 +636,7 @@ export class StatementListComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Statement List";
+        return "StatementList";
     }
 
     Copy(copyChildren: boolean): StatementListComparisonStatement {
@@ -691,7 +695,7 @@ export class AdvanceToEndStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Advance to the End Operation";
+        return "AdvanceToTheEndOperation";
     }
 
     Copy(copyChildren: boolean): AdvanceToEndStatement {
@@ -732,9 +736,9 @@ export class AdvanceToEndStatement extends TextParseStatement {
 
         var code=
             `{
-                var advanceToEnd=new AdvanceToTheEnd(${log});
-                advanceToEnd.Name="${name}";
-                ${fAddStatement("advanceToEnd")}
+                var ${name}=new AdvanceToTheEnd(${log});
+                ${name}.Name="${name}";
+                ${fAddStatement(name)}
             }`;
 
         return code;
@@ -751,7 +755,7 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "End of String Comparison";
+        return "EndOfStringComparison";
     }
 
     Copy(copyChildren: boolean): EndOfStringComparisonStatement {
@@ -792,9 +796,9 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
 
         var code=
             `{
-                var isEndOfStringComp=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == str.Length);
-                isEndOfStringComp.Name="${name}";
-                ${fAddStatement("isEndOfStringComp")}
+                var ${name}=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == str.Length);
+                ${name}.Name="${name}";
+                ${fAddStatement(name)}
             }`;
 
         return code;
@@ -811,7 +815,7 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Start of String Comparison";
+        return "StartOfStringComparison";
     }
 
     Copy(copyChildren: boolean): StartOfStringComparisonStatement {
@@ -852,9 +856,9 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
 
         var code=
             `{
-                var isStartOfStringComp=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == 0);
-                isStartOfStringComp.Name="${name}";
-                ${fAddStatement("isStartOfStringComp")}
+                var ${name}=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == 0);
+                ${name}.Name="${name}";
+                ${fAddStatement(name)}
             }`;
 
         return code;
@@ -917,7 +921,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
     }
 
     AddStatement(code: string): string {
-        return `captureStmtList.Add(${code});`;
+        return `${name}.Add(${code});`;
     }
 
     GenerateCode(
@@ -929,15 +933,17 @@ export class CaptureComparisonStatement extends TextParseStatement {
     ): string {
         const {children, name}=this;
 
+        const captureVarName=fGenerateVarName();
+
         let rv:string =
             `{
-                var captureInner = new Capture(${log});
-                captureInner.Name="${name}";
-                ${fAddStatement("captureInner")}
+                var ${captureVarName} = new Capture(${log});
+                ${captureVarName}.Name="${name}";
+                ${fAddStatement(captureVarName)}
 
-                var captureStmtList=new StatementList(${log});
-                captureInner.Comparison=captureStmtList;
-                capturing.Add("${name}", captureInner);
+                var ${name}=new StatementList(${log});
+                ${captureVarName}.Comparison=${name};
+                capturing.Add("${name}", ${captureVarName});
                 `;
 
         for(let i=0;i<children.length;++i) {
@@ -964,7 +970,7 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Is Whitespace Comparison";
+        return "IsWhitespaceComparison";
     }
 
     Copy(copyChildren: boolean): IsWhitespaceComparisonStatement {
@@ -1004,9 +1010,9 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
 
         var code=
             `{
-                var isWhitespaceComp=TokenComparison.IsWhitespace(${log});
-                isWhitespaceComp.Name="${name}";
-                ${fAddStatement("isWhitespaceComp")}
+                var ${name}=TokenComparison.IsWhitespace(${log});
+                ${name}.Name="${name}";
+                ${fAddStatement(name)}
             }`;
 
         return code;
@@ -1043,7 +1049,7 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "String Offset Comparison";
+        return "StringOffsetComparison";
     }
 
     CanSave(
@@ -1160,7 +1166,7 @@ export class StorePosAsVariableStatement extends SetVariableStatement {
     }
 
     TypeDescription(): string {
-        return "Store Current Position";
+        return "StoreCurrentPosition";
     }
 
     Description(): string {
@@ -1194,9 +1200,9 @@ export class StorePosAsVariableStatement extends SetVariableStatement {
         const { variable, name } = this;
 
         return `{
-            var setVar=new StorePosAsVariable(${log}, ${EncodeString(variable.name)});
-            setVar.Name=${EncodeString(name)};
-            ${fAddStatement("setVar")}
+            var ${name}=new StorePosAsVariable(${log}, ${EncodeString(variable.name)});
+            ${name}.Name=${EncodeString(name)};
+            ${fAddStatement(name)}
         }`;
     }
 };
@@ -1252,9 +1258,9 @@ export class AdvanceStatement extends TextParseStatement {
         const { name, advanceWhere } = this;
 
         return `{
-            var advance=new Advance(${log}, ${EncodeString(ParseOperandCode(advanceWhere, fGetVariables, functions))});
-            advance.Name=${EncodeString(name)};
-            ${fAddStatement("advance")}
+            var ${name}=new Advance(${log}, ${EncodeString(ParseOperandCode(advanceWhere, fGetVariables, functions))});
+            ${name}.Name=${EncodeString(name)};
+            ${fAddStatement(name)}
         }`;
     }
 };
@@ -1290,7 +1296,7 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
     }
 
     TypeDescription(): string {
-        return "Advance Until Comparison";
+        return "AdvanceUntilComparison";
     }
 
     Copy(copyChildren: boolean): AdvanceUntilComparisonStatement {

@@ -4,8 +4,7 @@ export const IsAlpha = (chr: string): boolean => {
     if(
         (chr>='0' && chr<='9') ||
         (chr>='a' && chr<='z') ||
-        (chr>='A' && chr<='Z') ||
-        (chr==' ')
+        (chr>='A' && chr<='Z')
     ){
         return true;
     }

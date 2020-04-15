@@ -1673,7 +1673,7 @@ const CreateParseStatement = (
 
     const newStatement=CreateStmt();
 
-    newStatement.name=`${newStatement.TypeDescription()} ${newIndex}`;
+    newStatement.name=`${newStatement.TypeDescription()}${newIndex}`;
     newStatement.UID = newIndex;
 
     return newStatement;
