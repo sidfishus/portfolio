@@ -47,7 +47,7 @@ export const ParseOperandCode = (
             {
                 const variableList=fGetVariables();
                 const variable=variableList.find(iterVar => oper.MatchesVariable(iterVar));
-                return `Operand.Variable("${variable.name}")`;
+                return `Operand.Variable<int>("${variable.name}")`;
             }
 
         case eParseOperandType.function:

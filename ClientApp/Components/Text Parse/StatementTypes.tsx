@@ -480,7 +480,8 @@ export class SkipWSStatement extends TextParseStatement {
                 var ${name}=TokenComparison.SkipWhitespace(${log});
                 ${name}.Name="${name}";
                 ${fAddStatement(name)}
-            }`;
+            }
+            `;
 
         return code;
     }
@@ -500,6 +501,8 @@ export class OrComparisonStatement extends TextParseStatement {
             this.type=eStatementType.Or_Comp;
             this.children = new Array<TextParseStatement>();
         }
+
+        this.AddStatement=this.AddStatement.bind(this);
     }
 
     CanSave(
@@ -543,7 +546,8 @@ export class OrComparisonStatement extends TextParseStatement {
     }
 
     AddStatement(code: string): string {
-        return `orComp.Add(${code});`;
+        const { name } = this;
+        return `${name}.Add(${code});`;
     }
 
     GenerateCode(
@@ -554,7 +558,7 @@ export class OrComparisonStatement extends TextParseStatement {
         fGenerateVarName: () => string
     ): string {
 
-        const {children, name}=this;
+        const {children, name, AddStatement}=this;
 
         let rv:string =
             `{
@@ -566,12 +570,13 @@ export class OrComparisonStatement extends TextParseStatement {
 
             const iterChild=children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log,this.AddStatement, fGetVariables, functions, fGenerateVarName));
+            rv=rv.concat(iterChild.GenerateCode(log,AddStatement, fGetVariables, functions, fGenerateVarName));
         }
 
         rv=rv.concat(
             `${fAddStatement(name)}
-            }`);
+            }
+            `);
         
         return rv;
 
@@ -595,7 +600,8 @@ const CreateStatementListCode = (
 
     let rv:string =
         `var ${name} = new StatementList(${log});
-        ${name}.Name="${name}";`;
+        ${name}.Name="${name}";
+        `;
 
     for(let i=0;i<stmtList.length;++i) {
 
@@ -681,7 +687,8 @@ export class StatementListComparisonStatement extends TextParseStatement {
         );
 
         return `${listCode}
-            ${fAddStatement(name)}`;
+            ${fAddStatement(name)}
+            `;
     }
 }
 
@@ -739,7 +746,8 @@ export class AdvanceToEndStatement extends TextParseStatement {
                 var ${name}=new AdvanceToTheEnd(${log});
                 ${name}.Name="${name}";
                 ${fAddStatement(name)}
-            }`;
+            }
+            `;
 
         return code;
     }
@@ -799,7 +807,8 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
                 var ${name}=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == str.Length);
                 ${name}.Name="${name}";
                 ${fAddStatement(name)}
-            }`;
+            }
+            `;
 
         return code;
     }
@@ -859,7 +868,8 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
                 var ${name}=new IndexIsOffsetComparison(${log},(pos,str,depth,runState) => pos == 0);
                 ${name}.Name="${name}";
                 ${fAddStatement(name)}
-            }`;
+            }
+            `;
 
         return code;
     }
@@ -879,6 +889,8 @@ export class CaptureComparisonStatement extends TextParseStatement {
             this.type=eStatementType.Capture_Comp;
             this.children = new Array<TextParseStatement>();
         }
+
+        this.AddStatement=this.AddStatement.bind(this);
     }
 
     CanSave(
@@ -921,6 +933,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
     }
 
     AddStatement(code: string): string {
+        const { name } = this;
         return `${name}.Add(${code});`;
     }
 
@@ -931,7 +944,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
         functions: TextParseFunction[],
         fGenerateVarName: () => string
     ): string {
-        const {children, name}=this;
+        const {children, name, AddStatement}=this;
 
         const captureVarName=fGenerateVarName();
 
@@ -950,11 +963,12 @@ export class CaptureComparisonStatement extends TextParseStatement {
 
             const iterChild=children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log, this.AddStatement, fGetVariables, functions, fGenerateVarName));
+            rv=rv.concat(iterChild.GenerateCode(log, AddStatement, fGetVariables, functions, fGenerateVarName));
         }
 
         rv=rv.concat(`
-            }`);
+            }
+            `);
         
         return rv;
     }
@@ -1013,7 +1027,8 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
                 var ${name}=TokenComparison.IsWhitespace(${log});
                 ${name}.Name="${name}";
                 ${fAddStatement(name)}
-            }`;
+            }
+            `;
 
         return code;
     }
@@ -1203,7 +1218,8 @@ export class StorePosAsVariableStatement extends SetVariableStatement {
             var ${name}=new StorePosAsVariable(${log}, ${EncodeString(variable.name)});
             ${name}.Name=${EncodeString(name)};
             ${fAddStatement(name)}
-        }`;
+        }
+        `;
     }
 };
 
@@ -1258,10 +1274,11 @@ export class AdvanceStatement extends TextParseStatement {
         const { name, advanceWhere } = this;
 
         return `{
-            var ${name}=new Advance(${log}, ${EncodeString(ParseOperandCode(advanceWhere, fGetVariables, functions))});
+            var ${name}=new Advance(${log}, ${ParseOperandCode(advanceWhere, fGetVariables, functions)});
             ${name}.Name=${EncodeString(name)};
             ${fAddStatement(name)}
-        }`;
+        }
+        `;
     }
 };
 
@@ -1333,22 +1350,22 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
 
         const AddComparison = (compCodeString: string): string => {
             const code: string=`var ${name}=new AdvanceUntilComparison(${log}, ${compCodeString}, ${BooleanAsString(forwards)});
-            ${name}.Name=${EncodeString(name)};`;
+            ${name}.Name=${EncodeString(name)};
+            ${fAddStatement(name)}`;
 
             return code;
         };
 
-        //sidtodo current test. pretty sure this won't work.
-        const code= fAddStatement(
-            CreateStatementListIfMultipleOtherwiseReturnSingle(
-                children,
-                AddComparison,
-                log,
-                fGetVariables,
-                functions,
-                fGenerateVarName));
+        //sidtodo current test.
+        const code = CreateStatementListIfMultipleOtherwiseReturnSingle(
+            children,
+            AddComparison,
+            log,
+            fGetVariables,
+            functions,
+            fGenerateVarName);
 
-        alert(code); //sidtodo test
+        alert(code); //sidtodo remove
         return code;
     }
 };
@@ -1367,18 +1384,16 @@ const CreateStatementListIfMultipleOtherwiseReturnSingle = (
 ) => {
 
     if(stmtList.length === 1)
-        //sidtodo current test
         return stmtList[0].GenerateCode(log, fAddStatements, fGetVariables, functions, fGenerateVarName);
 
     const stmtListVarName=fGenerateVarName();
     const AddStmtToStmtList = CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt(stmtListVarName);
 
-    let rv = `var ${stmtListVarName}=new StatementList(${log})`;
+    let rv = `var ${stmtListVarName}=new StatementList(${log});`;
     stmtList.forEach(iterStmt => {
         rv=rv.concat(iterStmt.GenerateCode(log, AddStmtToStmtList, fGetVariables, functions, fGenerateVarName));
     });
 
-    //sidtodo current test
     return `${rv}
         ${fAddStatements(stmtListVarName)}`;
 };

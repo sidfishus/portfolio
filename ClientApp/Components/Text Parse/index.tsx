@@ -772,6 +772,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         functions={functions}
                         updatePending={updatePending}
                     />;
+                break;
 
             case eStatementType.AdvanceUntil_Comp:
                 typeSpecificJsx=
@@ -784,7 +785,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         SetSubSelectedStatementType={SetSubSelectedStatementType}
                         SetSelStatement={SetSelStatement}
                 />;
-            break;
+                break;
         }
     }
 
