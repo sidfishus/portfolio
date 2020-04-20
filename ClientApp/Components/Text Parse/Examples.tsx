@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { TextParseStatement, eStatementType, StringOffsetComparisonStatement, StartOfStringComparisonStatement,
-    AdvanceStatement, StatementListComparisonStatement, IsWhitespaceComparisonStatement, SkipWSStatement, StorePosAsVariableStatement, AdvanceUntilComparisonStatement} from "./StatementTypes";
+    AdvanceStatement, StatementListComparisonStatement, IsWhitespaceComparisonStatement, SkipWSStatement, StorePosAsVariableStatement, AdvanceUntilComparisonStatement, OrComparisonStatement, CustomComparisonStatement, eCustomComparisonOperator} from "./StatementTypes";
 import { ITextParseProps } from "./index";
 import useConstant from "use-constant";
 import { Dropdown, Form, Label } from "semantic-ui-react";
@@ -181,19 +181,34 @@ const GetIsPalindromeStatements = (caseSensitive: boolean): (
         const startOfStringComp = CreateParseStatement(eStatementType.StartOfString_Comp);
         startOfStringComp.keyedDescription="Assert is the start of the parse input string";
 
-        const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
-        stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the string onwards";
-        stringOffsetComp.reverse=true;
-        stringOffsetComp.caseSensitive=caseSensitive;
-        stringOffsetComp.length=CreateFunctionOperand(functions[eIsPalindromeFunctionPos.offsetFuncLength]);
-        stringOffsetComp.offset=CreateFunctionOperand(functions[eIsPalindromeFunctionPos.offsetFuncOffset]);
+        const stringOffsetOr = CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
+        stringOffsetOr.keyedDescription="Reverse string offset comparison";
+        {
+            const customComp = CreateParseStatement(eStatementType.CustomComparison) as CustomComparisonStatement;
+            customComp.keyedDescription="Assume a match if the input string is 1 character";
+            customComp.leftHandOperand=CreateFunctionOperand(functions[eIsPalindromeFunctionPos.offsetFuncLength]);
+            customComp.operator=eCustomComparisonOperator.equals;
+            customComp.rightHandOperand=CreateArbitraryValueOperand(0);
+
+            const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
+            stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the string onwards";
+            stringOffsetComp.reverse=true;
+            stringOffsetComp.caseSensitive=caseSensitive;
+            stringOffsetComp.length=CreateFunctionOperand(functions[eIsPalindromeFunctionPos.offsetFuncLength]);
+            stringOffsetComp.offset=CreateFunctionOperand(functions[eIsPalindromeFunctionPos.offsetFuncOffset]);
+
+            stringOffsetOr.SetChildren([
+                customComp,
+                stringOffsetComp
+            ]);
+        }
         
         const advanceToTheEnd = CreateParseStatement(eStatementType.AdvanceToEnd_Op);
         advanceToTheEnd.keyedDescription="Parsing is complete if the string offset comparison was successfull.";
 
         return [
             startOfStringComp,
-            stringOffsetComp,
+            stringOffsetOr,
             advanceToTheEnd
         ];
     };
@@ -310,12 +325,27 @@ const GetExtractPalindromesStatements = (
         goBackToBeginningOfWord.advanceWhere=CreateVariableOperand(setFirstCharOfCurrentWordPosVariable.variable);
 
         // 6. Do the string offset compare on the current word to determine if it's a palindrome or not
-        const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
-        stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the current word onwards";
-        stringOffsetComp.reverse=true;
-        stringOffsetComp.caseSensitive=true;
-        stringOffsetComp.length=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompWordLength]);
-        stringOffsetComp.offset=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompOffset]);
+        const stringOffsetOr = CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
+        stringOffsetOr.keyedDescription="Reverse string offset comparison";
+        {
+            const customComp = CreateParseStatement(eStatementType.CustomComparison) as CustomComparisonStatement;
+            customComp.keyedDescription="Assume a match if the word is 1 character";
+            customComp.leftHandOperand=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompWordLength]);
+            customComp.operator=eCustomComparisonOperator.equals;
+            customComp.rightHandOperand=CreateArbitraryValueOperand(0);
+
+            const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
+            stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the current word onwards";
+            stringOffsetComp.reverse=true;
+            stringOffsetComp.caseSensitive=true;
+            stringOffsetComp.length=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompWordLength]);
+            stringOffsetComp.offset=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompOffset]);
+
+            stringOffsetOr.SetChildren([
+                customComp,
+                stringOffsetComp
+            ]);
+        }
 
         // 7. Skip to the end of the word
         const goToEndOfWord=CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
@@ -330,7 +360,7 @@ const GetExtractPalindromesStatements = (
             advanceTillEndOfWordOrInputString,
             setEndOfCurrentWordPosVariable,
             goBackToBeginningOfWord,
-            stringOffsetComp,
+            stringOffsetOr,
             goToEndOfWord
         ];
     };
