@@ -1,6 +1,6 @@
 
 import { TextParseVariable } from "./Variables";
-import { IParseOperand, CopyParseOperand, eParseOperandType } from "./Operands";
+import { IParseOperand, CopyParseOperand, ParseOperandMultipleCode } from "./Operands";
 
 export enum eCustomFunctionOperator {
     add=1,
@@ -18,39 +18,6 @@ const OperatorCode = (op: eCustomFunctionOperator): string => {
     }
 };
 
-const FunctionParseOperandCode = (
-    operand: IParseOperand,
-    fGetVariables: () => TextParseVariable[],
-    functions: TextParseFunction[],
-    posVarName: string,
-    strVarName: string,
-    runStateVarName: string): string => {
-
-    switch(operand.type) {
-        case eParseOperandType.length:
-            return `${strVarName}.Length`;
-
-        case eParseOperandType.currentPosition:
-            return posVarName;
-
-        case eParseOperandType.arbitraryValue:
-            return operand.arbitraryValue.toString();
-
-        case eParseOperandType.variable:
-            {
-                const variableList=fGetVariables();
-                const variable=variableList.find(iterVar => operand.MatchesVariable(iterVar));
-                return `(int)${runStateVarName}.GetVariable("${variable.name}")`;
-            }
-
-        case eParseOperandType.function:
-            {
-                const func=functions.find(iterFunc => operand.MatchesFunction(iterFunc));
-                return `${runStateVarName}.CallFunction<int>("${func.Name()}", ${posVarName}, ${strVarName})`;
-            }
-    }
-};
-
 // Create the equivalent C# code from a custom function
 export const TextParseFunctionCode = (
     func: TextParseFunction,
@@ -59,8 +26,8 @@ export const TextParseFunctionCode = (
 
     const operatorCode=OperatorCode(func.Operator());
 
-    const leftOperandCode=FunctionParseOperandCode(func.LeftHandOperand(),fGetVariables,functions, "pos", "str", "rs");
-    const rightOperandCode=FunctionParseOperandCode(func.RightHandOperand(),fGetVariables,functions, "pos", "str", "rs");
+    const leftOperandCode=ParseOperandMultipleCode(func.LeftHandOperand(),fGetVariables,functions, "pos", "str", "rs");
+    const rightOperandCode=ParseOperandMultipleCode(func.RightHandOperand(),fGetVariables,functions, "pos", "str", "rs");
 
     return `(int pos, string str, RunState rs) => ${leftOperandCode} ${operatorCode} ${rightOperandCode}`;
 };

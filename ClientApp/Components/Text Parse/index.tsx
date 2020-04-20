@@ -1,7 +1,7 @@
 
 import React, {useState, useRef, Fragment} from "react";
 import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox, Modal, Button, Icon, Table, Loader, List, Message, Header, ButtonProps, DropdownItemProps, TableRowProps } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement, AdvanceUntilComparisonStatement, AdvanceStatement } from "./StatementTypes";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement, AdvanceUntilComparisonStatement, AdvanceStatement, CustomComparisonStatement, eCustomComparisonOperator } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
@@ -274,6 +274,16 @@ interface IAdvanceUntilInputCtrlProps extends ITextParseStatementState {
     subSelectedStatementType: eStatementType;
     SetSubSelectedStatementType: (type?: eStatementType) => void;
     SetSelStatement: (statement: TextParseStatement) => void;
+};
+
+interface ICustomComparisonInputCtrlProps extends ITextParseStatementState {
+    fGetVariables: () => TextParseVariable[];
+    functions: Array<TextParseFunction>;
+    updater: SimpleDelayer;
+    updatePending: boolean;
+};
+
+interface ICustomComparisonOperatorProps extends ITextParseStatementState {
 };
 
 // ~interface
@@ -785,6 +795,19 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         SetSubSelectedStatementType={SetSubSelectedStatementType}
                         SetSelStatement={SetSelStatement}
                 />;
+                break;
+
+            case eStatementType.CustomComparison:
+                typeSpecificJsx=
+                    <CustomComparisonInputCtrl
+                        {...props}
+                        statement={selectedStatement}
+                        SetStatement={_UpdateStatement}
+                        fGetVariables={fGetVariables}
+                        functions={functions}
+                        updater={updater}
+                        updatePending={updatePending}
+                    />;
                 break;
         }
     }
@@ -1656,6 +1679,9 @@ const CreateParseStatement = (
 
             case eStatementType.AdvanceUntil_Comp:
                 return new AdvanceUntilComparisonStatement();
+
+            case eStatementType.CustomComparison:
+                return new CustomComparisonStatement();
         }
     }
 
@@ -1830,6 +1856,12 @@ const TypeDropdownCtrl_Options = [
         key: eStatementType.AdvanceUntil_Comp,
         text: "Advance until comparison",
         value: eStatementType.AdvanceUntil_Comp
+    },
+
+    {
+        key: eStatementType.CustomComparison,
+        text: "Custom comparison",
+        value: eStatementType.CustomComparison
     }
 ];
 
@@ -1931,6 +1963,10 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
         case eStatementType.AdvanceUntil_Comp:
             text="Advance the current position one by one until the statement list matches. Effectively a 'do until' "
                 "loop.";
+            break;
+
+        case eStatementType.CustomComparison:
+            text="User generated comparison. Only use this when specific statements(s) cannot achieve the same goal.";
             break;
     }
 
@@ -2465,10 +2501,11 @@ const ParseOperandDropdown_UpdateOperand = (
         case eParseOperandOptions.selectArbitraryValue:
 
             if(orgOperand) {
+
                 return {
                     ...CopyParseOperand(orgOperand),
                     showArbitraryValueDialog: true,
-                    arbitraryValueUpdate: orgOperand.arbitraryValue.toString(),
+                    arbitraryValueUpdate: ((orgOperand.arbitraryValue)!==undefined)?orgOperand.arbitraryValue.toString():"",
                 };
             }
 
@@ -2599,7 +2636,7 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
         <>
             <InputModal
                 key={`${name}handArbitraryValueModal`}
-                open={data && data.showArbitraryValueDialog}
+                open={((data && data.showArbitraryValueDialog)?true:false)}
                 headerIcon="pencil"
                 headerText="Please Enter the Arbitrary Value (32 Bit Signed Integer)"
                 valid={((data && IsA32BitSignedNumber(data.arbitraryValueUpdate))?true:false)}
@@ -3002,5 +3039,136 @@ const AdvanceUntilInputCtrl: React.FunctionComponent<ITextParseProps & IAdvanceU
                 />
             </Form.Field>
         </>
+    );
+};
+
+const CustomComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ICustomComparisonInputCtrlProps> = (props) => {
+
+    const { fGetVariables, functions, SetStatement, updater, updatePending } = props;
+    const statement = props.statement as CustomComparisonStatement;
+
+    return (
+        <>
+            <i>Return:</i>
+            <br />
+            {/* This is the only way I can get a tab to work. I'd love to know of a better way! */}
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <ParseOperandDropdown
+                name="CustomComparisonLeftOperand"
+                SetOperand={_oper => {
+                    const updated=new CustomComparisonStatement(statement);
+                    updated.leftHandOperand=_oper;
+                    SetStatement(updated);
+                }}
+                placeholder="..."
+                functions={functions}
+                fGetVariables={fGetVariables}
+                data={statement.leftHandOperand}
+                updater={updater}
+                updatePending={updatePending}
+                title="Left hand operand"
+            />
+
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+            <CustomComparisonOperator
+                statement={statement}
+                SetStatement={SetStatement}
+            />
+
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+            <ParseOperandDropdown
+                name="CustomComparisonRightOperand"
+                SetOperand={_oper => {
+                    const updated=new CustomComparisonStatement(statement);
+                    updated.rightHandOperand=_oper;
+                    SetStatement(updated);
+                }}
+                placeholder="..."
+                functions={functions}
+                fGetVariables={fGetVariables}
+                data={statement.rightHandOperand}
+                updater={updater}
+                updatePending={updatePending}
+                title="Right hand operand"
+            />
+        </>
+    );
+};
+
+const CustomComparisonOperator: React.FunctionComponent<ICustomComparisonOperatorProps> = (props) => {
+
+    const { SetStatement } = props;
+
+    const statement = props.statement as CustomComparisonStatement;
+
+    // These must be in the same order of the 'eCustomComparisonOperator' enum
+    const options=[
+        {
+            text: "==",
+            description: "Equals"
+        },
+
+        {
+            text: "!=",
+            description: "Not Equal To"
+        },
+
+        {
+            text: "<",
+            description: "Less Than"
+        },
+
+        {
+            text: "<=",
+            description: "Lesser Or Equal To"
+        },
+
+        {
+            text: ">",
+            description: "Greater Than"
+        },
+
+        {
+            text: ">=",
+            description: "Greater Or Equal To"
+        }
+    ];
+
+    const onClick = (operator: eCustomComparisonOperator) => {
+
+        const updated=new CustomComparisonStatement(statement);
+
+        updated.operator=operator;
+        SetStatement(updated);
+    };
+
+    const selOption = options[statement.operator];
+
+    return (
+        <Dropdown
+            inline
+            pointing="top left"
+            value={statement.operator}
+            text={selOption.text}
+        >
+            <Dropdown.Menu>
+                {options.map((iterOption, i) => {
+                    const operatorEnum=i as eCustomComparisonOperator;
+                    return (
+                        <Dropdown.Item
+                            text={iterOption.text}
+                            description={iterOption.description}
+                            key={i}
+                            value={operatorEnum}
+                            onClick={() => onClick(operatorEnum)}
+                            active={operatorEnum === statement.operator}
+                            selected={operatorEnum === statement.operator}
+                        />
+                    );
+                })}
+            </Dropdown.Menu>
+        </Dropdown>
     );
 };

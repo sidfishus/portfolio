@@ -27,6 +27,7 @@ export const ParseOperandIsValid = (oper: IParseOperand) => {
     );
 };
 
+// For a single operand
 export const ParseOperandCode = (
     oper: IParseOperand,
     fGetVariables: () => TextParseVariable[],
@@ -54,6 +55,40 @@ export const ParseOperandCode = (
             {
                 const func=functions.find(iterFunc => oper.MatchesFunction(iterFunc));
                 return `Operand.CallFunction<int>("${func.Name()}")`;
+            }
+    }
+};
+
+// For creating a function/comparison consisting of multiple comparisons
+export const ParseOperandMultipleCode = (
+    operand: IParseOperand,
+    fGetVariables: () => TextParseVariable[],
+    functions: TextParseFunction[],
+    posVarName: string,
+    strVarName: string,
+    runStateVarName: string): string => {
+
+    switch(operand.type) {
+        case eParseOperandType.length:
+            return `${strVarName}.Length`;
+
+        case eParseOperandType.currentPosition:
+            return posVarName;
+
+        case eParseOperandType.arbitraryValue:
+            return operand.arbitraryValue.toString();
+
+        case eParseOperandType.variable:
+            {
+                const variableList=fGetVariables();
+                const variable=variableList.find(iterVar => operand.MatchesVariable(iterVar));
+                return `(int)${runStateVarName}.GetVariable("${variable.name}")`;
+            }
+
+        case eParseOperandType.function:
+            {
+                const func=functions.find(iterFunc => operand.MatchesFunction(iterFunc));
+                return `${runStateVarName}.CallFunction<int>("${func.Name()}", ${posVarName}, ${strVarName})`;
             }
     }
 };

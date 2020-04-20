@@ -2,8 +2,8 @@
 import { SemanticICONS } from "semantic-ui-react";
 import { EncodeString} from "./ExecuteParse";
 import { IsAlpha } from "../../Library/Misc";
-import { IParseOperand, ParseOperandIsValid, ParseOperandCode } from "./Operands";
-import { TextParseFunction } from "./CustomFunctions";
+import { IParseOperand, ParseOperandIsValid, ParseOperandCode, CopyParseOperand, ParseOperandMultipleCode } from "./Operands";
+import { TextParseFunction, eCustomFunctionOperator } from "./CustomFunctions";
 import { TextParseVariable, CopyTextParseVariable } from "./Variables";
 
 const BooleanAsString = (bool: boolean) => ((bool)?"true":"false");
@@ -36,18 +36,24 @@ export enum eStatementType {
     Advance_Op=11,
     // Advance the current position one by one until a comparison matches
     AdvanceUntil_Comp=12,
+    // Custom comparison
+    CustomComparison=13,
     
     // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
     // Note: Keep this as the last item because it's used to determine the number of statement types
     // In C++ you can assert this kind of thing statically at compile type
-    phCount = 13,
+    phCount = 14,
 };
 
 // Information regarding the statement types
 export interface IStatementTypeInfo {
+    // False means it's an operation
     isComparison: boolean;
-    comparisonOnlyChildren: boolean; // Can only have children which are comparison type statements?
+    // Can only have children which are comparison type statements? For e.g. an Or statement. This is only relevant
+    // to statement types that have child statements
+    comparisonOnlyChildren: boolean;
+    // Is this a type of statement that deals with updating variables?
     isUpdateVariable: boolean;
 };
 
@@ -143,6 +149,13 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
         isComparison: true,
         comparisonOnlyChildren: false,
         isUpdateVariable: false
+    },
+
+    // CustomComparison
+    {
+        isComparison: true,
+        comparisonOnlyChildren: false,
+        isUpdateVariable: false
     }
 ];
 
@@ -201,6 +214,45 @@ const NumberOfLevelsDeep = (iterChild: TextParseStatement,currentDepth: number):
 
     return rv;
 };
+
+// For want of a better name...
+// When generating the text parse C# code, if a statement array contains multiple statements, create a text parse
+// statement list incoorporating them and return the statement list. Otherwise return the single text parse
+// statement as is
+const CreateStatementListIfMultipleOtherwiseReturnSingle = (
+    stmtList: Array<TextParseStatement>,
+    fAddStatements: (code: string) => string,
+    log: string,
+    fGetVariables: () => TextParseVariable[],
+    functions: TextParseFunction[],
+    fGenerateVarName: () => string
+) => {
+
+    if(stmtList.length === 1)
+        return stmtList[0].GenerateCode(log, fAddStatements, fGetVariables, functions, fGenerateVarName);
+
+    const stmtListVarName=fGenerateVarName();
+    const AddStmtToStmtList = CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt(stmtListVarName);
+
+    let rv = `var ${stmtListVarName}=new StatementList(${log});`;
+    stmtList.forEach(iterStmt => {
+        rv=rv.concat(iterStmt.GenerateCode(log, AddStmtToStmtList, fGetVariables, functions, fGenerateVarName));
+    });
+
+    return `${rv}
+        ${fAddStatements(stmtListVarName)}`;
+};
+
+const CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt = (
+    varName: string
+): (code: string) => string => {
+
+    return (code) => {
+        return `${varName}.Add(${code});`;
+    }
+};
+
+//// Statement classes
 
 // Parse statement base class
 export abstract class TextParseStatement {
@@ -1370,39 +1422,120 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
     }
 };
 
-// For want of a better name...
-// When generating the text parse C# code, if a statement array contains multiple statements, create a text parse
-// statement list incoorporating them and return the statement list. Otherwise return the single text parse
-// statement as is
-const CreateStatementListIfMultipleOtherwiseReturnSingle = (
-    stmtList: Array<TextParseStatement>,
-    fAddStatements: (code: string) => string,
-    log: string,
-    fGetVariables: () => TextParseVariable[],
-    functions: TextParseFunction[],
-    fGenerateVarName: () => string
-) => {
-
-    if(stmtList.length === 1)
-        return stmtList[0].GenerateCode(log, fAddStatements, fGetVariables, functions, fGenerateVarName);
-
-    const stmtListVarName=fGenerateVarName();
-    const AddStmtToStmtList = CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt(stmtListVarName);
-
-    let rv = `var ${stmtListVarName}=new StatementList(${log});`;
-    stmtList.forEach(iterStmt => {
-        rv=rv.concat(iterStmt.GenerateCode(log, AddStmtToStmtList, fGetVariables, functions, fGenerateVarName));
-    });
-
-    return `${rv}
-        ${fAddStatements(stmtListVarName)}`;
+export enum eCustomComparisonOperator {
+    equals=0,               // ==
+    notEquals=1,            // !=
+    lessThan=2,             // <
+    lesserEqual=3,          // <=
+    greaterThan=4,          // >
+    greaterEquals=5,        // >=
 };
 
-const CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt = (
-    varName: string
-): (code: string) => string => {
+export class CustomComparisonStatement extends TextParseStatement {
 
-    return (code) => {
-        return `${varName}.Add(${code});`;
+    public leftHandOperand: IParseOperand;
+    public operator: eCustomComparisonOperator;
+    public rightHandOperand: IParseOperand;
+
+    constructor(
+        copy?: CustomComparisonStatement) {
+
+        super(copy);
+        this.type=eStatementType.CustomComparison;
+
+        if(!copy) {
+            this.leftHandOperand=null;
+            this.rightHandOperand=null;
+            this.operator=eCustomComparisonOperator.equals;
+        }
+        else {
+            this.leftHandOperand=CopyParseOperand(copy.leftHandOperand);
+            this.rightHandOperand=CopyParseOperand(copy.rightHandOperand);
+            this.operator=copy.operator;
+        }
+    }
+
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+        const { leftHandOperand, rightHandOperand} = this;
+
+        if(!leftHandOperand || !rightHandOperand) return false;
+
+        return super.CanSave(stmtList, checkChildren);
+    }
+
+    TypeDescription(): string {
+        return "CustomComparison";
+    }
+
+    Copy(copyChildren: boolean): CustomComparisonStatement {
+        const copy=new CustomComparisonStatement(this);
+        return copy;
+    }
+
+    Description(): string {
+
+        return "Custom comparison";
+    }
+
+    Icon(): SemanticICONS { //sidtodo
+        return "unordered list";
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
+    ): string {
+
+        const { leftHandOperand, rightHandOperand, operator, name } = this;
+
+        const leftOperandCode=ParseOperandMultipleCode(leftHandOperand,fGetVariables,functions, "pos", "str", "rs");
+        const rightOperandCode=ParseOperandMultipleCode(rightHandOperand,fGetVariables,functions, "pos", "str", "rs");
+
+        const operatorCode=CustomComparisonOperatorCode(operator);
+
+        const fCustomComparisonCode =
+            `(int pos, string str, RunState rs) => ${leftOperandCode} ${operatorCode} ${rightOperandCode}`;
+
+        const code=`var ${name} = new CustomComparison(${log}, ${fCustomComparisonCode});
+            ${name}.Name=${EncodeString(name)};
+            ${fAddStatement(name)}
+            `;
+        return code;
+    }
+};
+
+// Returns the equivalent C# code
+const CustomComparisonOperatorCode = (operator: eCustomComparisonOperator): string => {
+    switch(operator) {
+        case eCustomComparisonOperator.equals:
+            return "==";
+
+        case eCustomComparisonOperator.notEquals:
+            return "!=";
+
+        case eCustomComparisonOperator.lessThan:
+            return "<";
+
+        case eCustomComparisonOperator.lesserEqual:
+            return "<=";
+
+        case eCustomComparisonOperator.greaterThan:
+            return ">";
+
+        case eCustomComparisonOperator.greaterEquals:
+            return ">=";
     }
 };
