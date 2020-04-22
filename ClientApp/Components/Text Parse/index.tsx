@@ -1,7 +1,7 @@
 
 import React, {useState, useRef, Fragment} from "react";
 import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox, Modal, Button, Icon, Table, Loader, List, Message, Header, ButtonProps, DropdownItemProps, TableRowProps } from "semantic-ui-react";
-import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement, AdvanceUntilComparisonStatement, AdvanceStatement, CustomComparisonStatement, eCustomComparisonOperator } from "./StatementTypes";
+import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement, AdvanceUntilComparisonStatement, AdvanceStatement, CustomComparisonStatement, eCustomComparisonOperator, ComparisonStatement } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
 import { Extract, Match, Replace } from "./ExecuteParse";
@@ -816,6 +816,8 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     const firstFailingFunction=functions.find((iterFunc, funcIdx) => !iterFunc.IsValid(functions, funcIdx));
     const parseInputError=((parseInputText!==null && parseInputText!=="")?null:"Please enter parse input before attempting to parse.");
 
+    const comparisonSpecificJsx = ComparisonSpecificJsx(selectedStatement, _UpdateStatement);
+
     //sidtodo checkbox to show full description
     //sidtood checkbox to show description from the type (i.e. string comparison against 'blah'.)
 
@@ -901,6 +903,12 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                                     />
 
                                 </Form.Field>
+
+                                {comparisonSpecificJsx &&
+                                    <Form.Field>
+                                        {comparisonSpecificJsx}
+                                    </Form.Field>
+                                }
 
                                 {typeSpecificJsx &&
                                     <Form.Field>
@@ -3170,5 +3178,31 @@ const CustomComparisonOperator: React.FunctionComponent<ICustomComparisonOperato
                 })}
             </Dropdown.Menu>
         </Dropdown>
+    );
+};
+
+const ComparisonSpecificJsx = (
+    tpStatement: TextParseStatement,
+    SetStatement: (stmt: TextParseStatement) => void
+): JSX.Element => {
+
+    if(!tpStatement || !(tpStatement instanceof ComparisonStatement)) {
+        return null;
+    }
+
+    const statement=tpStatement as ComparisonStatement;
+
+    return (
+        <Checkbox
+            label="Not - invert the result (the current position will not be updated)"
+            checked={statement.not}
+            onChange={() => {
+
+                const updated=statement.Copy(true) as ComparisonStatement;
+                updated.not=!statement.not;
+
+                SetStatement(updated);
+            }}
+        />
     );
 };

@@ -5,6 +5,7 @@ import { IsAlpha } from "../../Library/Misc";
 import { IParseOperand, ParseOperandIsValid, ParseOperandCode, CopyParseOperand, ParseOperandMultipleCode } from "./Operands";
 import { TextParseFunction, eCustomFunctionOperator } from "./CustomFunctions";
 import { TextParseVariable, CopyTextParseVariable } from "./Variables";
+import { TextParse } from ".";
 
 const BooleanAsString = (bool: boolean) => ((bool)?"true":"false");
 
@@ -276,8 +277,7 @@ export abstract class TextParseStatement {
     public abstract SetChildren(children?: TextParseStatement[]): void;
     public abstract GenerateCode(
         log: string,
-        fAddStatement:
-        (stmtCode: string) => string,
+        fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
         functions: TextParseFunction[],
         fGenerateVarName: () => string
@@ -383,7 +383,63 @@ export abstract class TextParseStatement {
     }
 };
 
-export class StringComparisonStatement extends TextParseStatement {
+// Base class for general comparison types which require functionality such as 'not'. Most comparison classes will
+// derive from this. Statement types such as capture and statement list feel like a bit of a grey area at the moment,
+// I'll only add them if necessary
+export abstract class ComparisonStatement extends TextParseStatement {
+
+    public not: boolean; // Invert the result. I.e. if a comparison matches, make it non matching.
+
+    constructor(
+        copy?: ComparisonStatement,
+        copyChildren: boolean=true
+    ) {
+
+        super(copy, copyChildren);
+
+        this.GenerateCodeDerived = this.GenerateCodeDerived.bind(this);
+
+        if(copy!=null) {
+            this.not=copy.not;
+        } else {
+            this.not=false;
+        }
+    }
+
+    // This doesn't feel like a great design but I can't think of another way without a lot of wholesale changes.
+    // The idea is that comparison classes override the derived version so this base class can give all derived
+    // comparison classes 'not' functionality (and in future we could add 'no advance' functionality too) for free
+    // which requires overriding the code sent to the fAddStatement function.
+    protected abstract GenerateCodeDerived(
+        log: string,
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
+    ): string;
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[],
+        fGenerateVarName: () => string
+    ): string {
+
+        const { GenerateCodeDerived, not } = this;
+
+        let fOverrideAddStatement;
+        if(not) {
+            fOverrideAddStatement = (code:string) => fAddStatement(`new NotComparison(null,${code})`);
+        } else {
+            fOverrideAddStatement = fAddStatement;
+        }
+
+        return GenerateCodeDerived(log, fOverrideAddStatement, fGetVariables, functions, fGenerateVarName);
+    }
+}
+
+export class StringComparisonStatement extends ComparisonStatement {
 
     public str: string;
     public caseSensitive: boolean;
@@ -456,7 +512,7 @@ export class StringComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    GenerateCode(
+    GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
@@ -539,7 +595,7 @@ export class SkipWSStatement extends TextParseStatement {
     }
 };
 
-export class OrComparisonStatement extends TextParseStatement {
+export class OrComparisonStatement extends ComparisonStatement {
 
     children: Array<TextParseStatement>;
 
@@ -602,7 +658,7 @@ export class OrComparisonStatement extends TextParseStatement {
         return `${name}.Add(${code});`;
     }
 
-    GenerateCode(
+    GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
@@ -805,7 +861,7 @@ export class AdvanceToEndStatement extends TextParseStatement {
     }
 };
 
-export class EndOfStringComparisonStatement extends TextParseStatement {
+export class EndOfStringComparisonStatement extends ComparisonStatement {
 
     constructor(copy?: EndOfStringComparisonStatement) {
         super(copy);
@@ -844,7 +900,7 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    GenerateCode(
+    GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
@@ -866,7 +922,7 @@ export class EndOfStringComparisonStatement extends TextParseStatement {
     }
 };
 
-export class StartOfStringComparisonStatement extends TextParseStatement {
+export class StartOfStringComparisonStatement extends ComparisonStatement {
 
     constructor(copy?: StartOfStringComparisonStatement) {
         super(copy);
@@ -905,7 +961,7 @@ export class StartOfStringComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    GenerateCode(
+    GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
@@ -1026,7 +1082,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
     }
 };
 
-export class IsWhitespaceComparisonStatement extends TextParseStatement {
+export class IsWhitespaceComparisonStatement extends ComparisonStatement {
 
     constructor(copy?: IsWhitespaceComparisonStatement) {
         super(copy);
@@ -1065,7 +1121,7 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    GenerateCode(
+    GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
@@ -1086,7 +1142,7 @@ export class IsWhitespaceComparisonStatement extends TextParseStatement {
     }
 };
 
-export class StringOffsetComparisonStatement extends TextParseStatement {
+export class StringOffsetComparisonStatement extends ComparisonStatement {
 
     public length: IParseOperand;
     public caseSensitive: boolean;
@@ -1152,7 +1208,7 @@ export class StringOffsetComparisonStatement extends TextParseStatement {
     SetChildren(children?: TextParseStatement[]): void {
     }
 
-    GenerateCode(
+    GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
@@ -1408,7 +1464,6 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
             return code;
         };
 
-        //sidtodo current test.
         const code = CreateStatementListIfMultipleOtherwiseReturnSingle(
             children,
             AddComparison,
@@ -1416,8 +1471,6 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
             fGetVariables,
             functions,
             fGenerateVarName);
-
-        alert(code); //sidtodo remove
         return code;
     }
 };

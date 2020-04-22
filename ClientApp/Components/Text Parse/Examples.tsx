@@ -31,6 +31,7 @@ export enum eParseExample {
     isPalindrome=1,
     isPalindromeCI=2,
     extractPalindromes=3,
+    extractNotPalindromes=4
 };
 
 interface IParseExampleOption {
@@ -48,7 +49,7 @@ interface IParseExampleOption {
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {
 
     const isPalindromeDescr = "Returns whether the input text is a palindrome: https://en.wikipedia.org/wiki/Palindrome";
-    const extractPalindromeInput = "Each abcba second bbb word cbbc is ppppgpppp a p palindrome qweewq";
+    const extractPalindromeInput = "Even abcba positioned bbb words cbbc are ppppgpppp palindromes qweewq";
 
     return [
         //eParseExample.none
@@ -82,6 +83,16 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
             description: "Extract the palindrome words from a sentence: https://en.wikipedia.org/wiki/Palindrome",
             GetStatements: GetExtractPalindromesStatements(false),
             GetFunctions: GetExtractPalindromesFunctions(false),
+            ParseInput: extractPalindromeInput,
+            ParseOuputType: eParseOutputType.potExtractAll
+        },
+
+        //eParseExample.extractNotPalindromes
+        {
+            text: "Extract not palindromes",
+            description: "Extract the words which are not palindromes from a sentence: https://en.wikipedia.org/wiki/Palindrome",
+            GetStatements: GetExtractPalindromesStatements(true),
+            GetFunctions: GetExtractPalindromesFunctions(true),
             ParseInput: extractPalindromeInput,
             ParseOuputType: eParseOutputType.potExtractAll
         }
@@ -310,7 +321,6 @@ const GetExtractPalindromesStatements = (
 
             advanceTillEndOfWordOrInputString.SetChildren([
                 orComp,
-                //orComp //sidtodo remove - this is only to test 'CreateStatementListIfMultipleOtherwiseReturnSingle' with multiple
             ]);
         }
 
@@ -325,9 +335,31 @@ const GetExtractPalindromesStatements = (
         goBackToBeginningOfWord.advanceWhere=CreateVariableOperand(setFirstCharOfCurrentWordPosVariable.variable);
 
         // 6. Do the string offset compare on the current word to determine if it's a palindrome or not
-        const stringOffsetOr = CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
-        stringOffsetOr.keyedDescription="Reverse string offset comparison";
-        {
+        const stringOffsetStatements: TextParseStatement[] = [];
+        if(notPalindromes) {
+
+            const customComp = CreateParseStatement(eStatementType.CustomComparison) as CustomComparisonStatement;
+            customComp.keyedDescription="Word must be longer than 1 character";
+            customComp.leftHandOperand=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.currentWordLength]);
+            customComp.operator=eCustomComparisonOperator.greaterThan;
+            customComp.rightHandOperand=CreateArbitraryValueOperand(1);
+
+            stringOffsetStatements.push(customComp);
+
+            const stringOffsetComp = CreateParseStatement(eStatementType.StringOffset_Comp) as StringOffsetComparisonStatement;
+            stringOffsetComp.keyedDescription="Reverse string offset comparison against the middle of the current word onwards (not)";
+            stringOffsetComp.not=true;
+            stringOffsetComp.reverse=true;
+            stringOffsetComp.caseSensitive=true;
+            stringOffsetComp.length=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompWordLength]);
+            stringOffsetComp.offset=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompOffset]);
+
+            stringOffsetStatements.push(stringOffsetComp);
+        }
+        else {
+            const stringOffsetOr= CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
+            stringOffsetOr.keyedDescription="Reverse string offset comparison";
+            
             const customComp = CreateParseStatement(eStatementType.CustomComparison) as CustomComparisonStatement;
             customComp.keyedDescription="Assume a match if the word is 1 character";
             customComp.leftHandOperand=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.stringOffsetCompWordLength]);
@@ -345,6 +377,8 @@ const GetExtractPalindromesStatements = (
                 customComp,
                 stringOffsetComp
             ]);
+            
+            stringOffsetStatements.push(stringOffsetOr);
         }
 
         // 7. Skip to the end of the word
@@ -360,7 +394,7 @@ const GetExtractPalindromesStatements = (
             advanceTillEndOfWordOrInputString,
             setEndOfCurrentWordPosVariable,
             goBackToBeginningOfWord,
-            stringOffsetOr,
+            ...stringOffsetStatements,
             goToEndOfWord
         ];
     };
