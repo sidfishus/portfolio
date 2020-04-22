@@ -9,7 +9,7 @@ import { TextParseFunction, CopyTextParsefunction, eCustomFunctionOperator, Crea
 import { CopyParseOperand, IParseOperand, eParseOperandType, CreateLengthOperand, CreateCurrentPositionOperand, CreateFunctionOperand, CreateVariableOperand, CreateArbitraryValueOperand } from "./Operands";
 import { IsA32BitSignedNumber } from "../../Library/Misc";
 import useConstant from "use-constant";
-import { ParseExamplesDropdown, eParseExample} from "./Examples";
+import { ParseExamplesDropdown, eParseExample, eParseBuiltInExample} from "./Examples";
 import { ffGetVariables, TextParseVariable } from "./Variables";
 
 export interface ITextParseProps {
@@ -200,6 +200,7 @@ interface ICustomFunctionsProps {
     updatePending: boolean;
     firstFailingFunction: TextParseFunction;
     CreateTextParsefunction: (ctrName: string) => TextParseFunction;
+    builtInExample: eParseBuiltInExample;
 };
 
 interface ICustomFunctionCtrlProps {
@@ -662,6 +663,8 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
 
     const [parseExample, SetParseExample] = useState<eParseExample>(eParseExample.none);
 
+    const [builtInExample, SetBuiltInExample] = useState<eParseBuiltInExample>(null);
+
     //// Events/mutators
 
     let typeSpecificJsx=null;
@@ -839,35 +842,46 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         updatePending={updatePending}
                         firstFailingFunction={firstFailingFunction}
                         CreateTextParsefunction={CreateTextParsefunction}
+                        builtInExample={builtInExample}
                     />
                     <Segment padded>
-                        <Label attached="top" icon={((!statements.length || firstFailingStatement)?"cancel":"check")} content="Parse Statement List" />
-                        <StatementListCtrl
-                            {...props}
-                            statements={statements}
-                            SetStatements={SetStatements}
-                            selStatement={selStatement}
-                            SetSelStatement={SetSelStatement}
-                            ChangeStatementOrder={_ChangeStatementOrder}
-                            RemoveStatement={_RemoveStatement}
-                            modalState={modalState}
-                            SetModalState={SetModalState}
-                        />
+                        <Label attached="top" icon={((builtInExample === null && !statements.length || firstFailingStatement)?"cancel":"check")} content="Parse Statement List" />
+                        {builtInExample===null &&
+                            <StatementListCtrl
+                                {...props}
+                                statements={statements}
+                                SetStatements={SetStatements}
+                                selStatement={selStatement}
+                                SetSelStatement={SetSelStatement}
+                                ChangeStatementOrder={_ChangeStatementOrder}
+                                RemoveStatement={_RemoveStatement}
+                                modalState={modalState}
+                                SetModalState={SetModalState}
+                            />
+                        }
 
-                        <AddNewParseStatementCtrls
-                            {...props}
-                            statements={statements}
-                            SetStatements={(statements, selStmt) => {
-                                SetSelStatement(selStmt);
-                                SetStatements(statements);
-                            }}
-                            selectedStatementType={newSelectedStatementType}
-                            nameIndexes={nameIndexes}
-                            SetSelectedStatementType={SetNewSelectedStatementType}
-                            selStmtIndex={topLevelSelStmtIndex}
-                            insert={true}
-                            comparisonOnly={false}
-                        />
+                        {builtInExample===null &&
+                            <AddNewParseStatementCtrls
+                                {...props}
+                                statements={statements}
+                                SetStatements={(statements, selStmt) => {
+                                    SetSelStatement(selStmt);
+                                    SetStatements(statements);
+                                }}
+                                selectedStatementType={newSelectedStatementType}
+                                nameIndexes={nameIndexes}
+                                SetSelectedStatementType={SetNewSelectedStatementType}
+                                selStmtIndex={topLevelSelStmtIndex}
+                                insert={true}
+                                comparisonOnly={false}
+                            />
+                        }
+
+                        {builtInExample !== null &&
+                            <Form.Field>
+                                <i>Using a built in example.</i>
+                            </Form.Field>
+                        }
 
                         {selStatement !== null &&
                             <Segment padded>
@@ -1022,6 +1036,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             CreateParseStatement={_CreateParseStatement}
                             SetParseInputText={SetParseInputText}
                             SetParseOuputType={SetOutputType}
+                            SetBuiltInExample={SetBuiltInExample}
                         />
                     </Segment>
                 </Form>
@@ -2706,7 +2721,8 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
 
 const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunctionsProps> = (props) => {
 
-    const { selFunctionIdx, SetCustomFunction, updater, fGetVariables, updatePending, firstFailingFunction, functions } = props;
+    const { selFunctionIdx, SetCustomFunction, updater, fGetVariables, updatePending, firstFailingFunction, 
+        functions, builtInExample } = props;
 
     const selCustomFunc=((selFunctionIdx !== null) ? props.functions[selFunctionIdx] : null);
 
@@ -2722,90 +2738,101 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
             <CustomFunctionList
                 {...props}
             />
-            <Button
-                onClick={() => AddCustomFunction(props)}
-            >
-                Add
-            </Button>
 
-            {selFunctionIdx !== null &&
-                <Segment padded>
-                    <Label attached="top">Update Custom Function</Label>
-                    <Form.Field>
-                        <UpdateCustomFunctionCtrl
-                            ctrlName="name"
-                            placeholder="Name..."
-                            value={selCustomFunc.Name()}
-                            SetValue={(updated,value) => updated.SetName(value)}
-                            title="Please enter a unique name for the function."
-                            customFunction={selCustomFunc}
-                            SetCustomFunction={SetCustomFunction}
-                            updater={updater}
-                            Validate={() => ValidateFuncName(selFunctionIdx, functions)}
-                            funcIdx={selFunctionIdx}
-                        />
-                    </Form.Field>
+            {builtInExample!==null &&
+                <Form.Field>
+                    <i>Using a built in example.</i>
+                </Form.Field>
+            }
 
-                    <Form.Field>
-                        <UpdateCustomFunctionCtrl
-                            ctrlName="descr"
-                            placeholder="Description... (optional)"
-                            value={selCustomFunc.Description()}
-                            SetValue={(updated,value) => updated.SetDescription(value)}
-                            title="Describe the purpose of the function."
-                            customFunction={selCustomFunc}
-                            SetCustomFunction={SetCustomFunction}
-                            updater={updater}
-                            funcIdx={selFunctionIdx}
-                        />
-                    </Form.Field>
+            {builtInExample===null &&
+                <>
+                    <Button
+                        onClick={() => AddCustomFunction(props)}
+                    >
+                        Add
+                    </Button>
 
-                    <Form.Field>
-                        <i>Return:</i>
-                        <br />
-                        {/* This is the only way I can get a tab to work. I'd love to know of a better way! */}
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <CustomFunctionOperandDropdown
-                            {...props}
-                            functions={operandFunctions}
-                            fGetVariables={fGetVariables}
-                            selFunctionIdx={selFunctionIdx}
-                            customFunction={selCustomFunc}
-                            SetCustomFunction={SetCustomFunction}
-                            SetOperand={(_function,_oper) => _function.SetLeftHandOperand(_oper)}
-                            data={selCustomFunc.LeftHandOperand()}
-                            name="left"
-                            updater={updater}
-                            updatePending={updatePending}
-                            title="Left hand operand"
-                        />
+                    {selFunctionIdx !== null &&
+                        <Segment padded>
+                            <Label attached="top">Update Custom Function</Label>
+                            <Form.Field>
+                                <UpdateCustomFunctionCtrl
+                                    ctrlName="name"
+                                    placeholder="Name..."
+                                    value={selCustomFunc.Name()}
+                                    SetValue={(updated,value) => updated.SetName(value)}
+                                    title="Please enter a unique name for the function."
+                                    customFunction={selCustomFunc}
+                                    SetCustomFunction={SetCustomFunction}
+                                    updater={updater}
+                                    Validate={() => ValidateFuncName(selFunctionIdx, functions)}
+                                    funcIdx={selFunctionIdx}
+                                />
+                            </Form.Field>
 
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <Form.Field>
+                                <UpdateCustomFunctionCtrl
+                                    ctrlName="descr"
+                                    placeholder="Description... (optional)"
+                                    value={selCustomFunc.Description()}
+                                    SetValue={(updated,value) => updated.SetDescription(value)}
+                                    title="Describe the purpose of the function."
+                                    customFunction={selCustomFunc}
+                                    SetCustomFunction={SetCustomFunction}
+                                    updater={updater}
+                                    funcIdx={selFunctionIdx}
+                                />
+                            </Form.Field>
 
-                        <CustomFunctionsOperatorDropdown
-                            {...props}
-                            SetCustomFunction={SetCustomFunction}
-                            function={selCustomFunc}
-                        />
+                            <Form.Field>
+                                <i>Return:</i>
+                                <br />
+                                {/* This is the only way I can get a tab to work. I'd love to know of a better way! */}
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <CustomFunctionOperandDropdown
+                                    {...props}
+                                    functions={operandFunctions}
+                                    fGetVariables={fGetVariables}
+                                    selFunctionIdx={selFunctionIdx}
+                                    customFunction={selCustomFunc}
+                                    SetCustomFunction={SetCustomFunction}
+                                    SetOperand={(_function,_oper) => _function.SetLeftHandOperand(_oper)}
+                                    data={selCustomFunc.LeftHandOperand()}
+                                    name="left"
+                                    updater={updater}
+                                    updatePending={updatePending}
+                                    title="Left hand operand"
+                                />
 
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                        <CustomFunctionOperandDropdown
-                            {...props}
-                            functions={operandFunctions}
-                            fGetVariables={fGetVariables}
-                            selFunctionIdx={selFunctionIdx}
-                            customFunction={selCustomFunc}
-                            SetCustomFunction={SetCustomFunction}
-                            SetOperand={(_function,_oper) => _function.SetRightHandOperand(_oper)}
-                            data={selCustomFunc.RightHandOperand()}
-                            name="right"
-                            updater={updater}
-                            updatePending={updatePending}
-                            title="Right hand operand"
-                        />
-                    </Form.Field>
-                </Segment>
+                                <CustomFunctionsOperatorDropdown
+                                    {...props}
+                                    SetCustomFunction={SetCustomFunction}
+                                    function={selCustomFunc}
+                                />
+
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+                                <CustomFunctionOperandDropdown
+                                    {...props}
+                                    functions={operandFunctions}
+                                    fGetVariables={fGetVariables}
+                                    selFunctionIdx={selFunctionIdx}
+                                    customFunction={selCustomFunc}
+                                    SetCustomFunction={SetCustomFunction}
+                                    SetOperand={(_function,_oper) => _function.SetRightHandOperand(_oper)}
+                                    data={selCustomFunc.RightHandOperand()}
+                                    name="right"
+                                    updater={updater}
+                                    updatePending={updatePending}
+                                    title="Right hand operand"
+                                />
+                            </Form.Field>
+                        </Segment>
+                    }
+                </>
             }
         </Segment>
     );

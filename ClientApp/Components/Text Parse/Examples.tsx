@@ -23,6 +23,7 @@ export interface IParseExamplesDropdownProps {
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement;
     SetParseInputText: (text: string) => void;
     SetParseOuputType: (type: eParseOutputType) => void;
+    SetBuiltInExample: (type: eParseBuiltInExample) => void;
 };
 
 // These are indexes in to the 'ParseExampleOptionsArray' array.
@@ -31,8 +32,13 @@ export enum eParseExample {
     isPalindrome=1,
     isPalindromeCI=2,
     extractPalindromes=3,
-    extractNotPalindromes=4
+    extractNotPalindromes=4,
+    vbsAddParenthesis=5
 };
+
+export enum eParseBuiltInExample {
+    vbsAddParenthesis=1,
+}
 
 interface IParseExampleOption {
     text: string;
@@ -44,6 +50,7 @@ interface IParseExampleOption {
     GetFunctions?: (CreateTextParsefunction: (ctrName: string) => TextParseFunction) => TextParseFunction[];
     ParseInput?: string;
     ParseOuputType?: eParseOutputType;
+    BuiltInType?: eParseBuiltInExample;
 };
 
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {
@@ -95,6 +102,15 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
             GetFunctions: GetExtractPalindromesFunctions(true),
             ParseInput: extractPalindromeInput,
             ParseOuputType: eParseOutputType.potExtractAll
+        },
+
+        //eParseExample.vbsAddParenthesis
+        {
+            text: "VB Script add parenthesis (built in)",
+            description: "Convert VB Script procedure calls to VB .NET procedure calls (add parenthesis). The UI for this is not available.",
+            ParseInput: "Response.Write 1",
+            ParseOuputType: eParseOutputType.potReplace,
+            BuiltInType: eParseBuiltInExample.vbsAddParenthesis,
         }
     ];
 };
@@ -102,7 +118,8 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
 export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IParseExamplesDropdownProps> = (props) => {
 
     const {parseExample, SetParseExample, SetStatements, SetSelStatement, SetFunctions, SetSelFunctionIdx,
-        CreateTextParsefunction, CreateParseStatement, SetParseInputText, SetParseOuputType }=props;
+        CreateTextParsefunction, CreateParseStatement, SetParseInputText, SetParseOuputType,
+        SetBuiltInExample }=props;
 
     const examples = useConstant(ParseExampleOptionsArray);
 
@@ -137,7 +154,8 @@ export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IP
                                             CreateTextParsefunction,
                                             CreateParseStatement,
                                             SetParseInputText,
-                                            SetParseOuputType
+                                            SetParseOuputType,
+                                            SetBuiltInExample
                                         );
                                     }}
                                     selected={iterEnum === parseExample}
@@ -165,7 +183,9 @@ const OnSelectParseExample = (
     CreateTextParsefunction: (ctrName: string) => TextParseFunction,
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
     SetParseInputText: (text: string) => void,
-    SetParseOuputType: (type: eParseOutputType) => void) => {
+    SetParseOuputType: (type: eParseOutputType) => void,
+    SetBuiltInExample: (type: eParseBuiltInExample) => void
+) => {
 
     const functions=(pe.GetFunctions)?pe.GetFunctions(CreateTextParsefunction):new Array<TextParseFunction>();
     SetFunctions(functions);
@@ -180,6 +200,10 @@ const OnSelectParseExample = (
 
     if(pe.ParseOuputType!==undefined)
         SetParseOuputType(pe.ParseOuputType);
+
+    if(pe.BuiltInType !== undefined) {
+        SetBuiltInExample(pe.BuiltInType);
+    }
 };
 
 const GetIsPalindromeStatements = (caseSensitive: boolean): (
