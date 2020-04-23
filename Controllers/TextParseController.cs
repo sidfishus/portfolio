@@ -69,6 +69,27 @@ namespace react_spa.Controllers
             });
         }
 
+        [HttpPost("ExecuteBuiltInExample")]
+        public async Task<ActionResult<TextParseBuiltInExampleModel>> ExecuteBuiltInExample(ExecuteBuiltInModel model)
+        {
+            return await ControllerFunctionAsync<TextParseBuiltInExampleModel>(async() => {
+                var rvModel=new TextParseBuiltInExampleModel();
+                int numMatches=0;
+                await Task.Run(() => {
+                    switch(model.Example) {
+                        case ExecuteBuiltInModel.eParseBuiltInExample.vbsAddParenthesis:
+                            rvModel.ReplacedText=dotNETConversion.AddParenthesisToFunctionCalls(null,model.Input,out numMatches);
+                            break;
+
+                        default:
+                            throw new Exception($"Invalid built in example type: {model.Example}");
+                    }
+                });
+                rvModel.NumMatching=numMatches;
+                return rvModel;
+            });
+        }
+
         private async Task<object> CompileAndExecuteCode(
             string clientCode,
             string returnVariableName,

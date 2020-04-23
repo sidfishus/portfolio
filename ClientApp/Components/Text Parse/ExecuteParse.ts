@@ -4,6 +4,7 @@ import { TextParseVariable } from "./Variables";
 import { CreateAPIURL } from "../../Library/HttpHelper";
 import axios, { AxiosResponse } from "axios";
 import { TextParseFunction, TextParseFunctionCode } from "./CustomFunctions";
+import { eParseBuiltInExample } from "./Examples";
 
 // Based on the list of statements, this creates and executes the C# code necessary to perform the parse.
 // The reason for why I designed it like this is so we do not need an intermediate language or another way of
@@ -166,6 +167,21 @@ export const Match = (
         ReturnVariableName: "matchingCount",
         UsingStatements: usingStatements
     });
+};
+
+// Execute built in example
+export const ExecuteBuiltInExample = (
+    input: string,
+    type: eParseBuiltInExample
+): Promise<AxiosResponse> => {
+
+    // Call the API to do the execution
+    const url=CreateAPIURL("TextParse/ExecuteBuiltInExample");
+    return axios.post(url, {
+        Example: type,
+        Input: input
+    });
+
 };
 
 const CodeForStatements_AddStatement: (stmtCode: string, stmtListName: string) => string = (stmtCode: string, stmtListName: string): string => {

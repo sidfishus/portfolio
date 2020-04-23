@@ -38,7 +38,7 @@ export enum eParseExample {
 
 export enum eParseBuiltInExample {
     vbsAddParenthesis=1,
-}
+};
 
 interface IParseExampleOption {
     text: string;
@@ -52,6 +52,11 @@ interface IParseExampleOption {
     ParseOuputType?: eParseOutputType;
     BuiltInType?: eParseBuiltInExample;
 };
+
+const vbsAddParenthesisInput: string =
+`<%
+        Response.Write 1
+%>`;
 
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {
 
@@ -114,7 +119,7 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
                 "shown. The text parse code for this can be found in Github in a function named "+
                 "'AddParenthesisToFunctionCalls': "+
                 "https://github.com/sidfishus/TextParse/blob/master/Library/dotNETConversion.cs.",
-            ParseInput: "Response.Write 1",
+            ParseInput: vbsAddParenthesisInput,
             BuiltInType: eParseBuiltInExample.vbsAddParenthesis,
         }
     ];

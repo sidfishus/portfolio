@@ -4,7 +4,7 @@ import { Dropdown, Label, Form, Segment, Container, Input, InputProps, Checkbox,
 import { eStatementType, TextParseStatement, StringComparisonStatement, SkipWSStatement, ITextParseStatementState, OrComparisonStatement, StatementListComparisonStatement, StatementTypeInfo, AdvanceToEndStatement, EndOfStringComparisonStatement, StartOfStringComparisonStatement, CaptureComparisonStatement, IsWhitespaceComparisonStatement, StringOffsetComparisonStatement, StorePosAsVariableStatement, SetVariableStatement, AdvanceUntilComparisonStatement, AdvanceStatement, CustomComparisonStatement, eCustomComparisonOperator, ComparisonStatement } from "./StatementTypes";
 import { IRoutedCompProps } from "../../routes";
 import { SimpleDelayer } from "../../Library/UIHelper";
-import { Extract, Match, Replace } from "./ExecuteParse";
+import { Extract, Match, Replace, ExecuteBuiltInExample } from "./ExecuteParse";
 import { TextParseFunction, CopyTextParsefunction, eCustomFunctionOperator, CreateTextParseFunctionCreator } from "./CustomFunctions";
 import { CopyParseOperand, IParseOperand, eParseOperandType, CreateLengthOperand, CreateCurrentPositionOperand, CreateFunctionOperand, CreateVariableOperand, CreateArbitraryValueOperand } from "./Operands";
 import { IsA32BitSignedNumber } from "../../Library/Misc";
@@ -1285,7 +1285,8 @@ const ExecuteParseButtonClick = (
     replaceFormat: string,
     SetReplaceResult: (result: IParseReplaceResult) => void,
     fGetVariables: () => TextParseVariable[],
-    functions: TextParseFunction[]
+    functions: TextParseFunction[],
+    builtInExample: eParseBuiltInExample
 ) => {
 
     // Makes the code terser
@@ -1303,57 +1304,74 @@ const ExecuteParseButtonClick = (
         SetGeneralError,
         SetParseInProgress);
 
-    switch(type) {
-        case eParseOutputType.potMatch:
+    if(builtInExample!==null) {
+        const fHandleSuccess = (dataOptional: any): void => {
+            SetReplaceResult({
+                numMatching: ((dataOptional)?dataOptional.NumMatching:0),
+                replacedText: ((dataOptional)?dataOptional.ReplacedText:"")
+            });
+        };
 
-            _HandleParseTask(
-                Match(input, statements, fGetVariables, functions),
-                (data) => data.NumMatching>0,
-                (data) => SetMatchResult(data.NumMatching),
-                () => SetMatchResult(0)
-            );
-            break;
+        _HandleParseTask(
+            ExecuteBuiltInExample(input, builtInExample),
+            (data) => data.NumMatching>0,
+            (data) => fHandleSuccess(data),
+            () => fHandleSuccess(null)
+        );
 
-        case eParseOutputType.potExtractSingle:
-        case eParseOutputType.potExtractAll:
-
-            {
-                const isSingle = (type == eParseOutputType.potExtractSingle);
-
-                const fHandleSuccess = (dataOptional: any): void => {
-                    SetExtractResults({
-                        success: (dataOptional!==null),
-                        extracted: ((dataOptional)?dataOptional.ExtractedText:null)
-                    })  
-                };
+    } else {
+        switch(type) {
+            case eParseOutputType.potMatch:
 
                 _HandleParseTask(
-                    Extract(input, statements, isSingle, replaceFormat, fGetVariables, functions),
-                    (data) => data.ExtractedText && data.ExtractedText.length>0,
-                    (data) => fHandleSuccess(data),
-                    () => fHandleSuccess(null)
-                );
-            }
-            break;
-
-        case eParseOutputType.potReplace:
-
-            {
-                const fHandleSuccess = (dataOptional: any): void => {
-                    SetReplaceResult({
-                        numMatching: ((dataOptional)?dataOptional.NumMatching:0),
-                        replacedText: ((dataOptional)?dataOptional.ReplacedText:"")
-                    });
-                };
-
-                _HandleParseTask(
-                    Replace(input, statements, replaceFormat, fGetVariables, functions),
+                    Match(input, statements, fGetVariables, functions),
                     (data) => data.NumMatching>0,
-                    (data) => fHandleSuccess(data),
-                    () => fHandleSuccess(null)
+                    (data) => SetMatchResult(data.NumMatching),
+                    () => SetMatchResult(0)
                 );
-            }
-            break;
+                break;
+
+            case eParseOutputType.potExtractSingle:
+            case eParseOutputType.potExtractAll:
+
+                {
+                    const isSingle = (type == eParseOutputType.potExtractSingle);
+
+                    const fHandleSuccess = (dataOptional: any): void => {
+                        SetExtractResults({
+                            success: (dataOptional!==null),
+                            extracted: ((dataOptional)?dataOptional.ExtractedText:null)
+                        })  
+                    };
+
+                    _HandleParseTask(
+                        Extract(input, statements, isSingle, replaceFormat, fGetVariables, functions),
+                        (data) => data.ExtractedText && data.ExtractedText.length>0,
+                        (data) => fHandleSuccess(data),
+                        () => fHandleSuccess(null)
+                    );
+                }
+                break;
+
+            case eParseOutputType.potReplace:
+
+                {
+                    const fHandleSuccess = (dataOptional: any): void => {
+                        SetReplaceResult({
+                            numMatching: ((dataOptional)?dataOptional.NumMatching:0),
+                            replacedText: ((dataOptional)?dataOptional.ReplacedText:"")
+                        });
+                    };
+
+                    _HandleParseTask(
+                        Replace(input, statements, replaceFormat, fGetVariables, functions),
+                        (data) => data.NumMatching>0,
+                        (data) => fHandleSuccess(data),
+                        () => fHandleSuccess(null)
+                    );
+                }
+                break;
+        }
     }
 
     // Update the UI
@@ -1393,7 +1411,7 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
                 disabled={!canExecute || updatePending}
                 onClick={() => ExecuteParseButtonClick(input, type, statements, SetParseInProgress, SetExtractResults,
                     SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult,
-                    fGetVariables, functions)}
+                    fGetVariables, functions, builtInExample)}
             >
                 {((disabled)?"Parse in Progress..":"Execute Parse")}
             </Button>
