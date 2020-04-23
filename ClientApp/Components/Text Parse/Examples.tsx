@@ -97,7 +97,8 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.extractNotPalindromes
         {
             text: "Extract not palindromes",
-            description: "Extract the words which are not palindromes from a sentence: https://en.wikipedia.org/wiki/Palindrome",
+            description: "Extract the words which are not palindromes from a sentence: " +
+                "https://en.wikipedia.org/wiki/Palindrome",
             GetStatements: GetExtractPalindromesStatements(true),
             GetFunctions: GetExtractPalindromesFunctions(true),
             ParseInput: extractPalindromeInput,
@@ -107,9 +108,13 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.vbsAddParenthesis
         {
             text: "VB Script add parenthesis (built in)",
-            description: "Convert VB Script procedure calls to VB .NET procedure calls (add parenthesis). The UI for this is not available.",
+            description: "Convert VB Script procedure calls to VB .NET procedure calls (add parenthesis). " +
+                "Because this uses functionality which is not available in this UI currently the statement list "+
+                "and functions e.t.c. cannot be "+
+                "shown. The text parse code for this can be found in Github in a function named "+
+                "'AddParenthesisToFunctionCalls': "+
+                "https://github.com/sidfishus/TextParse/blob/master/Library/dotNETConversion.cs.",
             ParseInput: "Response.Write 1",
-            ParseOuputType: eParseOutputType.potReplace,
             BuiltInType: eParseBuiltInExample.vbsAddParenthesis,
         }
     ];
@@ -201,9 +206,8 @@ const OnSelectParseExample = (
     if(pe.ParseOuputType!==undefined)
         SetParseOuputType(pe.ParseOuputType);
 
-    if(pe.BuiltInType !== undefined) {
-        SetBuiltInExample(pe.BuiltInType);
-    }
+    
+    SetBuiltInExample((pe.BuiltInType !== undefined)?pe.BuiltInType:null);
 };
 
 const GetIsPalindromeStatements = (caseSensitive: boolean): (

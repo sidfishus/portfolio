@@ -124,6 +124,7 @@ interface IParseInputTextCtrlProps {
     text: string;
     SetText: (text: string) => void;
     onBlur: () => void;
+    parseInputTextRef: any; // I'm not sure what the type is..
 };
 
 interface IParseOutputTypeCtrlProps {
@@ -148,7 +149,8 @@ interface IExecuteParseButtonCtrlProps {
     firstFailingStatement: TextParseStatement;
     firstFailingFunction: TextParseFunction;
     parseInputError: string;
-    fGetVariables: () => TextParseVariable[]
+    fGetVariables: () => TextParseVariable[];
+    builtInExample: eParseBuiltInExample;
 };
 
 interface IParseOutputGeneralErrorCtrlProps {
@@ -609,10 +611,13 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     // Modal
     const [modalState,SetModalState] = useState<IModalState|null>(null);
 
-    // Parse input text
+    //// Parse input text
     const [parseInputText,SetParseInputText] = useState<string>("");
+    // Because the input text is not controlled, we need to have a 'ref' to it so we can update it directly in the
+    // DOM programatically.
+    const parseInputTextRef=useRef(null);
 
-    // Parse output type checkbox
+    //// Parse output type checkbox
     const [outputType,SetOutputType] = useState<eParseOutputType>(eParseOutputType.potMatch);
 
     // Parse in progress?
@@ -879,7 +884,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
 
                         {builtInExample !== null &&
                             <Form.Field>
-                                <i>Using a built in example.</i>
+                                <i>Cannot display.</i>
                             </Form.Field>
                         }
 
@@ -941,24 +946,29 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             text={parseInputText}
                             SetText={text => updater.DelayedCall(() => SetParseInputText(text))}
                             onBlur={updater.ImmediateCall}
+                            parseInputTextRef={parseInputTextRef}
                         />
                     </Segment>
 
                     <Segment padded>
                         <Label attached="top">Parse Output</Label>
-                        <ParseOutputType
-                            {...props}
-                            type={outputType}
-                            SetType={SetOutputType}
-                        />
+                        {builtInExample===null &&
+                            <>
+                                <ParseOutputType
+                                    {...props}
+                                    type={outputType}
+                                    SetType={SetOutputType}
+                                />
 
-                        {outputType!=eParseOutputType.potMatch &&
-                            <ParseOutputReplaceFormat
-                                {...props}
-                                replaceFormat={replaceFormat}
-                                SetReplaceFormat={SetReplaceFormat}
-                                updater={updater}
-                            />
+                                {outputType!=eParseOutputType.potMatch &&
+                                    <ParseOutputReplaceFormat
+                                        {...props}
+                                        replaceFormat={replaceFormat}
+                                        SetReplaceFormat={SetReplaceFormat}
+                                        updater={updater}
+                                    />
+                                }
+                            </>
                         }
 
                         {generalError &&
@@ -1016,6 +1026,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                                 firstFailingFunction={firstFailingFunction}
                                 parseInputError={parseInputError}
                                 fGetVariables={fGetVariables}
+                                builtInExample={builtInExample}
                             />
 
                             {parseInProgress &&
@@ -1034,7 +1045,11 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             SetSelFunctionIdx={SetSelFunctionIdx}
                             CreateTextParsefunction={CreateTextParsefunction}
                             CreateParseStatement={_CreateParseStatement}
-                            SetParseInputText={SetParseInputText}
+                            SetParseInputText={(text: string) => {
+                                SetParseInputText(text);
+                                // Without this the text on the screen will not update
+                                if(parseInputTextRef.current) parseInputTextRef.current.value=text;
+                            }}
                             SetParseOuputType={SetOutputType}
                             SetBuiltInExample={SetBuiltInExample}
                         />
@@ -1356,7 +1371,8 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
 
     const { statements, type, input, SetParseInProgress, SetExtractResults, disabled,
         SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult, updatePending,
-        functions, firstFailingStatement, firstFailingFunction, parseInputError, fGetVariables } = props;
+        functions, firstFailingStatement, firstFailingFunction, parseInputError, fGetVariables,
+        builtInExample } = props;
 
     let buttonCaption="";
     let canExecute=false;
@@ -1364,7 +1380,7 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
     if(!disabled && !updatePending) {
 
         if(parseInputError!==null) buttonCaption=parseInputError;
-        else if(!statements.length) buttonCaption="Please create some parse statements before attempting to parse.";
+        else if(builtInExample===null && !statements.length) buttonCaption="Please create some parse statements before attempting to parse.";
         else if(firstFailingStatement) buttonCaption=`One or more parse statements have missing data and/or are not valid. First failing statement found: ${firstFailingStatement.Heading()}`;
         else if (firstFailingFunction) buttonCaption=`One or more custom functions have missing data and/or are not valid. First failing custom function found: ${firstFailingFunction.Name()}`;
         else canExecute=true;
@@ -1394,7 +1410,7 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
 
 const ParseInputText: React.FunctionComponent<ITextParseProps & IParseInputTextCtrlProps> = (props) => {
 
-    const { text, SetText, onBlur } = props;
+    const { text, SetText, onBlur, parseInputTextRef } = props;
 
     return (
         <textarea
@@ -1402,6 +1418,7 @@ const ParseInputText: React.FunctionComponent<ITextParseProps & IParseInputTextC
             defaultValue={text}
             onChange={e => SetText(e.target.value)}
             onBlur={onBlur}
+            ref={parseInputTextRef}
         />
     );
 };
@@ -2741,7 +2758,7 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
 
             {builtInExample!==null &&
                 <Form.Field>
-                    <i>Using a built in example.</i>
+                    <i>Cannot display.</i>
                 </Form.Field>
             }
 
