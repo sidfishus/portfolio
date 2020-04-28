@@ -55,7 +55,7 @@ interface IParseExampleOption {
 
 const vbsAddParenthesisInput: string =
 `<%
-        Response.Write 1
+    Response.Write 1, obj.Func(1), obj.Func2(2)
 %>`;
 
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {

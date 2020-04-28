@@ -187,6 +187,7 @@ interface IReplaceFormatCtrlProps {
 
 interface IReplaceResultCtrlProps {
     replaceResult: IParseReplaceResult;
+    builtInExample: eParseBuiltInExample;
 };
 
 interface ICustomFunctionsProps {
@@ -1003,6 +1004,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             <ReplaceResult
                                 {...props}
                                 replaceResult={replaceResult}
+                                builtInExample={builtInExample}
                             />
                         }
 
@@ -1065,7 +1067,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
 
 const ReplaceResult: React.FunctionComponent<ITextParseProps & IReplaceResultCtrlProps> = (props) => {
 
-    const { replaceResult } = props;
+    const { replaceResult, builtInExample } = props;
 
     if(replaceResult.numMatching>0) {
         return (
@@ -1073,8 +1075,12 @@ const ReplaceResult: React.FunctionComponent<ITextParseProps & IReplaceResultCtr
                 <Message.Header>{`${replaceResult.numMatching} matching entrie(s) were replaced`}</Message.Header>
                 <Message.Content>
                     <>
-                        {"The code has been output to the console for further investigation if necessary:"}
-                        <br />
+                        {builtInExample === null &&
+                            <>
+                                The code has been output to the console for further investigation if necessary:
+                                <br />
+                            </>
+                        }
                         <br />
                         <textarea
                             value={replaceResult.replacedText}
@@ -1089,7 +1095,9 @@ const ReplaceResult: React.FunctionComponent<ITextParseProps & IReplaceResultCtr
     return (
         <Message negative>
             <Message.Header>No text was replaced</Message.Header>
-            <Message.Content>The full text parse statement code has been output to the console if further investigation is required.</Message.Content>
+            {builtInExample === null && <Message.Content>
+                The full text parse statement code has been output to the console if further investigation is required.
+            </Message.Content>}
         </Message>
     );
 };
