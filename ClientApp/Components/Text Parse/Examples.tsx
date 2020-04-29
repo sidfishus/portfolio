@@ -55,7 +55,14 @@ interface IParseExampleOption {
 
 const vbsAddParenthesisInput: string =
 `<%
-    Response.Write 1, obj.Func(1), obj.Func2(2)
+    ' Classic ASP VB Script code where procedures are called without parenthesis.. (prior to parse replacement)
+    Response.Write 1, obj.Func(1), obj.Func2(2), Func("three"), NestedFunc(InnerFunc("one",2),3), _
+        FuncOnAnotherLine(1)
+    dim world
+    world="world"
+    Response.Write "hello " & world, _
+        2
+    ExecProc 1,2,3
 %>`;
 
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {
