@@ -1,7 +1,9 @@
 
 import * as React from "react";
 import { TextParseStatement, eStatementType, StringOffsetComparisonStatement, StartOfStringComparisonStatement,
-    AdvanceStatement, StatementListComparisonStatement, IsWhitespaceComparisonStatement, SkipWSStatement, StorePosAsVariableStatement, AdvanceUntilComparisonStatement, OrComparisonStatement, CustomComparisonStatement, eCustomComparisonOperator} from "./StatementTypes";
+    AdvanceStatement, StatementListComparisonStatement, IsWhitespaceComparisonStatement, SkipWSStatement,
+    StorePosAsVariableStatement, AdvanceUntilComparisonStatement, OrComparisonStatement, CustomComparisonStatement,
+    eCustomComparisonOperator, CaptureComparisonStatement, StringComparisonStatement} from "./StatementTypes";
 import { ITextParseProps } from "./index";
 import useConstant from "use-constant";
 import { Dropdown, Form, Label } from "semantic-ui-react";
@@ -24,6 +26,7 @@ export interface IParseExamplesDropdownProps {
     SetParseInputText: (text: string) => void;
     SetParseOuputType: (type: eParseOutputType) => void;
     SetBuiltInExample: (type: eParseBuiltInExample) => void;
+    SetReplaceFormat: (fmt: string) => void;
 };
 
 // These are indexes in to the 'ParseExampleOptionsArray' array.
@@ -33,7 +36,9 @@ export enum eParseExample {
     isPalindromeCI=2,
     extractPalindromes=3,
     extractNotPalindromes=4,
-    vbsAddParenthesis=5
+    vbsAddParenthesis=5,
+    capturePersonDetails=6,
+    captureHTMLTags=7
 };
 
 export enum eParseBuiltInExample {
@@ -51,6 +56,7 @@ interface IParseExampleOption {
     ParseInput?: string;
     ParseOuputType?: eParseOutputType;
     BuiltInType?: eParseBuiltInExample;
+    replaceFormat?: string;
 };
 
 const vbsAddParenthesisInput: string =
@@ -120,14 +126,38 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.vbsAddParenthesis
         {
             text: "VB Script add parenthesis (built in)",
-            description: "Convert VB Script procedure calls to VB .NET procedure calls (add parenthesis). " +
+            description: "A complex replace example which converts VB Script procedure calls to VB .NET procedure "+
+                "calls by adding parenthesis around the arguments. This was created as part of an application which " +
+                "converts classic ASP code to ASP .NET. "+
                 "Because this uses functionality which is not available in this UI currently the statement list "+
                 "and functions e.t.c. cannot be "+
-                "shown. The text parse code for this can be found in Github in a function named "+
+                "shown but has been added as a demonostration of what can be achieved using the TextParse library. "+
+                "The text parse code for this can be found in Github in a function named "+
                 "'AddParenthesisToFunctionCalls': "+
                 "https://github.com/sidfishus/TextParse/blob/master/Library/dotNETConversion.cs.",
             ParseInput: vbsAddParenthesisInput,
             BuiltInType: eParseBuiltInExample.vbsAddParenthesis,
+        },
+
+        //eParseExample.capturePersonDetails
+        {
+            text: "Capture extract example",
+            description: "A simple CSV parsing example demonostrating the replace format feature.",
+            GetFunctions: GetCaptureExtractExampleFunctions,
+            GetStatements: GetCaptureExtractExampleStatements,
+            ParseInput: "Bjarne Stroustrup,30/12/1950,Male,Ada Lovelace,10/12/1815,Female,Anders Hejlsberg,"+
+                "02/12/1960,Male,Brendan Eich,04/07/1961,Male,",
+            ParseOuputType: eParseOutputType.potExtractAll,
+            replaceFormat: `Name: 'name', Date of birth: 'dob', Gender: 'gender'.`
+        },
+
+        //eParseExample.captureHTMLTags
+        {
+            text: "Capture HTML control elements",
+            description: "A simple example which captures all of the control elements from HTML code",
+            GetStatements: GetCaptureHTMLElementsStatements,
+            ParseInput: "<html><body><input type=\"text\" value=\"hi\"/></body></html>",
+            ParseOuputType: eParseOutputType.potExtractAll,
         }
     ];
 };
@@ -136,7 +166,7 @@ export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IP
 
     const {parseExample, SetParseExample, SetStatements, SetSelStatement, SetFunctions, SetSelFunctionIdx,
         CreateTextParsefunction, CreateParseStatement, SetParseInputText, SetParseOuputType,
-        SetBuiltInExample }=props;
+        SetBuiltInExample, SetReplaceFormat }=props;
 
     const examples = useConstant(ParseExampleOptionsArray);
 
@@ -172,7 +202,8 @@ export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IP
                                             CreateParseStatement,
                                             SetParseInputText,
                                             SetParseOuputType,
-                                            SetBuiltInExample
+                                            SetBuiltInExample,
+                                            SetReplaceFormat
                                         );
                                     }}
                                     selected={iterEnum === parseExample}
@@ -201,7 +232,8 @@ const OnSelectParseExample = (
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
     SetParseInputText: (text: string) => void,
     SetParseOuputType: (type: eParseOutputType) => void,
-    SetBuiltInExample: (type: eParseBuiltInExample) => void
+    SetBuiltInExample: (type: eParseBuiltInExample) => void,
+    SetReplaceFormat: (format: string) => void
 ) => {
 
     const functions=(pe.GetFunctions)?pe.GetFunctions(CreateTextParsefunction):new Array<TextParseFunction>();
@@ -220,6 +252,8 @@ const OnSelectParseExample = (
 
     
     SetBuiltInExample((pe.BuiltInType !== undefined)?pe.BuiltInType:null);
+
+    SetReplaceFormat((pe.replaceFormat !== undefined)?pe.replaceFormat:null);
 };
 
 const GetIsPalindromeStatements = (caseSensitive: boolean): (
@@ -293,7 +327,6 @@ const GetIsPalindromeFunctions =
     ];
 };
 
-//sidtodo do the 'not palindromes' 
 const GetExtractPalindromesStatements = (
     notPalindromes: boolean
 ): (
@@ -488,4 +521,129 @@ const GetExtractPalindromesFunctions = (
             stringOffsetCompOffset
         ];
     };
+};
+
+enum eCaptureExtractExampleFunctionPos {
+    curPosMinus1=0,
+};
+
+const GetCaptureExtractExampleStatements = (
+    CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
+    functions: TextParseFunction[]
+): TextParseStatement[] => {
+
+    const fCreateIsComma = (): TextParseStatement => {
+        var isComma=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
+        isComma.str=",";
+        isComma.keyedDescription="Match against the delimeter (and advance)";
+        return isComma;
+    };
+
+    const fCreateAdvanceToCommaAndStepBack = (): TextParseStatement[] => {
+
+
+        var advanceToComma=CreateParseStatement(eStatementType.AdvanceUntil_Comp) as AdvanceUntilComparisonStatement;
+        {
+            advanceToComma.forwards=true;
+
+            var isComma=fCreateIsComma();
+            advanceToComma.SetChildren([
+                isComma
+            ]);
+        }
+
+        var stepBack=CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
+        stepBack.advanceWhere=CreateFunctionOperand(functions[eCaptureExtractExampleFunctionPos.curPosMinus1]);
+        stepBack.keyedDescription="Move to before the delimeter so it is not included in the capture.";
+        return [
+            advanceToComma,
+            stepBack
+        ];
+    };
+
+
+    const nameCapture=CreateParseStatement(eStatementType.Capture_Comp) as CaptureComparisonStatement;
+    nameCapture.keyedDescription="Capture the name";
+    nameCapture.name="name";
+    nameCapture.SetChildren(fCreateAdvanceToCommaAndStepBack());
+
+    const dobCapture=CreateParseStatement(eStatementType.Capture_Comp) as CaptureComparisonStatement;
+    dobCapture.keyedDescription="Capture the DOB";
+    dobCapture.name="dob";
+    dobCapture.SetChildren(fCreateAdvanceToCommaAndStepBack());
+
+    const genderCapture=CreateParseStatement(eStatementType.Capture_Comp) as CaptureComparisonStatement;
+    genderCapture.keyedDescription="Capture the gender";
+    genderCapture.name="gender";
+    genderCapture.SetChildren(fCreateAdvanceToCommaAndStepBack());
+
+    return [
+        nameCapture,
+        fCreateIsComma(),
+        dobCapture,
+        fCreateIsComma(),
+        genderCapture,
+        fCreateIsComma()
+    ];
+};
+
+const GetCaptureExtractExampleFunctions = (
+    CreateTextParsefunction: (ctrName: string) => TextParseFunction
+ ): TextParseFunction[] => {
+
+    // Get the current position - 1
+    const curPosMinus1 = CreateTextParsefunction("Current Position - 1");
+    curPosMinus1.SetLeftHandOperand(CreateCurrentPositionOperand());
+    curPosMinus1.SetOperator(eCustomFunctionOperator.subtract);
+    curPosMinus1.SetRightHandOperand(CreateArbitraryValueOperand(1));
+
+    // Don't change the order! Refer to 'eCaptureExtractExampleFunctionPos'
+    return [curPosMinus1];
+};
+
+const GetCaptureHTMLElementsStatements = (
+    CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
+    functions: TextParseFunction[]
+): TextParseStatement[] => {
+
+    const fCreateStringCompAndWhitespace = (str: string): TextParseStatement => {
+        const stmtList=CreateParseStatement(eStatementType.StatementList_Comp) as StatementListComparisonStatement;
+        stmtList.keyedDescription=`Match against '${str}' and then whitespace`;
+
+        const stringComp=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
+        stringComp.caseSensitive=true;
+        stringComp.str=str;
+
+        stmtList.SetChildren([
+            stringComp,
+            CreateParseStatement(eStatementType.IsWhitespace_Comp)
+        ]);
+
+        return stmtList;
+    };
+
+    const openTag=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
+    openTag.keyedDescription="Match against the HTML opening tag (<)";
+    openTag.str="<";
+    openTag.caseSensitive=false;
+
+    const excludeNonControlElements=CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
+    excludeNonControlElements.keyedDescription="Exclude non control elements: set a marker if one is found";
+    {
+
+        excludeNonControlElements.SetChildren([
+            fCreateStringCompAndWhitespace("html"),
+            fCreateStringCompAndWhitespace("head"),
+            fCreateStringCompAndWhitespace("body"),
+        ]);
+    }
+
+    return [
+        // Match against <
+        openTag,
+        // Skip whitespace
+        CreateParseStatement(eStatementType.SkipWS_Op),
+        // Exclude html/head/body e.t.c. tags (more would need to be added)
+        excludeNonControlElements
+    ];
 };

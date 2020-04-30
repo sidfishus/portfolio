@@ -39,12 +39,14 @@ export enum eStatementType {
     AdvanceUntil_Comp=12,
     // Custom comparison
     CustomComparison=13,
+    // Set variable
+    SetVariable_Op=14,
     
     // Note: When adding new types don't forget to update 'StatementTypeInfo'
 
     // Note: Keep this as the last item because it's used to determine the number of statement types
     // In C++ you can assert this kind of thing statically at compile type
-    phCount = 14,
+    phCount = 15,
 };
 
 // Information regarding the statement types
@@ -157,7 +159,14 @@ export const StatementTypeInfo:IStatementTypeInfo[] = [
         isComparison: true,
         comparisonOnlyChildren: false,
         isUpdateVariable: false
-    }
+    },
+
+    // SetVariable_Op
+    {
+        isComparison: false,
+        comparisonOnlyChildren: false,
+        isUpdateVariable: true
+    },
 ];
 
 export interface ITextParseStatementState {
@@ -1230,11 +1239,11 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
     }
 };
 
-export abstract class SetVariableStatement extends TextParseStatement {
+export abstract class SetVariableStatementBase extends TextParseStatement {
 
     public variable: TextParseVariable;
 
-    constructor(copy?: SetVariableStatement) {
+    constructor(copy?: SetVariableStatementBase) {
         super(copy);
         if(!copy) {
             this.variable=null;
@@ -1244,18 +1253,18 @@ export abstract class SetVariableStatement extends TextParseStatement {
         }
     }
 
-    public static SetVarName(stmt: SetVariableStatement, varName: string): void {
+    public static SetVarName(stmt: SetVariableStatementBase, varName: string): void {
         stmt.variable={
             ...stmt.variable,
             name: varName
         };
     }
 
-    public static GetVarName(stmt: SetVariableStatement): string {
+    public static GetVarName(stmt: SetVariableStatementBase): string {
         return stmt.variable?.name;
     }
 
-    public static ValidateVarName(stmt: SetVariableStatement): boolean {
+    public static ValidateVarName(stmt: SetVariableStatementBase): boolean {
         return (
             stmt.variable !== null &&
             stmt.variable.name !== null &&
@@ -1268,13 +1277,13 @@ export abstract class SetVariableStatement extends TextParseStatement {
         checkChildren=true
     ): boolean {
 
-        if(!SetVariableStatement.ValidateVarName(this)) return false;
+        if(!SetVariableStatementBase.ValidateVarName(this)) return false;
 
         return super.CanSave(stmtList, checkChildren);
     }
 };
 
-export class StorePosAsVariableStatement extends SetVariableStatement {
+export class StorePosAsVariableStatement extends SetVariableStatementBase {
 
     constructor(copy?: StorePosAsVariableStatement) {
         super(copy);
@@ -1590,5 +1599,80 @@ const CustomComparisonOperatorCode = (operator: eCustomComparisonOperator): stri
 
         case eCustomComparisonOperator.greaterEquals:
             return ">=";
+    }
+};
+
+export class SetVariableStatement extends SetVariableStatementBase {
+
+    public operand: IParseOperand;
+
+    constructor(copy?: SetVariableStatement) {
+        super(copy);
+        if(!copy) {
+            this.type=eStatementType.SetVariable_Op;
+            this.operand=null;
+        } else {
+            this.operand=copy.operand;
+        }
+    }
+
+    Copy(copyChildren: boolean): SetVariableStatement {
+        const copy=new SetVariableStatement(this);
+        return copy;
+    }
+
+    TypeDescription(): string {
+        return "SetVariable";
+    }
+
+    Description(): string {
+        const { CanSave, variable } = this;
+        
+        if(!CanSave(null, false)) {
+            return null;
+        }
+
+        return `Assign a variable named '${variable.name}'`;
+    }
+
+    Icon(): SemanticICONS {
+        return "angle double right"; //sidtodo
+    }
+
+    Children(): TextParseStatement[] | null {
+        return null;
+    }
+
+    SetChildren(children?: TextParseStatement[]): void {
+    }
+
+    CanSave(
+        stmtList: TextParseStatement[],
+        checkChildren=true
+    ): boolean {
+        const { operand} = this;
+
+        if(!operand) return false;
+
+        return super.CanSave(stmtList, checkChildren);
+    }
+
+    GenerateCode(
+        log: string,
+        fAddStatement: (stmtCode: string) => string,
+        fGetVariables: () => TextParseVariable[],
+        functions: TextParseFunction[]
+    ): string {
+
+        const { variable, name } = this;
+
+        //sidtodo current
+
+        return `{
+            var ${name}=new SetVariable(${log}, ${EncodeString(variable.name)});
+            ${name}.Name=${EncodeString(name)};
+            ${fAddStatement(name)}
+        }
+        `;
     }
 };

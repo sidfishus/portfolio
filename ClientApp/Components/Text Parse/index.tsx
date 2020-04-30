@@ -10,7 +10,7 @@ import { CopyParseOperand, IParseOperand, eParseOperandType, CreateLengthOperand
 import { IsA32BitSignedNumber } from "../../Library/Misc";
 import useConstant from "use-constant";
 import { ParseExamplesDropdown, eParseExample, eParseBuiltInExample} from "./Examples";
-import { ffGetVariables, TextParseVariable } from "./Variables";
+import { ffGetVariables, TextParseVariable, VariablesMatch } from "./Variables";
 
 export interface ITextParseProps {
 };
@@ -288,6 +288,13 @@ interface ICustomComparisonInputCtrlProps extends ITextParseStatementState {
 };
 
 interface ICustomComparisonOperatorProps extends ITextParseStatementState {
+};
+
+interface ISetVariableInputCtrlProps extends ITextParseStatementState {
+    updater: SimpleDelayer;
+    fGetVariables: () => TextParseVariable[];
+    functions: Array<TextParseFunction>;
+    updatePending: boolean,
 };
 
 // ~interface
@@ -818,6 +825,19 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         updatePending={updatePending}
                     />;
                 break;
+
+            case eStatementType.SetVariable_Op:
+                typeSpecificJsx=
+                    <SetVariableInputCtrl
+                        {...props}
+                        statement={selectedStatement}
+                        SetStatement={_UpdateStatement}
+                        fGetVariables={fGetVariables}
+                        functions={functions}
+                        updater={updater}
+                        updatePending={updatePending}
+                    />;
+                break;
         }
     }
 
@@ -1054,6 +1074,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                             }}
                             SetParseOuputType={SetOutputType}
                             SetBuiltInExample={SetBuiltInExample}
+                            SetReplaceFormat={SetReplaceFormat}
                         />
                     </Segment>
                 </Form>
@@ -1748,6 +1769,9 @@ const CreateParseStatement = (
 
             case eStatementType.CustomComparison:
                 return new CustomComparisonStatement();
+
+            case eStatementType.SetVariable_Op:
+                return new SetVariableStatement();
         }
     }
 
@@ -1928,6 +1952,12 @@ const TypeDropdownCtrl_Options = [
         key: eStatementType.CustomComparison,
         text: "Custom comparison",
         value: eStatementType.CustomComparison
+    },
+
+    {
+        key: eStatementType.SetVariable_Op,
+        text: "Set variable",
+        value: eStatementType.SetVariable_Op
     }
 ];
 
@@ -2033,6 +2063,10 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
 
         case eStatementType.CustomComparison:
             text="User generated comparison. Only use this when specific statements(s) cannot achieve the same goal.";
+            break;
+
+        case eStatementType.SetVariable_Op:
+            text="Store a value as a variable.";
             break;
     }
 
@@ -3020,11 +3054,9 @@ const InputModal: React.SFC<IInputModalProps> = (props) => {
 
 };
 
-const StorePosAsVariableInputCtrl:
-    React.FunctionComponent<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
+const SelectVariableNameInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
 
-    const { SetStatement, updater } = props;
-    const statement = props.statement as StorePosAsVariableStatement;
+    const { SetStatement, updater, statement } = props;
 
     const placeHolderText="Name of variable...";
 
@@ -3039,6 +3071,21 @@ const StorePosAsVariableInputCtrl:
             Validate={SetVariableStatement.ValidateVarName}
             updater={updater}
             name="varName"
+        />
+    );
+};
+
+const StorePosAsVariableInputCtrl:
+    React.FunctionComponent<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
+
+    const { SetStatement, updater } = props;
+    const statement = props.statement as StorePosAsVariableStatement;
+
+    return (
+        <SelectVariableNameInputCtrl
+            statement={statement}
+            SetStatement={SetStatement}
+            updater={updater}
         />
     );
 };
@@ -3275,4 +3322,47 @@ const ComparisonSpecificJsx = (
             }}
         />
     );
+};
+
+const SetVariableInputCtrl: React.FunctionComponent<ITextParseProps & ISetVariableInputCtrlProps> = (props) => {
+
+    const { SetStatement, updater, functions, fGetVariables, updatePending } = props;
+    const statement = props.statement as SetVariableStatement;
+
+    return (
+        <>
+            <Form.Field>
+                <SelectVariableNameInputCtrl
+                    statement={statement}
+                    SetStatement={SetStatement}
+                    updater={updater}
+                />
+            </Form.Field>
+
+            <Form.Field>
+                <ParseOperandDropdown
+                    functions={functions}
+                    fGetVariables={() => {
+                        if(statement.variable)
+                            return fGetVariables().filter(iterVar => !VariablesMatch(iterVar, statement.variable));
+                        return fGetVariables();
+                    }}
+                    SetOperand={_oper => {
+                        const updated=new SetVariableStatement(statement);
+                        updated.operand=_oper;
+                        SetStatement(updated);
+                    }}
+                    data={statement.operand}
+                    name={`setvariableoperand`}
+                    updater={updater}
+                    updatePending={updatePending}
+                    includeLength={false}
+                    includeCurrentPosition={false}
+                    placeholder="(Value to assign)..."
+                    title="Please select what the variable should be assigned to"
+                />
+            </Form.Field>
+        </>
+    );
+
 };
