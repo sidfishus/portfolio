@@ -1664,12 +1664,10 @@ export class SetVariableStatement extends SetVariableStatementBase {
         functions: TextParseFunction[]
     ): string {
 
-        const { variable, name } = this;
-
-        //sidtodo current
+        const { variable, name, operand } = this;
 
         return `{
-            var ${name}=new SetVariable(${log}, ${EncodeString(variable.name)});
+            var ${name}=new SetVariable(${log}, ${EncodeString(variable.name)}, ${ParseOperandCode(operand,fGetVariables,functions)});
             ${name}.Name=${EncodeString(name)};
             ${fAddStatement(name)}
         }

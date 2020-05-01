@@ -3,7 +3,7 @@ import * as React from "react";
 import { TextParseStatement, eStatementType, StringOffsetComparisonStatement, StartOfStringComparisonStatement,
     AdvanceStatement, StatementListComparisonStatement, IsWhitespaceComparisonStatement, SkipWSStatement,
     StorePosAsVariableStatement, AdvanceUntilComparisonStatement, OrComparisonStatement, CustomComparisonStatement,
-    eCustomComparisonOperator, CaptureComparisonStatement, StringComparisonStatement} from "./StatementTypes";
+    eCustomComparisonOperator, CaptureComparisonStatement, StringComparisonStatement, SetVariableStatement} from "./StatementTypes";
 import { ITextParseProps } from "./index";
 import useConstant from "use-constant";
 import { Dropdown, Form, Label } from "semantic-ui-react";
@@ -148,7 +148,7 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
             ParseInput: "Bjarne Stroustrup,30/12/1950,Male,Ada Lovelace,10/12/1815,Female,Anders Hejlsberg,"+
                 "02/12/1960,Male,Brendan Eich,04/07/1961,Male,",
             ParseOuputType: eParseOutputType.potExtractAll,
-            replaceFormat: `Name: 'name', Date of birth: 'dob', Gender: 'gender'.`
+            replaceFormat: `Programmer name: 'name', Date of birth: 'dob', Gender: 'gender'.`
         },
 
         //eParseExample.captureHTMLTags
@@ -156,8 +156,10 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
             text: "Capture HTML control elements",
             description: "A simple example which captures all of the control elements from HTML code",
             GetStatements: GetCaptureHTMLElementsStatements,
-            ParseInput: "<html><body><input type=\"text\" value=\"hi\"/></body></html>",
+            ParseInput: "<html><body><form><input type=\"text\" value=\"hi\"/><label>hello</label><button>Click</button></form></body></html>",
             ParseOuputType: eParseOutputType.potExtractAll,
+            replaceFormat: "Control element type: 'elementTypeCapture'",
+            GetFunctions: GetCaptureHTMLElementsFunctions
         }
     ];
 };
@@ -601,23 +603,61 @@ const GetCaptureExtractExampleFunctions = (
     return [curPosMinus1];
 };
 
+enum eCaptureHTMLElementsFunctionPos {
+    curPosMinus1=0,
+};
+
 const GetCaptureHTMLElementsStatements = (
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
     functions: TextParseFunction[]
 ): TextParseStatement[] => {
 
-    const fCreateStringCompAndWhitespace = (str: string): TextParseStatement => {
+    const isControlElementVarName="IsControlElement";
+    const isControlElementVariable=CreateTextParseVariable(isControlElementVarName);
+
+    const fMatchNonControlElementAndSetMarker = (
+        str: string,
+        isStr: boolean
+    ): TextParseStatement => {
         const stmtList=CreateParseStatement(eStatementType.StatementList_Comp) as StatementListComparisonStatement;
-        stmtList.keyedDescription=`Match against '${str}' and then whitespace`;
+        stmtList.keyedDescription=`Match against '${str}' and store a variable to indicate this is not a control element.`;
 
-        const stringComp=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
-        stringComp.caseSensitive=true;
-        stringComp.str=str;
+        const elementNameComp=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
+        elementNameComp.caseSensitive=true;
+        elementNameComp.str=str;
 
-        stmtList.SetChildren([
-            stringComp,
-            CreateParseStatement(eStatementType.IsWhitespace_Comp)
-        ]);
+        const setVariable=CreateParseStatement(eStatementType.SetVariable_Op) as SetVariableStatement;
+        setVariable.keyedDescription="Set the marker to indicate it is not a control element";
+        setVariable.variable=isControlElementVariable;
+        setVariable.operand=CreateArbitraryValueOperand(0);
+
+        if(isStr) {
+
+            const whitespaceOrCloseTag = CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
+            whitespaceOrCloseTag.keyedDescription="Assert that the current character is whitespace or '>'";
+            {
+                const isCloseTag=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
+                isCloseTag.not=false;
+                isCloseTag.str=">";
+
+                whitespaceOrCloseTag.SetChildren([
+                    CreateParseStatement(eStatementType.IsWhitespace_Comp),
+                    isCloseTag
+                ]);
+            }
+
+            stmtList.SetChildren([
+                elementNameComp,
+                whitespaceOrCloseTag,
+                setVariable
+            ]);
+
+        } else {
+            stmtList.SetChildren([
+                elementNameComp,
+                setVariable
+            ]);
+        }
 
         return stmtList;
     };
@@ -625,16 +665,74 @@ const GetCaptureHTMLElementsStatements = (
     const openTag=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
     openTag.keyedDescription="Match against the HTML opening tag (<)";
     openTag.str="<";
-    openTag.caseSensitive=false;
+    openTag.caseSensitive=false; // Not relevant
 
-    const excludeNonControlElements=CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
-    excludeNonControlElements.keyedDescription="Exclude non control elements: set a marker if one is found";
+    const excludeNonControlElementsSetMarker=CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
+    excludeNonControlElementsSetMarker.keyedDescription="Exclude non control elements: set a marker to indicate found / not found";
     {
 
-        excludeNonControlElements.SetChildren([
-            fCreateStringCompAndWhitespace("html"),
-            fCreateStringCompAndWhitespace("head"),
-            fCreateStringCompAndWhitespace("body"),
+        const setVariableStmtList=CreateParseStatement(eStatementType.StatementList_Comp) as StatementListComparisonStatement;
+        setVariableStmtList.keyedDescription="Set the marker to indicate it is a control element";
+        {
+            const setVariable=CreateParseStatement(eStatementType.SetVariable_Op) as SetVariableStatement;
+            setVariable.variable=isControlElementVariable;
+            setVariable.operand=CreateArbitraryValueOperand(1);
+
+            setVariableStmtList.SetChildren([setVariable]);
+        }
+
+        const closeTagBegin=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
+        closeTagBegin.caseSensitive=true;
+        closeTagBegin.str="/";
+
+        excludeNonControlElementsSetMarker.SetChildren([
+            fMatchNonControlElementAndSetMarker("html", true),
+            fMatchNonControlElementAndSetMarker("head", true),
+            fMatchNonControlElementAndSetMarker("body", true),
+            fMatchNonControlElementAndSetMarker("form", true),
+            fMatchNonControlElementAndSetMarker("/", false),
+            setVariableStmtList
+        ]);
+    }
+
+    const isControlElementComp=CreateParseStatement(eStatementType.CustomComparison) as CustomComparisonStatement;
+    isControlElementComp.keyedDescription="Assert that the marker indicates we have found a control element.";
+    isControlElementComp.leftHandOperand=CreateVariableOperand(isControlElementVariable);
+    isControlElementComp.operator=eCustomComparisonOperator.equals;
+    isControlElementComp.rightHandOperand=CreateArbitraryValueOperand(1);
+
+    const elementTypeCapture=CreateParseStatement(eStatementType.Capture_Comp);
+    elementTypeCapture.name="elementTypeCapture";
+    elementTypeCapture.keyedDescription="Capture the control element type";
+    {
+
+        const whitespaceOrCloseTag=CreateParseStatement(eStatementType.Or_Comp) as OrComparisonStatement;
+        {
+            const closeTagStringComp=CreateParseStatement(eStatementType.String_Comp) as StringComparisonStatement;
+            closeTagStringComp.str=">";
+
+            whitespaceOrCloseTag.SetChildren([
+                CreateParseStatement(eStatementType.IsWhitespace_Comp),
+                closeTagStringComp
+            ]);
+        }
+
+        // Advance until whitespace is found or HTML tag close
+        const advanceUntil=CreateParseStatement(eStatementType.AdvanceUntil_Comp) as AdvanceUntilComparisonStatement;
+        advanceUntil.keyedDescription="Advance until whitespace or '>' is found";
+        advanceUntil.forwards=true;
+        advanceUntil.SetChildren([
+            whitespaceOrCloseTag
+        ]);
+
+        // Step back one to exclude the whitespace in the capture
+        const stepBack=CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
+        stepBack.keyedDescription="Exclude the whitespace in the capture";
+        stepBack.advanceWhere=CreateFunctionOperand(functions[eCaptureHTMLElementsFunctionPos.curPosMinus1]);
+
+        elementTypeCapture.SetChildren([
+            advanceUntil,
+            stepBack
         ]);
     }
 
@@ -643,7 +741,25 @@ const GetCaptureHTMLElementsStatements = (
         openTag,
         // Skip whitespace
         CreateParseStatement(eStatementType.SkipWS_Op),
-        // Exclude html/head/body e.t.c. tags (more would need to be added)
-        excludeNonControlElements
+        // Determine if it's a control element and set the marker/variable
+        excludeNonControlElementsSetMarker,
+        // Assert the marker/variable
+        isControlElementComp,
+        // Capture the element type
+        elementTypeCapture
     ];
+};
+
+const GetCaptureHTMLElementsFunctions = (
+    CreateTextParsefunction: (ctrName: string) => TextParseFunction
+ ): TextParseFunction[] => {
+
+    // Get the current position - 1
+    const curPosMinus1 = CreateTextParsefunction("Current Position - 1");
+    curPosMinus1.SetLeftHandOperand(CreateCurrentPositionOperand());
+    curPosMinus1.SetOperator(eCustomFunctionOperator.subtract);
+    curPosMinus1.SetRightHandOperand(CreateArbitraryValueOperand(1));
+
+    // Don't change the order! Refer to 'eCaptureHTMLElementsFunctionPos'
+    return [curPosMinus1];
 };

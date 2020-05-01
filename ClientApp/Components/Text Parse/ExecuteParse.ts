@@ -13,7 +13,8 @@ import { eParseBuiltInExample } from "./Examples";
 // all of the features available in the C# Text Parse library.
 
 export const EncodeString = (str: string): string => {
-    return `@"${str.replace(`"`,`""`)}"`;
+    // The /g suffix replaces all instances. Without this only the first occurence will be changed.
+    return `@"${str.replace(/"/g,`""`)}"`;
 };
 
 const InitRunState = (functions: TextParseFunction[], fGetVariables: () => TextParseVariable[]): string => {
