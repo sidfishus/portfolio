@@ -551,6 +551,22 @@ const CompareSelectedStatement = (
     return rv;
 };
 
+const StatementIsAChildOf = (
+    parent: TextParseStatement,
+    potentialChild: ISelectedStatement
+) => {
+    const children=parent.Children();
+    if(!children) return false;
+
+    const findPred=(iterChild: TextParseStatement): boolean => {
+        if(CompareSelectedStatement(potentialChild, iterChild)) return true;
+
+        return StatementIsAChildOf(iterChild, potentialChild);
+    };
+
+    return (children.find(findPred) !== undefined);
+};
+
 const GetSelectedStatementNested = (
     selStmt: ISelectedStatement,
     stmt: TextParseStatement
@@ -1539,7 +1555,7 @@ const ParseOutputType: React.FunctionComponent<ITextParseProps & IParseOutputTyp
     );
 };
 
-const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps & IStatementListCtrlProps & {
+const StatementListItem: React.FunctionComponent<ITextParseProps & IStatementListCtrlProps & {
     stmt: TextParseStatement,
     idx: number,
     level: number,
@@ -1555,13 +1571,16 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
     const children=stmt.Children();
     
     const childrenListItems=((children) ? children.map((iterStmt,idx) => {
-        return StatementListItemRenderStatement({
-            ...props,
-            stmt: iterStmt,
-            idx: idx,
-            level: level+1,
-            stmtCount: children.length
-        });
+        return (
+            <StatementListItem
+                {...props}
+                stmt={iterStmt}
+                idx={idx}
+                level={level+1}
+                stmtCount={children.length}
+                key={CreateStatementKey(iterStmt,"li")}
+            />
+        );
     }) : null);
 
     let rowExtraProps;
@@ -1571,20 +1590,6 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
     } else {
         rowExtraProps={negative: true};
     }
-
-    // let upButtonProps;
-    // if(idx === 0) {
-    //     upButtonProps = {
-    //         disabled: true
-    //     };
-    // }
-
-    // let downButtonProps;
-    // if(idx === stmtCount-1) {
-    //     downButtonProps = {
-    //         disabled: true
-    //     };
-    // }
 
     const hasUpButton=(idx !==0);
     const hasDownButton=(idx !== stmtCount-1);
@@ -1608,6 +1613,10 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
                     {heading}
                 </Table.Cell>
 
+                <Table.Cell>
+                    <b>Test</b>
+                </Table.Cell>
+
                 <Table.Cell textAlign="right" width={2}>
                     {hasUpButton && <Icon name="caret up" onClick={() => ChangeStatementOrder(CreateSelStatement(stmt),-1)} />}
                     {hasDownButton && <Icon name="caret down" onClick={() => ChangeStatementOrder(CreateSelStatement(stmt),1)} />}
@@ -1623,6 +1632,9 @@ const StatementListItemRenderStatement: React.FunctionComponent<ITextParseProps 
                         title="Confirm Delete"
                         message={`Are you sure you want to delete this text parse statement? This action cannot be undone.`}
                         onYes={() => {
+                            if(CompareSelectedStatement(selStatement,stmt) || StatementIsAChildOf(stmt, selStatement)) {
+                                SetSelStatement(null);
+                            }
                             SetModalState(null);
                             RemoveStatement(stmt);
                         }}
@@ -1643,13 +1655,18 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
 
     const { statements, modalState, SetModalState, SetStatements, SetSelStatement } = props;
 
-    const items=statements.map((stmt,idx) => StatementListItemRenderStatement({
-        ...props,
-        stmt: stmt,
-        idx: idx,
-        level: 1,
-        stmtCount: statements.length
-    }));
+    const items=statements.map((stmt,idx) => {
+        return (
+            <StatementListItem
+                {...props}
+                stmt={stmt}
+                idx={idx}
+                level={1}
+                stmtCount={statements.length}
+                key={CreateStatementKey(stmt,"li")}
+            />
+        );
+    });
 
     const clearListTrigger = (
         <Button
@@ -1787,6 +1804,8 @@ const CreateParseStatement = (
 
     newStatement.name=`${newStatement.TypeDescription()}${newIndex}`;
     newStatement.UID = newIndex;
+
+    //console.log(`Created parse statement: ${CreateStatementKey(newStatement,"")}`);
 
     return newStatement;
 };
@@ -2031,7 +2050,7 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
 
         case eStatementType.Capture_Comp:
             text="Perform a statement list and capture the matching text. "+
-                "The matching text can be referenced within the replace format using the specified name.";
+                "The matching text can be referenced within the replace format using the statement name.";
             break;
 
         case eStatementType.IsWhitespace_Comp:
@@ -2039,8 +2058,7 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
             break;
 
         case eStatementType.StringOffset_Comp:
-            text="Compare the string denoted by the current position and the specified length against the string "+
-                "denoted by the specified offset and the specified length.";
+            text="Compare the string at the current position against a string elsewhere in the input text.";
             break;
 
         case eStatementType.StorePosAsVariable_Op:

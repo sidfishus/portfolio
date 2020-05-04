@@ -5,7 +5,6 @@ import { IsAlpha } from "../../Library/Misc";
 import { IParseOperand, ParseOperandIsValid, ParseOperandCode, CopyParseOperand, ParseOperandMultipleCode } from "./Operands";
 import { TextParseFunction, eCustomFunctionOperator } from "./CustomFunctions";
 import { TextParseVariable, CopyTextParseVariable } from "./Variables";
-import { TextParse } from ".";
 
 const BooleanAsString = (bool: boolean) => ((bool)?"true":"false");
 
@@ -1193,15 +1192,9 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
         return super.CanSave(stmtList, checkChildren);
     }
 
+    // Just specify the name or the keyed description
     Description(): string {
-        const { CanSave, length, caseSensitive } = this;
-        
-        if(!CanSave(null, false)) {
-            return null;
-        }
-
-        return `Compare the string at the current position and consisting of ${length} characters against the string `+
-            `denoted by the offset for the same length (case ${((!caseSensitive)?"in":"")}sensitive).`;
+        return null;
     }
 
     Icon(): SemanticICONS {
