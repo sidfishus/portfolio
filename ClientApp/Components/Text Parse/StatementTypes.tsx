@@ -700,8 +700,6 @@ export class OrComparisonStatement extends ComparisonStatement {
     }
 };
 
-//sidtodo here statement names must be in same format as variable names in C#.
-//sidtodo here names of variables in the code generated in the statements is from the name property
 const CreateStatementListCode = (
     name: string,
     stmtList: TextParseStatement[],
@@ -899,7 +897,7 @@ export class EndOfStringComparisonStatement extends ComparisonStatement {
     }
 
     Icon(): SemanticICONS {
-        return "angle double right"; //sidtodo
+        return "terminal";
     }
 
     Children(): TextParseStatement[] | null {
@@ -960,7 +958,7 @@ export class StartOfStringComparisonStatement extends ComparisonStatement {
     }
 
     Icon(): SemanticICONS {
-        return "angle double right"; //sidtodo
+        return "pointing left";
     }
 
     Children(): TextParseStatement[] | null {
@@ -1038,7 +1036,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
     }
 
     Icon(): SemanticICONS {
-        return "list ol"; //sidtodo
+        return "magnify";
     }
 
     Children(): TextParseStatement[] | null {
@@ -1120,7 +1118,7 @@ export class IsWhitespaceComparisonStatement extends ComparisonStatement {
     }
 
     Icon(): SemanticICONS {
-        return "angle double right"; //sidtodo
+        return null;
     }
 
     Children(): TextParseStatement[] | null {
@@ -1207,7 +1205,7 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
     }
 
     Icon(): SemanticICONS {
-        return "angle double right"; //sidtodo
+        return "sign in";
     }
 
     Children(): TextParseStatement[] | null {
@@ -1312,7 +1310,7 @@ export class StorePosAsVariableStatement extends SetVariableStatementBase {
     }
 
     Icon(): SemanticICONS {
-        return "angle double right"; //sidtodo
+        return "thumbtack";
     }
 
     Children(): TextParseStatement[] | null {
@@ -1371,7 +1369,7 @@ export class AdvanceStatement extends TextParseStatement {
     }
 
     Icon(): SemanticICONS {
-        return "angle double right"; //sidtodo
+        return "step forward";
     }
 
     Children(): TextParseStatement[] | null {
@@ -1443,7 +1441,7 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
         return "Advance until comparison";
     }
 
-    Icon(): SemanticICONS { //sidtodo
+    Icon(): SemanticICONS {
         return "unordered list";
     }
 
@@ -1542,8 +1540,8 @@ export class CustomComparisonStatement extends TextParseStatement {
         return "Custom comparison";
     }
 
-    Icon(): SemanticICONS { //sidtodo
-        return "unordered list";
+    Icon(): SemanticICONS {
+        return "code";
     }
 
     Children(): TextParseStatement[] | null {
@@ -1636,7 +1634,7 @@ export class SetVariableStatement extends SetVariableStatementBase {
     }
 
     Icon(): SemanticICONS {
-        return "angle double right"; //sidtodo
+        return "save";
     }
 
     Children(): TextParseStatement[] | null {

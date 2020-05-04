@@ -646,7 +646,6 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     // When a new item is created, it is created with a default name and an index. This array holds the indexes.
     // As names are created the indexes come from this array, and are incremented accordingly. There is an index
     // per statement type
-    //sidtodo is this a constant??? it's a useRef - it needs to be updated.
     const nameIndexes = useConstant(() => new Array<number|undefined>(eStatementType.phCount));
 
     // Replace format
@@ -706,7 +705,6 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
 
     const _CreateParseStatement = (stmtType: eStatementType): TextParseStatement => CreateParseStatement(nameIndexes, stmtType);
 
-    //sidtodo: this is a usememo which updates only when the statements change.
     const fGetVariables = ffGetVariables(statements);
     
     //// Render
@@ -846,9 +844,6 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     const parseInputError=((parseInputText!==null && parseInputText!=="")?null:"Please enter parse input before attempting to parse.");
 
     const comparisonSpecificJsx = ComparisonSpecificJsx(selectedStatement, _UpdateStatement);
-
-    //sidtodo checkbox to show full description
-    //sidtood checkbox to show description from the type (i.e. string comparison against 'blah'.)
 
     return (
         <>
@@ -2761,7 +2756,6 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
                         SetOperand(null);
 
                     } else {
-                        //sidtodo test. does this clear the org value properly
                         const updatedOperand: IParseOperand={
                             ...CopyParseOperand(data),
                             arbitraryValueUpdate: undefined,
