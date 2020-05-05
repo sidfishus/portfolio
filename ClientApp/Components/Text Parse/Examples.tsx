@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { TextParseStatement, eStatementType, StringOffsetComparisonStatement, StartOfStringComparisonStatement,
-    AdvanceStatement, StatementListComparisonStatement, IsWhitespaceComparisonStatement, SkipWSStatement,
+    AdvanceStatement, StatementListComparisonStatement,
     StorePosAsVariableStatement, AdvanceUntilComparisonStatement, OrComparisonStatement, CustomComparisonStatement,
     eCustomComparisonOperator, CaptureComparisonStatement, StringComparisonStatement, SetVariableStatement} from "./StatementTypes";
 import { ITextParseProps } from "./index";
@@ -57,6 +57,19 @@ interface IParseExampleOption {
     ParseOuputType?: eParseOutputType;
     BuiltInType?: eParseBuiltInExample;
     replaceFormat?: string;
+};
+
+const CreateCurPosMinus1Function = (
+    CreateTextParsefunction: (ctrName: string) => TextParseFunction
+ ): TextParseFunction => {
+
+    // Get the current position - 1
+    const curPosMinus1 = CreateTextParsefunction("Current Position - 1");
+    curPosMinus1.SetDescription("Return the current position - 1");
+    curPosMinus1.SetLeftHandOperand(CreateCurrentPositionOperand());
+    curPosMinus1.SetOperator(eCustomFunctionOperator.subtract);
+    curPosMinus1.SetRightHandOperand(CreateArbitraryValueOperand(1));
+    return curPosMinus1;
 };
 
 const vbsAddParenthesisInput: string =
@@ -313,11 +326,13 @@ const GetIsPalindromeFunctions =
     // The integer version of the length divided by 2 gives the amount of characters to compare.
     // I.e. if the length is 5, this will return 2.
     const offsetFuncLength = CreateTextParsefunction("Offset Length");
+    offsetFuncLength.SetDescription("E.g. for a word of length 5 return 2, for a word of length 6 return 3");
     offsetFuncLength.SetLeftHandOperand(CreateLengthOperand());
     offsetFuncLength.SetOperator(eCustomFunctionOperator.divide);
     offsetFuncLength.SetRightHandOperand(CreateArbitraryValueOperand(2));
 
     const offsetFuncOffset = CreateTextParsefunction("Offset Position");
+    offsetFuncOffset.SetDescription("The index at which to begin the string offset comparison");
     offsetFuncOffset.SetLeftHandOperand(CreateLengthOperand());
     offsetFuncOffset.SetOperator(eCustomFunctionOperator.subtract);
     offsetFuncOffset.SetRightHandOperand(CreateFunctionOperand(offsetFuncLength));
@@ -490,13 +505,11 @@ const GetExtractPalindromesFunctions = (
     return (CreateTextParsefunction): TextParseFunction[] => {
 
         // Get the current position - 1
-        const curPosMinus1 = CreateTextParsefunction("Current Position - 1");
-        curPosMinus1.SetLeftHandOperand(CreateCurrentPositionOperand());
-        curPosMinus1.SetOperator(eCustomFunctionOperator.subtract);
-        curPosMinus1.SetRightHandOperand(CreateArbitraryValueOperand(1));
+        const curPosMinus1 = CreateCurPosMinus1Function(CreateTextParsefunction);
 
         // Get the length of the current word
         const currentWordLength=CreateTextParsefunction("Current Word Length");
+        currentWordLength.SetDescription("Return the length of the current word");
         const currentWordLastCharPlus1PosVar=CreateTextParseVariable("Current Word Last Char + 1 Pos");
         currentWordLength.SetLeftHandOperand(CreateVariableOperand(currentWordLastCharPlus1PosVar));
         currentWordLength.SetOperator(eCustomFunctionOperator.subtract);
@@ -504,12 +517,14 @@ const GetExtractPalindromesFunctions = (
 
         // Get the length of the current word / 2 for string offset comparison
         const stringOffsetWordLength=CreateTextParsefunction("String Offset Comparison Word Length");
+        stringOffsetWordLength.SetDescription("E.g. for a word of length 5 return 2, for a word of length 6 return 3");
         stringOffsetWordLength.SetLeftHandOperand(CreateFunctionOperand(currentWordLength));
         stringOffsetWordLength.SetOperator(eCustomFunctionOperator.divide);
         stringOffsetWordLength.SetRightHandOperand(CreateArbitraryValueOperand(2));
 
         // Get the offset for the string offset comparison which is the middle of the current word
         const stringOffsetCompOffset = CreateTextParsefunction("String Offset Comparison Offset");
+        stringOffsetCompOffset.SetDescription("The index at which to begin the string offset comparison");
         stringOffsetCompOffset.SetLeftHandOperand(CreateVariableOperand(currentWordLastCharPlus1PosVar));
         stringOffsetCompOffset.SetOperator(eCustomFunctionOperator.subtract);
         stringOffsetCompOffset.SetRightHandOperand(CreateFunctionOperand(stringOffsetWordLength));
@@ -593,10 +608,7 @@ const GetCaptureExtractExampleFunctions = (
  ): TextParseFunction[] => {
 
     // Get the current position - 1
-    const curPosMinus1 = CreateTextParsefunction("Current Position - 1");
-    curPosMinus1.SetLeftHandOperand(CreateCurrentPositionOperand());
-    curPosMinus1.SetOperator(eCustomFunctionOperator.subtract);
-    curPosMinus1.SetRightHandOperand(CreateArbitraryValueOperand(1));
+    const curPosMinus1 = CreateCurPosMinus1Function(CreateTextParsefunction);
 
     // Don't change the order! Refer to 'eCaptureExtractExampleFunctionPos'
     return [curPosMinus1];
@@ -753,12 +765,6 @@ const GetCaptureHTMLElementsFunctions = (
     CreateTextParsefunction: (ctrName: string) => TextParseFunction
  ): TextParseFunction[] => {
 
-    // Get the current position - 1
-    const curPosMinus1 = CreateTextParsefunction("Current Position - 1");
-    curPosMinus1.SetLeftHandOperand(CreateCurrentPositionOperand());
-    curPosMinus1.SetOperator(eCustomFunctionOperator.subtract);
-    curPosMinus1.SetRightHandOperand(CreateArbitraryValueOperand(1));
-
     // Don't change the order! Refer to 'eCaptureHTMLElementsFunctionPos'
-    return [curPosMinus1];
+    return [CreateCurPosMinus1Function(CreateTextParsefunction)];
 };
