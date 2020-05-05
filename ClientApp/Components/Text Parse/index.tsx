@@ -1555,14 +1555,29 @@ const ParseOutputType: React.FunctionComponent<ITextParseProps & IParseOutputTyp
     );
 };
 
+const StatementChildThenOrDescr = (parentStmt: TextParseStatement) => {
+    // The main statement list will not have a parent but it is effectively a statement list
+    if(parentStmt === null) return "THEN";
+
+    switch(parentStmt.type) {
+        case eStatementType.Or_Comp:
+            return "OR";
+        default:
+            return "THEN";
+    }
+};
+
 const StatementListItem: React.FunctionComponent<ITextParseProps & IStatementListCtrlProps & {
     stmt: TextParseStatement,
     idx: number,
     level: number,
-    stmtCount: number
+    stmtCount: number,
+    siblings: TextParseStatement[],
+    parentStmt: TextParseStatement
 }> = (props) => {
 
-    const { stmt, SetSelStatement, selStatement, idx, level, stmtCount, ChangeStatementOrder, RemoveStatement, modalState, SetModalState, statements } = props;
+    const { stmt, SetSelStatement, selStatement, idx, level, stmtCount, ChangeStatementOrder, RemoveStatement,
+        modalState, SetModalState, statements, siblings, parentStmt } = props;
 
     const paddingBlankSpace=((level>1)?" ".repeat(10*(level-1)) : "");
 
@@ -1579,6 +1594,8 @@ const StatementListItem: React.FunctionComponent<ITextParseProps & IStatementLis
                 level={level+1}
                 stmtCount={children.length}
                 key={CreateStatementKey(iterStmt,"li")}
+                siblings={children}
+                parentStmt={stmt}
             />
         );
     }) : null);
@@ -1614,7 +1631,7 @@ const StatementListItem: React.FunctionComponent<ITextParseProps & IStatementLis
                 </Table.Cell>
 
                 <Table.Cell>
-                    <b>Test</b>
+                    {idx<(siblings.length -1) && <b>{StatementChildThenOrDescr(parentStmt)}</b>}
                 </Table.Cell>
 
                 <Table.Cell textAlign="right" width={2}>
@@ -1664,6 +1681,8 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
                 level={1}
                 stmtCount={statements.length}
                 key={CreateStatementKey(stmt,"li")}
+                siblings={statements}
+                parentStmt={null}
             />
         );
     });
