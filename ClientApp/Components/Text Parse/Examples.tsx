@@ -338,14 +338,13 @@ const GetExtractPalindromesStatements = (
 
     return (CreateParseStatement,functions) => {
 
-        const isWhitespaceComp = CreateParseStatement(eStatementType.IsWhitespace_Comp) as IsWhitespaceComparisonStatement;
-
-        const advanceCurPosMinus1 = CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
-        advanceCurPosMinus1.keyedDescription="Set current position = current position - 1";
-        advanceCurPosMinus1.advanceWhere=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.curPosMinus1]);
-
-        const skipWhitespace = CreateParseStatement(eStatementType.SkipWS_Op) as SkipWSStatement;
-        skipWhitespace.keyedDescription="Skip whitespace.";
+        const CreateAdvanceCurPosMinus1 = (): TextParseStatement => {
+            const advanceCurPosMinus1 = CreateParseStatement(eStatementType.Advance_Op) as AdvanceStatement;
+            advanceCurPosMinus1.keyedDescription="Set current position = current position - 1";
+            advanceCurPosMinus1.advanceWhere=CreateFunctionOperand(functions[eExtractPalindromeFunctionPos.curPosMinus1]);
+    
+            return advanceCurPosMinus1;
+        };
 
         // 1. Is the start of a word - isStartOfWordComp
         const isStartOfWordComp = CreateParseStatement(eStatementType.Or_Comp);
@@ -357,9 +356,9 @@ const GetExtractPalindromesStatements = (
 
             const isStartOfWordStatementList=CreateParseStatement(eStatementType.StatementList_Comp) as StatementListComparisonStatement;
             isStartOfWordStatementList.SetChildren([
-                advanceCurPosMinus1,
-                isWhitespaceComp,
-                skipWhitespace
+                CreateAdvanceCurPosMinus1(),
+                CreateParseStatement(eStatementType.IsWhitespace_Comp),
+                CreateParseStatement(eStatementType.SkipWS_Op)
             ]);
 
             isStartOfWordComp.SetChildren([
@@ -383,8 +382,8 @@ const GetExtractPalindromesStatements = (
             const isWhiteSpaceNoAdvance=CreateParseStatement(eStatementType.StatementList_Comp) as StatementListComparisonStatement;
             isWhiteSpaceNoAdvance.keyedDescription="Compare that the current character is whitespace but don't advance";
             isWhiteSpaceNoAdvance.SetChildren([
-                isWhitespaceComp,
-                advanceCurPosMinus1
+                CreateParseStatement(eStatementType.IsWhitespace_Comp),
+                CreateAdvanceCurPosMinus1()
             ]);
             
             const orComp=CreateParseStatement(eStatementType.Or_Comp);
