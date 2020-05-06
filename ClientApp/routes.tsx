@@ -5,7 +5,8 @@ import { TextParse } from "./Components/Text Parse";
 import { StdPage } from "./Components/Standard Page";
 import { Home } from "./Components/Home";
 import { eMenuId } from "./Components/Menu";
-import { Portfolio } from "./Components/Portfolio";
+import { DPAPortfolio } from "./Components/Portfolio/DPA";
+import { HAndSPortfolio } from "./Components/Portfolio/HAndS";
 
 export type IPrerenderData = {
 };
@@ -45,12 +46,22 @@ const HomeRouted = (props: IRoutedCompProps) => {
     );
 };
 
-const PortfolioRouted = (props: IRoutedCompProps) => {
+const DPAPortfolioRouted = (props: IRoutedCompProps) => {
     return (
         <StdPage
-            pageRender={() => <Portfolio {...props} />}
+            pageRender={() => <DPAPortfolio {...props} />}
             stdProps={props}
-            menuId={eMenuId.portfolio}
+            menuId={eMenuId.portfolioDPA}
+        />
+    );
+};
+
+const HAndSPortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <HAndSPortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioHAndS}
         />
     );
 };
@@ -63,7 +74,8 @@ export const Routes = (props: IRoutesProps) => {
             <Route exact path="/" render={(renderProps: RouteComponentProps<any>) => <HomeRouted {...renderProps} {...props} />} />
             <Route exact path="/home" render={(renderProps: RouteComponentProps<any>) => <HomeRouted {...renderProps} {...props} />} />
             <Route exact path="/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParseRouted {...renderProps} {...props} />} />
-            <Route exact path="/portfolio" render={(renderProps: RouteComponentProps<any>) => <PortfolioRouted {...renderProps} {...props} />} />
+            <Route exact path="/portfolio/dpa" render={(renderProps: RouteComponentProps<any>) => <DPAPortfolioRouted {...renderProps} {...props} />} />
+            <Route exact path="/portfolio/hands" render={(renderProps: RouteComponentProps<any>) => <HAndSPortfolioRouted {...renderProps} {...props} />} />
             <Route render={(renderProps: RouteComponentProps<any>) => <NoRoutingMatch {...renderProps} {...props} />} />
         </Switch>
     );
