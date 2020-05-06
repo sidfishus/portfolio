@@ -11,6 +11,7 @@ import { IsA32BitSignedNumber } from "../../Library/Misc";
 import useConstant from "use-constant";
 import { ParseExamplesDropdown, eParseExample, eParseBuiltInExample} from "./Examples";
 import { ffGetVariables, TextParseVariable, VariablesMatch } from "./Variables";
+import { HEADING_COLOUR } from "../../theme";
 
 export interface ITextParseProps {
 };
@@ -882,7 +883,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         builtInExample={builtInExample}
                     />
                     <Segment padded>
-                        <Label attached="top" icon={((builtInExample === null && !statements.length || firstFailingStatement)?"cancel":"check")} content="Parse Statement List" />
+                        <Label color={HEADING_COLOUR} attached="top" icon={((builtInExample === null && !statements.length || firstFailingStatement)?"cancel":"check")} content="Parse Statement List" />
                         {builtInExample===null &&
                             <StatementListCtrl
                                 {...props}
@@ -972,7 +973,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                     </Segment>
 
                     <Segment padded>
-                        <Label attached="top" content="Parse Input" icon={((parseInputError!== null)?"remove":"check")}/>
+                        <Label color={HEADING_COLOUR} attached="top" content="Parse Input" icon={((parseInputError!== null)?"remove":"check")}/>
                         <ParseInputText
                             {...props}
                             text={parseInputText}
@@ -983,7 +984,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                     </Segment>
 
                     <Segment padded>
-                        <Label attached="top">Parse Output</Label>
+                        <Label color={HEADING_COLOUR} attached="top">Parse Output</Label>
                         {builtInExample===null &&
                             <>
                                 <ParseOutputType
@@ -2842,7 +2843,7 @@ const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunction
 
     return (
         <Segment padded>
-            <Label attached="top" icon={(firstFailingFunction)?"remove":"check"} content="Custom Functions" />
+            <Label color={HEADING_COLOUR} attached="top" icon={(firstFailingFunction)?"remove":"check"} content="Custom Functions" />
             <CustomFunctionList
                 {...props}
             />
