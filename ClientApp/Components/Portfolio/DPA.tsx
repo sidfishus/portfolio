@@ -1,10 +1,39 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase } from "./PortfolioBase";
+import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
 
 export interface IDPAPortfolioProps extends IRoutedCompProps {
 };
+
+const carouselImgs: ICarouselImg[] = [
+    {
+        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss1.png",
+        text: "Clientside Identity Server login using React and Semantic UI."
+    },
+
+    {
+        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss2.png",
+        text: "User must grant permissions."
+    },
+
+    {
+        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss3.png",
+        text: "",
+        width: "200px",
+        height: "200px"
+    },
+
+    {
+        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss4.png",
+        text: ""
+    },
+
+    {
+        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss5.png",
+        text: ""
+    },
+];
 
 export const DPAPortfolio: React.SFC<IDPAPortfolioProps> = (props) => {
     return (
@@ -12,6 +41,7 @@ export const DPAPortfolio: React.SFC<IDPAPortfolioProps> = (props) => {
             {...props}
             about={About()}
             aboutHeading="Distributed SPA"
+            carouselImgs={carouselImgs}
         />
     );
 };

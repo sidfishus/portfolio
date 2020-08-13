@@ -1090,15 +1090,12 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         />
                     </Segment>
                 </Form>
-
-                
-                <Button onClick={() => console.log(document.documentElement.innerHTML)}>Log HTML</Button>
             </Container>
         </>
     );
 };
 
-const ReplaceResult: React.FunctionComponent<ITextParseProps & IReplaceResultCtrlProps> = (props) => {
+const ReplaceResult: React.SFC<ITextParseProps & IReplaceResultCtrlProps> = (props) => {
 
     const { replaceResult, builtInExample } = props;
 
@@ -1135,7 +1132,7 @@ const ReplaceResult: React.FunctionComponent<ITextParseProps & IReplaceResultCtr
     );
 };
 
-const ParseOutputReplaceFormat: React.FunctionComponent<ITextParseProps & IReplaceFormatCtrlProps> = (props) => {
+const ParseOutputReplaceFormat: React.SFC<ITextParseProps & IReplaceFormatCtrlProps> = (props) => {
 
     const { SetReplaceFormat, replaceFormat, updater } = props;
 
@@ -1163,7 +1160,7 @@ const ParseOutputReplaceFormat: React.FunctionComponent<ITextParseProps & IRepla
     );
 };
 
-const MatchResult: React.FunctionComponent<ITextParseProps & IMatchResultCtrlProps> = (props) => {
+const MatchResult: React.SFC<ITextParseProps & IMatchResultCtrlProps> = (props) => {
 
     const { matchResult } = props;
 
@@ -1199,7 +1196,7 @@ const MatchResult: React.FunctionComponent<ITextParseProps & IMatchResultCtrlPro
     );
 };
 
-const ExtractResults: React.FunctionComponent<ITextParseProps & IExtractResultsCtrlProps> = (props) => {
+const ExtractResults: React.SFC<ITextParseProps & IExtractResultsCtrlProps> = (props) => {
 
     const { extractResults } = props;
 
@@ -1233,7 +1230,7 @@ const ExtractResults: React.FunctionComponent<ITextParseProps & IExtractResultsC
     );
 };
 
-const CompileErrors: React.FunctionComponent<ITextParseProps & ICompileErrorsCtrlProps> = (props) => {
+const CompileErrors: React.SFC<ITextParseProps & ICompileErrorsCtrlProps> = (props) => {
 
     const { compileErrors } = props;
 
@@ -1258,7 +1255,7 @@ const CompileErrors: React.FunctionComponent<ITextParseProps & ICompileErrorsCtr
     );
 };
 
-const ParseOutputGeneralError: React.FunctionComponent<ITextParseProps & IParseOutputGeneralErrorCtrlProps> = (props) => {
+const ParseOutputGeneralError: React.SFC<ITextParseProps & IParseOutputGeneralErrorCtrlProps> = (props) => {
 
     const { msg } = props;
 
@@ -1426,7 +1423,7 @@ const ExecuteParseButtonClick = (
     SetReplaceResult(null);
 };
 
-const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecuteParseButtonCtrlProps> = (props) => {
+const ExecuteParseButton: React.SFC<ITextParseProps & IExecuteParseButtonCtrlProps> = (props) => {
 
     const { statements, type, input, SetParseInProgress, SetExtractResults, disabled,
         SetCompileErrors, SetGeneralError, SetMatchResult, replaceFormat, SetReplaceResult, updatePending,
@@ -1467,7 +1464,7 @@ const ExecuteParseButton: React.FunctionComponent<ITextParseProps & IExecutePars
 
 };
 
-const ParseInputText: React.FunctionComponent<ITextParseProps & IParseInputTextCtrlProps> = (props) => {
+const ParseInputText: React.SFC<ITextParseProps & IParseInputTextCtrlProps> = (props) => {
 
     const { text, SetText, onBlur, parseInputTextRef } = props;
 
@@ -1482,7 +1479,7 @@ const ParseInputText: React.FunctionComponent<ITextParseProps & IParseInputTextC
     );
 };
 
-const ParseOutputType: React.FunctionComponent<ITextParseProps & IParseOutputTypeCtrlProps> = (props) => {
+const ParseOutputType: React.SFC<ITextParseProps & IParseOutputTypeCtrlProps> = (props) => {
 
     const { type, SetType } = props;
 
@@ -1568,7 +1565,7 @@ const StatementChildThenOrDescr = (parentStmt: TextParseStatement) => {
     }
 };
 
-const StatementListItem: React.FunctionComponent<ITextParseProps & IStatementListCtrlProps & {
+const StatementListItem: React.SFC<ITextParseProps & IStatementListCtrlProps & {
     stmt: TextParseStatement,
     idx: number,
     level: number,
@@ -1669,7 +1666,7 @@ const StatementListItem: React.FunctionComponent<ITextParseProps & IStatementLis
     );
 };
 
-const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementListCtrlProps> = (props) => {
+const StatementListCtrl: React.SFC<ITextParseProps & IStatementListCtrlProps> = (props) => {
 
     const { statements, modalState, SetModalState, SetStatements, SetSelStatement } = props;
 
@@ -1731,7 +1728,7 @@ const StatementListCtrl: React.FunctionComponent<ITextParseProps & IStatementLis
     );
 };
 
-const AddNewParseStatementCtrls: React.FunctionComponent<ITextParseProps & ITypeDropdownProps & IAddInsertParseStatementCtrlProps> = (props) => {
+const AddNewParseStatementCtrls: React.SFC<ITextParseProps & ITypeDropdownProps & IAddInsertParseStatementCtrlProps> = (props) => {
     
     return (
         <>
@@ -1880,7 +1877,7 @@ const AddInsertParseStatement =
     SetStatements(updatedStatements, newStatement);
 }
 
-const AddInsertParseStatementCtrl: React.FunctionComponent<ITextParseProps & IAddInsertParseStatementCtrlProps> = (props) => {
+const AddInsertParseStatementCtrl: React.SFC<ITextParseProps & IAddInsertParseStatementCtrlProps> = (props) => {
 
     const {insert} = props;
     
@@ -1995,7 +1992,7 @@ const TypeDropdownCtrl_Options = [
     }
 ];
 
-const TypeDropdownCtrl: React.FunctionComponent<ITextParseProps & ITypeDropdownProps> = (props) => {
+const TypeDropdownCtrl: React.SFC<ITextParseProps & ITypeDropdownProps> = (props) => {
 
     const { selectedStatementType, SetSelectedStatementType, comparisonOnly } = props;
 
@@ -2026,7 +2023,7 @@ const TypeDropdownCtrl: React.FunctionComponent<ITextParseProps & ITypeDropdownP
     );
 };
 
-const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplanationProps> = (props) => {
+const TypeExplanationCtrl: React.SFC<ITextParseProps & ITypeExplanationProps> = (props) => {
 
     if(props.selectedStatementType === null) {
         return null;
@@ -2110,7 +2107,7 @@ const TypeExplanationCtrl: React.FunctionComponent<ITextParseProps & ITypeExplan
     );
 };
 
-const StringComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & {
+const StringComparisonInputCtrl: React.SFC<ITextParseProps & ITextParseStatementState & {
     updater: SimpleDelayer
 }> =
     (props) => {
@@ -2153,7 +2150,7 @@ const StringComparisonInputCtrl: React.FunctionComponent<ITextParseProps & IText
     );
 };
 
-const OrComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & IOrComparisonInputCtrlProps> = (props) => {
+const OrComparisonInputCtrl: React.SFC<ITextParseProps & ITextParseStatementState & IOrComparisonInputCtrlProps> = (props) => {
 
     const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
 
@@ -2182,7 +2179,7 @@ const OrComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextPars
     );
 };
 
-const CaptureComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & ICaptureComparisonInputCtrlProps> = (props) => {
+const CaptureComparisonInputCtrl: React.SFC<ITextParseProps & ITextParseStatementState & ICaptureComparisonInputCtrlProps> = (props) => {
 
     const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
 
@@ -2212,7 +2209,7 @@ const CaptureComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITex
 
 };
 
-const StatementListComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & IStatementListComparisonInputCtrlProps> = (props) => {
+const StatementListComparisonInputCtrl: React.SFC<ITextParseProps & ITextParseStatementState & IStatementListComparisonInputCtrlProps> = (props) => {
 
     const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
 
@@ -2241,7 +2238,7 @@ const StatementListComparisonInputCtrl: React.FunctionComponent<ITextParseProps 
     );
 };
 
-const StringOffsetComparisonInputCtrl: React.FunctionComponent<IStringOffsetComparisonCtrlProps & {
+const StringOffsetComparisonInputCtrl: React.SFC<IStringOffsetComparisonCtrlProps & {
     updater: SimpleDelayer
 }> =
     (props) => {
@@ -2335,7 +2332,7 @@ const CreateStatementKey = (stmt: TextParseStatement, name: string) => {
     return `${stmt.type}-${stmt.UID}-${name}`;
 };
 
-const UpdateInputCtrl: React.FunctionComponent<ITextParseProps & IParseStatementInputCtrlProps> =
+const UpdateInputCtrl: React.SFC<ITextParseProps & IParseStatementInputCtrlProps> =
     (props) => {
 
     const { statement, SetStatement, placeholder, GetValue, SetValue, title, Validate, updater, name } = props;
@@ -2399,7 +2396,7 @@ const InputCtrl = (
     );
 };
 
-const TextParseModal: React.FunctionComponent<IModalCtrlProps> = (props) => {
+const TextParseModal: React.SFC<IModalCtrlProps> = (props) => {
 
     const { title, message, onNo, onYes, onCancel, trigger, show } = props;
 
@@ -2466,7 +2463,7 @@ const AddCustomFunction = (props: ITextParseProps & ICustomFunctionsProps): void
     SetSelFunctionIdx(updatedFunctions.length-1);
 };
 
-const UpdateCustomFunctionCtrl: React.FunctionComponent<ITextParseProps & ICustomFunctionCtrlProps> =
+const UpdateCustomFunctionCtrl: React.SFC<ITextParseProps & ICustomFunctionCtrlProps> =
     (props) => {
 
     const { placeholder, value, SetValue, title, Validate, updater, ctrlName, customFunction, SetCustomFunction, funcIdx } = props;
@@ -2509,7 +2506,7 @@ const ValidateFuncName = (selFunctionIdx: number, functions: TextParseFunction[]
     return true;
 };
 
-const CustomFunctionsOperatorDropdown: React.FunctionComponent<ITextParseProps & ICustomFunctionsOperatorDropdownProps> = (props) => {
+const CustomFunctionsOperatorDropdown: React.SFC<ITextParseProps & ICustomFunctionsOperatorDropdownProps> = (props) => {
 
     const { function: customFunction, SetCustomFunction } = props;
 
@@ -2661,7 +2658,7 @@ const ParseOperandDropdown_UpdateOperand = (
     }
 };
 
-const CustomFunctionOperandDropdown: React.FunctionComponent<ITextParseProps & ICustomFunctionOperandDropdownProps> = (props) => {
+const CustomFunctionOperandDropdown: React.SFC<ITextParseProps & ICustomFunctionOperandDropdownProps> = (props) => {
 
     const { selFunctionIdx, name, customFunction, SetCustomFunction } = props;
 
@@ -2681,7 +2678,7 @@ const CustomFunctionOperandDropdown: React.FunctionComponent<ITextParseProps & I
     );
 };
 
-const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOperandDropdownProps> = (props) => {
+const ParseOperandDropdown: React.SFC<ITextParseProps & IParseOperandDropdownProps> = (props) => {
 
     const { fGetVariables, functions, data, SetOperand, name, updater, updatePending, includeLength, includeCurrentPosition, placeholder, title } = props;
 
@@ -2828,7 +2825,7 @@ const ParseOperandDropdown: React.FunctionComponent<ITextParseProps & IParseOper
     );
 };
 
-const CustomFunctions: React.FunctionComponent<ITextParseProps & ICustomFunctionsProps> = (props) => {
+const CustomFunctions: React.SFC<ITextParseProps & ICustomFunctionsProps> = (props) => {
 
     const { selFunctionIdx, SetCustomFunction, updater, fGetVariables, updatePending, firstFailingFunction, 
         functions, builtInExample } = props;
@@ -2957,7 +2954,7 @@ const CustomFuncTableRowProps = (
     return {negative: true};
 };
 
-const CustomFunctionList: React.FunctionComponent<ITextParseProps & ICustomFunctionsProps> = (props) => {
+const CustomFunctionList: React.SFC<ITextParseProps & ICustomFunctionsProps> = (props) => {
 
     const { functions, SetFunctions, SetModalState, modalState, selFunctionIdx, SetSelFunctionIdx } = props;
 
@@ -3086,7 +3083,7 @@ const InputModal: React.SFC<IInputModalProps> = (props) => {
 
 };
 
-const SelectVariableNameInputCtrl: React.FunctionComponent<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
+const SelectVariableNameInputCtrl: React.SFC<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
 
     const { SetStatement, updater, statement } = props;
 
@@ -3108,7 +3105,7 @@ const SelectVariableNameInputCtrl: React.FunctionComponent<ITextParseProps & ITe
 };
 
 const StorePosAsVariableInputCtrl:
-    React.FunctionComponent<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
+    React.SFC<ITextParseProps & ITextParseStatementState & {updater: SimpleDelayer}> = (props) => {
 
     const { SetStatement, updater } = props;
     const statement = props.statement as StorePosAsVariableStatement;
@@ -3122,7 +3119,7 @@ const StorePosAsVariableInputCtrl:
     );
 };
 
-const AdvanceInputCtrl: React.FunctionComponent<ITextParseProps & IAdvanceInputProps> = (props) => {
+const AdvanceInputCtrl: React.SFC<ITextParseProps & IAdvanceInputProps> = (props) => {
 
     const { SetStatement, functions, fGetVariables, updater, updatePending } = props;
     const statement = props.statement as AdvanceStatement;
@@ -3152,7 +3149,7 @@ const AdvanceInputCtrl: React.FunctionComponent<ITextParseProps & IAdvanceInputP
 
 };
 
-const AdvanceUntilInputCtrl: React.FunctionComponent<ITextParseProps & IAdvanceUntilInputCtrlProps> = (props) => {
+const AdvanceUntilInputCtrl: React.SFC<ITextParseProps & IAdvanceUntilInputCtrlProps> = (props) => {
 
     const { nameIndexes, subSelectedStatementType, SetSubSelectedStatementType, SetStatement, SetSelStatement } = props;
 
@@ -3199,7 +3196,7 @@ const AdvanceUntilInputCtrl: React.FunctionComponent<ITextParseProps & IAdvanceU
     );
 };
 
-const CustomComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ICustomComparisonInputCtrlProps> = (props) => {
+const CustomComparisonInputCtrl: React.SFC<ITextParseProps & ICustomComparisonInputCtrlProps> = (props) => {
 
     const { fGetVariables, functions, SetStatement, updater, updatePending } = props;
     const statement = props.statement as CustomComparisonStatement;
@@ -3254,7 +3251,7 @@ const CustomComparisonInputCtrl: React.FunctionComponent<ITextParseProps & ICust
     );
 };
 
-const CustomComparisonOperator: React.FunctionComponent<ICustomComparisonOperatorProps> = (props) => {
+const CustomComparisonOperator: React.SFC<ICustomComparisonOperatorProps> = (props) => {
 
     const { SetStatement } = props;
 
@@ -3356,7 +3353,7 @@ const ComparisonSpecificJsx = (
     );
 };
 
-const SetVariableInputCtrl: React.FunctionComponent<ITextParseProps & ISetVariableInputCtrlProps> = (props) => {
+const SetVariableInputCtrl: React.SFC<ITextParseProps & ISetVariableInputCtrlProps> = (props) => {
 
     const { SetStatement, updater, functions, fGetVariables, updatePending } = props;
     const statement = props.statement as SetVariableStatement;
