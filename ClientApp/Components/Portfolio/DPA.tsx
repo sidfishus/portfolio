@@ -14,24 +14,22 @@ const carouselImgs: ICarouselImg[] = [
 
     {
         src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss2.png",
-        text: "User must grant permissions."
+        text: "User must grant permissions for the application to impersonate them."
     },
 
     {
         src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss3.png",
-        text: "",
-        width: "200px",
-        height: "200px"
+        text: "Logged in successfully.",
     },
 
     {
         src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss4.png",
-        text: ""
+        text: "Calling a protected web API."
     },
 
     {
         src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss5.png",
-        text: ""
+        text: "Demo result from a protected API."
     },
 ];
 

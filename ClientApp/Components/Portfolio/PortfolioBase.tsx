@@ -8,8 +8,6 @@ import { Carousel } from "react-responsive-carousel";
 export interface ICarouselImg {
     src: string;
     text: string;
-    width?: string;
-    height?: string;
 };
 
 export interface IPortfolioBaseProps extends IRoutedCompProps {
@@ -52,6 +50,9 @@ const PortfolioCarousel: React.SFC<IPortfolioCarouselProps> = (props) => {
     return (
         <Carousel
             showArrows={true}
+            width={700}
+            infiniteLoop={true}
+            useKeyboardArrows={true}
         >
             {imgs.map((iterImg, i) => CarouselImgJSX(iterImg, i))}
         </Carousel>
@@ -65,17 +66,17 @@ const CarouselImgJSX: any = (img: ICarouselImg, imgIdx: number) => {
 
     // Credits to 'https://stackoverflow.com/questions/11757537/css-image-size-how-to-fill-not-stretch/43001159' for this.
     // It centers images that are too small to fit with the rest of the images, the key part is the 'background size'.
-    const divStyle: React.CSSProperties = {
-        width: img.width,
-        height: img.height,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "50% 50%",
-        margin: "auto",
-    };
+    // const divStyle: React.CSSProperties = {
+    //     width: 700,
+    //     height: 394,
+    //     backgroundSize: "cover",
+    //     backgroundRepeat: "no-repeat",
+    //     backgroundPosition: "50% 50%",
+    //     margin: "auto",
+    // };
 
     return (
-        <div key={`img-${imgIdx}`} style={divStyle} >
+        <div key={`img-${imgIdx}`} >
             <img src={img.src} />
             <p className="legend">{img.text}</p>
         </div>
