@@ -47,9 +47,9 @@ export const DPAPortfolio: React.SFC<IDPAPortfolioProps> = (props) => {
 const About: any = () => {
     return (
 <>
-<p>A distributed isomorphic React single page application (SPA) hosted via .NET MVC Core 2.2 with seperate client, API, and identity server applications.</p>
+<p>A distributed isomorphic React single page application (SPA) hosted via .NET MVC Core 2.2 with seperate client, API, and identity server applications. The code for which can be found at: <a href="https://github.com/sidfishus/distributedspa/" target="_blank">https://github.com/sidfishus/distributedspa/</a></p>
 <p>The purpose of this is to provide a template for modern clientside web applications. Developed using Chrome, and tested on IE and Edge browsers. Developed using the Microsoft Visual Code IDE and includes integrated build and debugging tasks.</p>
-<p>There is a video by the Identity Server 4 creators which is available on YouTube that describes authentication and the distributed model used in this project: <a href="https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo" rel="nofollow">https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo</a>.</p>
+<p>There is a video by the Identity Server 4 creators which is available on YouTube that describes authentication and the distributed model used in this project: <a href="https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo" target="_blank" rel="nofollow">https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo</a>.</p>
 <p>The 3 applications are split between 4 code projects:</p>
 <h3>Client</h3>
 <p>A modern Javascript React SPA which calls a protected external web API. When not logged in the application redirects the user to the identity server for authentication. Incorporates a .NET and Node JS server backend, and a Javascript client application.</p>
@@ -59,10 +59,10 @@ const About: any = () => {
 <li>Server side pre-rendering by leveraging the Microsoft SPA Services and Node JS.</li>
 <li>Webpack and Babel for transpiling and bundling Javascript files, and includes the object spread syntax plugin.</li>
 <li>React version 16.12.</li>
-<li>Hot module replacement (web pages reload upon changes to the code) provided by the React hot loader (<a href="https://github.com/gaearon/react-hot-loader">https://github.com/gaearon/react-hot-loader</a>) and Microsoft SPA services.</li>
-<li>Flow (<a href="https://flow.org/" rel="nofollow">https://flow.org/</a>) for static type checking.</li>
+<li>Hot module replacement (web pages reload upon changes to the code) provided by the React hot loader (<a href="https://github.com/gaearon/react-hot-loader" target="_blank">https://github.com/gaearon/react-hot-loader</a>) and Microsoft SPA services.</li>
+<li>Flow (<a href="https://flow.org/" target="_blank" rel="nofollow">https://flow.org/</a>) for static type checking.</li>
 <li>Interfaces with the identity server via the OIDC Javascript client provided by Identity Server 4.</li>
-<li>React UI theme and controls provided by React Bootstrap: (<a href="https://react-bootstrap.github.io/" rel="nofollow">https://react-bootstrap.github.io/</a>).</li>
+<li>React UI theme and controls provided by React Bootstrap: (<a href="https://react-bootstrap.github.io/" target="_blank" rel="nofollow">https://react-bootstrap.github.io/</a>).</li>
 <li>React router for client-side routing and navigation.</li>
 <li>Axios for asynchronous web requests.</li>
 <li>No Redux but this would be simple to add.</li>
@@ -103,7 +103,7 @@ const About: any = () => {
 <li>Use the 'API' debug task to debug this.</li>
 </ul>
 <h3>IdentityServer</h3>
-<p>A .NET MVC Core web application which provides authentication and authorisation to the rest of the application via Identity Server 4 (<a href="http://docs.identityserver.io/en/latest/" rel="nofollow">http://docs.identityserver.io/en/latest/</a>). Login and consent is captured via a Javascript React SPA.</p>
+<p>A .NET MVC Core web application which provides authentication and authorisation to the rest of the application via Identity Server 4 (<a href="http://docs.identityserver.io/en/latest/" target="_blank" rel="nofollow">http://docs.identityserver.io/en/latest/</a>). Login and consent is captured via a Javascript React SPA.</p>
 <p>Features:</p>
 <ul>
 <li>ASP .NET MVC Core 2.2.</li>
@@ -142,12 +142,12 @@ const About: any = () => {
 <li>'dotnet ef database update'</li>
 </ul>
 </li>
-<li>As part of seeding the database an administrator user will be created with a random password. In order to login to the application you will require this password. This password can be viewed by opening the Identity Server database file 'AspIdUsers.db' and finding the 'header' table, inside here will be a single row that has a column named 'DefaultAdminPassword'. To view the contents of the database you can use an application named 'DB Browser for Sqlite': <a href="https://sqlitebrowser.org/" rel="nofollow">https://sqlitebrowser.org/</a>. Once the password is known, this row can be deleted from the database.</li>
+<li>As part of seeding the database an administrator user will be created with a random password. In order to login to the application you will require this password. This password can be viewed by opening the Identity Server database file 'AspIdUsers.db' and finding the 'header' table, inside here will be a single row that has a column named 'DefaultAdminPassword'. To view the contents of the database you can use an application named 'DB Browser for Sqlite': <a href="https://sqlitebrowser.org/" target="_blank" rel="nofollow">https://sqlitebrowser.org/</a>. Once the password is known, this row can be deleted from the database.</li>
 <li>URL's to the 3 applications are held in URLs.cs and mirrored in URLs.js: change these accordingly but it will work as-is for development purposes (as long as the ports are not already in use).</li>
-<li>You may receive errors when contacting the API relating to a network error or SSL certificates when running it from a development machine. I found the following helpful in resolving this: <a href="https://medium.com/@ali.dev/how-to-trust-any-self-signed-ssl-certificate-in-ie11-and-edge-fa7b416cac68" rel="nofollow">https://medium.com/@ali.dev/how-to-trust-any-self-signed-ssl-certificate-in-ie11-and-edge-fa7b416cac68</a>.</li>
+<li>You may receive errors when contacting the API relating to a network error or SSL certificates when running it from a development machine. I found the following helpful in resolving this: <a href="https://medium.com/@ali.dev/how-to-trust-any-self-signed-ssl-certificate-in-ie11-and-edge-fa7b416cac68" target="_blank" rel="nofollow">https://medium.com/@ali.dev/how-to-trust-any-self-signed-ssl-certificate-in-ie11-and-edge-fa7b416cac68</a>.</li>
 </ul>
 <h3>Application Default URL</h3>
-<p>When the client, IdentityServer, and API server applications are running, the client application can be accessed via <a href="http://localhost:5000/home" rel="nofollow">http://localhost:5000/home</a>.</p>
+<p>When the client, IdentityServer, and API server applications are running, the client application can be accessed via <a href="http://localhost:5000/home" target="_blank" rel="nofollow">http://localhost:5000/home</a>.</p>
 </>
     );
 };

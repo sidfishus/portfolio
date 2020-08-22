@@ -14,6 +14,7 @@ export const CreateTextParseVariable = (name: string) => {
 };
 
 export const CopyTextParseVariable = (variable: TextParseVariable) => {
+    if(!variable) return null;
     return {
         ...variable
     };

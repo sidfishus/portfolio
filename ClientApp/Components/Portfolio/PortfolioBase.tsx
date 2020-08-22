@@ -47,6 +47,8 @@ const PortfolioCarousel: React.SFC<IPortfolioCarouselProps> = (props) => {
 
     const { imgs } = props;
 
+    //sidtodo change width for different screen size
+
     return (
         <Carousel
             showArrows={true}
