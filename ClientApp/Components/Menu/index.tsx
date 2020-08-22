@@ -13,7 +13,9 @@ export enum eMenuId {
     portfolioStart=3,
     portfolioDPA=3,
     portfolioHAndS=4,
-    portfolioEnd=5,
+    portfolioTextParse=5,
+    // Keep this as the last portfolio item + 1
+    portfolioEnd=6,
 };
 
 interface IDemoMenuItemProps {
@@ -39,6 +41,8 @@ export const DemoMenu: React.SFC<IDemoMenuProps> = (props) => {
                             onClick={()=> history.push("/portfolio/dpa")}>Distributed SPA</DemoMenuDropdownItem>
                         <DemoMenuDropdownItem active={activeMenuId===eMenuId.portfolioHAndS}
                             onClick={()=> history.push("/portfolio/hands")}>Health and Safety System</DemoMenuDropdownItem>
+                        <DemoMenuDropdownItem active={activeMenuId===eMenuId.portfolioTextParse}
+                            onClick={()=> history.push("/portfolio/textparse")}>Text Parse</DemoMenuDropdownItem>
                     </Dropdown.Menu>
                 </Dropdown>
                 <img src="/img/logo.png" height="36" style={{position: "absolute", right: "10%", marginRight: 50}} />

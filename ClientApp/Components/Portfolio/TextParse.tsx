@@ -6,18 +6,18 @@ import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
 export interface ITextParsePortfolioProps extends IRoutedCompProps {
 };
 
+//sidtodo change heading??
 export const TextParsePortfolio: React.SFC<ITextParsePortfolioProps> = (props) => {
     return (
         <PortfolioBase
             {...props}
             about={About()}
-            aboutHeading="House Construction Health and Safety Web System (CAIRS)"
+            aboutHeading="Text Parse"
             carouselImgs={carouselImgs}
         />
     );
 };
 
-//todo show example for variables
 const carouselImgs : ICarouselImg[] = [
     {
         src: "/img/textparse/palindromeexample.jpg",
@@ -52,6 +52,51 @@ const carouselImgs : ICarouselImg[] = [
     {
         src: "/img/textparse/customfunction2.jpg",
         text: "Custom functions and custom variable creation."
+    },
+
+    {
+        src: "/img/textparse/customfunction3.jpg",
+        text: "Custom functions and custom variables."
+    },
+
+    {
+        src: "/img/textparse/customfunction4.jpg",
+        text: "Custom functions and custom variables."
+    },
+
+    {
+        src: "/img/textparse/customfunction5.jpg",
+        text: "Custom functions and custom variables."
+    },
+
+    {
+        src: "/img/textparse/userdefinedvariables.jpg",
+        text: "User defined variables."
+    },
+
+    {
+        src: "/img/textparse/customcomparison1.jpg",
+        text: "Custom comparisons."
+    },
+
+    {
+        src: "/img/textparse/customcomparison2.jpg",
+        text: "Custom comparisons."
+    },
+
+    {
+        src: "/img/textparse/customcomparison3.jpg",
+        text: "Custom comparisons."
+    },
+
+    {
+        src: "/img/textparse/customcomparison4.jpg",
+        text: "Custom comparisons."
+    },
+
+    {
+        src: "/img/textparse/customcomparison5.jpg",
+        text: "Custom comparisons."
     },
 ];
 

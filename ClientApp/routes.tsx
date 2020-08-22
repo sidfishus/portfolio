@@ -7,6 +7,7 @@ import { Home } from "./Components/Home";
 import { eMenuId } from "./Components/Menu";
 import { DPAPortfolio } from "./Components/Portfolio/DPA";
 import { HAndSPortfolio } from "./Components/Portfolio/HAndS";
+import { TextParsePortfolio } from "./Components/Portfolio/TextParse";
 
 export type IPrerenderData = {
 };
@@ -66,6 +67,16 @@ const HAndSPortfolioRouted = (props: IRoutedCompProps) => {
     );
 };
 
+const TextParsePortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <TextParsePortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioTextParse}
+        />
+    );
+};
+
 //sidtodo no routing match.
 export const Routes = (props: IRoutesProps) => {
 
@@ -76,6 +87,7 @@ export const Routes = (props: IRoutesProps) => {
             <Route exact path="/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParseRouted {...renderProps} {...props} />} />
             <Route exact path="/portfolio/dpa" render={(renderProps: RouteComponentProps<any>) => <DPAPortfolioRouted {...renderProps} {...props} />} />
             <Route exact path="/portfolio/hands" render={(renderProps: RouteComponentProps<any>) => <HAndSPortfolioRouted {...renderProps} {...props} />} />
+            <Route exact path="/portfolio/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParsePortfolioRouted {...renderProps} {...props} />} />
             <Route render={(renderProps: RouteComponentProps<any>) => <NoRoutingMatch {...renderProps} {...props} />} />
         </Switch>
     );
