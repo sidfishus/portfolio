@@ -8,6 +8,8 @@ import { eMenuId } from "./Components/Menu";
 import { DPAPortfolio } from "./Components/Portfolio/DPA";
 import { HAndSPortfolio } from "./Components/Portfolio/HAndS";
 import { TextParsePortfolio } from "./Components/Portfolio/TextParse";
+import { ScriptableTemplatePortfolio } from "./Components/Portfolio/ScriptableTemplate";
+import { MiscPortfolio } from "./Components/Portfolio/Misc";
 
 export type IPrerenderData = {
 };
@@ -77,6 +79,26 @@ const TextParsePortfolioRouted = (props: IRoutedCompProps) => {
     );
 };
 
+const ScriptableTemplatePortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <ScriptableTemplatePortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioScriptableTemplate}
+        />
+    );
+};
+
+const MiscPortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <MiscPortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioMisc}
+        />
+    );
+};
+
 //sidtodo no routing match.
 export const Routes = (props: IRoutesProps) => {
 
@@ -88,6 +110,8 @@ export const Routes = (props: IRoutesProps) => {
             <Route exact path="/portfolio/dpa" render={(renderProps: RouteComponentProps<any>) => <DPAPortfolioRouted {...renderProps} {...props} />} />
             <Route exact path="/portfolio/hands" render={(renderProps: RouteComponentProps<any>) => <HAndSPortfolioRouted {...renderProps} {...props} />} />
             <Route exact path="/portfolio/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParsePortfolioRouted {...renderProps} {...props} />} />
+            <Route exact path="/portfolio/scriptabletemplate" render={(renderProps: RouteComponentProps<any>) => <ScriptableTemplatePortfolioRouted {...renderProps} {...props} />} />
+            <Route exact path="/portfolio/misc" render={(renderProps: RouteComponentProps<any>) => <MiscPortfolioRouted {...renderProps} {...props} />} />
             <Route render={(renderProps: RouteComponentProps<any>) => <NoRoutingMatch {...renderProps} {...props} />} />
         </Switch>
     );
