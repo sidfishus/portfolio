@@ -47,7 +47,7 @@ const carouselImgs : ICarouselImg[] =[
 const About: any = () => {
     return (
         <>
-            <p>//sidtodo</p>
+            <p>Miscellaneous work and minor projects.</p>
         </>
     );
 };
