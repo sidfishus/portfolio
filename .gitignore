@@ -1,7 +1,5 @@
 obj/
 node_modules/
 bin/
-wwwroot/js/main-client.js
-Server/main-server.js
 TextParse_ChrisSid*/
 SharedCS_ChrisSid*/

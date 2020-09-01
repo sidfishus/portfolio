@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "webpack"
+    "webpack": "webpack --mode=development",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"webpackprod": "webpack --mode=production"
   },
   "author": "Chris Siddall",
   "license": "ISC",
