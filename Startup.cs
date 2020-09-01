@@ -1,26 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 
 namespace react_spa
 {
     public class Startup
     {
+        IWebHostEnvironment m_HostingEnvironment;
 
-        public IHostingEnvironment Environment { get; }
-
-        public Startup(IHostingEnvironment environment,IConfiguration configuration)
+        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
         {
-            Environment = environment;
+            m_HostingEnvironment=environment;
             Configuration = configuration;
         }
 
@@ -29,20 +27,14 @@ namespace react_spa
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddControllersWithViews()
+                .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             // For debugging server side javascript via Node
             services.AddNodeServices(options =>
             {
-                if (Environment.IsDevelopment())
+                if (m_HostingEnvironment.IsDevelopment())
                 {
                     options.InvocationTimeoutMilliseconds=1000000;
                     options.LaunchWithDebugging = true;
@@ -52,7 +44,7 @@ namespace react_spa
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -70,23 +62,21 @@ namespace react_spa
                     HotModuleReplacementEndpoint = "/wwwroot/__webpack_hmr"
                 });
             }
-
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                // Doesn't appear to be needed?
-                // routes.MapRoute(
-                //     name: "default",
-                //     template: "{controller=Home}/{action=Index}/{id?}"
-				// );
-
                 // Replaces the 'URL rewrite' functionality in IIS and is necessary for clientside navigation to work
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                endpoints.MapFallbackToController("Index", "Home");
             });
         }
     }
