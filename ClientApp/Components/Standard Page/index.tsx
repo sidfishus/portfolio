@@ -10,8 +10,6 @@ type IStdPageProps = {
     menuId: eMenuId
 };
 
-//sidtodo: remove the debug button
-
 export const StdPage : React.SFC<IStdPageProps> = (props: IStdPageProps) => {
 
     const { stdProps, pageRender, menuId } = props;
@@ -23,7 +21,7 @@ export const StdPage : React.SFC<IStdPageProps> = (props: IStdPageProps) => {
             <br />
             {pageRender()}
 
-            <Button onClick={() => console.log(document.documentElement.innerHTML)}>Log HTML</Button>
+            {/*<Button onClick={() => console.log(document.documentElement.innerHTML)}>Log HTML</Button>*/}
         </>
     );
 };

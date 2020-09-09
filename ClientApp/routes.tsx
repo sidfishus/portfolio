@@ -99,7 +99,6 @@ const MiscPortfolioRouted = (props: IRoutedCompProps) => {
     );
 };
 
-//sidtodo no routing match.
 export const Routes = (props: IRoutesProps) => {
 
     const routes = (
