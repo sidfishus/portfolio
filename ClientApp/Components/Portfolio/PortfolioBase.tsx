@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Container, Segment, Label } from "semantic-ui-react";
+import { Container, Segment, Label, Table } from "semantic-ui-react";
 import { HEADING_COLOUR } from "../../theme";
 import { Carousel } from "react-responsive-carousel";
 
@@ -84,3 +84,34 @@ const CarouselImgJSX: any = (img: ICarouselImg, imgIdx: number) => {
         </div>
     );
 };
+
+export interface ITechnologyInfo {
+    name: JSX.Element;
+    descr: JSX.Element;
+};
+
+const TechnologyTableRow = (info: ITechnologyInfo): JSX.Element => {
+
+    return (
+        <Table.Row>
+            <Table.Cell>{info.name}</Table.Cell>
+            <Table.Cell>{info.descr}</Table.Cell>
+        </Table.Row>
+    );
+};
+
+export const TechnologyTable = (infoList: ITechnologyInfo[]): JSX.Element => {
+    return (
+        <Table>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell>Technology</Table.HeaderCell>
+                    <Table.HeaderCell>Purpose</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+                {infoList.map(TechnologyTableRow)}
+            </Table.Body>
+        </Table>
+    );
+}
