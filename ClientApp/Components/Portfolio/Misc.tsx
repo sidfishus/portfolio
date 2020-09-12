@@ -46,58 +46,58 @@ const carouselImgs : ICarouselImg[] =[
 
 const technology: ITechnologyInfo[] = [
     {
-        name: "ASP .NET MVC Core 2",
-        descr: "Hosts the web application as well as providing API's and access to the database, authentication, and more."
+        name: <>ASP .NET MVC Core 2</>,
+        descr: <>Hosts the web application as well as providing API's and access to the database, authentication, and more.</>
     },
 
     {
-        name: "React / JSX",
-        descr: "The entire Javascript application is rendered by React and it's JSX notation."
+        name: <>React / JSX</>,
+        descr: <>The entire Javascript application is rendered by React and it's JSX notation.</>
     },
 
     {
-        name: "Redux",
-        descr: "Data accessor and mutator functionality for the browser application is encapsulated in Redux stores and is made accessible as component 'props' via the connect function."
+        name: <>Redux</>,
+        descr: <>Data accessor and mutator functionality for the browser application is encapsulated in Redux stores and is made accessible as component 'props' via the connect function.</>
     },
 
     {
-        name: "Semantic UI React",
-        descr: "A user interface engine and theme for React which is similar to Bootstrap."
+        name: <>Semantic UI React Version 0.75.1 (<a href="https://react.semantic-ui.com/">https://react.semantic-ui.com/</a>)</>,
+        descr: <>A user interface engine and theme for React which is similar to Bootstrap.</>
     },
 
     {
-        name: "Webpack",
-        descr: "Bundles the client and server script files."
+        name: <>Webpack Version 2.5.1</>,
+        descr: <>Bundles the client and server script files.</>
     },
 
     {
-        name: "Babel",
-        descr: "Transpilation to allow the use of new Javascript features but with native compatability in a wide range of browsers."
+        name: <>Babel Loader Version 7.1.2</>,
+        descr: <>Transpilation to allow the use of new Javascript features but with native compatability in a wide range of browsers.</>
     },
 
     {
-        name: "Typescript",
-        descr: "Static type checking in the Javascript code."
+        name: <>Typescript Version 2.5.3</>,
+        descr: <>Static type checking in the Javascript code.</>
     },
 
     {
-        name: "Azure App Services",
-        descr: "Hosts the ASP .NET MVC Core application and API processes in the cloud."
+        name: <>Azure App Services</>,
+        descr: <>Hosts the ASP .NET MVC Core application and API processes in the cloud.</>
     },
 
     {
-        name: "Azure Active Directory",
-        descr: "Holds the list of user accounts in Azure and is synchronised from the on-premise Active Directory."
+        name: <>Azure Active Directory</>,
+        descr: <>Holds the list of user accounts in Azure and is synchronised from the on-premise Active Directory.</>
     },
 
     {
-        name: "Azure Cosmos DB",
-        descr: "Persists and provides access to the dynamic data which is consumed by the application."
+        name: <>Azure Cosmos DB</>,
+        descr: <>Persists and provides access to the dynamic data which is consumed by the application. Data is stored and transported as JSON.</>
     },
 
     {
-        name: "Azure Web Jobs",
-        descr: "A scheduled process which creates and updates user profiles and the organisational structure in Azure Cosmos DB based on Azure Active Directory."
+        name: <>Azure Web Jobs</>,
+        descr: <>A scheduled process which creates and updates user profiles and the organisational structure in Azure Cosmos DB based on Azure Active Directory.</>
     },
 ];
 
