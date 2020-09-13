@@ -115,6 +115,11 @@ const technology: ITechnologyInfo[] = [
     {
         name: <>React Hot Loader Version 4.12.21 (<a href="https://github.com/gaearon/react-hot-loader">https://github.com/gaearon/react-hot-loader</a>)</>,
         descr: <>Changes to the Javascript code update in real time for quicker development.</>
+    },
+
+    {
+        name: <>Microsoft Entity Framework</>,
+        descr: <>Map database records to .NET objects</>
     }
 ];
 
@@ -130,11 +135,51 @@ const technology: ITechnologyInfo[] = [
 
 //sidtodo uses the scriptable template for SQL queries
 // textparse for parsing HTML into PDF's
+
+//caching system / versioning
 const About: any = () => {
 
     return (
         <>
             <p>A responsive and mobile/tablet friendly web based data capture and reporting health and safety system for a house construction company.</p>
+            <h2>Description</h2>
+            <p>CAIRS is an on-premise based web application which incoorporates a ASP .NET MVC Core and SQL backend with a Javascript and React single page application frontend.</p>
+            <p>It is used to record accidents and incidents, labour returns and safety observations.
+                These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
+            </p>
+            <p>The application has been designed and hand crafted to work specifically with 7 different screen sizes ranging from small phones up to a typical computer screen of 1920 x 1200 pixels resolution.</p>
+            <h2>Task / Design</h2>
+            <p>The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets.</p>
+            <p>
+                AI reports were recorded by hand on a copy of the dedicated Word document template and added to a spreadsheet by the health and safety administrators.
+                Labour return and safety observation figures were sent via email by the site / office managers to the health and safety administrators who then added them to a spreadsheet.
+                The totals were then extracted and used to plot the graphs that form the monthly reports.
+                This labourious task would take the health and safety administrators at least 2 days to perform per month and was clearly vulnerable to discrepancies.
+            </p>
+            <h2>Development</h2>
+            <p>//sidtodo database structure</p>
+            <p>The UI theme was chosen by the users and was originally created for another system which runs on classic ASP and jQuery and Bootstrap.
+                I reused the CSS and HTML/layout from the existing system but replaced the jQuery and Bootstrap with React and React Bootstrap.
+            </p>
+            <p>The AI report form was designed to match the original word document as closely as possible.
+                Using controlled React components caused the screen to flicker due to the amount of components on screen.
+                To get around this I used uncontrolled components where value changes .. //sidtodo
+                
+                as a batch via a call to setTimeout similar to my 'SimpleDelayer' class here <a href="https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts">https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts</a>
+
+                
+
+                //sidtodo</p>
+            <p>
+                The AI report form captures a lot of data and it was found that using media queries with multiple copies of the input components was significantly impeding performance.
+                To resolve this I utilised the window.matchMedia function to query which of the 7 screen sizes most closely matched the current dimensions and held this as an enum.
+                Each input component has a 'switch case' on this enum and outputs JSX accordingly when rendering.
+                The window.matchMedia also allows you to be notified via a callback when the dimensions change and I used this to re-render the application.
+            </p>
+            <p>//sidtodo base class for the different RB controls.</p>
+            <p>//sidtodo base class for the report screen, and static data import screens</p>
+
+            <p>Data copy from spreadsheets to SQL //sidtodo</p>
             <h2>Technology</h2>
             <p>Below is the list of technology incoorporated:</p>
             {TechnologyTable(technology)}
@@ -177,32 +222,32 @@ const carouselImgs: ICarouselImg[] = [
 
     {
         src: "/img/hands/aireport1.jpg",
-        text: "Accident and incident report creation."
+        text: "AI report creation."
     },
 
     {
         src: "/img/hands/aireport2.jpg",
-        text: "Accident and incident report creation."
+        text: "AI report creation."
     },
 
     {
         src: "/img/hands/aireport3.jpg",
-        text: "Accident and incident report creation."
+        text: "AI report creation."
     },
 
     {
         src: "/img/hands/aireport4.jpg",
-        text: "Accident and incident report creation."
+        text: "AI report creation."
     },
 
     {
         src: "/img/hands/ailist1.jpg",
-        text: "Accident and incident report list using React Bootstrap Data Tables."
+        text: "AI report list using React Bootstrap Data Tables."
     },
 
     {
         src: "/img/hands/ailist2.jpg",
-        text: "Accident and incident report list using React Bootstrap Data Tables."
+        text: "AI report list using React Bootstrap Data Tables."
     },
 
     {
@@ -282,7 +327,7 @@ const carouselImgs: ICarouselImg[] = [
 
     {
         src: "/img/hands/mobileaireport1.jpg",
-        text: "Mobile layout for the accident and incident report form."
+        text: "Mobile layout for the AI report form."
     },
 
     {
@@ -292,6 +337,6 @@ const carouselImgs: ICarouselImg[] = [
 
     {
         src: "/img/hands/tabletaireport1.jpg",
-        text: "Tablet (Ipad) layout for the accident and incident report form."
+        text: "Tablet (Ipad) layout for the AI report form."
     },
 ];
