@@ -52,7 +52,7 @@ const About: any = () => {
 <p>There is a video by the Identity Server 4 creators which is available on YouTube that describes authentication and the distributed model used in this project: <a href="https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo" target="_blank" rel="nofollow">https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo</a>.</p>
 <p>The 3 applications are split between 4 code projects:</p>
 <h3>Client</h3>
-<p>A modern Javascript React SPA which calls a protected external web API. When not logged in the application redirects the user to the identity server for authentication. Incorporates a .NET and Node JS server backend, and a Javascript client application.</p>
+<p>A modern Javascript React SPA which calls a protected external web API. When not logged in the application redirects the user to the identity server for authentication. Incorporates a .NET and Node JS server back end, and a Javascript client application.</p>
 <p>Features:</p>
 <ul>
 <li>ASP .NET MVC Core 2.2 for hosting the static front end files.</li>

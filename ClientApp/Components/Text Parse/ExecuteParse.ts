@@ -8,7 +8,7 @@ import { eParseBuiltInExample } from "./Examples";
 
 // Based on the list of statements, this creates and executes the C# code necessary to perform the parse.
 // The reason for why I designed it like this is so we do not need an intermediate language or another way of
-// expressing the parse statements that both the client and the backend understand in order to
+// expressing the parse statements that both the client and the back end understand in order to
 // read/write/execute the parse statements. Writing the C# code directly means the Javascript client has access to
 // all of the features available in the C# Text Parse library.
 
