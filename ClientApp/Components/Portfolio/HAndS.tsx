@@ -123,20 +123,6 @@ const technology: ITechnologyInfo[] = [
     }
 ];
 
-//sidtodo improve
-
-// CAIRS is a 
-
-// I built this alongside
-// original site jquery / classic ASP
-
-// plethora of existing
-// fully live within 9 months
-
-//sidtodo uses the scriptable template for SQL queries
-// textparse for parsing HTML into PDF's
-
-//caching system / versioning
 const About: any = () => {
 
     return (
@@ -148,6 +134,7 @@ const About: any = () => {
                 These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
             </p>
             <p>The application has been designed and hand crafted to work specifically with 7 different screen sizes ranging from small phones up to a typical computer screen of 1920 x 1200 pixels resolution.</p>
+            <p>The Cairs system including the data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout and existing third party libraries was done entirely by myself from scratch.</p>
             <h2>Task / Design</h2>
             <p>The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets.</p>
             <p>
@@ -157,61 +144,55 @@ const About: any = () => {
                 This labourious task would take the health and safety administrators at least 2 days to perform per month and was clearly vulnerable to discrepancies.
             </p>
             <h2>Development</h2>
-            <p>//sidtodo database structure</p>
+            <h3>User Interface</h3>
             <p>The UI theme was chosen by the users and was originally created for another system which runs on classic ASP and jQuery and Bootstrap.
                 I reused the CSS and HTML/layout from the existing system but replaced the jQuery and Bootstrap with React and React Bootstrap.
             </p>
             <p>The AI report form was designed to match the original word document as closely as possible.
-                Using controlled React components caused the screen to flicker due to the amount of components on screen.
-                To get around this I used uncontrolled components where value changes .. //sidtodo
-                
-                as a batch via a call to setTimeout similar to my 'SimpleDelayer' class here <a href="https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts">https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts</a>
-
-                
-
-                //sidtodo</p>
+                Using controlled React components caused the screen to flicker and appear unresponsive due to the amount of components on screen.
+                To get around this I used uncontrolled components where value changes were stored as a Javascript object and applied using setState approx 500ms after the final change via setTimeout.
+                A more complex version of my 'SimpleDelayer' class which can be found here <a href="https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts">https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts</a>.
+            </p>
             <p>
                 The AI report form captures a lot of data and it was found that using media queries with multiple copies of the input components was significantly impeding performance.
                 To resolve this I utilised the window.matchMedia function to query which of the 7 screen sizes most closely matched the current dimensions and held this as an enum.
                 Each input component has a 'switch case' on this enum and outputs JSX accordingly when rendering.
                 The window.matchMedia also allows you to be notified via a callback when the dimensions change and I used this to re-render the application.
             </p>
-            <p>//sidtodo base class for the different RB controls.</p>
-            <p>//sidtodo base class for the report screen, and static data import screens</p>
-
-            <p>Data copy from spreadsheets to SQL //sidtodo</p>
+            <p>
+                I created a base component to encapsulate a generic screen for creating and displaying reports, and base components for generic screens to list database records, select, and edit their values.
+                This was done again to achieve consistency but also speed up development by hold any duplicated code in the base componenent.
+            </p>
+            <p>
+                Each type of input control in the application was abstracted in to their own Cairs version and parameterised in such a way to simplify their useage and hide details specific to their React Bootstrap implementation and achieve consistency.
+                All functionality pertaining to persisting values was done within the base component.
+            </p>
+            <h3>API and Data Access</h3>
+            <p>
+                The SQL database was created to mirror the data that was being captured in the existing system.
+                Data was initially migrated from the spreadsheets in to the SQL database via an automated process that was ran iteratively until the figures aligned.
+            </p>
+            <p>The client side Javascript application accesses the database and server side functionality via HTTP messages sent to the relevant controller and method.
+                The ASP .NET application holds a version GUID per each database table constituting static data which is regenerated upon changes to that table.
+                Static data requests made by the Javascript application are passed with an optional version GUID which represents the current version of that table that the client has.
+                If the client side version corresponds to the server side version then no data is returned as a performance enhancement because once initially loaded in to the client Redux store data is only reloaded when there is a change.
+            </p>
+            <p>
+                The data used to populate the graphs and tables is calculated via executing the associated SQL stored procedure with filters such as the date range passed as parameters.
+                My scriptable template library which I had previously created was used to generate the report SQL stored procedures as they shared a lot of code.
+            </p>
+            <h3>Authentication and Authorisation</h3>
+            <p>This is achieved using OAuth bearer token functionality built in to the version of ASP .NET used.
+            </p>
+            <p>
+                User's and their access is stored in a database table and is made available to ASP .NET by my own implementation of an IUserStore which has access to the user table.
+                Authorisation for each individual piece of functionality available in the server application is held as a boolean column against the user record. Controller method's assert that the user has the associated field set to true against the logged in user as a prerequisite to performing the task.
+            </p>
             <h2>Technology</h2>
             <p>Below is the list of technology incoorporated:</p>
             {TechnologyTable(technology)}
         </>
     );
-
-    // return (
-    //     <>
-    //         <p>CAIRS is an on-premise house construction health and safety web application.</p>
-    //         <p>It is used by employees to record accidents and incidents, labour returns and safety observations.
-    //             These values are then used to calculate the accident and incident rate (AIR) across all levels of the company and are used to form a variety of tables and graphs.
-    //         </p>
-    //         <p>
-    //             The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets where totals had to be manually extracted in order to do the reporting.
-    //             The administrators using this system mentioned that it saves them at least 2 working days per month as well as providing more accurate figures.
-    //         </p>
-    //         <p>
-    //             The frontend is a single page application written in Javascript and React and is served by a dedicated ASP .NET MVC Core process.
-    //             Data, transactions and authentication is handled by the dedicated API process which again uses ASP .NET MVC Core.
-    //             The theme used was originally created for another system using classic ASP and jQuery.
-    //             I reused the CSS and layout but rewrote it using React Bootstrap
-                
-    //              a dedicated , a dedicated API which serves 
-
-    //             SQL backend and serves the data 
-
-    //             Besides the theme 
-
-    //             Micro adjustments and look and feel.
-    //         </p>
-    //     </>
-    // );
 };
 
 const carouselImgs: ICarouselImg[] = [
