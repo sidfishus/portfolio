@@ -75,24 +75,40 @@ const welcome: JSX.Element = (
             Kickboxing is the sport I took most seriously which I did between the ages of 7 and 18, had 10 amateur fights including a British title bout (I lost) and even helped teach women and children's classes.
             I now rigorously exercise for over 1 hour almost every day because it has a wonderful effect on my physical and mental health and acts as a natural stimulant.
         </p>
+        <p>
+            I am both an introvert and an extrovert, happy in my own space but also can be lively and crave the 
+
+            whatever it is I need to be mentally stimulated or I get bored very quickly.
+            i like to solve problems either programming or fishing related
+            
+            naturally an introvert, happy to spend time on my own
+        </p>
+
+
+        <p>hobbies / beliefs</p>
+        <p>personality / problem solver / confidence / drive / obsession / focus / quirky / introverted and extroverted / (ego to an extent) / brutally honest</p>
+        <p>not very good at summarising and may come across long winded</p>
+        <p>negatives: can get anxious new surroundings</p>
+
+        <p>I do believe there is such a thing as too much technology and think it's de-sensitising us to the world around us</p>
+
+        <h1>Hobbies</h1>
         <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and lovingly fish in all weather conditions.
+        <p>
             In my early to mid 20's I was heavily into frequenting live music events such as raves, clubbing and festivals and my favourite genre's are trance, hard house/dance, drum and bass, and UK hardcore.
             I have been to Glastonbury 4 times.
             I learned to mix my favourite categories of music using CDJ's and played out approximately 10 times at small to medium club events.
-            Those days are behind me now but I am still very passionate about music due to it's wonderful natural stimulating effects.
+        </p>
+        <p>
+            Those days are behind me now but I am still very passionate about music due to it's wonderful natural stimulating effects and will occasionally dust off the decks.
             Since becoming a father balancing my life has become even more important as I carefully manage work, family and my home as well as squeezing in time to follow my dreams.
             Lately I'm finding myself more and more interested in politics and have been following the COVID19 crisis and American rioting very closely.
         </p>
 
-        <p>I do believe there is such a thing as too much technology and think it's de-sensitising us to the world around us</p>
+        
 
-        <p>hobbies / beliefs</p>
-        <p>personality / confidence / drive / obsession / focus / quirky / introverted and extroverted / (ego to an extent) / brutally honest</p>
-        <p>not very good at summarising and may come across long winded</p>
-        <p>negatives: can get anxious new surroundings</p>
+       
 
         <h1>Beginnings</h1>
-
-        <h1>About Me</h1>
     </>
 );
