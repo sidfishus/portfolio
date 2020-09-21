@@ -21,7 +21,7 @@ export const HAndSPortfolio: React.SFC<IHAndSPortfolioProps> = (props) => {
 const technology: ITechnologyInfo[] = [
     {
         name: <>ASP .NET MVC 5 / C#</>,
-        descr: <>Hosts the web application as well as providing API's and access to the database, authentication, and more.</>
+        descr: <>Hosts the web application as well as providing API's and access to the database, authentication, and server side functionality.</>
     },
 
     {
@@ -31,11 +31,16 @@ const technology: ITechnologyInfo[] = [
 
     {
         name: <>React / JSX Version 16.7</>,
-        descr: <>The entire Javascript application is rendered by React and it's JSX notation. Data in the Javascript is accessed and mutated via this.state and this.setState respectively.</>
+        descr: <>The entire Javascript application is rendered by React and it's JSX notation.</>
     },
 
     {
-        name: <>React Bootstrap Version 0.32 (https://react-bootstrap.github.io/)</>,
+        name: <>Redux Version 4.0.5</>,
+        descr: <>The application makes use of Redux stores to hold static data such as the organisational structure and make it accessible to React components via the 'connect' method.</>
+    },
+
+    {
+        name: <>React Bootstrap Version 0.32 <a href="https://react-bootstrap.github.io/">(https://react-bootstrap.github.io/)</a></>,
         descr: <>The Bootstrap theme and UI engine but rewritten for React applications (no jQuery).</>
     },
 
@@ -60,7 +65,7 @@ const technology: ITechnologyInfo[] = [
     },
 
     {
-        name: <>Babel Loader Version 7.1.5"</>,
+        name: <>Babel Loader Version 7.1.5</>,
         descr: <>Transpilation to allow the use of new Javascript features but with native compatability in a wide range of browsers.</>
     },
 
@@ -76,7 +81,7 @@ const technology: ITechnologyInfo[] = [
 
     {
         name: <>React Router Version 4.3.1 (<a href="https://reactrouter.com/web/guides/quick-start">https://reactrouter.com/web/guides/quick-start</a>)</>,
-        descr: <>Clientside navigation/routing enables the Javascript application to work as a single page application (does not redirect to the server).</>
+        descr: <>Clientside navigation/routing enables the Javascript application to work as a single page application (does not redirect to the server for navigation).</>
     },
 
     {
@@ -103,23 +108,23 @@ const technology: ITechnologyInfo[] = [
 
     {
         name: <>Text Parse Version 1.0.15 (<Link to="/portfolio/textparse">/portfolio/textparse</Link>, <Link to="/textparse">/textparse</Link>, <a href="https://github.com/sidfishus/TextParse">https://github.com/sidfishus/TextParse</a>)</>,
-        descr: <>My .NET text parsing library which aids in the process of producing PDF's based on HTML. The HTML output from the browser DOM needs to be transformed in order for it look appropriate on a PDF. For example 'a' tags need to be changed so they do not look like links and pagination buttons must be removed from data tables.</>
+        descr: <>My .NET text parsing library which aids in the process of producing PDF's based on HTML. The HTML output from the browser DOM needs to be transformed in order for it look appropriate on a PDF. For example 'a' tags need to be changed so they do not look like links, and pagination buttons must be removed from data tables.</>
     },
 
     {
         name: <>Scriptable Template (<Link to="/portfolio/scriptabletemplate">/portfolio/scriptabletemplate</Link>, <a href="https://github.com/sidfishus/ScriptableTemplate">https://github.com/sidfishus/ScriptableTemplate</a>)</>,
         descr: <>My .NET library which allows templates to be parameterised and scripted with the aim of removing duplication in code.
-            I use this for generating statically parameterisable SQL stored procedures which provide the data for the reports and share the same concepts and repeated code but with the performance benefits of inline SQL as opposed to moving anything that is repeated in to sub SQL views and functions. Also, bug fixes to the shared SQL code can be deployed to all of the stored procedures which use it by a click of a button.</>
+            I used this for generating SQL stored procedures which provide the data for the reports and share the same concepts and repeated code but with the performance benefits of inline SQL, as opposed to moving anything that is repeated in to sub SQL views and functions. Also, bug fixes to the shared SQL code can be deployed to all of the stored procedures which use it by executing a single command.</>
     },
 
     {
         name: <>React Hot Loader Version 4.12.21 (<a href="https://github.com/gaearon/react-hot-loader">https://github.com/gaearon/react-hot-loader</a>)</>,
-        descr: <>Changes to the Javascript code update in real time for quicker development.</>
+        descr: <>Changes to the Raect code updates in real time without the need to refresh the screen for quicker development.</>
     },
 
     {
         name: <>Microsoft Entity Framework</>,
-        descr: <>Map database records to .NET objects</>
+        descr: <>Map database records to .NET objects.</>
     }
 ];
 
@@ -134,7 +139,9 @@ const About: any = () => {
                 These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
             </p>
             <p>The application has been designed and hand crafted to work specifically with 7 different screen resolutions ranging from small phones up to a typical computer screen of 1920 x 1200 pixels.</p>
-            <p>The CAIRS system including data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout, and third party libraries was created entirely by myself.</p>
+            <p>The CAIRS system including data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout, and third party libraries was created entirely by myself.
+                Developed using Microsoft Visual Studio 2017 with TFS integration for source code control with all technology choices being made by myself .
+            </p>
             <h2>Task / Design</h2>
             <p>The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets.</p>
             <p>
@@ -199,7 +206,7 @@ const About: any = () => {
 const carouselImgs: ICarouselImg[] = [
     {
         src: "/img/hands/homepage1.jpg",
-        text: "Home page including live graphs using Recharts."
+        text: "Home page which includes live graphs rendered using Recharts."
     },
 
     {
@@ -234,12 +241,12 @@ const carouselImgs: ICarouselImg[] = [
 
     {
         src: "/img/hands/ailist3.jpg",
-        text: "General PDF export functionality available on all screens."
+        text: "General PDF export functionality available on most screens."
     },
 
     {
         src: "/img/hands/ailist4.jpg",
-        text: "General PDF export functionality available on all screens."
+        text: "General PDF export functionality available on most screens."
     },
 
     {
