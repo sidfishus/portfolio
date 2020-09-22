@@ -26,6 +26,10 @@ interface IHomeProps extends IRoutedCompProps {
 //  versatility, ability to learn on the fly
 //  professional experience, cv furlough giving me time to finish
 //  what the site offers: live React app e.t.c.
+// educational game to explain programming to children
+
+// Javascript and transpilation is very much a bit of me. i first heard of this concept when I read a book by .. about the Eiffel OO programming language that is transpiled in to C.
+// would like to design my own programming language that works in a similar fashion though i'm not sure if the produced code would be something static like C, or dynamic like javascript.
 
 // links section
 
@@ -58,7 +62,7 @@ const welcome: JSX.Element = (
         </p>
         <p>
             My name is Chris Siddall, I am currently the fine age of 35 years old (1985) and based in Tamworth Staffordshire.
-            I have had a passion for coding since discovering it at the age of 16, and have created this application as a means of demonstrating my skills, to catalog my work and experience and to give further insight into my personality.
+            I have had a passion for coding since discovering it at the age of 16, and have created this application as a means of demonstrating my skills, to catalog my life's work and experience and to give further insight into my personality.
             It is not my intention to sound overly professional or formal because I want to express who I am.
         </p>
         <p>
@@ -76,21 +80,77 @@ const welcome: JSX.Element = (
             I now rigorously exercise for over 1 hour almost every day because it has a wonderful effect on my physical and mental health and acts as a natural stimulant.
         </p>
         <p>
-            I am both an introvert and an extrovert, happy in my own space but also can be lively and crave the 
-
-            whatever it is I need to be mentally stimulated or I get bored very quickly.
-            i like to solve problems either programming or fishing related
-            
-            naturally an introvert, happy to spend time on my own
+            I am naturally an introvert, content to be on my own but I appreciate the value of family and working with others.
+            Depending on my mood and the surroundings I switch to an extrovert and crave interaction.
+            Proud to be called a geek and I like to consider myself a deep outside of the box thinker, I love the extreme level of focus you can achieve when mapping out a scenario in your head.
+            I enjoy solving problems which is the essence of programming, I need to be mentally stimulated otherwise I can become disinterested.
         </p>
+        <p>
+            If I had to sum myself up without embellishing too much I would say I'm a free thinker, confident, driven, motivated, versatile and quick to learn, meticulous to the point of appearing pedantic, and obsessive which is both positive and negative.
+        </p>
+        <p>
+            Negatives and aspects I am working on are new surroundings and situations can make me anxious and I can be brutally honest.
+            I find it difficult to summarise as this portfolio probably attests to.
+            Programming has always felt natural to me, but I always have to conscious and reflect upon how I interact and converse with people.
+            In my opinion computer code is far simpler to work with than humans, especially the opposite sex!
+        </p>
+
+        <h1>Thoughts Towards Programming</h1>
+        <p>
+            For 15 years I was a C++ stalwart, being mentored and inspired by some very intelligent and experienced C++ coders whilst at Prophet.
+            This taught me the importance of being meticulous, and writing careful and resilient code which is an integral system in a production environment.
+            At the time we were very fixated on having as much of the code statically analysable as possible, to allow the compiler to pick up C++ style bugs and maximise efficiency.
+            Forgetting to deallocate memory in C/C++ is easy to do unless you write code in such a way, and can, and has, literally cost lives.
+            I can't find a reference to it via search engines, but I was told a story where a key hospital system was offline due to a memory leak.
+            I know of applications that have to be restarted multiple times per day due to long standing unfixed memory leaks.
+        </p>
+        <p>
+            As time passes by, and with finding myself having less time, and with computer processing power continually increasing, I am more pragmatic.
+            I consider the ultimate goal of programming to be delivering the use cases as accurately as possible, as opposed to being precious about the code //sidtodo change.
+            Don't misunderstand me, I appreciate imaginative, well designed and quality code, but it must always be secondary to the finished product.
+        </p>
+
+        <p>
+            very much influenced by Bertrand Meyer and his Eiffel programming language and his fascination for underscores (much to the annoyane of my manager at the time!)
+        </p>
+
+        <p>as time passees, and with finding myself having less time, and computer processing power forever increasing I consider myself more pragmatic, with the final product/outcome being the most important factor as opposed to fixating on the nuances of the actual code.
+            the code is not the end result
+
+            with readability being a more important factor than efficiency most of the time.
+
+            80% 20% rule.
+        </p>
+
+        <p>It is very interesting to see the way the open source community is flourishing.
+            For example I would never have imagined that Microsoft would begin releasing code like they have with their Roslyn compiler and their ASP .NET MVC Core libraries.
+            The abundance of freely available code has allowed me to create this web site without having to reinvent the wheel and it feels like we are working together to share a better future.
+            If you removed the content, I imagine that less than 10% (very rough guess) of the codebase in this application is actually my own.
+            I hope this trend continues!
+        </p>
+
+        <p> .NET is brilliant - love the concept of interim/byte code and JIT so that code is portable. </p>
+
+        <p>so many free libraries that I a make use of this in this site. not reinventing the wheel, and working together building a better future. i hope it continues</p>
+
+
+
+
+        <p>attention to detail to the point of appearing pedantic. obsessive which is a double edged sword</p>
+
+        <p>programming is natural to me but I have to always consider how I interact with others </p>
+
+        <p>versatility</p>
 
 
         <p>hobbies / beliefs</p>
         <p>personality / problem solver / confidence / drive / obsession / focus / quirky / introverted and extroverted / (ego to an extent) / brutally honest</p>
         <p>not very good at summarising and may come across long winded</p>
-        <p>negatives: can get anxious new surroundings</p>
+        <p>negatives: can get anxious new surroundings, don't like to multi task</p>
 
         <p>I do believe there is such a thing as too much technology and think it's de-sensitising us to the world around us</p>
+
+        
 
         <h1>Hobbies</h1>
         <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and lovingly fish in all weather conditions.
