@@ -2,9 +2,8 @@
 const merge = require("webpack-merge");
 const path = require("path");
 
-const sharedConfig = {
-	watch: true,
-	mode: "development",
+// Shared between both the server and client output
+const sharedConfigStd = {
 	module: {
 		rules: [
 			{
@@ -47,7 +46,8 @@ const sharedConfig = {
 	stats: { modules: false }, /* This changes the run webpack output */
 };
 
-const clientConfig = merge(sharedConfig, {
+// Client config settings which never change
+const clientConfigStd = merge(sharedConfigStd, {
 	entry: {
 		"main-client": [
 			"@hot-loader/react-dom",
@@ -62,10 +62,10 @@ const clientConfig = merge(sharedConfig, {
 		// WebpackDevMiddlewareOptions.HotModuleReplacementEndpoint option directory
 		publicPath: "/wwwroot/"
 	},
-	devtool: "eval-source-map",
 });
 
-const serverBundleConfig = merge(sharedConfig, {
+// Server config settings which never change
+const serverBundleConfigStd = merge(sharedConfigStd, {
 	entry: {
 		"main-server": [
 			"@hot-loader/react-dom",
@@ -82,6 +82,51 @@ const serverBundleConfig = merge(sharedConfig, {
 	devtool: "inline-source-map"
 });
 
-module.exports = (env) => {
-	return [clientConfig, serverBundleConfig];
+const fMainFilename = (clientOrServer, isDev) => {
+	return `main-${clientOrServer}${((isDev)?"-debug":"")}.js`;
+};
+
+module.exports = (env, argv) => {
+
+	//console.log(argv);
+
+	const isDev=(argv.mode === "development");
+
+	const mode = {
+		mode: argv.mode
+	};
+
+	const clientDevOptional = ((!isDev)?{}:{
+		devtool: "eval-source-map",
+	});
+
+	const serverDevOptional = ((!isDev)?{}:{
+		devtool: "inline-source-map",
+	});
+	
+	//sidtodo this is overwriting teh output
+	//sidtodo change the filename loaded by .NET
+	const clientConfig={
+		...clientConfigStd,
+		...mode,
+		...clientDevOptional,
+		output: {
+			filename: fMainFilename("client", isDev)
+		}
+	};
+
+
+	//sidtodo remove
+	console.log(clientConfig);
+
+	const serverConfig={
+		...serverBundleConfigStd,
+		...mode,
+		...clientDevOptional,
+		output: {
+			filename: fMainFilename("server", isDev)
+		}
+	};
+
+	return [clientConfig,serverConfig];
 };
