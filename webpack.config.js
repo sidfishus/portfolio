@@ -78,8 +78,7 @@ const serverBundleConfigStd = merge(sharedConfigStd, {
 		libraryTarget: "commonjs",
 		path: path.join(__dirname, "./Server")
 	},
-	target: "node",
-	devtool: "inline-source-map"
+	target: "node"
 });
 
 const fMainFilename = (clientOrServer, isDev) => {
@@ -90,10 +89,10 @@ module.exports = (env, argv) => {
 
 	//console.log(argv);
 
-	const isDev=(argv.mode === "development");
+	const isDev=(!argv || argv.mode === "development");
 
 	const mode = {
-		mode: argv.mode
+		mode: ((isDev)?"development":"production")
 	};
 
 	const clientDevOptional = ((!isDev)?{}:{
@@ -104,26 +103,22 @@ module.exports = (env, argv) => {
 		devtool: "inline-source-map",
 	});
 	
-	//sidtodo this is overwriting teh output
-	//sidtodo change the filename loaded by .NET
 	const clientConfig={
 		...clientConfigStd,
 		...mode,
 		...clientDevOptional,
 		output: {
+			...clientConfigStd.output,
 			filename: fMainFilename("client", isDev)
 		}
 	};
 
-
-	//sidtodo remove
-	console.log(clientConfig);
-
 	const serverConfig={
 		...serverBundleConfigStd,
 		...mode,
-		...clientDevOptional,
+		...serverDevOptional,
 		output: {
+			...serverBundleConfigStd.output,
 			filename: fMainFilename("server", isDev)
 		}
 	};

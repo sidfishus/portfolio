@@ -203,6 +203,7 @@ const About: any = () => {
     );
 };
 
+//sidtodo change the pages to load from github instead of locally
 const carouselImgs: ICarouselImg[] = [
     {
         src: "/img/hands/homepage1.jpg",
