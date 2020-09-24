@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "webpack": "webpack --mode=development",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"webpackprod": "webpack --mode=production"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpackprod": "webpack --mode=production"
   },
   "author": "Chris Siddall",
   "license": "ISC",
@@ -23,8 +23,10 @@
     "aspnet-webpack-react": "^4.0.0",
     "axios": "^0.19.2",
     "babel-loader": "^8.1.0",
+    "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-ga": "^3.1.2",
     "react-responsive-carousel": "^3.2.7",
     "react-router-dom": "^5.1.2",
     "semantic-ui-react": "^0.88.2",

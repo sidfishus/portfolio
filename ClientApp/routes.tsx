@@ -99,6 +99,7 @@ const MiscPortfolioRouted = (props: IRoutedCompProps) => {
     );
 };
 
+//sidtodo use google analytics
 export const Routes = (props: IRoutesProps) => {
 
     const routes = (
