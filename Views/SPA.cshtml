@@ -12,7 +12,7 @@
 
 #if DEBUG
     // Run the local debug version
-    string jsClientFilename="js/main-client-debug.js";
+    string jsClientFilename="/js/main-client-debug.js";
     string jsServerFilename="Server/main-server-debug";
 #else
     // Run the one in github
@@ -34,7 +34,7 @@
             string ssrOnly=Environment.GetEnvironmentVariable("SSR_Only");
             if(ssrOnly == null || ssrOnly=="0")
             {
-                <script src="@jsClientFilename"></script>
+                <script src=@jsClientFilename></script>
             }
         }
 

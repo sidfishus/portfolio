@@ -9,6 +9,7 @@ interface IHomeProps extends IRoutedCompProps {
 };
 
 //sidtodo catalog of my favourite tunes.
+//sidtodo book recommendations
 
 //sidtodo: create a short video?
 
@@ -27,6 +28,7 @@ interface IHomeProps extends IRoutedCompProps {
 //  professional experience, cv furlough giving me time to finish
 //  what the site offers: live React app e.t.c.
 // educational game to explain programming to children
+//sidtodo: about this app. technology involved
 
 
 
@@ -64,7 +66,7 @@ const welcome: JSX.Element = (
         <p>
             My name is Chris Siddall, I am currently the fine age of 35 years old (1985) and based in Tamworth Staffordshire.
             I have had a passion for coding since discovering it at the age of 16, and have created this application as a means of demonstrating my skills, to catalog my life's work and experience and to give further insight into my personality.
-            It is not my intention to sound overly professional or formal because I want this to also be about expressing myself and my life story.
+            For this part of my portfolio it is my intention to not sound overly professional or formal because I want this to also be about expressing myself and my life story.
         </p>
         <p>
             Before the COVID quarantine in March 2019 my work on this was limited to the odd spare 15 minutes I could find.
@@ -99,6 +101,9 @@ const welcome: JSX.Element = (
             With web development currently exploding for example, it is more important to be full-stack and versatile as opposed to being an expert in a single thing.
             Especially when every month there are a number of new libraries or updates to use and by the time you read this no doubt some of the third party code is now obsolete or deprecated.
             Unless you have a photographic memory it's not feasible to remember low level details of X number of programming languages, platforms, libraries.
+            I consider myself a full stack developer now but I have a definite preference for the backend.
+            I'm better placed being concerned with how things work as opposed to how it looks.
+            My least understood of the general web technologies is CSS, and I would rather just go with a ready built user interface platform like Bootstrap, Semantic UI, or Material UI (the 3 I have used).
         </p>
         <p>If I could change anything about myself it would be to remove my need for sleep.
             I have lots of ideas but there just isn't enough time in the day and I have to strike the correct balance.
@@ -184,7 +189,7 @@ const welcome: JSX.Element = (
             Lately I'm finding myself more and more interested in politics and have been following the COVID19 crisis and riots in America closely.
         </p>
         
-        <h1>Childish Beginnings</h1>
+        <h1>Frivolous Beginnings</h1>
         <h2>MSN Chat</h2>
         <p>I find it very random and lucky how I stumbled across programming and this is a story a geek/hacker may find interesting or relate to.
             But feel free to skip this section.
@@ -308,7 +313,7 @@ const welcome: JSX.Element = (
 
         <h3>C++</h3>
         <p>
-            On MSN Chat, if you could write C or C++ code then you were "the man" and it gave you the bragging rights over lesser coders.
+            On MSN Chat, if you could knowledge of C or C++ then you were "the man" and it gave you the bragging rights over lesser coders.
         </p>
         <p>
             By now I had learned that mIRC was relatively slow, and the more script loaded in to mIRC the slower it became.
@@ -344,12 +349,171 @@ const welcome: JSX.Element = (
 
         <p>I really could write a book about my experiences and exploits (maybe one day I will) and have very fond memories, long live MSN Chat.</p>
 
+        <h1>University</h1>
+        <p>From the moment I started scripting on MSN Chat I knew this was what I wanted to do as a career.
+        </p>
+        <p>
+            Prior to this I was studying a variety of subjects at A level in sixth form without any real idea of what I wanted to do.
+            I didn't really get much out of this part of my education but achieved the results required to get on to a computing undergraduate course at my local university (Coventry).
+        </p>
+        <p>
+            I instantly made some very close friends and had many social occasions throughout my 3 year stint, we have a ritual where we meet up every year on the last Saturday of January in Coventry.
+            In terms of programming university did not teach me very much, I was doing 'get' and 'set' methods in Java at university when in my spare time I was creating complex Win32 applications in C++.
+            But it give me more of an overview and broader understanding of how the various aspects of computers work, which as much as anything just helped give me more context.
+            I found the computer architecture courses particularily enjoyable.
+        </p>
+        <p>
+            For my final year project I picked one of the university's examples which was to program a strategy for a <a href="https://www.youtube.com/watch?v=3OWYOatzJZE">robotic soccer team</a>.
+            This consisted of creating a Windows C++ DLL with a number of exported functions that would be called/hooked by the robot soccer engine.
+            In particular you had a function that was executed like a frame in a computer game.
+            In this function you would receive the current position of the ball and positions of all of the players and you could assign a speed value to each wheel of each of your team players to control their movement.
+            I created an array that would log the ball positions over each frame, and use this to predict the direction and speed of where it was going so I could try to intercept it.
+            I assigned a strategy to each player as per a soccer game.
+            The goalie's job was to stay within the box and block the ball.
+            2 defenders who would stay within the final third of the pitch in their designated side and attempt to block the ball and move towards the ball with the angle necessary to direct the ball towards the goal by using trigonometry calculations.
+            2 attackers who would move towards the ball with the correct angle to direct it towards the goal when it was in the center or the opposition's side of the pitch.
+            //sidtodo upload the soccer strategy
+        </p>
+
+        <h1><a href="https://www.prophetize.com/">Prophet PLC</a></h1>
+        <p>
+            I had my last exam in May 2006 and was rewarded with an upper second class batchelors degree with honours in computing.
+            Around this time my friend had spotted a job in the local newspaper which they thought I suited.
+            It was a role looking for junior programmers with experience of C++, COM, Windows API, MFC and SQL.
+        </p>
+        <p>
+            I applied, had an interview which included a C++ test and was given the job!
+            Prophet are the leading ERP software provider for the fresh food and horticultural industry.
+            Prophet software is a steep learning curve but I proved my capabilities by instantly becoming fluent and quickly becoming an integral part of the programming team.
+        </p>
+        <p>
+            I was continually being thrown into the deep end.
+            Within the first 12 months I was the lead programmer on a software project to operate a robotic warehouse.
+            This consisted of various cranes and conveyor belts that transport pallets, and contraptions like a fruit grader, and tipper, automatic barcode scanning.
+            The warehouse was controlled by a PLC that ran on a Unix system.
+            My software did all of the interfacing with the PLC which was via a TCP/IP Winsock socket connection and a protocol of messages known as "telegrams".
+            My software ran in real time 24/7, and if it crashed or had a bug, it would literally bring the warehoue to a halt.
+            We had examples where the PLC would send erroneous rogue telegrams and we had to prove this to the vendor by recording all telegrams sent and received.
+        </p>
+
+        <p>I did make mistakes in the beginning, I don't think I was ready for that sort of pressure but the project succeeded and I learned some valuable lessons.
+            Working like this taught me the important aspect of software resilience.
+            Forgetting to deallocate memory or using uninitialised variables were costly and also difficult to find errors.
+        </p>
+
+        <p>
+            My software was a Win32 C++ executable consisting of multiple threads that were assigned different jobs, and the main thread that would continually poll/ping the other threads to ensure they were still alive.
+            Commands to for example move a pallet would arrive from the main Prophet ERP application by way of a text file in a specified directory that was polled by one of the threads.
+            Commands were then parsed and the appropriate sequence of telegrams were then sent to the PLC to perform the task.
+            If there was an issue such as the pallet source location was inaccessible, the PLC would send a telgram back and I would have to determine a different strategy.
+            I also created VB scripts that would house keep the warehouse when operating volumes were low, and determine the most appropriate destination location for incoming pallets based on the properties (date/grade/type) of the fresh produce on it.
+        </p>
+
+        <p>
+            I also was the lead on a number of projects involving mobile devices that would run on .NET, for example delivery drivers where there was limited internet connectivity.
+        </p>
+
+        <p>
+            My main area of expertise at Prophet was "EDI", which is the transmission of electronic data between trading companies.
+            The consisted of types of XML files or messages that were produced according to an XSD standard which followed <a href="https://en.wikipedia.org/wiki/EDIFACT">EDIFACT</a>
+            For example there was an order type, an <a href="https://en.wikipedia.org/wiki/Advance_ship_notice">ASN</a>, invoice, e.t.c.
+            Incoming files/messages went through a complex pipeline of services that held them in a raw message queue, did various levels of validation, and handled them in the appropriate order and trigger the appropriate actions in the ERP database.
+            Again these were real time systems where resilience and efficiency was key.
+        </p>
+
+        <p>
+            In approximately 2014 I was promoted to the role of "lead developer".
+            From then on I was writing less code and spent more time supervising other developers.
+            Depending on the size and type of project, and developer availability, I could have up to 5 developers working for me.
+            For projects I would typically receive a design specification which varied in quality, ask the designers questions until the design was actually complete, ask any technical questions.
+            Then produce a programmer's document detailing the technical changes required and breaking the work in to parcels of work that could be distributed among the developers.
+            I would answer any questions, and formally review their code to ensure a certain level of quality and that they had followed my instructions.
+            I would typically do the harder pieces if I was not confident of the others, or lack of developer availability.
+        </p>
+        
+        <p>Throughout all of this this period of my life I was continually put through my paces, and definitely helped with maturing in to an adult and earning my stripes to transition from a junior to a senior programmer</p>
+
+        <p>The main technologies we used were Windows, C++, COM, STL, SQL, Delphi, C#/.NET, VB script, XML.</p>
+
+        <p>A lot of the work involved highly complicated algorithms such as splitting database records, loading history and drip feeding records to be processed.
+        </p>
+
+        <p>Effectively had their own version of Entity Framework, where database records were mapped to C++ COM objects which had a number of interfaces and handled the business logic</p>
+
+        <h1>House Construction Company</h1>
+
+        <p>In my later years at Prophet I felt I had reached a plateau and was at the top of the learning curve.
+            I had registered my CV on a job board and was receiving a substantial amount of emails from recruiters regarding .NET and web development jobs due to me having .NET experience.
+        </p>
+
+        <p>I could see the benefit of being experienced in both an expert in C++/web technologies, and would hopefully open up more job opportunities.</p>
+        <p>I began doing some web programming in my spare time, ASP .NET, Javascript, Babel, React and got a job as a senior web developer as part of a 3 person development team for a house construction company in February 2018 so I could get some professional experience.
+            They had 2 large scale ERP web applications which ran on classic ASP that they were looking to transition to ASP .NET and I would be the lead on this as well as take over the development leadership.
+        </p>
+
+        <p>My experience at Prophet was invaluable here as I brought in the use of the Microsoft Team Foundation Studio for source code management and introduced processes I had used there.</p>
+
+        <p>My first project was to improve the report page creation process.
+            Reports were web pages of the application, written in classic ASP that would query the database to display a list of columns and rows.
+            As well as having functionality to generate a PDF and CSV version of the report.
+            There were large swathes of repetition in the code base so I created (in my lunch break) and utilised my <a href="https://github.com/sidfishus/ScriptableTemplate">Scriptable Template</a> to greatly speed up the creation of report pages.
+            I go in to great detail about this works <Link to="/portfolio/scriptabletemplate">here</Link>.
+            I took the aspects of the existing reports that were replicated and moved them in to a template, and passed in the parameters such as the title of report, database query, and columns.
+            This reduced the actual code required to produce a report to (depending on the number of columns) usually less than 100 lines of simple C# code.
+            The current method of producing CSV and PDF output was tedious because it involved re-executing the SQL query and using a COM object to manually craft the PDF or CSV.
+            Effectively the code for each report was replicated 3 times due to the 3 formats (HTML, CSV and PDF).
+            There had to be a better way to do it than this surely.
+            I did some googling and found a third party library that would convert from <a href="https://www.evopdf.com/html-to-pdf-converter.aspx">HTML to PDF</a>.
+            To utilise this I added some markers in the produced HTML of the report which were HTML comments indicating which parts of the HTML that I wanted to convert to PDF.
+            I wrote a helper COM object in .NET that would take a HTML string as a parameter, parse it according to the markers, convert it to PDF using the library, and then return that to be viewed through the library.
+            I added a HTML button that when clicked would obtain the HTML from the DOM, use the VB script CreateObject function to create my COM object and do the parsing.
+            I did a similar concept to convert a HTML table to CSV using the <a href="https://html-agility-pack.net/">HTML Agility Pack</a> .NET library.
+            The whole point of this was so that the HTML was only required to be produced once.
+        </p>
+
+        <p>
+            The next project was to convert the 2 classic ASP web systems to ASP .NET.
+            To do this I created my <a href="https://github.com/sidfishus/TextParse">Text Parse</a> library.
+            I go in to great detail about this <Link to="/portfolio/textparse">here</Link> and there is a live example <Link to="/textparse">here</Link>.
+        </p>
+
+        <p>
+            Not long after starting the .NET conversion project the company I was working for was acquired by a FTSE 250 company.
+            They already had existing systems in place and would eventually be phasing out our 2 web systems, any large scale development on them was given the kybosh.
+            They did not however do any development in house so they took the 3 of us on to take over the support and development of their existing bespoke systems created for them by contractors and software vendors.
+            This is the position I am in currently.
+        </p>
+
+        <h2>Intranet</h2>
+        <p>
+            They have an intranet which is a modern web application utilising ASP .NET Core, Webpack, Typescript, React, Cosmos DB, and is hosted in Azure.
+            Many Azure features are used such as App Services, the application is split between an API process and a client process.
+            Azure storage: queues, blobs.
+            Azure webjobs, function apps.
+            Azure Acive Directory, single sign on, Redis cache.
+            Administrator's add content via Sharepoint which is propogated to the backend Cosmos DB via Office365 Flow/Power Automate.
+            I go in to detail regarding the organisational chart project I have completed <Link to="/portfolio/misc">here</Link>.
+        </p>
+
+        <h2>Customer Service Application</h2>
+        <p>
+            Whenever there is a fault with a recently built house by the company, the customer logs the issue with the customer service department.
+            They then use an application to log the issue, nominate a sub contractor, and the workflow required to organise an appointment and fix the issue.
+            The application to log the issue is a clientside .NET Windows GUI executable frontend using Entity Framework and a server side ASP .NET API process which handles the data and transactions.
+        </p>
+        <p>
+            //sidtodo here: mobile app, dashboard, workflow service
+        </p>
+
+        <p>Other minor ASP .NET/MVC applications</p>
 
         //sidtodo
-        <p>If you want to introduce children to programming then give them real world scenarios they are interested in to create programs for</p>
+        <p>If you want to introduce children to programming then I recommend giving them real world scenarios they are interested in to create programs for</p>
 
 
         <h1>Current and Future</h1>
+        <p>I've created 4 web based React applications.</p>
+
         <p>I do believe there is such a thing as too much technology and think it's de-sensitising us to the world around us</p>
     </>
 );

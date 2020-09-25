@@ -8,7 +8,7 @@ function RenderApp() {
 
 	const history=createBrowserHistory();
 
-	//sidtodo history.listen((location: any) => alert("bananas"));
+	history.listen((location: any) => alert("bananas"));
 
 	let reactElement = document.getElementById("react");
 
