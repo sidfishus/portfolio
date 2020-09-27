@@ -11,14 +11,13 @@
 
 
 #if DEBUG
-    // Run the local debug version
     string jsClientFilename="/js/main-client-debug.js";
     string jsServerFilename="Server/main-server-debug";
+    string reactElementName="reactDebug";
 #else
-    // Run the one in github
-    string jsClientFilename="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/js/main-client.js";
-    //sidtodo test
-    string jsServerFilename="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/js/main-server.js";
+    string jsClientFilename="/js/main-client.js";
+    string jsServerFilename="Server/main-server";
+    string reactElementName="react";
 #endif
 }
 
@@ -28,7 +27,7 @@
 <html>
     <body>
 
-        <div id="react" asp-prerender-module="@jsServerFilename" asp-prerender-data="prerenderData"></div>
+        <div id="@reactElementName" asp-prerender-module="@jsServerFilename" asp-prerender-data="prerenderData"></div>
 
         @{
             string ssrOnly=Environment.GetEnvironmentVariable("SSR_Only");

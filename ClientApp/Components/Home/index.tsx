@@ -79,7 +79,7 @@ const welcome: JSX.Element = (
             Arthur if you are reading this, your father loves you very much.
         </p>
         <p>I have always been physically active and have done many sports in my youth including kickboxing, boxing, rugby, cricket, football and even gymnastics.
-            Kickboxing is the sport I took most seriously which I did between the ages of 7 and 18, had 10 amateur fights including a British title bout (I lost) and even helped teach women and children's classes.
+            Kickboxing is the sport I took most seriously which I did between the ages of 7 and 18 for Don's Gym in Coventry, had 10 amateur fights including a British title bout (I lost) and even helped teach women and children's classes.
             I now rigorously exercise for over 1 hour almost every day because it has a wonderful effect on my physical and mental health and acts as a natural stimulant.
         </p>
         <p>

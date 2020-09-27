@@ -2,21 +2,22 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import App from "./Components/App";
-import { createBrowserHistory } from "history";
+import { BrowserRouter } from "react-router-dom";
 
 function RenderApp() {
 
-	const history=createBrowserHistory();
-
-	history.listen((location: any) => alert("bananas"));
-
+	let debug=false;
 	let reactElement = document.getElementById("react");
+	if(!reactElement) {
+		debug=true;
+		reactElement = document.getElementById("reactDebug");
+	}
 
 	if (reactElement) {
 		ReactDOM.hydrate(
-			<App
-				history={history}
-			/>
+			<BrowserRouter>
+				<App debug={debug} />
+			</BrowserRouter>
 		, reactElement);
 	}
 }

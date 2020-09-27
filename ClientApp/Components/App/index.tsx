@@ -1,28 +1,41 @@
 
 import * as React from "react";
 import { Routes } from "../../routes";
-import { Router } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { hot } from "react-hot-loader/root";
-import { BrowserHistory } from "history";
+import ReactGA from "react-ga";
 
 export type IAppProps = {
-    history: BrowserHistory<object>;
+    debug: boolean;
 };
 
-// Note: this is only ever called when the app rendered in the browser. SSR does not use this component.
-const App = (props: IAppProps) => {
+// Note: this is only ever called when the app is rendered in the browser. SSR does not use this component.
+const App: React.SFC<IAppProps> = (props) => {
 
-    const { history } = props;
+    const { debug } = props;
+
+    if(!debug) {
+        //sidtodo test when live in Azure.
+        //// Google Analytics
+        // Record the server loaded path
+        ReactGA.initialize("UA-179122198-1");
+        ReactGA.pageview(window.location.pathname + window.location.search);
+
+        // Record client-side changes
+        const history = useHistory();
+        history.listen((location: any) => {
+            ReactGA.set({ page: location.pathname });
+            ReactGA.pageview(location.pathname);
+        });
+    }
 
     const windowAsAny: any = window;
 
 	return (
-        <Router history={history}>
-            <Routes
-                prerenderData={windowAsAny.prerenderData}
-                SSR={false}
-            />
-        </Router>
+        <Routes
+            prerenderData={windowAsAny.prerenderData}
+            SSR={false}
+        />
     );
 };
 
