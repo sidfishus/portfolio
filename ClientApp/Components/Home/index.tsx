@@ -10,6 +10,7 @@ interface IHomeProps extends IRoutedCompProps {
 
 //sidtodo catalog of my favourite tunes.
 //sidtodo book recommendations
+//sidtodo test on a mobile, and desktop.
 
 //sidtodo: create a short video?
 
@@ -53,8 +54,6 @@ export const Home: React.SFC<IHomeProps> = (props) => {
     );
 };
 
-//sidtodo <p>I am currently pursueing anything that is both financially viable (there are bills to pay unfortunately) but also rewarding and has an impact on the world around me</p>
-
 //const welcome= <>test</>;
 
 const welcome: JSX.Element = (
@@ -64,7 +63,7 @@ const welcome: JSX.Element = (
             I trust your journey was not a stressful one.
         </p>
         <p>
-            My name is Chris Siddall, I am currently the fine age of 35 years old (1985) and based in Tamworth Staffordshire.
+            My name is Chris Siddall, I am currently the fine age of 35 years old (1985) and are based in Tamworth Staffordshire.
             I have had a passion for coding since discovering it at the age of 16, and have created this application as a means of demonstrating my skills, to catalog my life's work and experience and to give further insight into my personality.
             For this part of my portfolio it is my intention to not sound overly professional or formal because I want this to also be about expressing myself and my life story.
         </p>
@@ -477,6 +476,7 @@ const welcome: JSX.Element = (
             I go in to great detail about this <Link to="/portfolio/textparse">here</Link> and there is a live example <Link to="/textparse">here</Link>.
         </p>
 
+        <h2>Acquisition</h2>
         <p>
             Not long after starting the .NET conversion project the company I was working for was acquired by a FTSE 250 company.
             They already had existing systems in place and would eventually be phasing out our 2 web systems, any large scale development on them was given the kybosh.
@@ -491,29 +491,78 @@ const welcome: JSX.Element = (
             Azure storage: queues, blobs.
             Azure webjobs, function apps.
             Azure Acive Directory, single sign on, Redis cache.
+            Sharepoint SPFX which is allows a administrator to utilise React and Javascript to create forms.
             Administrator's add content via Sharepoint which is propogated to the backend Cosmos DB via Office365 Flow/Power Automate.
             I go in to detail regarding the organisational chart project I have completed <Link to="/portfolio/misc">here</Link>.
+        </p>
+        <p>
+            I'm currently working on rewriting the process that images are uploaded to articles and announcements by using SPFX and React and the ASP .NET MVC Core API Azure application.
+        </p>
+
+        <h2>Health and Safety Application</h2>
+        <p>A ASP .NET MVC and React single page application which I created from scratch.
+            I go in to a lot of detail about this <Link to="/portfolio/hands">here</Link>. 
         </p>
 
         <h2>Customer Service Application</h2>
         <p>
             Whenever there is a fault with a recently built house by the company, the customer logs the issue with the customer service department.
-            They then use an application to log the issue, nominate a sub contractor, and the workflow required to organise an appointment and fix the issue.
-            The application to log the issue is a clientside .NET Windows GUI executable frontend using Entity Framework and a server side ASP .NET API process which handles the data and transactions.
+            They then use a client to log the issue and nominate a sub contractor.
+            The application to log the issue is a clientside .NET Windows GUI executable frontend data and transactions are facilitated using Entity Framework and a server side .NET API process.
         </p>
         <p>
-            //sidtodo here: mobile app, dashboard, workflow service
+            A server side .NET Windows service (Workflow Service) polls for type of various events and it does the work necessary to progress the issue.
+            In the case of a subcontractror being nominated, it emails the subcontractor requesting them to accept or reject the nomination.
+            The subcontractor email contains a link to the mobile application which is a ASP .NET application set up in IIS on premise.
+            Clicking the link shows them a screen where they accept or reject, and the workflow service will update accordingly.
+            The Workflow Service moves the issue on iteratively until the subcontractor has been to the appointment, resolved the issue, and the customer has given confirmation of the fix.
         </p>
-
-        <p>Other minor ASP .NET/MVC applications</p>
+        <p>
+            There is also a dashboard which is another ASP .NET application that the customer service department can use to see a list of all of the open issues and their current state ordered by urgency.
+            A service side ASP .NET API process services the data to the mobile, dashboard, and Workflow Service applications.
+        </p>
 
         //sidtodo
         <p>If you want to introduce children to programming then I recommend giving them real world scenarios they are interested in to create programs for</p>
 
 
         <h1>Current and Future</h1>
-        <p>I've created 4 web based React applications.</p>
+        <p>I've created 3 React and ASP .NET MVC applications, I develop and support another professionally, and I'm in the middle of creating another.</p>
+
+        <p>I was aware of the importance and power of software from the very beginning and understand that demand for competent programmers will continue to increase.
+        </p>
+
+        <p>The world is currently going through a digital transformation and I believe in the future there will be applications to do almost every aspect of human life.
+            I have 2 good ideas for applications.
+            I am currently working on a social media web application again using React and ASP .NET, and Material UI, which huge potential which I plan to host in Azure on a low quota when I have a working version and get friends and friends of friends to try it out.
+            If it is well received then I plan to look in to getting financial backing to help me expand and bring it to the masses.
+        </p>
+
+        <p>I am currently pursueing anything that is both financially viable (there are bills to pay unfortunately) but also rewarding and has an impact on the world around me
+        </p>
+
+        <p>Find cryptocurrency interesting and potentially write an application that uses a crypto API like Coinbase Pro
+            to spot trends and buy/sell at the write time.
+        </p>
+
+        <h1>Skills Matrix</h1>
+        <p>I have worked on a ton of technologies but here are the ones ..</p>
+        <p>Go in to each skill / language but also sub skills, such as hooks in React, lazy loading, sub React libraries.</p>
+        <p>Maybe seperate page for this.</p>
+
+        <p>Identity Server 4, Recharts, editors</p>
+
+        <h1>About this Site</h1>
+        <p>This is a ASP .NET MVC Core 3 application hosted in Azure using their most basic subscription.
+
+        </p>
+        <p>The entire sourcecode for this website is held in <a href="https://github.com/sidfishus/react-spa-demo">Github</a>.</p>
+
+        <h1>Useful Links</h1>
+
 
         <p>I do believe there is such a thing as too much technology and think it's de-sensitising us to the world around us</p>
+
+        <p>Feel free to request a copy of my CV word document which is a very slimmed down version of this portfolio.</p>
     </>
 );
