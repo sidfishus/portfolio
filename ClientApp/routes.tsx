@@ -10,6 +10,7 @@ import { HAndSPortfolio } from "./Components/Portfolio/HAndS";
 import { TextParsePortfolio } from "./Components/Portfolio/TextParse";
 import { ScriptableTemplatePortfolio } from "./Components/Portfolio/ScriptableTemplate";
 import { MiscPortfolio } from "./Components/Portfolio/Misc";
+import { SkillsMatrix} from "./Components/Skills Matrix";
 
 export type IPrerenderData = {
 };
@@ -99,6 +100,16 @@ const MiscPortfolioRouted = (props: IRoutedCompProps) => {
     );
 };
 
+const SkillsMatrixRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <SkillsMatrix {...props} />}
+            stdProps={props}
+            menuId={eMenuId.skillsMatrix}
+        />
+    );
+};
+
 //sidtodo use google analytics
 export const Routes = (props: IRoutesProps) => {
 
@@ -112,6 +123,7 @@ export const Routes = (props: IRoutesProps) => {
             <Route exact path="/portfolio/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParsePortfolioRouted {...renderProps} {...props} />} />
             <Route exact path="/portfolio/scriptabletemplate" render={(renderProps: RouteComponentProps<any>) => <ScriptableTemplatePortfolioRouted {...renderProps} {...props} />} />
             <Route exact path="/portfolio/misc" render={(renderProps: RouteComponentProps<any>) => <MiscPortfolioRouted {...renderProps} {...props} />} />
+            <Route exact path="/skillsmatrix" render={(renderProps: RouteComponentProps<any>) => <SkillsMatrixRouted {...renderProps} {...props} />} />
             <Route render={(renderProps: RouteComponentProps<any>) => <NoRoutingMatch {...renderProps} {...props} />} />
         </Switch>
     );

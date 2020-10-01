@@ -545,12 +545,16 @@ const welcome: JSX.Element = (
             to spot trends and buy/sell at the write time.
         </p>
 
+        <p>Would like to focus more on functional programming, unit tests and test driven development</p>
+
         <h1>Skills Matrix</h1>
         <p>I have worked on a ton of technologies but here are the ones ..</p>
         <p>Go in to each skill / language but also sub skills, such as hooks in React, lazy loading, sub React libraries.</p>
         <p>Maybe seperate page for this.</p>
 
         <p>Identity Server 4, Recharts, editors</p>
+        <p>Sub sections: Office 365, excel e.t.c.</p>
+        <p>Look at job vacancy emails to see what skills are on there.</p>
 
         <h1>About this Site</h1>
         <p>This is a ASP .NET MVC Core 3 application hosted in Azure using their most basic subscription.
