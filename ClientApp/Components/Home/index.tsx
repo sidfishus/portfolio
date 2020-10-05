@@ -165,6 +165,7 @@ const welcome: JSX.Element = (
             I would like to look at some of the unit testing platforms that are available.
             I would like to revisit some of my old code and enforce a strict functional and unit test approach.
             Or work for a company that enforces a similar rule, where unit tests and test driven development is an integral part of their development process.
+            I think the concept of self testing code is absolutely brilliant and I will use it as much as possible!
         </p>
 
         <h2>Open Source</h2>
@@ -450,7 +451,7 @@ const welcome: JSX.Element = (
             They had 2 large scale ERP web applications which ran on classic ASP that they were looking to transition to ASP .NET and I would be the lead on this as well as take over the development leadership.
         </p>
 
-        <p>My experience at Prophet was invaluable here as I brought in the use of the Microsoft Team Foundation Studio for source code management and introduced processes I had used there.</p>
+        <p>My experience at Prophet was invaluable here as I brought in the use of the Microsoft Team Foundation Server for source code management and introduced processes I had used there.</p>
 
         <p>My first project was to improve the report page creation process.
             Reports were web pages of the application, written in classic ASP that would query the database to display a list of columns and rows.
