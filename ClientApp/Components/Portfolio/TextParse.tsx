@@ -220,7 +220,7 @@ const About: any = () => {
             &#9;&#9;&#9;int numMatches;<br/>
             &#9;&#9;&#9;parser.Extract(userInput,null,stmtList,null,null,out numMatches,(unused1,unused2,unused3)=&gt;null,null);<br/><br/>
 
-            &#9;&#9;&#9;Console.WriteLine("Greeting {0}understood.",((numMatches&gt;=1)?"":"not "));<br/>
+            &#9;&#9;&#9;Console.WriteLine("Greeting &#123;0&#125;understood.",((numMatches&gt;=1)?"":"not "));<br/>
             &#9;&#9;&#125;<br/>
             &#9;&#125;<br/>
             &#125;</code></pre>
@@ -446,7 +446,10 @@ const About: any = () => {
             </Table.Body>
             </Table>
             <h1>Text Parse User Interface Application</h1>
-            <p>I have created a live ASP .NET MVC Core 3 and React web application that is hosted within Azure which demonstrates how the Text Parse library works as well as my skills as a full stack developer: <Link to="/textparse">http://chrissiddall.azurewebsites.net/textparse</Link>.
+            <p>I have created an extensive ASP .NET MVC Core/React/Javascript application with a rich GUI
+            which leverages the latest features of each, as well as advertise my&#32;
+            <a href="https://github.com/sidfishus/TextParse">text parse library</a> and demonstrate what it can achieve
+            and how it works.
             It can be used to create and execute a UCPA visually as opposed to through lines of code and may give a different perspective and deeper understanding.</p>
             <p>The code for the entire application can be found at <a href="https://github.com/sidfishus/react-spa-demo">https://github.com/sidfishus/react-spa-demo</a>.</p>
             <h2>Usage</h2>

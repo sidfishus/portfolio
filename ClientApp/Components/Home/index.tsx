@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Container, Segment, Label } from "semantic-ui-react";
+import { Container, Segment, Label, Table } from "semantic-ui-react";
 import { HEADING_COLOUR } from "../../theme";
 import { Link } from "react-router-dom";
 
@@ -41,10 +41,13 @@ interface IHomeProps extends IRoutedCompProps {
 
 //sidtodo page for my live mixes!
 
+//sidtood button to collapse the headings
+
 export const Home: React.SFC<IHomeProps> = (props) => {
     return (
         <>
             <Container>
+                <Technology />
                 <Segment padded>
                     <Label color={HEADING_COLOUR} attached="top" content={"printf(\"Hello, World!\");"} />
                     {welcome}
@@ -54,27 +57,103 @@ export const Home: React.SFC<IHomeProps> = (props) => {
     );
 };
 
-//const welcome= <>test</>;
+const Technology: React.SFC = () => {
+    return (
+        <HomeSegment heading="Introduction">
+            <p>printf("Hello world! Welcome to my cloud based portfolio.");</p>
+            <p>
+                My name is Chris Siddall, I am the fine age of 35 years old (1985) and I am based in Tamworth Staffordshire.
+                I have had a passion for computer programming since discovering it at the age of 16, and have created
+                this application as a means of demonstrating my skills, to catalog my work and experience,
+                and to give an insight into my personality.
+                More than simply advertise myself, I want to express my true self and life story to my family and
+                future generations, and store memories for my future self to or look back on.
+                So unless I am discussing technical details it is my deliberate intention to not sound overly
+                formal or professional.
+            </p>
+            <p>For enquiries, constructive comments, or to request a copy of my CV word
+                document feel free to contact me <a href="mailto:sidnet001@gmail.com">here</a>.</p>
+        </HomeSegment>
+    );
+};
 
+interface IAboutSection {
+    section: React.ReactNode;
+    descr: React.ReactNode;
+};
+
+//sidtodo remaining sections
+const aboutSections: IAboutSection[] = [
+    {
+        section: <>Portfolio</>,
+        descr: <>Documents my work from 2017 onwards including screenshots and links to the code where possible.</>
+    },
+    {
+        section: <>Skills Matrix</>,
+        descr: <>A list of the computer programming related technologies and concepts that I have used
+            with an approximation of how much experience in years, and the specific areas that I remember working on. </>,
+    },
+    {
+        section: <Link to="/textparse">Text Parse Demo</Link>,
+        descr: <>The purpose of this was to create an extensive ASP .NET MVC Core/React/Javascript application with a rich GUI
+            which leverages the latest features of each, as well as advertise my&#32;
+            <a href="https://github.com/sidfishus/TextParse">text parse library</a> and demonstrate what it can achieve
+            and how it works, but from a visual perspective for a deeper understanding.</>
+    }
+];
+
+const RenderAboutSectionRow = (section: IAboutSection, i: number): React.ReactNode => {
+
+    return (
+        <Table.Row key={i}>
+            <Table.Cell>{section.section}</Table.Cell>
+            <Table.Cell>{section.descr}</Table.Cell>
+        </Table.Row>
+    );
+};
+
+//sidtodo about me section include pictures - family and fishing, kickboxing
 const welcome: JSX.Element = (
     <>
-        <h1>Introduction</h1>
-        <p>Hello and welcome to my cloud based portfolio!
-            I trust your journey was not a stressful one.
+        <h1>About this Site</h1>
+        <p>What better way is there to demonstrate my computer programming skills than to create a portfolio which is in itself
+            a computer program incorporating many of the technologies I have experience in using?</p>
+        <p>
+            When I originally started in Winter 2019 my time on this was very limited, however being furloughed for
+            6 weeks in March 2020 gave me the wonderful opportunity to complete the&#32;
+            <Link to="./textparse">text parse user interface</Link> example which forms the bulk of this application.
+            I have been able to complete the remaining parts in my spare time whilst being a father and having a full
+            time job and the first version of the application was complete in October 2020.
         </p>
         <p>
-            My name is Chris Siddall, I am currently the fine age of 35 years old (1985) and are based in Tamworth Staffordshire.
-            I have had a passion for coding since discovering it at the age of 16, and have created this application as a means of demonstrating my skills, to catalog my life's work and experience and to give further insight into my personality.
-            For this part of my portfolio it is my intention to not sound overly professional or formal because I want this to also be about expressing myself and my life story.
+            Typically, I have added more features and have gone in to far more detail than I originally intended and
+            it will only expand over time.
         </p>
-        <p>
-            Before the COVID quarantine in March 2019 my work on this was limited to the odd spare 15 minutes I could find.
-            However being furloughed for 6 weeks gave me the wonderful opportunity to knuckle down and really put some time in.
-            It was then that I completed the majority of the <Link to="./textparse">text parse user interface</Link>, and what remained was writing everything up.
+
+        <h2>Technology</h2>
+        <p>This is a mobile friendly isomorphic web based single page application which is hosted in Azure using an account
+            I created and manage.
+            The entire sourcecode for this is held in <a href="https://github.com/sidfishus/react-spa-demo">Github</a>.
         </p>
+        <p>Technologies used includes: ASP .NET MVC Core 3, C#, React, Javascript, Typescript, Semantic UI React, Webpack,
+            Babel, React Router, Google Analytics, React Responsive Carousel and hot module replacement.</p>
+
+        <h2>Sections</h2>
+        <Table>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell style={{minWidth: 150}}>Section</Table.HeaderCell>
+                    <Table.HeaderCell>Description</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+                {aboutSections.map(RenderAboutSectionRow)}
+            </Table.Body>
+        </Table>
+
         <h1>About Me</h1>
-        <p>I am a proud father to my 6 year old son and believe this has had a very positive effect on my outlook towards life.
-            My father has moulded me in to the person I am today so I am hoping to replicate that with my son.
+        <p>I am a devoted father to my 6 year old son and this has has a very positive effect on my attitude towards life.
+            My father moulded me to be the person I am today and I am hoping to replicate that with my son.
             Arthur if you are reading this, your father loves you very much.
         </p>
         <p>I have always been physically active and have done many sports in my youth including kickboxing, boxing, rugby, cricket, football and even gymnastics.
@@ -107,8 +186,12 @@ const welcome: JSX.Element = (
         <p>If I could change anything about myself it would be to remove my need for sleep.
             I have lots of ideas but there just isn't enough time in the day and I have to strike the correct balance.
         </p>
+        <p>I work best when I am on my own and it is quiet</p>
 
         <h1>Thoughts Towards Programming</h1>
+        <p>I believe that the key to getting children engaged with computer programming is by giving them real world scenarios they are interested in to creating solutions for.
+            For example MSN chat//sidtodo
+        </p>
         <h2>C++</h2>
         <p>
             For 15 years I was a C++ stalwart, being mentored and inspired by some very intelligent and experienced C++ coders whilst working for Prophet and this experience was invaluable.
@@ -135,7 +218,7 @@ const welcome: JSX.Element = (
             Good design, readability and robustness should come first, and I believe you should only consider going to these lengths when absolutely necessary.
             Have always been impressed with the performance of .NET programs, I would be interested to see a comparison between a C++ program.
             I also love the all pervasive collection of freely available namespaces and assembles accessible through NuGet that greatly simplify and shorten development and take code reuse to new levels.
-            Hopefully gone are the days of using Windows C functions such as '_beginThreadEx' and 'CreateWindowEx' that take X amount of parameters, or having to create things like "message pumps" *shudders*.
+            Hopefully gone are the days of using Windows C functions such as '_beginThreadEx' and 'CreateWindowEx' that take 20 parameters, or having to create things like "message pumps" *shudders*.
         </p>
 
         <h2>Javascript</h2>
@@ -155,7 +238,7 @@ const welcome: JSX.Element = (
             Especially with the advent of React hooks which moved away from the use of classes//sidtodo.
             I think some applications suit OO well like my text parse library due to the large amount of statement types but would be interested to rewrite it using a functional approach.
 
-            Why does the programmer need to delcare types at all when the compiler can infer their useage from the body of the code, and create a type file based on that information, for example with the 'auto' and 'var' keywords in C++/C# respectively. I would like to give this ago myself, and produce C# off the back of it. //sidtodo
+            Why does the programmer need to declare types at all when the compiler can infer their useage from the body of the code, and create a type file based on that information, for example with the 'auto' and 'var' keywords in C++/C# respectively. I would like to give this ago myself, and produce C# off the back of it. //sidtodo
         </p>
 
         <h2>Unit Testing</h2>
@@ -410,7 +493,7 @@ const welcome: JSX.Element = (
         </p>
 
         <p>
-            I also was the lead on a number of projects involving mobile devices that would run on .NET, for example delivery drivers where there was limited internet connectivity.
+            I was also the technical lead on a number of projects involving mobile devices that would run on .NET, for example delivery drivers where there was limited internet connectivity.
         </p>
 
         <p>
@@ -422,7 +505,7 @@ const welcome: JSX.Element = (
         </p>
 
         <p>
-            In approximately 2014 I was promoted to the role of "lead developer".
+            In approximately 2013 I was promoted to the role of "lead developer".
             From then on I was writing less code and spent more time supervising other developers.
             Depending on the size and type of project, and developer availability, I could have up to 5 developers working for me.
             For projects I would typically receive a design specification which varied in quality, ask the designers questions until the design was actually complete, ask any technical questions.
@@ -451,7 +534,7 @@ const welcome: JSX.Element = (
             They had 2 large scale ERP web applications which ran on classic ASP that they were looking to transition to ASP .NET and I would be the lead on this as well as take over the development leadership.
         </p>
 
-        <p>My experience at Prophet was invaluable here as I brought in the use of the Microsoft Team Foundation Server for source code management and introduced processes I had used there.</p>
+        <p>My experience at Prophet was invaluable here as for example I brought in the use of the Microsoft Team Foundation Server for source code management and introduced processes I had used there.</p>
 
         <p>My first project was to improve the report page creation process.
             Reports were web pages of the application, written in classic ASP that would query the database to display a list of columns and rows.
@@ -507,7 +590,7 @@ const welcome: JSX.Element = (
 
         <h2>Customer Service Application</h2>
         <p>
-            Whenever there is a fault with a recently built house by the company, the customer logs the issue with the customer service department.
+            Whenever there is a fault with a recently built house by the company (under warranty), the customer logs the issue with the customer service department.
             They then use a client to log the issue and nominate a sub contractor.
             The application to log the issue is a clientside .NET Windows GUI executable frontend data and transactions are facilitated using Entity Framework and a server side .NET API process.
         </p>
@@ -523,9 +606,6 @@ const welcome: JSX.Element = (
             A service side ASP .NET API process services the data to the mobile, dashboard, and Workflow Service applications.
         </p>
 
-        //sidtodo
-        <p>If you want to introduce children to programming then I recommend giving them real world scenarios they are interested in to create programs for</p>
-
 
         <h1>Current and Future</h1>
         <p>I've created 3 React and ASP .NET MVC applications, I develop and support another professionally, and I'm in the middle of creating another.</p>
@@ -539,6 +619,8 @@ const welcome: JSX.Element = (
             If it is well received then I plan to look in to getting financial backing to help me expand and bring it to the masses.
         </p>
 
+        <p>I do believe there is such a thing as too much technology and think it's de-sensitising us to the world around us</p>
+
         <p>I am currently pursueing anything that is both financially viable (there are bills to pay unfortunately) but also rewarding and has an impact on the world around me
         </p>
 
@@ -546,28 +628,31 @@ const welcome: JSX.Element = (
             to spot trends and buy/sell at the write time.
         </p>
 
-        <p>Would like to focus more on functional programming, unit tests and test driven development</p>
+        <p>I would like to focus more on functional programming, unit tests and test driven development</p>
 
-        <h1>Skills Matrix</h1>
-        <p>I have worked on a ton of technologies but here are the ones ..</p>
-        <p>Go in to each skill / language but also sub skills, such as hooks in React, lazy loading, sub React libraries.</p>
-        <p>Maybe seperate page for this.</p>
 
-        <p>Identity Server 4, Recharts, editors</p>
-        <p>Sub sections: Office 365, excel e.t.c.</p>
-        <p>Look at job vacancy emails to see what skills are on there.</p>
-
-        <h1>About this Site</h1>
-        <p>This is a ASP .NET MVC Core 3 application hosted in Azure using their most basic subscription.
-
-        </p>
-        <p>The entire sourcecode for this website is held in <a href="https://github.com/sidfishus/react-spa-demo">Github</a>.</p>
+        //sidtodo explain what is on this site.
 
         <h1>Useful Links</h1>
-
-
-        <p>I do believe there is such a thing as too much technology and think it's de-sensitising us to the world around us</p>
-
-        <p>Feel free to request a copy of my CV word document which is a very slimmed down version of this portfolio.</p>
+        //sidtodo github, explain what's on this site
     </>
 );
+
+interface IHomeSegmentProps {
+    children: React.ReactNode;
+    heading: React.ReactNode;
+};
+
+const HomeSegment: React.SFC<IHomeSegmentProps> = (props) => {
+
+    const { children, heading } = props;
+
+    return (
+        <>
+            <Segment padded>
+                <Label color={HEADING_COLOUR} attached="top" content={heading} />
+                {children}
+            </Segment>
+        </>
+    );
+};
