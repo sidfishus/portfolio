@@ -342,7 +342,7 @@ const skillsMatrix: ISkillRow[] = [
         experienceCommercial: 0,
         areas: <><a href="https://github.com/sidfishus/PowerBIManageEngineExtension">Power BI custom data connectors
             using the M language</a>, DOS scripting, Perl scripting, MS Graph (O365), Flow/Power Automate (O365),
-            Sharepoint and SPFX, Java, and more which has now faded from my memory!</>
+            Sharepoint and SPFX, Java, HTML, CSS (a weakness) and more which has now faded from my memory!</>
     },
 ];
 
