@@ -240,7 +240,8 @@ const skillsMatrix: ISkillRow[] = [
         technology: "Azure",
         experienceTotal: 3, 
         experienceCommercial: 3,
-        areas: <>App services, function apps, storage accounts, Cosmos DB, Azure Active Directory, Redis Cache.
+        areas: <>App services, function apps, storage accounts, Cosmos DB, Azure Active Directory,
+            Redis Cache, Kudu.
             <AreaLinkBreak/> 
             It is used to host <a href="https://github.com/sidfishus/react-spa-demo">THIS</a> application using an Azure
             account I created and manage and the <Link to="/portfolio/misc">intranet application</Link> which I also manage.</>
@@ -279,7 +280,8 @@ const skillsMatrix: ISkillRow[] = [
         experienceTotal: 3, 
         experienceCommercial: 2,
         areas: <>Identity Server 4 (ASP .NET), OAuth2 bearer tokens (ASP .NET), custom implementation of IUserStore
-            and IUser (ASP .NET) for validating user authorisation, Azure AD (ASP .NET).<AreaLinkBreak/>
+            and IUser (ASP .NET) for validating user authorisation, API's secured using Azure AD (ASP .NET).
+            <AreaLinkBreak/>
             Used in the <Link to="/portfolio/dpa">distributed SPA</Link>
             and the <Link to="/portfolio/hands">data capture and reporting application</Link>. <AreaLinkBreak/>
             Out of everything I find this subject the most complex and challenging.</>
@@ -342,7 +344,8 @@ const skillsMatrix: ISkillRow[] = [
         experienceCommercial: 0,
         areas: <><a href="https://github.com/sidfishus/PowerBIManageEngineExtension">Power BI custom data connectors
             using the M language</a>, DOS scripting, Perl scripting, MS Graph (O365), Flow/Power Automate (O365),
-            Sharepoint and SPFX, Java, HTML, CSS (a weakness) and more which has now faded from my memory!</>
+            Sharepoint and SPFX consuming data from AAD authorised API's, Java, HTML, CSS (a weakness) and more which
+            has now faded from my memory!</>
     },
 ];
 
