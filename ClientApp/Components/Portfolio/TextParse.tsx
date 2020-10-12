@@ -4,6 +4,7 @@ import { IRoutedCompProps } from "../../routes";
 import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
 import { Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { Code } from "../Presentation";
 
 export interface ITextParsePortfolioProps extends IRoutedCompProps {
 };
@@ -189,7 +190,7 @@ const About: any = () => {
             <p>I quickly gave up on the idea of creating a psuedo language because it was taking me too long to parse it and was too verbose and difficult to follow when describing complex parse algorithm's. However the C# class syntax I was already using to create the parse statement objects as a result of parsing the psuedo language seemed appropriate for the task and had the added benefit of removing the need for an intermediate language.</p>
             <h3>Simple Example</h3>
             <p>Below is a simple example I created for the purpose of illustrating the syntax of a TextParse program. For more complex examples see the built in examples at <Link to="/textparse">https://chrissiddall.azurewebsites.net/textparse</Link>:</p>
-            <pre><code>using System;<br/>
+            <Code>using System;<br/>
             using Sid.Parse.TextPatternParser;<br/>
             using StringComparison = Sid.Parse.TextPatternParser.StringComparison;<br/>
             using Sid.Log;<br/>
@@ -223,7 +224,7 @@ const About: any = () => {
             &#9;&#9;&#9;Console.WriteLine("Greeting &#123;0&#125;understood.",((numMatches&gt;=1)?"":"not "));<br/>
             &#9;&#9;&#125;<br/>
             &#9;&#125;<br/>
-            &#125;</code></pre>
+            &#125;</Code>
             <h3>Types / Interfaces / Classes</h3>
             <p>Below is the list of types e.t.c. that a user/developer may need to be concerned with when using the parser:</p>
             <Table compact>

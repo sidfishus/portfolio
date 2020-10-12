@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import App from "./Components/App";
+import App from "./Components/Client App";
 import { BrowserRouter } from "react-router-dom";
 
 function RenderApp() {
@@ -14,7 +14,8 @@ function RenderApp() {
 	}
 
 	if (reactElement) {
-		ReactDOM.hydrate(
+
+		ReactDOM.render(
 			<BrowserRouter>
 				<App debug={debug} />
 			</BrowserRouter>

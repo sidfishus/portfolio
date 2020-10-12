@@ -2,6 +2,7 @@
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
 import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
+import { Code } from "../Presentation";
 
 export interface IScriptableTemplatePortfolioProps extends IRoutedCompProps {
 };
@@ -47,7 +48,7 @@ const About: any = () => {
             <p>This is a simple example that can be used to create a HTML page based on a set of parameters and a dynamic dataset to illustrate basic usage of ScriptableTemplate. It consists of a HTML file which contains the static HTML template and the embedded script to output the dynamic parts, as well as a .cs file that uses the ScriptableTemplate engine to parameterise and use the template to generate the output file.</p>
             <h3>template.html</h3>
             <p>Script is encapsulated in between &#123;&#125; blocks. To escape a '&#123;', use '&#123;&#123;'. The full features and keywords that are available can be found by reading the ScriptableTemplate class code.</p>
-            <pre><code>
+            <Code>
             &lt;!DOCTYPE html&gt;<br /><br/>
             &lt;html&gt;<br/>
 
@@ -85,10 +86,10 @@ const About: any = () => {
             &#9;&lt;/table&gt;<br/>
             &#9;&lt;/body&gt;<br/>
             &lt;/html&gt;
-            </code></pre>
+            </Code>
             <h3>Main.cs</h3>
             <p>Includes a main entry point to generate the output file when the application is executed.</p>
-            <pre><code>using System.Collections.Generic;<br/>
+            <Code>using System.Collections.Generic;<br/>
             using Sid.ScriptableTemplate;<br/><br/>
 
             namespace ConsoleApp2<br/>
@@ -126,7 +127,7 @@ const About: any = () => {
             &#9;&#9;&#9;return rv.ToArray();<br/>
             &#9;&#9;&#125;<br/>
             &#9;&#125;<br/>
-            &#125;</code></pre>
+            &#125;</Code>
         </>
     );
 };

@@ -11,6 +11,14 @@ import { TextParsePortfolio } from "./Components/Portfolio/TextParse";
 import { ScriptableTemplatePortfolio } from "./Components/Portfolio/ScriptableTemplate";
 import { MiscPortfolio } from "./Components/Portfolio/Misc";
 import { SkillsMatrix} from "./Components/Skills Matrix";
+import { AboutMe } from "./Components/About Me";
+import { FrivolousBeginnings } from "./Components/History/FrivolousBeginnings";
+import { Education } from "./Components/History/Education";
+import { Career } from "./Components/History/Career";
+import { CurrentAndFuture } from "./Components/History/CurrentAndFuture";
+import { ProgrammingDiscussion } from "./Components/Programming Discussion";
+import { MatchMediaResult } from "./Library/MediaMatching";
+
 
 export type IPrerenderData = {
 };
@@ -18,6 +26,7 @@ export type IPrerenderData = {
 export type IRoutesProps = {
     prerenderData: IPrerenderData;
     SSR: boolean;
+    mediaMatching: MatchMediaResult;
 };
 
 export type IRoutedCompProps = RouteComponentProps<any> & IRoutesProps;
@@ -100,6 +109,16 @@ const MiscPortfolioRouted = (props: IRoutedCompProps) => {
     );
 };
 
+const AboutMeRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <AboutMe {...props} />}
+            stdProps={props}
+            menuId={eMenuId.aboutMe}
+        />
+    );
+};
+
 const SkillsMatrixRouted = (props: IRoutedCompProps) => {
     return (
         <StdPage
@@ -110,7 +129,56 @@ const SkillsMatrixRouted = (props: IRoutedCompProps) => {
     );
 };
 
-//sidtodo use google analytics
+const FrivolousBeginningsRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <FrivolousBeginnings {...props} />}
+            stdProps={props}
+            menuId={eMenuId.frivolousBeginnings}
+        />
+    );
+};
+
+const EducationRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <Education {...props} />}
+            stdProps={props}
+            menuId={eMenuId.education}
+        />
+    );
+};
+
+const CareerRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <Career {...props} />}
+            stdProps={props}
+            menuId={eMenuId.career}
+        />
+    );
+};
+
+const CurrentAndFutureRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <CurrentAndFuture {...props} />}
+            stdProps={props}
+            menuId={eMenuId.currentAndFuture}
+        />
+    );
+};
+
+const ProgrammingDiscussionRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <ProgrammingDiscussion {...props} />}
+            stdProps={props}
+            menuId={eMenuId.programmingDiscussion}
+        />
+    );
+};
+
 export const Routes = (props: IRoutesProps) => {
 
     const routes = (
@@ -124,6 +192,12 @@ export const Routes = (props: IRoutesProps) => {
             <Route exact path="/portfolio/scriptabletemplate" render={(renderProps: RouteComponentProps<any>) => <ScriptableTemplatePortfolioRouted {...renderProps} {...props} />} />
             <Route exact path="/portfolio/misc" render={(renderProps: RouteComponentProps<any>) => <MiscPortfolioRouted {...renderProps} {...props} />} />
             <Route exact path="/skillsmatrix" render={(renderProps: RouteComponentProps<any>) => <SkillsMatrixRouted {...renderProps} {...props} />} />
+            <Route exact path="/aboutme" render={(renderProps: RouteComponentProps<any>) => <AboutMeRouted {...renderProps} {...props} />} />
+            <Route exact path="/history/frivolousbeginnings" render={(renderProps: RouteComponentProps<any>) => <FrivolousBeginningsRouted {...renderProps} {...props} />} />
+            <Route exact path="/history/education" render={(renderProps: RouteComponentProps<any>) => <EducationRouted {...renderProps} {...props} />} />
+            <Route exact path="/history/career" render={(renderProps: RouteComponentProps<any>) => <CareerRouted {...renderProps} {...props} />} />
+            <Route exact path="/history/currentandfuture" render={(renderProps: RouteComponentProps<any>) => <CurrentAndFutureRouted {...renderProps} {...props} />} />
+            <Route exact path="/programmingdiscussion" render={(renderProps: RouteComponentProps<any>) => <ProgrammingDiscussionRouted {...renderProps} {...props} />} />
             <Route render={(renderProps: RouteComponentProps<any>) => <NoRoutingMatch {...renderProps} {...props} />} />
         </Switch>
     );

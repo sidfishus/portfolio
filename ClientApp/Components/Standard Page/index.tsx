@@ -16,9 +16,7 @@ export const StdPage : React.SFC<IStdPageProps> = (props: IStdPageProps) => {
 
     return (
         <>
-            <br />
             <DemoMenu {...stdProps} activeMenuId={menuId} />
-            <br />
             {pageRender()}
 
             {/*<Button onClick={() => console.log(document.documentElement.innerHTML)}>Log HTML</Button>*/}

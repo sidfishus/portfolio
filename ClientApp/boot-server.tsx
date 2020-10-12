@@ -14,6 +14,7 @@ export default createServerRenderer(params => {
             <Routes
                 prerenderData={params.data}
                 SSR={true}
+                mediaMatching={null}
             />
         );
 
@@ -22,7 +23,7 @@ export default createServerRenderer(params => {
             <StaticRouter context={routerContext} location={params.location.path} children={routes} />
         );
 
-        let rendered=renderToString(app);
+        const rendered=renderToString(app);
 
         params.domainTasks.then(() => {
             resolve({
