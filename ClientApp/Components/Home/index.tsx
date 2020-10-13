@@ -5,6 +5,8 @@ import { Container, Segment, Label, Table } from "semantic-ui-react";
 import { HEADING_COLOUR } from "../../theme";
 import { Link } from "react-router-dom";
 import { Code, SegmentDemo, ContainerDemo } from "../Presentation";
+import { MatchMediaResult } from "../../Library/MediaMatching";
+import { eScreenResolution } from "../Client App";
 
 interface IHomeProps extends IRoutedCompProps {
 };
@@ -15,6 +17,7 @@ interface IHomeProps extends IRoutedCompProps {
 
 //sidtodo: create a short video?
 
+//sidtodo
 //topics:
 //  purpose of site: catalog my work, demonstrate my skills, experience, give a flavour in to who i am
 //      covers my work from approx 2017 onwards.
@@ -30,23 +33,18 @@ interface IHomeProps extends IRoutedCompProps {
 //  professional experience, cv furlough giving me time to finish
 //  what the site offers: live React app e.t.c.
 // educational game to explain programming to children
-//sidtodo: about this app. technology involved
-
-// links section
-
-// work in spare time
 
 //  financially viable but also rewarding and puts me to the test, has an impact on the world around me
 
 //sidtodo page for my live mixes!
 
-//sidtood button to collapse the headings
+export const Home: React.FunctionComponent<IHomeProps> = (props) => {
 
-export const Home: React.SFC<IHomeProps> = (props) => {
+
     return (
         <>
             <ContainerDemo>
-                <Introduction />
+                <Introduction {...props} />
                 <AboutThisSite />
                 <UsefulLinks />
             </ContainerDemo>
@@ -54,14 +52,11 @@ export const Home: React.SFC<IHomeProps> = (props) => {
     );
 };
 
-const Introduction: React.SFC = () => {
+const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
+
     return (
         <SegmentDemo heading="Introduction">
-            <Code>
-                void main(void) {"{"}<br/>
-                &nbsp;&nbsp;&nbsp;printf("Hello world! Welcome to my cloud based portfolio!");<br/>
-                {"}"}
-            </Code>
+            <HelloWorld {...props} />
             <p>
                 My name is Chris Siddall, I am the fine age of 35 years old (1985) and I am based in Tamworth Staffordshire.
                 I have had a passion for computer programming since discovering it at the age of 16, and have created
@@ -76,6 +71,34 @@ const Introduction: React.SFC = () => {
                 document feel free to contact me <a href="mailto:sidnet001@gmail.com">here</a>.
             </p>
         </SegmentDemo>
+    );
+};
+
+const HelloWorld: React.FunctionComponent<IHomeProps> = (props) => {
+
+    const { mediaMatching} = props;
+
+    if(!mediaMatching) return null;
+
+    const resolutionDependantCode: React.ReactNode =
+        ((mediaMatching.FirstMatching() === eScreenResolution.THINNER_THAN_LAPTOP)?
+            (
+                <>
+                    &nbsp;&nbsp;&nbsp;printf("Hello world!");<br/>
+                    &nbsp;&nbsp;&nbsp;printf("Welcome to my cloud based portfolio!");<br/>
+                </>
+            ):
+            (
+                <>&nbsp;&nbsp;&nbsp;printf("Hello world! Welcome to my cloud based portfolio!");<br/></>
+            )
+        );
+
+    return (
+        <Code>
+            void main(void) {"{"}<br/>
+            {resolutionDependantCode}
+            {"}"}
+        </Code>
     );
 };
 
@@ -119,7 +142,7 @@ const AboutThisSite: React.FunctionComponent<{}> = () => {
     return (
         <SegmentDemo heading="About This Site">
             <h1>About this Site</h1>
-            <p>What better way is there to demonstrate my computer programming skills than to create a portfolio which is in itself
+            <p>What better way to demonstrate my computer programming skills is there than to create a portfolio which is in itself
                 a computer program incorporating many of the technologies I have experience in using?</p>
             <p>
                 When I originally started in Winter 2019 my time on this was very limited, however being furloughed for
@@ -161,8 +184,8 @@ const AboutThisSite: React.FunctionComponent<{}> = () => {
 const UsefulLinks: React.FunctionComponent<{}> = () => {
 
     return (
-        <Segment heading="Useful Links">
-
-        </Segment>
+        <SegmentDemo heading="Useful Links">
+            <>//sidtodo</>
+        </SegmentDemo>
     );
 };
