@@ -20,6 +20,7 @@ export const StdPage : React.SFC<IStdPageProps> = (props: IStdPageProps) => {
             {pageRender()}
 
             {/*<Button onClick={() => console.log(document.documentElement.innerHTML)}>Log HTML</Button>*/}
+            <br/>
         </>
     );
 };

@@ -4,7 +4,7 @@ import { IRoutedCompProps } from "../../routes";
 import { Container, Segment, Label, Table } from "semantic-ui-react";
 import { HEADING_COLOUR } from "../../theme";
 import { Link } from "react-router-dom";
-import { Code, SegmentDemo, ContainerDemo } from "../Presentation";
+import { Code, SegmentDemo, ContainerDemo, SegmentSubSection } from "../Presentation";
 import { MatchMediaResult } from "../../Library/MediaMatching";
 import { eScreenResolution } from "../Client App";
 
@@ -107,16 +107,29 @@ interface IAboutSection {
     descr: React.ReactNode;
 };
 
-//sidtodo remaining sections
 const aboutSections: IAboutSection[] = [
+    {
+        section: <Link to="/aboutme">About Me</Link>,
+        descr: <>General information about myself and my personality.</>
+    },
+    {
+        section: <>History</>,
+        descr: <>My history from an education and computer programming perspective starting from the very beginning and
+            continuing up to what I am doing currently and my plans for the future.</>
+    },
     {
         section: <>Portfolio</>,
         descr: <>Documents some of my work from 2017 onwards including screenshots and links to the code where possible.</>
     },
     {
-        section: <>Skills Matrix</>,
+        section: <Link to="/programmingdiscussion">Programming Discussion</Link>,
+        descr: <>My opinion and feelings towards the various computer programming technologies and concepts I am
+            experienced in.</>
+    },
+    {
+        section: <Link to="/skillsmatrix">Skills Matrix</Link>,
         descr: <>A list of the computer programming related technologies and concepts that I have used
-            with an approximation of how much experience in years, and the specific areas that I remember working on. </>,
+            with an approximation of how much experience I have in years, and the specific areas that I remember working on. </>,
     },
     {
         section: <Link to="/textparse">Text Parse Demo</Link>,
@@ -141,51 +154,101 @@ const AboutThisSite: React.FunctionComponent<{}> = () => {
 
     return (
         <SegmentDemo heading="About This Site">
-            <h1>About this Site</h1>
-            <p>What better way to demonstrate my computer programming skills is there than to create a portfolio which is in itself
-                a computer program incorporating many of the technologies I have experience in using?</p>
-            <p>
-                When I originally started in Winter 2019 my time on this was very limited, however being furloughed for
-                6 weeks in March 2020 gave me the wonderful opportunity to complete the&#32;
-                <Link to="./textparse">text parse user interface</Link> example which forms the bulk of this application.
-                I have been able to complete the remaining parts in my spare time whilst being a father and having a full
-                time job and the first version of the application was complete in October 2020.
-            </p>
-            <p>
-                Typically, I have added more features and have gone in to far more detail than I originally intended and
-                it will only expand over time.
-            </p>
+            <SegmentSubSection>
+                <p>What better way to demonstrate my computer programming skills is there than to create a portfolio which is in itself
+                    a computer program incorporating many of the technologies I have experience in using?</p>
+                <p>
+                    When I originally started in Winter 2019 my time on this was very limited, however being furloughed for
+                    6 weeks in March 2020 gave me the wonderful opportunity to complete the&#32;
+                    <Link to="./textparse">text parse user interface</Link> example which forms the bulk of this application.
+                    I have been able to complete the remaining parts in my spare time whilst being a father and having a full
+                    time job and the first version of the application was complete in October 2020.
+                </p>
+                <p>
+                    Typically, I have added more features and have gone in to far more detail than I originally intended and
+                    it will only expand over time.
+                </p>
+            </SegmentSubSection>
 
-            <h2>Technology</h2>
-            <p>This is a mobile friendly isomorphic web based single page application which is hosted in Azure using an account
-                I created and manage.
-                The entire sourcecode for this is held in <a href="https://github.com/sidfishus/react-spa-demo">Github</a>.
-            </p>
-            <p>Technologies used includes: ASP .NET MVC Core 3, C#, React, Javascript, Typescript, Semantic UI React, Webpack,
-                Babel, React Router, Google Analytics, React Responsive Carousel and hot module replacement.</p>
+            <SegmentSubSection heading="Technology">
+                <p>This is a mobile friendly isomorphic web based single page application which is hosted in Azure using an account
+                    I created and manage.
+                    The entire sourcecode for this is held in <a href="https://github.com/sidfishus/react-spa-demo">Github</a>.
+                </p>
+                <p>Technologies used includes: ASP .NET MVC Core 3, C#, React, Javascript, Typescript, Semantic UI React, Webpack,
+                    Babel, React Router, Google Analytics, React Responsive Carousel and hot module replacement.</p>
+            </SegmentSubSection>
 
-            <h2>Sections</h2>
-            <Table>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell style={{minWidth: 150}}>Section</Table.HeaderCell>
-                        <Table.HeaderCell>Description</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {aboutSections.map(RenderAboutSectionRow)}
-                </Table.Body>
-            </Table>
+            <SegmentSubSection heading="Pages">
+                <p>The pages that make up this site as well as a brief description:</p>
+                <Table>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell style={{minWidth: 150}}>Page</Table.HeaderCell>
+                            <Table.HeaderCell>Description</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {aboutSections.map(RenderAboutSectionRow)}
+                    </Table.Body>
+                </Table>
+            </SegmentSubSection>
         </SegmentDemo>
     );
 };
 
-//sidtodo
+interface IUsefulLink {
+    url: JSX.Element;
+    descr: JSX.Element;
+};
+
+const usefulLinks: IUsefulLink[] = [
+    {
+        url: <a href="https://github.com/sidfishus">https://github.com/sidfishus</a>,
+        descr: <>My Github account.</>
+    },
+
+    {
+        url: <a href="https://github.com/sidfishus/react-spa-demo">https://github.com/sidfishus/react-spa-demo</a>,
+        descr: <>My Github repository which contains the code for this application.</>
+    },
+
+    {
+        url: <a href="mailto:sidnet001@gmail.com">mailto:sidnet001@gmail.com</a>,
+        descr: <>My email address.</>
+    },
+];
+
+const RenderLinkSectionRow = (link: IUsefulLink, idx: number) => {
+
+    const { url, descr} = link;
+
+    return (
+        <Table.Row key={idx}>
+            <Table.Cell>{url}</Table.Cell>
+            <Table.Cell>{descr}</Table.Cell>
+        </Table.Row>
+    );
+};
+
 const UsefulLinks: React.FunctionComponent<{}> = () => {
 
     return (
         <SegmentDemo heading="Useful Links">
-            <>//sidtodo</>
+            <SegmentSubSection>
+                <p>A list of useful links:</p>
+                <Table>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell style={{minWidth: 150}}>Link</Table.HeaderCell>
+                            <Table.HeaderCell>Description</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {usefulLinks.map(RenderLinkSectionRow)}
+                    </Table.Body>
+                </Table>
+            </SegmentSubSection>
         </SegmentDemo>
     );
 };

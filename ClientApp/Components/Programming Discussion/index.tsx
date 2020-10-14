@@ -87,7 +87,7 @@ const Javascript: React.FunctionComponent<{}> = () => {
                 Especially with the advent of React hooks which moved away from the use of classes//sidtodo.
                 I think some applications suit OO well like my text parse library due to the large amount of statement types but would be interested to rewrite it using a functional approach.
 
-                Why does the programmer need to declare types at all when the compiler can infer their useage from the body of the code, and create a type file based on that information, for example with the 'auto' and 'var' keywords in C++/C# respectively. I would like to give this ago myself, and produce C# off the back of it. //sidtodo
+                Why does the programmer need to declare types at all when the compiler can infer their usage from the body of the code, and create a type file based on that information, for example with the 'auto' and 'var' keywords in C++/C# respectively. I would like to give this ago myself, and produce C# off the back of it. //sidtodo
             </p>
         </SegmentDemo>
     );

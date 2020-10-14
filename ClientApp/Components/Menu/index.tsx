@@ -1,8 +1,10 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Menu, Container, Dropdown } from "semantic-ui-react";
+import { Menu, Dropdown, Icon, Image } from "semantic-ui-react";
 import { eScreenResolution } from "../Client App";
+import { ContainerDemo } from "../Presentation";
+import { Link } from "react-router-dom";
 
 export interface IDemoMenuProps extends IRoutedCompProps {
     activeMenuId: eMenuId;
@@ -29,7 +31,6 @@ export enum eMenuId {
 };
 
 enum eMenuType {
-    menuTypeNone=0,
     menuTypeVertical=1,
     menuTypeHorizontal=2
 };
@@ -38,106 +39,166 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
 
     const { activeMenuId, history, mediaMatching } = props;
 
-    const menuType: eMenuType = ((!mediaMatching)?eMenuType.menuTypeNone:(
-        (mediaMatching.FirstMatching() === eScreenResolution.THINNER_THAN_LAPTOP)?
+    const [verticalOpenState,SetVerticalOpenState] = React.useState<boolean>(false);
+
+    if(!mediaMatching) {
+        //sidtodo test
+        return (
+            <br />
+        );
+    }
+
+    const menuType: eMenuType =
+        ((mediaMatching.FirstMatching() === eScreenResolution.THINNER_THAN_LAPTOP)?
             eMenuType.menuTypeVertical:
             eMenuType.menuTypeHorizontal
-        )
-    );
+        );
 
-    //sidtodo whoops - can't use useMemo due to the active menu???
-    //sidtodo no :/
-    const jsx=React.useMemo(()=>GenerateMenu(menuType),[menuType]);
+    const { SubMenuHeader, SubMenuItem, MenuHeader, MenuItem } = ResponsiveControls(menuType);
 
-    return jsx;
-};
-
-const MenuVerticle: React.FunctionComponent<{children: any}> = (props) => {
-
-    //sidtodo fluid???
     return (
         <>
-            <br />
-            <Container>
-                <Menu verticle fluid>{props.children}</Menu>
-            </Container>
-            <br />
+            {MenuHeader({
+                verticalOpenState: verticalOpenState,
+                SetVerticalOpenState: SetVerticalOpenState,
+                children: [
+                    MenuItem({
+                        activeMenuId: activeMenuId,
+                        menuId: eMenuId.home,
+                        onClick: ()=> history.push("/home"),
+                        children: <>Home</>,
+                        key: "home"
+                    }),
+
+                    MenuItem({
+                        activeMenuId: activeMenuId,
+                        menuId: eMenuId.aboutMe,
+                        onClick: ()=> history.push("/aboutme"),
+                        children: <>About Me</>,
+                        key: "aboutme"
+                    }),
+
+                    SubMenuHeader({
+                        text: "History",
+                        children: [
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.frivolousBeginnings,
+                                children: <>Frivolous Beginnings</>,
+                                onClick: ()=> history.push("/history/frivolousbeginnings"),
+                                key: "frivolousbeginnings"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.education,
+                                children: <>Education</>,
+                                onClick: ()=> history.push("/history/education"),
+                                key: "education"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.career,
+                                children: <>Career</>,
+                                onClick: ()=> history.push("/history/career"),
+                                key: "career"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.currentAndFuture,
+                                children: <>Current and Future</>,
+                                onClick: ()=> history.push("/history/currentandfuture"),
+                                key: "currentandfuture"
+                            })
+                        ]
+                    }),
+
+                    SubMenuHeader({
+                        text: "Portfolio",
+                        children: [
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioDPA,
+                                children: <>Distributed SPA</>,
+                                onClick: ()=> history.push("/portfolio/dpa"),
+                                key: "dpa"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioHAndS,
+                                children: <>Health and Safety System</>,
+                                onClick: ()=> history.push("/portfolio/hands"),
+                                key: "hands"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioTextParse,
+                                children: <>Text Parse</>,
+                                onClick: ()=> history.push("/portfolio/textparse"),
+                                key: "textparse"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioScriptableTemplate,
+                                children: <>Scriptable Template</>,
+                                onClick: ()=> history.push("/portfolio/scriptabletemplate"),
+                                key: "scriptabletemplate"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioMisc,
+                                children: <>Miscellenaous</>,
+                                onClick: ()=> history.push("/portfolio/misc"),
+                                key: "misc"
+                            })
+                        ]
+                    }),
+
+                    MenuItem({
+                        activeMenuId: activeMenuId,
+                        menuId: eMenuId.skillsMatrix,
+                        onClick: ()=> history.push("/skillsmatrix"),
+                        children: <>Skills Matrix</>,
+                        key: "skillsmatrix"
+                    }),
+
+                    MenuItem({
+                        activeMenuId: activeMenuId,
+                        menuId: eMenuId.programmingDiscussion,
+                        onClick: ()=> history.push("/programmingdiscussion"),
+                        children: <>Programming Discussion</>,
+                        key: "programmingdiscussion"
+                    }),
+
+                    MenuItem({
+                        activeMenuId: activeMenuId,
+                        menuId: eMenuId.textParse,
+                        onClick: ()=> history.push("/textparse"),
+                        children: <>Text Parse Demo</>,
+                        key: "textparsedemo"
+                    })
+                ]
+            })}
         </>
     );
-}
-
-const MenuHorizontal: React.FunctionComponent<{}> = (props) => {
-    return (
-        <>
-            <br />
-            <Container>
-                <Menu>{props.children}</Menu>
-            </Container>
-            <br />
-        </>
-    );
-}
-
-interface IMenuItemProps {
-    children: React.ReactNode;
-    active: boolean;
-    onClick?: ()=>void;
 };
 
-const MenuItemAll = (props: IMenuItemProps): JSX.Element => {
-
-    const { children, active, onClick } = props;
-    
-    return (
-        <Menu.Item
-            active={active}
-            onClick={onClick}
-        >
-            {children}
-        </Menu.Item>
-    );
-};
-
-interface ISubMenuHeaderProps {
-    text: string;
-};
-
-const SubMenuHeaderVerticle: React.FunctionComponent<ISubMenuHeaderProps> = (props) => {
-
-    const { children, text} = props;
-
-    return (
-        <Menu.Item>
-            {text}
-            <Menu.Menu>
-                {children}
-            </Menu.Menu>
-        </Menu.Item>
-    );
-};
-
-const SubMenuHeaderHorizontal: React.FunctionComponent<ISubMenuHeaderProps> = (props) => {
-
-    const { children, text} = props;
-
-    return (
-        <Dropdown text={text} item>
-            <Dropdown.Menu>
-                {children}
-            </Dropdown.Menu>
-        </Dropdown>
-    );
-};
-
+// These have to be functions instead of components because otherwise the menu will not render properly
 interface IResponsiveControls {
-    MenuHeader: React.FunctionComponent<{}>;
-    MenuItem: (props: IMenuItemProps)=>JSX.Element;
-    SubMenuHeader: React.FunctionComponent<ISubMenuHeaderProps>;
-    SubMenuItem: React.FunctionComponent<ISubMenuItemProps>;
+    MenuHeader: (props: IMenuHeaderProps) => JSX.Element;
+    MenuItem: (props: IMenuItemProps) => JSX.Element;
+    SubMenuHeader: (props: ISubMenuHeaderProps) => JSX.Element;
+    SubMenuItem: (props: ISubMenuItemProps) => JSX.Element;
 };
 
-const ResponsiveControls = (verticle: boolean): IResponsiveControls => {
-    if(verticle) {
+const ResponsiveControls = (menuType: eMenuType): IResponsiveControls => {
+    if(menuType === eMenuType.menuTypeVertical) {
         return {
             MenuHeader: MenuVerticle,
             SubMenuHeader: SubMenuHeaderVerticle,
@@ -154,93 +215,203 @@ const ResponsiveControls = (verticle: boolean): IResponsiveControls => {
     };
 };
 
-interface ISubMenuItemProps {
-    active: boolean;
-    onClick?: ()=>void;
+interface IMenuHeaderProps {
+    children: JSX.Element[];
+    verticalOpenState: boolean;
+    SetVerticalOpenState: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const SubMenuItemHorizontal: React.FunctionComponent<ISubMenuItemProps> = (props) => {
+//sidtodo finish the logo and test the vertical view when have better internet
+const MenuVerticle = (props: IMenuHeaderProps): JSX.Element => {
 
-    const { active, onClick, children} = props;
+    const { verticalOpenState, SetVerticalOpenState} = props;
+
+    // Do not ask me why, but using 'vertical' as a prop here DOES NOT WORK :/
+    // You have to specify it as a class directly as per below for it to propogate through to the rendered HTML.
+    return (
+        <>
+            <ContainerDemo>
+                <Menu secondary>
+                    <Menu.Item fitted>
+                        <Icon
+                            name="bars"
+                            link
+                            size="big"
+                            onClick={()=>SetVerticalOpenState(curState => !curState)}
+                        />
+                    </Menu.Item>
+                    
+                    <Menu.Menu position="right">
+                        <Menu.Item>
+                            <span style={{fontSize: 16}}>
+                                Chris Siddall
+                            </span>
+                            <span style={{fontSize: 26, color: "#2185d0"}}>
+                                <b>&nbsp;Portfolio</b>
+                            </span>
+                        </Menu.Item>
+                    </Menu.Menu>
+
+                    {/*<Menu.Item position="right" active={false}>
+                        
+                        {/*<img
+                            src="/img/logo.png" height="36"
+                            key="logo"
+                        />
+                        </Menu.Item>*/}
+
+                    {/*<Menu.Item icon="bars" size="large" />*/}
+                    {/*<Menu.Item>
+                        <Icon
+                            name="bars"
+                            link
+                            size="large"
+                            onClick={()=>SetVerticalOpenState(curState => !curState)}
+                        />
+                    </Menu.Item>*/}
+
+                    {/*<img
+                        src="/img/logo.png" height="36"
+                        key="logo"
+                    />*/}
+                </Menu>
+            </ContainerDemo>
+
+            {verticalOpenState &&
+                <>
+                    <ContainerDemo>
+                        <Menu fluid className="vertical">{props.children}</Menu>
+                    </ContainerDemo>
+                </>
+            }
+        </>
+    );
+}
+
+//sidtodo test on different screen sizes
+const MenuHorizontal = (props: IMenuHeaderProps): JSX.Element => {
+
+    const children = [
+        ...props.children,
+        <img
+            src="/img/logo.png" height="36"
+            style={{position: "absolute", right: "10%", marginRight: 50}}
+            key="logo"
+        />
+    ];
 
     return (
-        <Dropdown.Item
-            active={active}
-            onClick={onClick}
-        >
-            {children}
-        </Dropdown.Item>
+        <>
+            <br />
+            <ContainerDemo>
+                <Menu>{children}</Menu>
+            </ContainerDemo>
+            <br />
+        </>
     );
+}
+
+interface IMenuItemProps {
+    children: JSX.Element;
+    menuId: eMenuId;
+    activeMenuId: eMenuId;
+    onClick?: ()=>void;
+    key: string;
 };
 
-//sidtodo this is the same as DemoMenuItem
-const SubMenuItemVerticle: React.FunctionComponent<ISubMenuItemProps> = (props) => {
+const MenuItemAll = (props: IMenuItemProps): JSX.Element => {
 
-    const { active, onClick, children} = props;
+    const { key, children, menuId, activeMenuId } = props;
 
+    const active=(menuId === activeMenuId);
+
+    const onClick=((active)?null:props.onClick);
+    
     return (
         <Menu.Item
             active={active}
             onClick={onClick}
+            key={key}
         >
             {children}
         </Menu.Item>
     );
 };
 
-const GenerateMenu = (menuType: eMenuType): JSX.Element => {
+interface ISubMenuHeaderProps {
+    text: string;
+    children: JSX.Element[];
+};
 
-    const { SubMenuHeader, SubMenuItem, MenuHeader, MenuItem } = ResponsiveControls(verticle);
+const SubMenuHeaderVerticle = (props: ISubMenuHeaderProps): JSX.Element => {
+
+    const { children, text} = props;
 
     return (
+        <Menu.Item key={text}>
+            {text}
+            <Menu.Menu>
+                {children}
+            </Menu.Menu>
+        </Menu.Item>
+    );
+};
 
-        <>
-            <Menu vertical>
-                {MenuItem({
-                    active: (activeMenuId===eMenuId.home),
-                    onClick: ()=> history.push("/home"),
-                    children: <>Home</>
-                })}
-                {MenuItem({
-                    active: (activeMenuId===eMenuId.aboutMe),
-                    onClick: ()=> history.push("/aboutme"),
-                    children: <>About Me</>
-                })}
-                {/* <MenuItem active={activeMenuId===eMenuId.home} onClick={()=> history.push("/home")}>
-                    Home</MenuItem>
-                <MenuItem active={activeMenuId===eMenuId.aboutMe} onClick={()=> history.push("/aboutme")}>
-                    About Me</MenuItem>
-                <SubMenuHeader text="History">
-                    <SubMenuItem active={activeMenuId===eMenuId.frivolousBeginnings}
-                        onClick={()=> history.push("/history/frivolousbeginnings")}>Frivolous Beginnings</SubMenuItem>
-                    <SubMenuItem active={activeMenuId===eMenuId.education}
-                        onClick={()=> history.push("/history/education")}>Education</SubMenuItem>
-                    <SubMenuItem active={activeMenuId===eMenuId.career}
-                        onClick={()=> history.push("/history/career")}>Career</SubMenuItem>
-                    <SubMenuItem active={activeMenuId===eMenuId.currentAndFuture}
-                        onClick={()=> history.push("/history/currentandfuture")}>Current and Future</SubMenuItem>
-                </SubMenuHeader>
-                <SubMenuHeader text="Portfolio">
-                    <SubMenuItem active={activeMenuId===eMenuId.portfolioDPA}
-                        onClick={()=> history.push("/portfolio/dpa")}>Distributed SPA</SubMenuItem>
-                    <SubMenuItem active={activeMenuId===eMenuId.portfolioHAndS}
-                        onClick={()=> history.push("/portfolio/hands")}>Health and Safety System</SubMenuItem>
-                    <SubMenuItem active={activeMenuId===eMenuId.portfolioTextParse}
-                        onClick={()=> history.push("/portfolio/textparse")}>Text Parse</SubMenuItem>
-                    <SubMenuItem active={activeMenuId===eMenuId.portfolioScriptableTemplate}
-                        onClick={()=> history.push("/portfolio/scriptabletemplate")}>Scriptable Template</SubMenuItem>
-                    <SubMenuItem active={activeMenuId===eMenuId.portfolioMisc}
-                        onClick={()=> history.push("/portfolio/misc")}>Miscellenaous</SubMenuItem>
-                </SubMenuHeader>
-                <MenuItem active={activeMenuId===eMenuId.skillsMatrix} onClick={()=> history.push("/skillsmatrix")}>
-                    Skills Matrix</MenuItem>
-                <MenuItem active={activeMenuId===eMenuId.programmingDiscussion} onClick={()=> history.push("/programmingdiscussion")}>
-                    Programming Discussion</MenuItem>
-                <MenuItem active={activeMenuId===eMenuId.textParse} onClick={()=> history.push("/textparse")}>
-                    Text Parse Demo</MenuItem> */}
-                
-                <img src="/img/logo.png" height="36" style={{position: "absolute", right: "10%", marginRight: 50}} />
-            </Menu>
-        </>
+const SubMenuHeaderHorizontal = (props: ISubMenuHeaderProps): JSX.Element => {
+
+    const { children, text} = props;
+
+    return (
+        <Dropdown text={text} item key={text}>
+            <Dropdown.Menu>
+                {children}
+            </Dropdown.Menu>
+        </Dropdown>
+    );
+};
+
+interface ISubMenuItemProps {
+    menuId: eMenuId;
+    activeMenuId: eMenuId;
+    onClick?: ()=>void;
+    children: JSX.Element;
+    key: string;
+};
+
+const SubMenuItemHorizontal = (props: ISubMenuItemProps): JSX.Element => {
+
+    const { menuId, activeMenuId, children, key} = props;
+
+    const active=(menuId === activeMenuId);
+
+    const onClick=((active)?null:props.onClick);
+
+    return (
+        <Dropdown.Item
+            active={active}
+            onClick={onClick}
+            key={key}
+        >
+            {children}
+        </Dropdown.Item>
+    );
+};
+
+const SubMenuItemVerticle = (props: ISubMenuItemProps): JSX.Element => {
+
+    const { menuId, activeMenuId, children, key} = props;
+
+    const active=(menuId === activeMenuId);
+
+    const onClick=((active)?null:props.onClick);
+
+    return (
+        <Menu.Item
+            active={active}
+            onClick={onClick}
+            key={key}
+        >
+            {children}
+        </Menu.Item>
     );
 };

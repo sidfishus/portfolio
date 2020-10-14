@@ -2,6 +2,7 @@
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
 import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable } from "./PortfolioBase";
+import { SegmentDemo, SegmentSubSection } from "../Presentation";
 
 export interface IMiscPortfolioProps extends IRoutedCompProps {
 };
@@ -10,8 +11,7 @@ export const MiscPortfolio: React.SFC<IMiscPortfolioProps> = (props) => {
     return (
         <PortfolioBase
             {...props}
-            about={About()}
-            aboutHeading="Miscellaneous Work"
+            writeUp={WriteUp()}
             carouselImgs={carouselImgs}
         />
     );
@@ -101,20 +101,32 @@ const technology: ITechnologyInfo[] = [
     },
 ];
 
-const About: any = () => {
+const WriteUp = (): JSX.Element => {
     return (
-        <>
-            <h1>Organisational Chart</h1>
-            <p>A web based representation of a company's organisational hierarchy which is generated dynamically according to Azure Active Directory.</p>
-            <h2>Technology</h2>
-            <p>Below is the list of technology incoorporated:</p>
-            {TechnologyTable(technology)}
-            <h2>Process</h2>
-            <p>The Azure webjob synchronises user details and the organisational structure between Azure Active Directory and Azure Cosmos DB.
-            Selecting a division, region, department or user calls a Redux dispatch method to load the associated data from Cosmos DB via a HTTP call to the relevant API controller method.
-            As the Redux store updates as a result of the dispatch method, the screen is re-rendered by React to show the updated organisational hierarchy.
-            Selecting a user propogates their hierarchy by showing their manager, team, and those that report to them.
-            Selecting the manager causes the same information to be loaded and displayed for them and so on until the Group CEO is at the top.</p>
-        </>
+        <SegmentDemo heading="Organisational Chart">
+            <SegmentSubSection>
+                <p>A web based representation of a company's organisational hierarchy which is generated dynamically
+                    according to Sharepoint and Azure Active Directory.
+                </p>
+            </SegmentSubSection>
+
+            <SegmentSubSection heading="Technology">
+                <p>Below is the list of technology incoorporated:</p>
+                {TechnologyTable(technology)}
+            </SegmentSubSection>
+
+            <SegmentSubSection heading="Process">
+                <p>The Azure webjob synchronises user details between Azure Active Directory and Azure Cosmos DB.
+                    User's create the organisational structure in Sharepoint and this is pushed across to Cosmos DB.
+                    Selecting a division, region, department or user calls a Redux dispatch method to load the associated
+                    data from Cosmos DB via a HTTP call to the relevant API controller method.
+                    As the Redux store updates as a result of the dispatch method, the screen is re-rendered by React to
+                    show the updated organisational hierarchy.
+                    Selecting a user propogates their hierarchy by showing their manager, team, and those that report to them.
+                    Selecting the manager causes the same information to be loaded and displayed for them and so on until
+                    the Group CEO is at the top.
+                </p>
+            </SegmentSubSection>
+        </SegmentDemo>
     );
 };

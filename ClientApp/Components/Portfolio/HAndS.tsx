@@ -3,6 +3,7 @@ import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
 import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable } from "./PortfolioBase";
 import { Link } from "react-router-dom";
+import { SegmentDemo, SegmentSubSection } from "../Presentation";
 
 export interface IHAndSPortfolioProps extends IRoutedCompProps {
 };
@@ -11,8 +12,7 @@ export const HAndSPortfolio: React.SFC<IHAndSPortfolioProps> = (props) => {
     return (
         <PortfolioBase
             {...props}
-            about={About()}
-            aboutHeading="Health and Safety System (CAIRS)"
+            writeUp={WriteUp()}
             carouselImgs={carouselImgs}
         />
     );
@@ -128,77 +128,97 @@ const technology: ITechnologyInfo[] = [
     }
 ];
 
-const About: any = () => {
+const WriteUp = (): JSX.Element => {
 
     return (
         <>
-            <p>A responsive and mobile/tablet friendly web based data capture and reporting health and safety system used by a house construction company.</p>
-            <h2>Description</h2>
-            <p>CAIRS is an on-premise based web application which incoorporates a ASP .NET MVC and SQL back end with a Javascript and React single page application front end.</p>
-            <p>It is used to record accidents and incidents, labour returns and safety observations.
-                These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
-            </p>
-            <p>The application has been designed and hand crafted to work specifically with 7 different screen resolutions ranging from small phones up to a typical computer screen of 1920 x 1200 pixels.</p>
-            <p>The CAIRS system including data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout, and third party libraries was created entirely by myself.
-                Developed using Microsoft Visual Studio 2017 with TFS integration for source code control with all technology choices being made by myself .
-            </p>
-            <h2>Task / Design</h2>
-            <p>The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets.</p>
-            <p>
-                AI reports were recorded by hand on a copy of the dedicated Word document template and added to accident database spreadsheet by the health and safety administrators.
-                Labour return and safety observation figures were sent via email by the site / office managers to the administrators who would then add them to a spreadsheet.
-                The totals were then extracted for the different levels of the company and used to plot the graphs that form the monthly reports.
-                This labourious task would take the administrators at least 2 days to perform per month and was clearly vulnerable to discrepancies.
-            </p>
-            <h2>Development</h2>
-            <h3>User Interface</h3>
-            <p>The UI theme was chosen by the users and had been created for another system used by the company which runs on classic ASP and jQuery/Bootstrap.
-                I reused the CSS and HTML/layout from this system but replaced the jQuery and Bootstrap with React and React Bootstrap.
-            </p>
-            <p>The AI report form was designed to match the original word document as closely as possible.
-                Using controlled React components caused the screen to flicker and appear unresponsive due to the amount of components on screen.
-                To get around this I used uncontrolled components where value changes were stored as a Javascript object and applied using setState approx 500ms after the final change via setTimeout.
-                My 'SimpleDelayer' class is a simpler version of this and can be found here <a href="https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts">https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts</a>.
-            </p>
-            <p>
-                The AI report form captures a lot of data and it was found that using media queries with up to 7 copies of each React component was significantly impeding performance.
-                To resolve this I utilised the window.matchMedia function to query which of the 7 screen resolutions most closely matched the current dimensions and held this as an enum in a Redux store.
-                Each React component has a 'switch case' on this enum and outputs JSX accordingly when rendering.
-                The window.matchMedia also allows you to be notified via a callback when the dimensions change and I used this to trigger a re-render of the application by updating the Redux store.
-            </p>
-            <p>
-                I created a base component to encapsulate a generic screen for creating and displaying reports including the various filters, and base components for generic screens to list database records, select, and edit their values.
-                This was done again to achieve consistency but also speed up development by holding any duplicated code in the base componenents.
-            </p>
-            <p>
-                Each type of input control in the application was abstracted in to their own Cairs version and parameterised in such a way as to simplify their useage and hide the details specific to their React Bootstrap implementation and achieve UI consistency.
-                All functionality pertaining to persisting values was done within the base component so code duplication was minimised.
-            </p>
-            <h3>API and Data Access</h3>
-            <p>
-                The SQL database was created to mirror the data that was being captured in the existing system.
-                Data was initially migrated from the spreadsheets in to the SQL database via an automated process that was ran iteratively until the figures aligned.
-            </p>
-            <p>The client side Javascript application accesses the database and server side functionality via asynchronous HTTP messages sent to the relevant controller and method.
-                The ASP .NET application holds a version GUID per each database table that constitutes static data and regenerates it upon changes to that table.
-                Static data requests made by the Javascript application are passed with an optional version GUID to represent the current version of that table that the client has cached.
-                If the client side version corresponds to the server side version then no data is returned as a performance enhancement.
-                After the static data is initially loaded by the client and persisted in a Redux store it is only reloaded when there is a change.
-            </p>
-            <p>
-                The data used to populate the graphs and tables is calculated via executing the associated SQL stored procedure with filters such as the date range being passed as parameters.
-                My scriptable template library which I had previously created was used to generate the report SQL stored procedures as they shared a lot of code.
-            </p>
-            <h3>Authentication and Authorisation</h3>
-            <p>This is achieved using OAuth bearer token functionality built in to the version of ASP .NET used.
-            </p>
-            <p>
-                User's and their access is stored in a database table and is made available to ASP .NET by my own implementation of an IUserStore which has access to the user table.
-                Authorisation for each individual piece of functionality available in the server application is held as a boolean column against the user record. Controller method's assert that the user has the associated field set to true against the logged in user as a prerequisite to performing the task otherwise a 401 is returned the client.
-            </p>
-            <h2>Technology</h2>
-            <p>Below is the list of technology incoorporated:</p>
-            {TechnologyTable(technology)}
+        
+            <SegmentDemo heading="Health and Safety System (CAIRS)">
+                <SegmentSubSection>
+                    <p>A responsive and mobile/tablet friendly web based data capture and reporting health and safety system used by a house construction company.</p>
+                </SegmentSubSection>
+
+                <SegmentSubSection heading="Description">
+                    <p>CAIRS is an on-premise based web application which incoorporates a ASP .NET MVC and SQL back end with a Javascript and React single page application front end.</p>
+                    <p>It is used to record accidents and incidents, labour returns and safety observations.
+                        These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
+                    </p>
+                    <p>The application has been designed and hand crafted to work specifically with 7 different screen resolutions ranging from small phones up to a typical computer screen of 1920 x 1200 pixels.</p>
+                    <p>The CAIRS system including data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout, and third party libraries was created entirely by myself.
+                        Developed using Microsoft Visual Studio 2017 with TFS integration for source code control with all technology choices being made by myself .
+                    </p>
+                </SegmentSubSection>
+            </SegmentDemo>
+
+            <SegmentDemo heading="Task / Design">
+                <SegmentSubSection>
+                    <p>The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets.</p>
+                    <p>
+                        AI reports were recorded by hand on a copy of the dedicated Word document template and added to accident database spreadsheet by the health and safety administrators.
+                        Labour return and safety observation figures were sent via email by the site / office managers to the administrators who would then add them to a spreadsheet.
+                        The totals were then extracted for the different levels of the company and used to plot the graphs that form the monthly reports.
+                        This labourious task would take the administrators at least 2 days to perform per month and was clearly vulnerable to discrepancies.
+                    </p>
+                </SegmentSubSection>
+            </SegmentDemo>
+            
+            <SegmentDemo heading="Development">
+                <SegmentSubSection heading="User Interface">
+                    <p>The UI theme was chosen by the users and had been created for another system used by the company which runs on classic ASP and jQuery/Bootstrap.
+                        I reused the CSS and HTML/layout from this system but replaced the jQuery and Bootstrap with React and React Bootstrap.
+                    </p>
+                    <p>The AI report form was designed to match the original word document as closely as possible.
+                        Using controlled React components caused the screen to flicker and appear unresponsive due to the amount of components on screen.
+                        To get around this I used uncontrolled components where value changes were stored as a Javascript object and applied using setState approx 500ms after the final change via setTimeout.
+                        My 'SimpleDelayer' class is a simpler version of this and can be found here <a href="https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts">https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts</a>.
+                    </p>
+                    <p>
+                        The AI report form captures a lot of data and it was found that using media queries with up to 7 copies of each React component was significantly impeding performance.
+                        To resolve this I utilised the window.matchMedia function to query which of the 7 screen resolutions most closely matched the current dimensions and held this as an enum in a Redux store.
+                        Each React component has a 'switch case' on this enum and outputs JSX accordingly when rendering.
+                        The window.matchMedia also allows you to be notified via a callback when the dimensions change and I used this to trigger a re-render of the application by updating the Redux store.
+                    </p>
+                    <p>
+                        I created a base component to encapsulate a generic screen for creating and displaying reports including the various filters, and base components for generic screens to list database records, select, and edit their values.
+                        This was done again to achieve consistency but also speed up development by holding any duplicated code in the base componenents.
+                    </p>
+                    <p>
+                        Each type of input control in the application was abstracted in to their own Cairs version and parameterised in such a way as to simplify their usage and hide the details specific to their React Bootstrap implementation and achieve UI consistency.
+                        All functionality pertaining to persisting values was done within the base component so code duplication was minimised.
+                    </p>
+                </SegmentSubSection>
+                
+                <SegmentSubSection heading="API and Data Access">
+                    <p>
+                        The SQL database was created to mirror the data that was being captured in the existing system.
+                        Data was initially migrated from the spreadsheets in to the SQL database via an automated process that was ran iteratively until the figures aligned.
+                    </p>
+                    <p>The client side Javascript application accesses the database and server side functionality via asynchronous HTTP messages sent to the relevant controller and method.
+                        The ASP .NET application holds a version GUID per each database table that constitutes static data and regenerates it upon changes to that table.
+                        Static data requests made by the Javascript application are passed with an optional version GUID to represent the current version of that table that the client has cached.
+                        If the client side version corresponds to the server side version then no data is returned as a performance enhancement.
+                        After the static data is initially loaded by the client and persisted in a Redux store it is only reloaded when there is a change.
+                    </p>
+                    <p>
+                        The data used to populate the graphs and tables is calculated via executing the associated SQL stored procedure with filters such as the date range being passed as parameters.
+                        My scriptable template library which I had previously created was used to generate the report SQL stored procedures as they shared a lot of code.
+                    </p>
+                    <h3>Authentication and Authorisation</h3>
+                    <p>This is achieved using OAuth bearer token functionality built in to the version of ASP .NET used.
+                    </p>
+                    <p>
+                        User's and their access is stored in a database table and is made available to ASP .NET by my own implementation of an IUserStore which has access to the user table.
+                        Authorisation for each individual piece of functionality available in the server application is held as a boolean column against the user record. Controller method's assert that the user has the associated field set to true against the logged in user as a prerequisite to performing the task otherwise a 401 is returned the client.
+                    </p>
+                </SegmentSubSection>
+            </SegmentDemo>
+
+            <SegmentDemo heading="Technology">
+                <SegmentSubSection>
+                    <p>Below is the list of technology incoorporated:</p>
+                    {TechnologyTable(technology)}
+                </SegmentSubSection>
+            </SegmentDemo>
         </>
     );
 };

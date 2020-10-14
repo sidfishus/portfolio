@@ -12,6 +12,7 @@ export const Education: React.FunctionComponent<IEducationProps & IRoutedCompPro
     return (
         <ContainerDemo>
             <ComputingBSc />
+            <SixthForm />
         </ContainerDemo>
     );
 };
@@ -44,6 +45,24 @@ const ComputingBSc: React.FunctionComponent<{}> = () => {
                 2 attackers who would move towards the ball with the correct angle to direct it towards the goal when it was in the center or the opposition's side of the pitch.
                 //sidtodo upload the soccer strategy
             </p>
+        </SegmentDemo>
+    );
+};
+
+const SixthForm: React.FunctionComponent<{}> = () => {
+    
+    return (
+        <SegmentDemo heading="Sixth Form / College">
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
+            <p>//sidtodo</p>
         </SegmentDemo>
     );
 };

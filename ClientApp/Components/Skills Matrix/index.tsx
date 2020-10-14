@@ -1,9 +1,9 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Container, Segment, Label, Table, TableHeaderProps } from "semantic-ui-react";
-import { HEADING_COLOUR } from "../../theme";
+import { Table, TableHeaderProps } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { ContainerDemo, SegmentDemo, SegmentSubSection} from "../Presentation";
 
 export interface ISkillsMatrixProps {
 };
@@ -25,35 +25,37 @@ export const SkillsMatrix: React.FunctionComponent<ISkillsMatrixProps & IRoutedC
 
     return (
         <>
-            <Container>
-                <Segment padded>
-                    <Label color={HEADING_COLOUR} attached="top" content={"Skills Matrix"} />
-                    <p>Below is a list of the computer programming related technologies and concepts that I have used
-                        with an approximation of how much experience in years, and the specific areas that I remember working on.</p>
-                    <Table sortable>
-                        <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell
-                                    {...SkillsMatrixSortProps(eSkillsMatrixSortColumn.smcTechnology, sortColumn,
-                                        SetSortColumn, sortDirection, SetSortDirection)}
-                                >
-                                    Technology
-                                </Table.HeaderCell>
-                                <Table.HeaderCell
-                                    style={{minWidth: 200}}
-                                    {...SkillsMatrixSortProps(eSkillsMatrixSortColumn.smcExperience, sortColumn,
-                                        SetSortColumn, sortDirection, SetSortDirection)}
-                                >
-                                    Experience</Table.HeaderCell>
-                                <Table.HeaderCell>Areas</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                            {SortedSkillsMatrix(sortColumn,sortDirection).map(CreateSkillRow)}
-                        </Table.Body>
-                    </Table>
-                </Segment>
-            </Container>
+            <ContainerDemo>
+                <SegmentDemo heading="Skills Matrix">
+                    <SegmentSubSection>
+                        <p>Below is a list of the computer programming related technologies and concepts that I have used
+                            with an approximation of how much experience in years, and the specific areas that I remember working on.
+                        </p>
+                        <Table sortable>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell
+                                        {...SkillsMatrixSortProps(eSkillsMatrixSortColumn.smcTechnology, sortColumn,
+                                            SetSortColumn, sortDirection, SetSortDirection)}
+                                    >
+                                        Technology
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell
+                                        style={{minWidth: 200}}
+                                        {...SkillsMatrixSortProps(eSkillsMatrixSortColumn.smcExperience, sortColumn,
+                                            SetSortColumn, sortDirection, SetSortDirection)}
+                                    >
+                                        Experience</Table.HeaderCell>
+                                    <Table.HeaderCell>Areas</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {SortedSkillsMatrix(sortColumn,sortDirection).map(CreateSkillRow)}
+                            </Table.Body>
+                        </Table>
+                    </SegmentSubSection>
+                </SegmentDemo>
+            </ContainerDemo>
         </>
     );
 };

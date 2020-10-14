@@ -1,9 +1,9 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Container, Segment, Label, Table } from "semantic-ui-react";
-import { HEADING_COLOUR } from "../../theme";
+import { Table } from "semantic-ui-react";
 import { Carousel } from "react-responsive-carousel";
+import { SegmentDemo, ContainerDemo } from "../Presentation";
 
 export interface ICarouselImg {
     src: string;
@@ -11,8 +11,7 @@ export interface ICarouselImg {
 };
 
 export interface IPortfolioBaseProps extends IRoutedCompProps {
-    aboutHeading: string;
-    about: React.ReactNode;
+    writeUp: JSX.Element;
     carouselImgs: ICarouselImg[];
 };
 
@@ -22,24 +21,20 @@ interface IPortfolioCarouselProps {
 
 export const PortfolioBase: React.SFC<IPortfolioBaseProps> = (props) => {
 
-    const { aboutHeading, about, carouselImgs } = props;
+    const { writeUp, carouselImgs } = props;
 
     return (
-        <Container>
-            <Segment padded>
-                <Label color={HEADING_COLOUR} attached="top" content={aboutHeading} />
-                {about}
-            </Segment>
+        <ContainerDemo>
+            {writeUp}
 
             {carouselImgs &&
-                <Segment padded>
-                    <Label color={HEADING_COLOUR} attached="top" content="Images" />
+                <SegmentDemo heading="Images">
                     <PortfolioCarousel
                         imgs={carouselImgs}
                     />
-                </Segment>
+                </SegmentDemo>
             }
-        </Container>
+        </ContainerDemo>
     );
 };
 

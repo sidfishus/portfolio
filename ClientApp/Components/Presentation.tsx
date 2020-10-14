@@ -54,3 +54,28 @@ export interface IContainerDemoProps {
 export const ContainerDemo: React.FunctionComponent<IContainerDemoProps> = (props) => {
     return <Container>{props.children}</Container>
 }
+
+export interface ISegmentSubSection {
+    heading?: string;
+    children: React.ReactNode;
+    nested?: number;
+};
+
+export const SegmentSubSection: React.FunctionComponent<ISegmentSubSection> = (props) => {
+
+    const { heading, children, nested} = props;
+
+    //sidtodo use the nesting level.
+    const Heading = (): JSX.Element => {
+        if(!heading) return null;
+        if(nested===undefined || nested===null) return <h3>{heading}</h3>;
+        return <h4>{heading}</h4>
+    };
+
+    return (
+        <>
+            {Heading()}
+            {children}
+        </>
+    );
+};
