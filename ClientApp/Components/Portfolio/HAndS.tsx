@@ -130,16 +130,14 @@ const technology: ITechnologyInfo[] = [
 
 const WriteUp = (): JSX.Element => {
 
+    //sidtodo format the first section - too many paragraphs
     return (
         <>
         
             <SegmentDemo heading="Health and Safety System (CAIRS)">
                 <SegmentSubSection>
-                    <p>A responsive and mobile/tablet friendly web based data capture and reporting health and safety system used by a house construction company.</p>
-                </SegmentSubSection>
-
-                <SegmentSubSection heading="Description">
-                    <p>CAIRS is an on-premise based web application which incoorporates a ASP .NET MVC and SQL back end with a Javascript and React single page application front end.</p>
+                    <p>CAIRS is a responsive and mobile/tablet friendly data capture and reporting health and safety system used by a house construction company.</p>
+                    <p>It is based on-premise and incoorporates a ASP .NET MVC and SQL back end with a Javascript and React single page application front end.</p>
                     <p>It is used to record accidents and incidents, labour returns and safety observations.
                         These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
                     </p>

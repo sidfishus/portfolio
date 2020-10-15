@@ -241,39 +241,9 @@ const MenuVerticle = (props: IMenuHeaderProps): JSX.Element => {
                         />
                     </Menu.Item>
                     
-                    <Menu.Menu position="right">
-                        <Menu.Item>
-                            <span style={{fontSize: 16}}>
-                                Chris Siddall
-                            </span>
-                            <span style={{fontSize: 26, color: "#2185d0"}}>
-                                <b>&nbsp;Portfolio</b>
-                            </span>
-                        </Menu.Item>
-                    </Menu.Menu>
-
-                    {/*<Menu.Item position="right" active={false}>
-                        
-                        {/*<img
-                            src="/img/logo.png" height="36"
-                            key="logo"
-                        />
-                        </Menu.Item>*/}
-
-                    {/*<Menu.Item icon="bars" size="large" />*/}
-                    {/*<Menu.Item>
-                        <Icon
-                            name="bars"
-                            link
-                            size="large"
-                            onClick={()=>SetVerticalOpenState(curState => !curState)}
-                        />
-                    </Menu.Item>*/}
-
-                    {/*<img
-                        src="/img/logo.png" height="36"
-                        key="logo"
-                    />*/}
+                    <Menu.Item position="right">
+                        <Logo style={{marginRight: "-8px"}} />
+                    </Menu.Item>
                 </Menu>
             </ContainerDemo>
 
@@ -282,22 +252,42 @@ const MenuVerticle = (props: IMenuHeaderProps): JSX.Element => {
                     <ContainerDemo>
                         <Menu fluid className="vertical">{props.children}</Menu>
                     </ContainerDemo>
+                    <br/>
                 </>
             }
         </>
     );
 }
 
+interface ILogoProps {
+    style?: object;
+};
+
+const Logo: React.FunctionComponent<ILogoProps> = (props)  => {
+
+    const style = ((props.style)?props.style:{});
+
+    return (
+        <>
+            <span style={{fontSize: 26}}>
+                <b>Chris Siddall</b>
+            </span>
+            <span style={{fontSize: 16, color: "#2185d0", marginTop: "3px", ...style}}>
+                &nbsp;Portfolio
+            </span>
+        </>
+    );
+};
+
 //sidtodo test on different screen sizes
 const MenuHorizontal = (props: IMenuHeaderProps): JSX.Element => {
 
     const children = [
         ...props.children,
-        <img
-            src="/img/logo.png" height="36"
-            style={{position: "absolute", right: "10%", marginRight: 50}}
-            key="logo"
-        />
+
+        <Menu.Item className="no-left-border-demo" key="logo" position="right">
+            <Logo />
+        </Menu.Item>
     ];
 
     return (

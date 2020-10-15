@@ -1,0 +1,9 @@
+.no-left-border-demo {
+    border: none;
+    border-style: none;
+    background-color: green;
+}
+
+.ui.menu .no-left-border-demo:before {
+    width: 0px;
+}
