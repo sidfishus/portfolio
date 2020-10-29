@@ -20,88 +20,108 @@ export const FrivolousBeginnings: React.FunctionComponent<IFrivolousBeginningsPr
     );
 };
 
+//sidtodo try to find screenshots from my PC - old D drive.
 const MSNChat: React.FunctionComponent<{}> = () => {
     
     return (
-        <SegmentDemo heading="MSN Chat">
-            <p>I find it very random and lucky how I stumbled across programming and this is a story a geek/hacker may find interesting or relate to.
-                But feel free to skip this section.
-            </p>
-            <p>When I was 16 my father bought me a PC and set me up to connect to dial up 56k internet to help with my A levels and it was whilst browsing the internet one day that I discovered the MSN chat room service.
-                The <a href="https://en.wikipedia.org/wiki/MSN_Chat">MSN Chat service</a> was a collection of chat rooms (channels) accessible via a <a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/msn-webchat.png">browser</a> where you could chat with people from all over the world.
-                You could also create your own channel which would make you the channel owner and this would give you the additional powers of being able to set the chat room subject, mute, kick and ban other members.
-            </p>
-            <p>
-                I found out that it was possible to make other people the channel owner, when you create a channel a special password (owner key) is generated and placed in the Windows registry.
-                With this knowledge I started to social engineer unsuspecting users into giving me the owner key to their channels, which I could then use to make myself owner by using the '/pass' command and take over ownership of their chat room by banning them.
-                Ridiculous I know, but I was 16 at the time and I found this a lot of fun!
-            </p>
+        <>
+            <SegmentDemo heading="Foreword">
+                <p>I feel that my introduction to programming was very lucky and random.
+                </p>
+                <p>
+                    If I had not have stumbled across MSN Chat I may well have followed a completely different career path.
+                    The information on this page may seem irrelevant, but I can't emphasise enough the advantages my experiences programming on MSN Chat gave me when I was studying at university and in my job at Prophet, because it had given me 5 years of solid experience and is how my analytical, problem solving and investigative mindset naturally developed.
+                    It is also a story that geeks and hackers may relate to and find interesting.
+                </p>
+            </SegmentDemo>
 
-            <p>
-                One day I entered a busy chat room where everyone in the channel was an owner, and were all doing things like "mass kicking" people out but they were instantly rejoining, as well as mass stealing the other chatters' ownership.
-                I remember having to continually refresh my browser to re-enter the channel after being repeatedly kicked and not really understanding what was happening.
-                Whatever it was, I wanted those abilities as well.
-            </p>
-            <p>
-                After venturing into other channels and speaking to various people I found out that they were using "bots" and "scripts" and my reaction was "what - like a script to a play?".
-                After lots of chatting I found a user who was connected to the channel using a "bot" called "<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdominator.gif">IRC Dominator</a>", which would give you access to a lot more functionality than if you connected via a browser.
-                Not being backwards in being forward I quickly gleaned the information on how I could download it and how to setup.
-                I followed the instructions, which involved pasteing "<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdom-cookies.jpg">cookies</a>" into the application (which I got from doing a 'view source' in a browser session) and then fired it up.
-                Now this would take my channel stealing to the next level!
-            </p>
-            <p>This was fun for a while but I started to hear more and more about what you could achieve with scripts and be told things that were going over my head at the time.
-                After lots of begging I managed to talk someone in to sending me a working "script".
-                This consisted of an application called <a href="https://www.mirc.co.uk/">mIRC</a> and various other files.
-                I executed the mIRC.exe and was told type "join %#&lt;name of channel&gt;"" into a command prompt type window.
-                What followed then was a bunch of jargon scrolling down the screen until another window popped up that was a representation of the channel but through mIRC - I was in!
-            </p>
-            <p>
-                I still didn't understand why this was called a "script" but I started to get to grips with my new found abilities.
-                You could type various commands in to the channel window preceded by a /.
-                After doing some investigation in to this mIRC I found that it had a built in text editor like notepad and the ability to view files that were loaded in to the application.
-                One of the commands (/scroller) I was using gave you the ability the scroll messages on the screen with an increasing number of asterixes.
-                Whilst reading the computer code in the text files I came across the line "alias scroller &123;" - the cogs in my brain ticked over - I had found the mechanism that dictates what the scroller command does!
-                I copied and pasted this code but changed the top line to "alias scroller2 &123;", and changed the asterixes to another character.
-                I then hit the /scroller2 command and it worked as expected! My first script.
-                Apparently the text files were the "scripts" everyone was referring to and "scripting" was the process of writing script code.
-            </p>
+            <SegmentDemo heading="Discovering MSN Chat">
+                <p>When I was 16 my father bought me a PC with the Windows 98 OS installed and access to the internet via pay as you go dial up 56k modem connected to the telephone line with the purpose of aiding me in my A level work and studies.
+                    I had previously visited chat rooms whilst at my friends house and now that I was armed with my own computer I was keen to meet the opposite sex online!
+                    A quick google search for "UK chat rooms" resulted in MSN Chat as one of the top suggestions.
+                </p>
+                <p>
+                    <a href="https://en.wikipedia.org/wiki/MSN_Chat">MSN Chat</a> was a website that incorporated a directory listing of chat rooms (channels)
+                    Once you had created an account you could then select a chat room and speak to people all over the world via an Internet <a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/msn-webchat.png">browser</a>.
+                    You could also create your own channel which would make you the channel owner and give you the additional digital powers of being able to set the chat room subject, and mute, kick and ban other chatters.
+                </p>
+                <p>
+                    I soon found out that it was possible for multiple chatters to have channel owner access because when a channel is created a special password (owner key) was generated and placed in the Windows registry.
+                    With this knowledge I began social engineering unsuspecting channel owners into giving me the owner key and take control of the chat room by entering the '/pass &#60;ownerkey&#62;' command and then quickly banning the other owners.
+                    Ridiculous I know, but at the humble age of 16 this was great fun!
+                </p>
+            </SegmentDemo>
+            <SegmentDemo heading="The Turning Point">
+                <p>
+                    One day I entered a busy channel where everyone was an owner and were doing things such as kicking everyone out but with them instantly rejoining and reacting, or instantly removing everybody's ownership.
+                    I remember being frustrated for having to constantly refresh my browser in order to rejoin the channel after being repeatedly kicked but also being confused and excited.
+                    Whatever they were doing, I wanted those abilities as well!
+                </p>
+                <p>
+                    After venturing into other channels and speaking to various people I found out that they were using "bots" and "scripts", and my reaction was "what - like the script to a play?".
+                    After more searching I found a user who was connected to the chat room using a bot named "<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdominator.gif">IRC Dominator</a>" who explained some of it's features which were not available when connecting through a browser.
+                    Not being backwards in being forward, I was quickly extracting the information from him on how to download it and connect.
+                    I followed the instructions, which involved pasting "<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdom-cookies.jpg">cookies</a>" into the application (which I obtained by doing a 'view source' in a MSN Chat browser session), entered the name of the channel I wanted to join, and hit the enter key.
+                    Bosh, I was in!
+                    The user was indeed telling the truth as this application had a plethora of cool features that up until now I had only dreamed of.
+                    This helped me take my channel stealing and rank amongst the MSN Chat elite up to the next level!
+                </p>
+                <p>This was great fun for a while but I was still felt limited.
+                    I had started to hear more and more about what you could achieve with scripts and be told information that was going over my head at the time.
+                    After lots of begging I managed to talk someone in to sending me a working "script" which consisted of an application called <a href="https://www.mirc.co.uk/">mIRC</a> and various other text files.
+                    As per my new best friend's advice, I ran the mIRC.exe and typed a number of commands into a prompt and lastly typed "join %#&lt;name of channel&gt;"" and hit enter.
+                    //sidtodo here.
+                    What followed then was a bunch of jargon with cool colours and ASCII art scrolling down the screen until another window popped up that was a representation of the channel but through mIRC - I was in!
+                </p>
+                <p>
+                    I still didn't understand why this was called a "script" but I started to get to grips with my new found abilities.
+                    You could type various commands in to the channel window preceded by a /.
+                    (And right clicking a user's name would show a whole host of commands)
+                    After doing some investigation in to this mIRC I found that it had a built in text editor like notepad and the ability to view files that were loaded in to the application.
+                    One of the commands (/scroller) I was using gave you the ability the scroll messages on the screen with an increasing number of asterixes.
+                    Whilst reading the computer code in the text files I came across the line "alias scroller &123;" - the cogs in my brain ticked over - I had found the mechanism that dictates what the scroller command does!
+                    I copied and pasted this code but changed the top line to "alias scroller2 &123;", and changed the asterixes to another character.
+                    I then hit the /scroller2 command and it worked as expected! My first script.
+                    Apparently the text files were the "scripts" everyone was referring to and "scripting" was the process of writing script code.
+                </p>
 
-            <p>
-                After progressing my scripting abilities and furthering my understanding of the relationship between mIRC and MSN Chat I went one step further and decided to attempt writing a "connection" script.
-                mIRC has inbuilt functionality to connect to IRC servers (the Internet Relay Chat protocol MSN chat was based on) but MSN used it's own authentication processes which had to be manually scripted in order to gain access to the network.
-                I.e. the connection between mIRC and MSN had to be manually scripted using the mIRC 'socket' feature (which I imagine was implemented using Winsock).
-                To gain an understanding of how to do this I edited the connection script I was using at the time (named QuickChat), began stepping it through methodically and using the mIRC 'echo' command to give me an insight in to the data exchanges.
-                There were 2 connections involved, a connection to a "directory" server, and a connection to the actual chat server.
-                Sending a "finds" command whilst connected to the directory server would tell you which server a particular chat room was on as there were 8 of them.
-            </p>
+                <p>
+                    After progressing my scripting abilities and furthering my understanding of the relationship between mIRC and MSN Chat I went one step further and decided to attempt writing a "connection" script.
+                    mIRC has inbuilt functionality to connect to IRC servers (the Internet Relay Chat protocol MSN chat was based on) but MSN used it's own authentication processes which had to be manually scripted in order to gain access to the network.
+                    I.e. the connection between mIRC and MSN had to be manually scripted using the mIRC 'socket' feature (which I imagine was implemented using Winsock).
+                    To gain an understanding of how to do this I edited the connection script I was using at the time (named QuickChat), began stepping it through methodically and using the mIRC 'echo' command to give me an insight in to the data exchanges.
+                    There were 2 connections involved, a connection to a "directory" server, and a connection to the actual chat server.
+                    Sending a "finds" command whilst connected to the directory server would tell you which server a particular chat room was on as there were 8 of them.
+                </p>
 
-            <p>
-                Authentication was the most complex aspect and consisted of 2 parts.
-                The first part was an 8 character challenge string and in order to gain the answer you had to create a hidden browser window within mIRC and embed the chat ActiveX control within it.
-                The second part involved sending the MSN passport cookies which had to be regenerated every 24 hours that I was already in the habit of doing.
-            </p>
+                <p>
+                    Authentication was the most complex aspect and consisted of 2 parts.
+                    The first part was an 8 character challenge string and in order to gain the answer you had to create a hidden browser window within mIRC and embed the chat ActiveX control within it.
+                    The second part involved sending the MSN passport cookies which had to be regenerated every 24 hours that I was already in the habit of doing.
+                </p>
 
-            <p>
-                With this understanding I wrote my own connection in which I named "r00t" and released to the public via a popular mIRC scripting site at the time.
-                I couldn't resist the temptation to add a hidden backdoor which meant I would automatically be given owner access whenever I joined a channel with an owner user using my script ;-).
-            </p>
+                <p>
+                    With this understanding I wrote my own connection in which I named "r00t" and released to the public via a popular mIRC scripting site at the time.
+                    I couldn't resist the temptation to add a hidden backdoor which meant I would automatically be given owner access whenever I joined a channel with an owner user using my script ;-).
+                </p>
 
-            <p>
-                ROOt connection was quite well received but it didn't stand out at the time, there was nothing special about it.
-                Scripters were fixated with speed, if you were faster than everyone else at anything then you were considered "elite".
-                For example we used to write "deowner" protection so that we could react as quickly as possible to having our channel ownership removed to prevent channel take overs.
-                For some reason we were under the illusion that the more complicated we could make this the quicker we would react and would go to great lengths!
-                Joining a channel would incur a lag of at least 1 second due to having to determine which server a channel was on and then connect a socket to that server.
-                I had the idea of using pre-connected sockets: upon opening mIRC, the connection script would create a socket to each of the 8 servers and leave them idle.
-                Joining a channel was then a case of sending a "JOIN %#&lt;Channel&gt;" to each of the pre-connected sockets simulataneously, and the relevant one would give you access.
-                Voila instant connection!
-                I released this connection as "Direx" and it was very popular.
-                Again I couldn't help but add a backdoor which I used on a number of occasions to <a href="https://xt.proboards.com/thread/1017/connected-first?page=3">recapture</a> stolen channels.
-                There was an MSN Chat command "who" that you could use to search for chatters.
-                When my connection authenticated it sent a certain signature which could then be looked up using the "who" command.
-                In one hour I used this to mass find everyone connected using my script and promptly used the backdoor (ownership on entry) to take 50+ channels for fun (I returned the majority of them).
-            </p>
-        </SegmentDemo>
+                <p>
+                    ROOt connection was quite well received but it didn't stand out at the time, there was nothing special about it.
+                    Scripters were fixated with speed, if you were faster than everyone else at anything then you were considered "elite".
+                    For example we used to write "deowner" protection so that we could react as quickly as possible to having our channel ownership removed to prevent channel take overs.
+                    For some reason we were under the illusion that the more complicated we could make this the quicker we would react and would go to great lengths!
+                    Joining a channel would incur a lag of at least 1 second due to having to determine which server a channel was on and then connect a socket to that server.
+                    I had the idea of using pre-connected sockets: upon opening mIRC, the connection script would create a socket to each of the 8 servers and leave them idle.
+                    Joining a channel was then a case of sending a "JOIN %#&lt;Channel&gt;" to each of the pre-connected sockets simulataneously, and the relevant one would give you access.
+                    Voila instant connection!
+                    I released this connection as "Direx" and it was very popular.
+                    Again I couldn't help but add a backdoor which I used on a number of occasions to <a href="https://xt.proboards.com/thread/1017/connected-first?page=3">recapture</a> stolen channels.
+                    There was an MSN Chat command "who" that you could use to search for chatters.
+                    When my connection authenticated it sent a certain signature which could then be looked up using the "who" command.
+                    In one hour I used this to mass find everyone connected using my script and promptly used the backdoor (ownership on entry) to take 50+ channels for fun (I returned the majority of them).
+                </p>
+            </SegmentDemo>
+        </>
     );
 };
 
@@ -203,11 +223,9 @@ const TheEnd: React.FunctionComponent<{}> = () => {
             <p>
                 This is as far as I got on MSN because the network was closed in <a href="https://www.itprotoday.com/windows-8/conversation-over-msn-closing-chat-rooms-worldwide">2003</a> :(.
                 It's hard to explain why I was so fascinated with MSN Chat at the time, I really had a great time and I wasn't alone as it was very popular amongst computer programmers at the time.
+                It sounds strange, but I almost get butterflies in my stomach when I think of those days.
+                Randomly hearing one of the sound effects used within the original MSN Chat application will bring memories flooding back.
                 Perhaps one day I'll have a go at recreating MSN Chat, not just another IRC network, but one that has that MSN Chat feel.
-            </p>
-            
-            <p>This probably all sounds irrelevant, but I can't emphasise enough the advantage this experience gave me when I went to university and first started working.
-                I already had 5 years solid experience behind me and is how I developed my analytical, problem solving and investigative mindset.
             </p>
 
             <p>I really could write a book about my experiences and exploits (maybe one day I will) and have very fond memories, long live MSN Chat.</p>

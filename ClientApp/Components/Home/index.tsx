@@ -134,8 +134,8 @@ const aboutSections: IAboutSection[] = [
     {
         section: <Link to="/textparse">Text Parse Demo</Link>,
         descr: <>The purpose of this was to create an extensive ASP .NET MVC Core/React/Javascript application with a rich GUI
-            which leverages the latest features of each, as well as advertise my&#32;
-            <a href="https://github.com/sidfishus/TextParse">text parse library</a> and demonstrate what it can achieve
+            which leverages the latest features of each, to demonstrate my skills as well as advertise my&#32;
+            <a href="https://github.com/sidfishus/TextParse">text parse library</a> and exhibit what it can achieve
             and how it works, but from a visual perspective for a deeper understanding.</>
     }
 ];

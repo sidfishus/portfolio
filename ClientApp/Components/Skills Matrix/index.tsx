@@ -282,7 +282,8 @@ const skillsMatrix: ISkillRow[] = [
         experienceTotal: 3, 
         experienceCommercial: 2,
         areas: <>Identity Server 4 (ASP .NET), OAuth2 bearer tokens (ASP .NET), custom implementation of IUserStore
-            and IUser (ASP .NET) for validating user authorisation, API's secured using Azure AD (ASP .NET).
+            and IUser (ASP .NET) for validating user authorisation, API's secured using Azure AD and single sign on
+            (ASP .NET).
             <AreaLinkBreak/>
             Used in the <Link to="/portfolio/dpa">distributed SPA</Link>
             and the <Link to="/portfolio/hands">data capture and reporting application</Link>. <AreaLinkBreak/>

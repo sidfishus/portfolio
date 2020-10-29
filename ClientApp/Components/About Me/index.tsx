@@ -39,27 +39,26 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
             </p>
             <p>
                 I am naturally an introvert, content in solitude, but I appreciate the value of family and human
-                connection and the necessity to work with others.
-                If my mood or the surroundings take me, or if I am surrounded by introverts then I can become more extrovert.
+                connection and the necessity of working with others.
+                If my mood or the atmosphere takes me, or if I am surrounded by introverts then I can become more extrovert.
+                I adapt my personality to best suit the situation and group dynamics.
                 I pride myself on being labeled a geek and consider myself a very confident and creative deep outside of the
                 box thinker who takes a fresh and direct approach to solving problems and I get a buzz out of this.
-                I aim to be organised and focus my attention on one thing at a time, I actively strive not to multi task.
+                I aim to be organised and focus my attention on one thing at a time, I actively strive to not multi task.
                 I have proved myself to work well under pressure but I believe time constraints kill creativity!
             </p>
             <p>
                 To honestly sum myself up I would say I'm a critical free thinker, confident, driven,
-                motivated, versatile and quick to learn, meticulous to the point of appearing pedantic, and obsessive.
-                I can be cold, serious and almost robotic at times because I try to apply a methodical approach to
-                everything, not just software and problem solving.
+                motivated, adaptable and quick to learn, direct, meticulous, and obsessive.
             </p>
-            <p>//sidtodo here.
-                Weaknesses that I am working on are new surroundings, situations and meeting new people can make me anxious.
-                Programming has always felt natural, but social interaction is not at times and is something I reflect on.
-                If I had to choose between working with software or humans, I would choose
-                software because it is far simpler to understand (especially than the opposite sex) and follows fixed rules!
+            <p>
+                Weaknesses that I am working on are new surroundings, situations and meeting new people initially makes me anxious.
+                Social interaction is not as natural for me than is programming.
+                If I had to choose between working with software or humans then I would definitely choose
+                software because it is far simpler to understand!
                 I feel uncomfortable when I have to be spontaneous and I find it easier to express myself and explain technical
-                things through writing and diagrams rather than through speech.
-                I show leadership qualities such as taking charge and leading by example but I'm not sure if I would
+                information through writing and diagrams rather than through speech.
+                I show leadership qualities such as taking responsibility and leading by example but I'm not sure if I would
                 consider myself a leader because I have high expectations and need to work on getting the best
                 out of people.
             </p>
@@ -76,18 +75,19 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
                 Having a "can do" and "never give up" type attitude is a prerequisite for being a successful programmer
                 when each project you work on incorporates at least one significant technology which is new to you.
             </p>
-            //sidtodo here.
             <p>
                 I consider myself a full stack developer but I have a definite preference and strength for
                 creative software design and backend development.
                 I am better placed being concerned with how things work as opposed to nuances in the user interface.
-                Of the widely used web technologies I have the least experience in CSS and LESS because I prefer to
-                reuse a ready built user interface platform like Semantic UI React that I have used in this site
-                instead of spending valuable time making trvial changes by fiddling with CSS. That's just my opinion.
+                Of the widely used web technologies I have the least experience in CSS and LESS.
+                I prefer to
+                reuse a ready built user interface platform like Semantic UI React which I have used in this site
+                instead of spending valuable time making trivial presentation changes. That's just my opinion.
+                And I could not tell you all of the latest features of HTML5.
             </p>
             <p>If I could change anything about myself it would be to remove my need for sleep and rest.
-                There is so much that I would like to do but unfortunately I cannot do it all at the moment.
-                I have to find the correct balance between work, family, my friends, my hobbies, managing my house,
+                There is so much that I would like to pursue but unfortunately I cannot do it all at the moment.
+                I try to find a healthy balance between work, family, my friends, my hobbies, managing my house,
                 and my physical and mental health, whilst trying not to forget to smell the roses along the way.
             </p>
         </SegmentDemo>
@@ -97,16 +97,19 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
 const Hobbies: React.FunctionComponent<{}> = () => {
     return (
         <SegmentDemo heading="Hobbies">
-            <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and lovingly fish in all weather conditions.</p>
+            <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and passionately fish in all weather conditions.</p>
             <p>
-                In my early to mid 20's I was heavily into frequenting live music events such as raves, clubbing and festivals and my favourite genre's are trance, hard house/dance, drum and bass, and UK hardcore.
-                I have been to Glastonbury 4 times.
-                I learned to mix my favourite categories of music using CDJ's and played out approximately 10 times at small to medium club events.
+                From as far back as I can remember I have been very fond of listening to dance music.
+                Coding whilst listening to tunes puts me in a happy place!
+                In my early to mid 20's I was heavily into live music events such as raves, club events and festivals and my favourite genre's are trance, hard house/dance, drum and bass, and UK hardcore.
+                Around this time I learned to mix my favourite categories of music using CDJ's (CD version of vinyl records) and played out approximately 10 times at small to medium club events.
+                I have been to Glastonbury 4 times which is something everyone should experience at least once.
+                Those days are behind me now but I am still very passionate about music due to it's wonderful natural stimulating effects and will occasionally dust off the decks and smash them up.
             </p>
             <p>
-                Those days are behind me now but I am still very passionate about music due to it's wonderful natural stimulating effects and will occasionally dust off the decks.
-                Since becoming a father balancing my life has become even more important as I carefully manage work, family and my home as well as squeezing in time to follow my dreams.
-                Lately I'm finding myself more and more interested in politics and have been following the COVID19 crisis and riots in America closely.
+                Whereas in the past I would read books such as fishing novels and A Song of Ice and Fire, and watch Netflix movies and TV series, I spend a lot of that time now listening to pod casts and politics.
+                With having less free time available, it works well with me because I can listen to pod casts whilst simultaneously writing code.
+                2020 has been the most eventful year of my life due to the emergence of Covid19 and the American elections and I believe we will see significant changes to our way of life over the next 5 years.
             </p>
         </SegmentDemo>
     );
