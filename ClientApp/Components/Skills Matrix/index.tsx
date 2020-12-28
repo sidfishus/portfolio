@@ -216,7 +216,7 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>Entity Framework various versions, installer/deployment system, COM interop, Windows services,
             SQL database interaction, Rosylyn compiler framework, desktop and mobile GUI applications, 
             various command line utilities, SQL Server Compact Remote Data Access,
-            LINQ and LINQ extensions.</>
+            LINQ and LINQ extensions, dependancy injection.</>
     },
     {
         technology: "Unix",

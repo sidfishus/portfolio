@@ -26,52 +26,60 @@ const MSNChat: React.FunctionComponent<{}> = () => {
     return (
         <>
             <SegmentDemo heading="Foreword">
-                <p>I feel that my introduction to programming was very lucky and random.
-                </p>
+                <p>My introduction to programming was extremely lucky.</p>
                 <p>
-                    If I had not have stumbled across MSN Chat I may well have followed a completely different career path.
-                    The information on this page may seem irrelevant, but I can't emphasise enough the advantages my experiences programming on MSN Chat gave me when I was studying at university and in my job at Prophet, because it had given me 5 years of solid experience and is how my analytical, problem solving and investigative mindset naturally developed.
-                    It is also a story that geeks and hackers may relate to and find interesting.
+                    If I had not have stumbled across MSN Chat I likely would have followed a completely different career path as up until this point I had no idea of how I was going to make a living.
+                    A job in the fishing industry would have been ideal but at the time I had no relevant skills other than being reasonably good at catching carp, and the market was already saturated with passionate fisherman with the same "pipe dream".
+                    I did not connect with my A level subjects either, so I was/am very thankful for finding a new hobbie that I could also do as a job.
+                </p>
+                <p>This page explains in detail how I accidently discovered programming and what motivated me to continually pursue new skills and knowledge and improve upon what I had already created.
+                    It is also a story that geeks and hackers may relate to or find interesting.
+                    This page may seem irrelevant, but I can't emphasise enough the advantages my experiences programming on MSN Chat gave me when I was studying at university and working for Prophet.
+                    I had gained 5 years of solid experience and naturally developed my analytical, problem solving and investigative mindset.
                 </p>
             </SegmentDemo>
 
             <SegmentDemo heading="Discovering MSN Chat">
-                <p>When I was 16 my father bought me a PC with the Windows 98 OS installed and access to the internet via pay as you go dial up 56k modem connected to the telephone line with the purpose of aiding me in my A level work and studies.
-                    I had previously visited chat rooms whilst at my friends house and now that I was armed with my own computer I was keen to meet the opposite sex online!
-                    A quick google search for "UK chat rooms" resulted in MSN Chat as one of the top suggestions.
+                <p>When I was 16 my father bought me a PC with the Windows 98 OS installed and a 56k modem for the purpose of aiding me in my A level work and studies.
+                    I had previously used online chat rooms whilst at my friends house to speak to the opposite sex and generally have fun.
+                    Now I was armed with my own computer I decided to try this out again and after a quick google search for "UK chat rooms" I found MSN Chat.
                 </p>
                 <p>
-                    <a href="https://en.wikipedia.org/wiki/MSN_Chat">MSN Chat</a> was a website that incorporated a directory listing of chat rooms (channels)
-                    Once you had created an account you could then select a chat room and speak to people all over the world via an Internet <a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/msn-webchat.png">browser</a>.
-                    You could also create your own channel which would make you the channel owner and give you the additional digital powers of being able to set the chat room subject, and mute, kick and ban other chatters.
+                    <a href="https://en.wikipedia.org/wiki/MSN_Chat">MSN Chat</a> was a website that incorporated a directory listing of chat rooms (referred to as channels) that were split between specific topics (teen, computing, e.t.c.).
+                    Once you had created an account you could then select a channel and join it to speak to people from all over the world via your Internet <a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/msn-webchat.png">browser</a>.
+                    You could also create your own public channel which would make you the channel owner giving you additional digital powers such as the ability to set the chat room subject, and mute, kick and ban other chatters.
+                    Channel owners in the nickname list had a golden hammer icon next to their name (ahh the memories).
                 </p>
                 <p>
-                    I soon found out that it was possible for multiple chatters to have channel owner access because when a channel is created a special password (owner key) was generated and placed in the Windows registry.
-                    With this knowledge I began social engineering unsuspecting channel owners into giving me the owner key and take control of the chat room by entering the '/pass &#60;ownerkey&#62;' command and then quickly banning the other owners.
+                    It was difficult and time consuming to create a new channel and make it popular but I had found out that it was possible for multiple chatters to have channel owner access.
+                    When you create a new channel a special password (owner key) was generated and placed in a specific location in the Windows registry.
+                    With this knowledge I began social engineering unsuspecting channel owners in busy channels into telling me the owner key and I would then 'take over' the chat room by entering the '/pass &#60;owner key&#62;' command and quickly 'kick banning' the other owners.
                     Ridiculous I know, but at the humble age of 16 this was great fun!
                 </p>
             </SegmentDemo>
             <SegmentDemo heading="The Turning Point">
                 <p>
-                    One day I entered a busy channel where everyone was an owner and were doing things such as kicking everyone out but with them instantly rejoining and reacting, or instantly removing everybody's ownership.
-                    I remember being frustrated for having to constantly refresh my browser in order to rejoin the channel after being repeatedly kicked but also being confused and excited.
-                    Whatever they were doing, I wanted those abilities as well!
+                    One day I entered a busy channel where everybody was an owner and I couldn't keep up with what was happening.
+                    For example, all user's could be kicked out in an instant by one user but they would all instantly rejoin and sometimes make themself an owner and revoke the owner privileges of the user that kicked them, seemingly like an automated response.
+                    I remember being frustrated for having to continually refresh my browser in order to rejoin after being kicked, and finding I was no longer an owner when attempting to kick the other users.
+                    I was confused and excited, for whatever they were doing and however they were doing it, I wanted to be able to do the same!
                 </p>
                 <p>
-                    After venturing into other channels and speaking to various people I found out that they were using "bots" and "scripts", and my reaction was "what - like the script to a play?".
-                    After more searching I found a user who was connected to the chat room using a bot named "<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdominator.gif">IRC Dominator</a>" who explained some of it's features which were not available when connecting through a browser.
-                    Not being backwards in being forward, I was quickly extracting the information from him on how to download it and connect.
-                    I followed the instructions, which involved pasting "<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdom-cookies.jpg">cookies</a>" into the application (which I obtained by doing a 'view source' in a MSN Chat browser session), entered the name of the channel I wanted to join, and hit the enter key.
+                    After venturing into lots of other channels and speaking to various people I found out that they were using 'bots' and 'scripts'.
+                    After more searching I found a user who was chatting to me via a bot named '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdominator.gif">IRC Dominator</a>' who explained some of it's features which were not available when connecting through a browser.
+                    Not being backwards in coming forward, I was quickly extracting the information from him on how to download and use it.
+                    I followed the instructions, which involved pasting '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdom-cookies.jpg">cookies</a>' into the application (which were obtained by doing a 'view source' in a browser chat room session), keyed the name of the channel I wanted to join, and hit the enter key.
                     Bosh, I was in!
-                    The user was indeed telling the truth as this application had a plethora of cool features that up until now I had only dreamed of.
+                    The user was indeed telling the truth as this application boasted a plethora of cool features that up until now I had only dreamed of.
                     This helped me take my channel stealing and rank amongst the MSN Chat elite up to the next level!
                 </p>
-                <p>This was great fun for a while but I was still felt limited.
-                    I had started to hear more and more about what you could achieve with scripts and be told information that was going over my head at the time.
-                    After lots of begging I managed to talk someone in to sending me a working "script" which consisted of an application called <a href="https://www.mirc.co.uk/">mIRC</a> and various other text files.
-                    As per my new best friend's advice, I ran the mIRC.exe and typed a number of commands into a prompt and lastly typed "join %#&lt;name of channel&gt;"" and hit enter.
-                    //sidtodo here.
-                    What followed then was a bunch of jargon with cool colours and ASCII art scrolling down the screen until another window popped up that was a representation of the channel but through mIRC - I was in!
+                <p>This was great fun for a while but IRC Dominator had it's imperfections and I still felt limited.
+                    I was hearing more and more about what you could achieve with scripts and a lot of the information was going over my head at the time.
+                    After lots of begging and some failed attempts I managed to talk someone in to sending me a working 'script' which consisted of an application called <a href="https://www.mirc.co.uk/">mIRC</a> and various text files.
+                    As per my new best friend's advice, I ran the mIRC.exe and typed a number of commands into a prompt which included the same cookie approach as IRC Dominator and lastly typed "/join %#&lt;name of channel&gt;"" and hit enter.
+                    Something positive seemed to be happening as large swathes of jargon in cool colours and ASCII art scrolled down the screen until a seperate window inside mIRC opened up which appeared to be a representation of the channel I had wished to join but in a mIRC user interface.
+                    I was logged in to the same channel via my browser and I noticed that the second user account I was using specifically within mIRC had indeed joined and could send and receive chat room events.
+                    Yes! I had finally successfully connected via a script!
                 </p>
                 <p>
                     I still didn't understand why this was called a "script" but I started to get to grips with my new found abilities.
