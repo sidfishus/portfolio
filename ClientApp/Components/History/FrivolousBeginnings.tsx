@@ -35,7 +35,8 @@ const MSNChat: React.FunctionComponent<{}> = () => {
                 <p>This page explains in detail how I accidently discovered programming and what motivated me to continually pursue new skills and knowledge and improve upon what I had already created.
                     It is also a story that geeks and hackers may relate to or find interesting.
                     This page may seem irrelevant, but I can't emphasise enough the advantages my experiences programming on MSN Chat gave me when I was studying at university and working for Prophet.
-                    I had gained 5 years of solid experience and naturally developed my analytical, problem solving and investigative mindset.
+                    I had gained 5 years of solid programming experience including writing 1000's of publically released code as well as tutorials, and naturally developed my analytical, problem solving and investigative mindset.
+                    It also taught me a lot about human behaviour.
                 </p>
             </SegmentDemo>
 
@@ -81,34 +82,72 @@ const MSNChat: React.FunctionComponent<{}> = () => {
                     I was logged in to the same channel via my browser and I noticed that the second user account I was using specifically within mIRC had indeed joined and could send and receive chat room events.
                     Yes! I had finally successfully connected via a script!
                 </p>
+            </SegmentDemo>
+            <SegmentDemo heading="Scripting">
                 <p>
-                    I still didn't understand why this was called a "script" but I started to get to grips with my new found abilities.
-                    You could type various commands in to the channel window preceded by a /.
-                    (And right clicking a user's name would show a whole host of commands)
-                    After doing some investigation in to this mIRC I found that it had a built in text editor like notepad and the ability to view files that were loaded in to the application.
-                    One of the commands (/scroller) I was using gave you the ability the scroll messages on the screen with an increasing number of asterixes.
-                    Whilst reading the computer code in the text files I came across the line "alias scroller &123;" - the cogs in my brain ticked over - I had found the mechanism that dictates what the scroller command does!
-                    I copied and pasted this code but changed the top line to "alias scroller2 &123;", and changed the asterixes to another character.
-                    I then hit the /scroller2 command and it worked as expected! My first script.
-                    Apparently the text files were the "scripts" everyone was referring to and "scripting" was the process of writing script code.
+                    I still didn't understand why this was called a script but I dove straight into finding what new features I had gained and making sense of how this all worked.
+                    Similar to a web browser session, right clicking a user in the 'nick list' window opened a typical Windows context menu with a whole host of commands that you could apply to that user.
+                    And additionally right clicking in the channel window brought up another context menu with another list of commands such as 'null take', 'mass kick', 'mass ban', 'mass deowner'.
+                    I was also told by the user who sent me the script that there were also a number of 'aliases' available, which were commands you could type preceded by a '/'.
+                    And apparently all of this was completely customiseable.
+                </p>
+                <p>
+                    After doing some investigation in to this mIRC I found that it had a built in text editor like notepad and the ability to add and edit text files. 
+                    There was already a number of text files loaded into mIRC and I spent some time skimming through them.
+                    One of the aliases (/scroller &lt;text&gt;) I had been told about would repeat the specified text as messages with an increasing number of asterixes.
+                    Whilst reading the text files I came across the line "alias scroller &123;" and the cogs in my adolescent brain starting turning - had I found the essence of the scroller command?
+                    I copied and pasted the code which seemed to encompass the scroller command but changed the top line to "alias scroller2 &123;", and changed the '10' to a '5' (the original would scroll the text 10 times).
+                    I then typed /scroller2 into the command prompt and it worked as expected!
+                    My first ever lines of code!
+                    I later found out that these text files were the 'scripts' everyone was referring to and 'scripting' was the process of writing code in this manner.
+                    I was therefore now a scripter!
                 </p>
 
+                <p>The mIRC script language (at the time) had a syntax similar to Javascript and included most of the typical features you expect to find in a simple scripting language.
+                    There were no data types and there was no compiler/transpiler or syntax checker.
+                    The only feedback you would receive would be an error message shown in the active window whenever a line of code being executed contained a syntax or logic error.
+                    It didn't offer closures, object orientation or anything like that, but the syntax was intuitive and had enough keywords to facilitate the creation of complex algorithms, as well as featuring a comprehensive list of built in commands and events such as TCP/IP and UDP sockets and the ability to extend mIRC through the use of DLL's.
+                    And you could also create Windows style dialogs via a user interface editor.
+                    With mIRC you could create practically any software you could imagine, for example I created an MSN Messenger client that integrated with the mIRC switchbar and private messaging functionality.
+                </p>
+            </SegmentDemo>
+            <SegmentDemo heading="Connection Scripts">
                 <p>
                     After progressing my scripting abilities and furthering my understanding of the relationship between mIRC and MSN Chat I went one step further and decided to attempt writing a "connection" script.
-                    mIRC has inbuilt functionality to connect to IRC servers (the Internet Relay Chat protocol MSN chat was based on) but MSN used it's own authentication processes which had to be manually scripted in order to gain access to the network.
-                    I.e. the connection between mIRC and MSN had to be manually scripted using the mIRC 'socket' feature (which I imagine was implemented using Winsock).
-                    To gain an understanding of how to do this I edited the connection script I was using at the time (named QuickChat), began stepping it through methodically and using the mIRC 'echo' command to give me an insight in to the data exchanges.
-                    There were 2 connections involved, a connection to a "directory" server, and a connection to the actual chat server.
-                    Sending a "finds" command whilst connected to the directory server would tell you which server a particular chat room was on as there were 8 of them.
+                    Understanding how and being able to connect mIRC to MSN Chat was key to having an edge over the other scripters I was competing against.
+                </p>
+                <p>
+                    mIRC out of the box worked seemlessly with standard IRCx and IRCd type TCP/IP servers (the 2 types that I remember having used) and MSN Chat was IRCx based, however it had a number of additional features and nuances such as authentication that mIRC did not support directly.
+                    Rather than using the standard mIRC '/server &lt;IP&gt; &lt;port;&gt;' command to connect directly to MSN Chat (which would fail), the connection and traffic between the mIRC client and the MSN Chat network had to be manually scripted and the packets manually manipulated.
+                    The first part was to create a proxy connection to the mIRC client which is achieved by creating a local server using the '/socklisten &lt;socket name&gt; &lt;port&gt;' command, and then a '/server 127.0.0.1 &lt;port&gt;' command.
+                    The second step was to create a connection to the relevant MSN Chat server via the '/sockopen &lt;socket name&gt; &lt;IP&gt; &lt;port&gt;' command and handle the initialisation and authentication yourself in the mIRC script.
+                    Then for example to join a channel, you would enter '/join &lt;channel;&gt;' into the mIRC server window for which the local connection/proxy would receive via a 'socket read', and then forward it on to the MSN Chat server using the relevant IRCx/MSN Chat protocol via a 'socket write'.
+                    If the join request was successful, you would then receive a number of packets in the MSN Chat socket connection and these were parsed, manipulated under the circumstances where mIRC did not support a command, and forwarded on to the local proxy/mIRC connection.
+                    When the mIRC client receives the packets, the built in functionality would be triggered and behave as though it was connected directly to MSN Chat, which involved opening a new window for the channel, populating the nickname list, and showing the current topic.
+                </p>
+                <p>        
+                    To learn all of this I began methodically stepping through the connection I was using at the time
+                    (named QuickChat and by a scripter named 'Cyborg' who I eventually became friends with), and using the mIRC 'echo' command
+                    to debug trace the packets.
+                    There were 2 separate MSN Chat connections involved, a connection to a fixed IP referred to as the "directory server" in this
+                    script, and a separate connection to the chat server.
+                    There were 8 chat servers at the time which was later extended to 10 servers, and a given channel was hosted on one
+                    of these servers and accessed directly.
+                    It was the purpose of the "directory server" to tell clients the specific IP a channel was on which was achieved
+                    via a 'FINDS' command, as well as provide a command to create a new channel.
                 </p>
 
                 <p>
+                    In order to successfully connect to the servers you had to go through a complex 2 part authentication process.
+                    //sidtodo here
+
                     Authentication was the most complex aspect and consisted of 2 parts.
                     The first part was an 8 character challenge string and in order to gain the answer you had to create a hidden browser window within mIRC and embed the chat ActiveX control within it.
                     The second part involved sending the MSN passport cookies which had to be regenerated every 24 hours that I was already in the habit of doing.
                 </p>
 
                 <p>
+                    As my knowledge increased I rewrote many parts of QuickChat until I felt confident enough to start from scratch.
                     With this understanding I wrote my own connection in which I named "r00t" and released to the public via a popular mIRC scripting site at the time.
                     I couldn't resist the temptation to add a hidden backdoor which meant I would automatically be given owner access whenever I joined a channel with an owner user using my script ;-).
                 </p>
