@@ -35,7 +35,7 @@ const MSNChat: React.FunctionComponent<{}> = () => {
                 <p>This page explains in detail how I accidently discovered programming and what motivated me to continually pursue new skills and knowledge and improve upon what I had already created.
                     It is also a story that geeks and hackers may relate to or find interesting.
                     This page may seem irrelevant, but I can't emphasise enough the advantages my experiences programming on MSN Chat gave me when I was studying at university and working for Prophet.
-                    I had gained 5 years of solid programming experience including writing 1000's of publically released code as well as tutorials, and naturally developed my analytical, problem solving and investigative mindset.
+                    I had gained 5 years of solid programming experience including writing 1000's of lines of publically released code as well as tutorials, and naturally developed my analytical, problem solving and investigative mindset.
                     It also taught me a lot about human behaviour.
                 </p>
             </SegmentDemo>
@@ -114,10 +114,12 @@ const MSNChat: React.FunctionComponent<{}> = () => {
             <SegmentDemo heading="Connection Scripts">
                 <p>
                     After progressing my scripting abilities and furthering my understanding of the relationship between mIRC and MSN Chat I went one step further and decided to attempt writing a "connection" script.
-                    Understanding how and being able to connect mIRC to MSN Chat was key to having an edge over the other scripters I was competing against.
+                    Understanding how and being able to connect mIRC to MSN Chat was key to having an edge over the other scripters I was in effect competing against.
+                    Connection scripting sent me down a path where I realised my preference for what's known as 'back-end' programming, in contrast to the more front-end type applications I had been working on
+                    up to this point.
                 </p>
                 <p>
-                    mIRC out of the box worked seemlessly with standard IRCx and IRCd type TCP/IP servers (the 2 types that I remember having used) and MSN Chat was IRCx based, however it had a number of additional features and nuances such as authentication that mIRC did not support directly.
+                    mIRC out of the box worked seemlessly with standard IRCx and IRCd type TCP/IP servers (the 2 types that I remember using) and MSN Chat was IRCx based, however it had a number of additional features and nuances such as authentication that mIRC did not support directly.
                     Rather than using the standard mIRC '/server &lt;IP&gt; &lt;port;&gt;' command to connect directly to MSN Chat (which would fail), the connection and traffic between the mIRC client and the MSN Chat network had to be manually scripted and the packets manually manipulated.
                     The first part was to create a proxy connection to the mIRC client which is achieved by creating a local server using the '/socklisten &lt;socket name&gt; &lt;port&gt;' command, and then a '/server 127.0.0.1 &lt;port&gt;' command.
                     The second step was to create a connection to the relevant MSN Chat server via the '/sockopen &lt;socket name&gt; &lt;IP&gt; &lt;port&gt;' command and handle the initialisation and authentication yourself in the mIRC script.
@@ -126,7 +128,7 @@ const MSNChat: React.FunctionComponent<{}> = () => {
                     When the mIRC client receives the packets, the built in functionality would be triggered and behave as though it was connected directly to MSN Chat, which involved opening a new window for the channel, populating the nickname list, and showing the current topic.
                 </p>
                 <p>        
-                    To learn all of this I began methodically stepping through the connection I was using at the time
+                    To learn all of this I began methodically stepping through the connection script I was using at the time
                     (named QuickChat and by a scripter named 'Cyborg' who I eventually became friends with), and using the mIRC 'echo' command
                     to debug trace the packets.
                     There were 2 separate MSN Chat connections involved, a connection to a fixed IP referred to as the "directory server" in this
@@ -134,53 +136,68 @@ const MSNChat: React.FunctionComponent<{}> = () => {
                     There were 8 chat servers at the time which was later extended to 10 servers, and a given channel was hosted on one
                     of these servers and accessed directly.
                     It was the purpose of the "directory server" to tell clients the specific IP a channel was on which was achieved
-                    via a 'FINDS' command, as well as provide a command to create a new channel.
+                    via a 'FINDS' command, as well as to provide a command to create new channels.
                 </p>
 
                 <p>
                     In order to successfully connect to the servers you had to go through a complex 2 part authentication process.
-                    //sidtodo here
-
-                    Authentication was the most complex aspect and consisted of 2 parts.
-                    The first part was an 8 character challenge string and in order to gain the answer you had to create a hidden browser window within mIRC and embed the chat ActiveX control within it.
-                    The second part involved sending the MSN passport cookies which had to be regenerated every 24 hours that I was already in the habit of doing.
+                    The first part involved responding to a packet containing a random 8 character length string, except the hashing algorithm required was hidden (and unknown to us at the time) inside the chat
+                    ActiveX control compiled binary.
+                    To get around this we used mIRC script code to create a hidden browser window containing the HTML to load and spoof a connection between the chat ActiveX control and localhost, as though localhost was actually the chat service.
+                    The 8 character challenge received from the chat service was forwarded on to the chat ActiveX control which delightfully replied with the answer, and this was forwarded back to the chat service gaining us access.
+                    The second part of authentication involved sending the MSN Chat passport cookies which had to be regenerated every 24 hours for which I was already in the habit of doing.
                 </p>
 
                 <p>
                     As my knowledge increased I rewrote many parts of QuickChat until I felt confident enough to start from scratch.
-                    With this understanding I wrote my own connection in which I named "r00t" and released to the public via a popular mIRC scripting site at the time.
-                    I couldn't resist the temptation to add a hidden backdoor which meant I would automatically be given owner access whenever I joined a channel with an owner user using my script ;-).
+                    The first connection script I made (named r00t) followed the same principles of QuickChat and was released to released to the public via a popular mIRC scripting site at the time.
+                    And I couldn't resist the temptation to add a hidden backdoor which meant I would automatically be given owner access whenever I joined a channel containing an owner using my script ;-).
                 </p>
 
                 <p>
-                    ROOt connection was quite well received but it didn't stand out at the time, there was nothing special about it.
-                    Scripters were fixated with speed, if you were faster than everyone else at anything then you were considered "elite".
-                    For example we used to write "deowner" protection so that we could react as quickly as possible to having our channel ownership removed to prevent channel take overs.
-                    For some reason we were under the illusion that the more complicated we could make this the quicker we would react and would go to great lengths!
-                    Joining a channel would incur a lag of at least 1 second due to having to determine which server a channel was on and then connect a socket to that server.
-                    I had the idea of using pre-connected sockets: upon opening mIRC, the connection script would create a socket to each of the 8 servers and leave them idle.
-                    Joining a channel was then a case of sending a "JOIN %#&lt;Channel&gt;" to each of the pre-connected sockets simulataneously, and the relevant one would give you access.
-                    Voila instant connection!
-                    I released this connection as "Direx" and it was very popular.
-                    Again I couldn't help but add a backdoor which I used on a number of occasions to <a href="https://xt.proboards.com/thread/1017/connected-first?page=3">recapture</a> stolen channels.
-                    There was an MSN Chat command "who" that you could use to search for chatters.
-                    When my connection authenticated it sent a certain signature which could then be looked up using the "who" command.
-                    In one hour I used this to mass find everyone connected using my script and promptly used the backdoor (ownership on entry) to take 50+ channels for fun (I returned the majority of them).
+                    rOOt was quite well received but it didn't stand out at the time, there was nothing particularily special about it, although it did gain me extra kudos due to there being
+                    less than a handful of released connections at the time.
+                    Scripters were fixated with speed, if you were faster than everyone else at anything then you were considered "elite", when in reality it was all down to bandwidth and ping!
+                    For example we used to write "deowner" protection code so that we could react as quickly as possible to prevent channel take overs.
+                    And for some reason we were under the illusion that the more complicated we could make this the faster we would "reowner" and would go to great lengths including nesting string
+                    parsing functions ($gettok)!
+                    Joining a channel would incur a lag of at least 2 seconds due to the number of connections involved and having to determine which server a channel was on.
+                    So I came up with the idea of using pre-connected sockets: upon opening mIRC, the connection script would connect a socket to each of the 8 servers and leave them idle.
+                    Joining a channel was then a case of sending a "JOIN %#&lt;Channel&gt;" command to each of the pre-connected sockets simulataneously and the relevant one would join.
+                    Voila - virtually instant connection!
+                    I released this connection as "Direx" and it was very popular and again I couldn't help but add a 'backdoor' which I used on a number of occasions to
+                    <a href="https://xt.proboards.com/thread/1017/connected-first?page=3">recapture</a> stolen channels from a well known troll at the time (Arrow).
+                    There was an MSN Chat command "WHO" that you could use to search for chatters, when my connection authenticated it sent a certain signature as part of the authentication process
+                    and this could be looked up via the WHO command.
+                    This allowed me to determine every user on the network using Direx, what channel(s) they were in, and what status they had in those channels.
+                    Using this method I went on a channel taking spree taking 50+ channels in a day including some of the most popular!
                 </p>
             </SegmentDemo>
         </>
     );
 };
 
+/* sidtodo C++ split bot screenshot */
 const SplitBots: React.FunctionComponent<{}> = () => {
 
     return (
         <SegmentDemo heading="Split Bots..">
             <p>
-                Occasionally the chat servers would be rebooted for maintenance and when the server a given channel was on was rebooted ("split"), it gave you the opportunity to recreate it.
-                There were a number of very popular chat rooms at the time (%#Somewhere, %#Hackers, %#Unknown) that different cliques/factions of users were always trying to own.
-                The original MSN chat hackers had devised programs that would take advantage of whenever this happened by connecting 100's of sockets to the directory server and repeatedly sending the command to create a channel.
-                If you were lucky enough to send the command at the exact right time you would be rewarded with the recreation of the channel and become the new owner.
+                Occasionally the chat servers would be rebooted for maintenance and when the server a given channel was on was rebooted ("split") you had the opportunity to recreate it.
+                There was a number of very popular chat rooms (%#Somewhere, %#Hackers and %#Unknown being the key 3) that the opposing cliques/factions of users were perpetually trying to own.
+                It was typically the best scripters that were in control of them so they were already wise to the typical methods used to take channels.
+                Unless there was a freak event such as an owner having their MSN passport hacked, using a script containing a backdoor or deciding to change their allegiance, the best method
+                to get these channels was to try and split them.
+                The original MSN chat hackers/programmers had devised programs ("split bots") that would take advantage of channels splitting by connecting 100's of sockets to
+                the directory server and repeatedly send the create channel command on a cycle.
+                If you were lucky enough to send the create command at the exact time you would be rewarded with the recreation of the channel and become the new owner.
+                I knew of one programmer who actually had a botnet with infected computers running their split application - ridiculous when you think about it, but we were
+                power hungry and competitive!
+                Botnets are something which I've never used myself, but I did create my own split bots in mIRC and then later on a standalone application written in C++, and used these to gain
+                ownership of each of the 3 key channels at least once.
+                A similar analogy to the power grab surrounding the 3 MSN Chat key channels is US politics, except there were more than 2 parties involved.
+                An election is analogous to the server's splitting - effectively a transfer of power - if a single group gained access to 2 or more of the channels (presidency, senate and house)
+                after the server reboot had finished then they really were in control.
             </p>
         </SegmentDemo>
     );
@@ -191,13 +208,28 @@ const VisualBasic: React.FunctionComponent<{}> = () => {
     return (
         <SegmentDemo heading="Visual Basic">
             <p>
-                By now I was well into my programming and looking to expand my skills.
-                Visual Basic was a popular language among MSN Chat scripters so I decided to give it a go.
-                Around this time I had a lot of holiday away from sixth form, and my dad would regularly drop me off fishing/camping for a week at a time.
-                And so I bought an official book on VB and read it on my next fishing trip.
-                This was the first time I had been introduced to data types and the Windows API.
-                After I had returned from my trip I downloaded the Microsoft compiler/development environment and created some programs.
-                This was easy enough but I didn't have the enthusiasm to write my own chat client in Visual Basic.
+                I was now well into programming and looking to expand my skills.
+                Visual Basic was a topic that came up regularly in conversations as a number of the scripters could also program in Visual Basic.
+                I had a lot of spare time on my hands, I wasn't taking my A Levels as seriously as I should and I'd stopped doing sports, I was completely immersed
+                in this new found world I had stumbled across.
+                I was still a passionate carp angler though and the lakes I was fishing at the time gave me the perfect opportunity because I didn't have to pay
+                (my dad did work for the owner and we helped him move fish between lakes) and they were mostly empty during the week.
+                They were also very hard, it could be 2-3 days between bites, and therefore once the rods were out you just sat and waited.
+            </p>
+            <p>
+                Most of the holidays I had were spent camping at the lakes, my dad would drop me off with enough provisions and pick me up a week later looking like Worzel
+                Gummidge (no shower!).
+                Absolutely wonderful times and I capatalised on my free time by reading up on programming and computers, as well as studying for exams and doing coursework.
+            </p>
+            <p>
+                Getting back to Visual Basic, I purchased a book and spent my next fishing trip reading it.
+                This was the first time that I had been introduced to data types and the Windows API so it was quite a step up, but it seemed to resonate well with me.
+                After the trip I downloaded the Visual Basic IDE and was instantly successful in creating Windows Visual Basic applications.
+                I didn't feel the motivation to create a full blown MSN Chat client in VB because a lot of the work would be front-end oriented and mIRC already offered a
+                nice and easily configurable UI, and there was still a lot I didn't understand about the MSN Chat network.
+                I wasn't/am not a fan of the language or IDE either but learning VB was a good stepping stone in terms of programming experience and has been useful at various times
+                during my programming career: for example Prophet could be scripted using VB script and I wrote and edited a number of complex scripts, as well as becoming the
+                lead developer on 2 large-scale classic ASP ERP web applications and the project to convert them to ASP/VB .NET.
             </p>
         </SegmentDemo>
     );
@@ -208,25 +240,29 @@ const ChatActiveXControl: React.FunctionComponent<{}> = () => {
     return (
         <SegmentDemo heading="Reverse Engineering the Authentication Algorithm">
             <p>
-            The biggest hindrance to connecting to the chat service was the use of the ActiveX control, having to create a browser window with the OCX embedded per channel connection was slow and resource heavy and limited the amount of connections we could make at any one time.
-            For the various types of bots we were using you could have up to 1000 sockets simultaneously connected to the chat network.
+            The biggest hindrance to connecting to the chat service was the use of the ActiveX control.
+            Having to create a browser window with the OCX embedded per channel connection was slow and resource heavy and limited the amount of connections we could make at any one time.
+            For the various types of bots and scripts we were using you could have up to 1000 sockets simultaneously connected which had to be done sequentially.
             </p>
             <p>
-                Around this time one of my online friends gave me the source code to a Visual Basic program that could connect to MSN chat without having to use the MSN Chat OCX, however it only worked approximately 80% of the time.
+                Around this time one of my online friends gave me the source code to a Visual Basic program that could connect without having to use the MSN Chat OCX, however it only worked approximately 80% of the time.
                 This was the absolute holy grail and was to my knowledge unheard of at the time!
-                Apparently he had received it from a well known hacker at the time (AL..) who had reverse engineered the OCX and reproduced the challenge algorithm in VB, but was struggling to make it 100% successful.
+                Apparently he had received it from a well known hacker who frequented MSN Chat (AL..) who had reverse engineered the OCX and reproduced the challenge algorithm in VB, but was struggling to make it 100% successful.
             </p>
             <p>
                 From memory the algorithm consisted of unpacking the challenge you receive from MSN from a string to an array of 8 bytes, appending it to a fixed string and running it through a MD5 checksum.
                 The result of the checksum was then added to another fixed string and then MD5'd again.
-                I noticed that only when the challenge contained "\0" would authentication fail.
-                After digging in to the code I found it was treating the challenge as a C style string as opposed to an array of bytes and thus stripping out the part of the challenge after the \0 - \0 has a special meaning in strings (null terminator) and is used to mark the end of a string.
-                Fixing this part of the code worked as I expected and now it would authenticate 100% of the time.
+                I played around with the application and noticed that only when the challenge contained "\0" as part of the string would authentication fail.
+                After digging in to the code I found it was treating the challenge as a C style string as opposed to an array of bytes and thus stripping out the part of the challenge after the \0 - \0 has a special meaning in strings (0 - null terminator) and is used to mark the end of a string.
+                To find the length of a C style string you must linearly search through the algorithm until the null terminator is found (strlen function).
+                VB and COM strings work differently in that they are actually a struct with the length of the string preceding the first character of the string.
+                Changing this part of the code worked as I expected and now it authenticated 100% of the time!
             </p>
 
             <p>
-                I then reproduced the same algorithm in mIRC so we could use it in our connection scripts and circumvent any need for the OCX.
-                Yes!! Me and my friends now had a definitive advantage over the competition!
+                I then reproduced the same algorithm in mIRC script so we could use it in our connection scripts and circumvent any need for the OCX
+                and connect 100's of sockets at once with hardware and bandwidth being the only limiting factors.
+                Yes!! Me and my friends now had a definitive advantage over everybody else!
             </p>
         </SegmentDemo>
     );
@@ -237,27 +273,35 @@ const CPlusPlus: React.FunctionComponent<{}> = () => {
     return (
         <SegmentDemo heading="C++">
             <p>
-                On MSN Chat, if you could knowledge of C or C++ then you were "the man" and it gave you the bragging rights over lesser coders.
+                On MSN Chat, if you had knowledge of C or C++ then you were "the man" and it gave you the bragging rights over lesser coders.
             </p>
             <p>
-                By now I had learned that mIRC was relatively slow, and the more script loaded in to mIRC the slower it became.
-                Also, the complex authentication challenge algorithm we were using was currently written in mIRC and could speed up connection time if moved outside of mIRC.
+                By now I had learned that mIRC was slow, and became slower the more script code was loaded in to it, we really were pushing it beyond it's
+                capabilities with the scripts we were creating.
                 Ideally I wanted to move as much of the mIRC code as possible to another programming language that was compiled but retain the mIRC client as a user interface.
+                Being highly complex and involving a lot of parsing and number crunching, the authentication algorithm would also benefit from being in another programming
+                language and have another significant performance improvement on connection times.
             </p>
             <p>
-                mIRC has the ability to call functionality from a DLL so I followed a tutorial on how to create a C++ mIRC DLL and did a proof of concept.
-                Still having a lot of free time at my disposal, I bought a <a href="https://www.amazon.co.uk/Wileys-Teach-Yourself-Stevens-2003-04-04/dp/B01A65I12C">book on C++</a> and read it whilst fishing.
-                This gave me enough of an understanding to recreate the challenge algorithm in a C++ DLL that could be called at will by mIRC.
+                mIRC has the ability to execute functionality in a DLL, I had no experience with C++ up until this point but I found a tutorial on how to create a C++ DLL and
+                call it from mIRC and did a proof of concept.
+                This was the summer holiday before I started university so I still had a lot of free time at my disposal, I bought
+                a <a href="https://www.amazon.co.uk/Wileys-Teach-Yourself-Stevens-2003-04-04/dp/B01A65I12C">book on C++</a> and read it on my next fishing trip.
+                Up until now I had took to programming like a duck to water, but learning C++ was challenging.
+                I recommend any newcomer to programming to at least spend some time on C or C++, or even Assembly, because it really does give you a better understanding
+                of how software executes in conjunction with the rest of the machine.
+                Using high level languages can cause you to to become too abstracted from what's really happening and be complacent and write lazy code, and therefore I believe
+                it's helpful to be able to understand it from a low-level perspective as well.
+                I partly regret I wasn't born 10 years earlier when low level programming was more common place and important, I'm a control freak, I want to know how everything works.
             </p>
-
             <p>
-                I then tried to move all of the mIRC connection script event handling code in to C++ and I utilised it by passing the MSN chat data received from the mIRC socket to a function in the DLL, and executing the result which was a list of mIRC commands.
-                In retrospect now it would have been better to write a C++ program that I could send commands to from inside mIRC that did all of the socket connections including authentication, and so that mIRC only delt with the user interface.
-            </p>
-
-            <p>
-                I also created a split bot as an executable written entirely in C++ which was another advantage because the majority of everyone else were using ones made in mIRC.
-                //sidtodo find screenshot
+                I digress, I don't think I quite understood pointers to begin with, but reading this book gave me enough of an understanding to be able to recreate the authentication hash
+                algorithm in a C++ DLL that could be called at will by mIRC.
+                I then created a mIRC/C++ hybrid connection where the sockets were mIRC based but all of the socket event handling was in C++, this dramatically reduced the
+                mIRC script codebase and encapsulated most of the complex and time consuming code as a compiled binary.
+                In retrospect now it would have been better to write a C++ program which encapsulated the full connection to MSN and sent/received commands to/from
+                mIRC so that mIRC and mIRC script was only concerned with the user interface and things external to the connection.
+                Further to this I also created a split bot as an executable written entirely in C++ which was another major advantage.
             </p>
         </SegmentDemo>
     );
@@ -270,8 +314,13 @@ const TheEnd: React.FunctionComponent<{}> = () => {
             <p>
                 This is as far as I got on MSN because the network was closed in <a href="https://www.itprotoday.com/windows-8/conversation-over-msn-closing-chat-rooms-worldwide">2003</a> :(.
                 It's hard to explain why I was so fascinated with MSN Chat at the time, I really had a great time and I wasn't alone as it was very popular amongst computer programmers at the time.
-                It sounds strange, but I almost get butterflies in my stomach when I think of those days.
-                Randomly hearing one of the sound effects used within the original MSN Chat application will bring memories flooding back.
+                It taught me a lot about myself, gave me a ton of programming experience, set me on my career path, and gave me a lot of confidence to go
+                and do what I enjoyed and was clearly good at.
+            </p>
+            <p>
+                It seems strange to say, but I almost get butterflies in my stomach when I think of those days.
+                Randomly hearing one of the sound effects used within the original MSN Chat application brings memories flooding back.
+                It wasn't just directly MSN Chat but also my age and the experiences I had at the time.
                 Perhaps one day I'll have a go at recreating MSN Chat, not just another IRC network, but one that has that MSN Chat feel.
             </p>
 

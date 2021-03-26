@@ -17,6 +17,7 @@ export const Career: React.FunctionComponent<ICareerProps & IRoutedCompProps> = 
     );
 };
 
+/* //sidtodo here */
 const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
 
     return (
@@ -25,86 +26,148 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                 I had registered my CV on a job board and was receiving a substantial amount of emails from recruiters regarding .NET and web development jobs due to me having .NET experience.
             </p>
 
-            <p>I could see the benefit of being experienced in both an expert in C++/web technologies, and would hopefully open up more job opportunities.</p>
-            <p>I began doing some web programming in my spare time, ASP .NET, Javascript, Babel, React and got a job as a senior web developer as part of a 3 person development team for a house construction company in February 2018 so I could get some professional experience.
-                They had 2 large scale ERP web applications which ran on classic ASP that they were looking to transition to ASP .NET and I would be the lead on this as well as take over the development leadership.
+            <p>I could see the benefit of being experienced in both C++ and .NET/web technologies and it would hopefully open up more job opportunities as well.</p>
+            <p>I began doing some web programming in my spare time: ASP .NET, Javascript, Babel/Webpack and React.
+                I then got a job as a senior developer as part of a 3 person development team for a house construction company in February 2018 so I could get some professional experience.
+                It appealed to me because I had a lot more control over the technologies used and the technical solutions employed, far more leeway than I ever had at Prophet.
+                They had 2 large scale ERP SQL web applications hosted in classic ASP which they were looking to transition to ASP .NET and I would be the lead on this as well as take over the development leadership.
             </p>
 
-            <p>My experience at Prophet was invaluable here as for example I brought in the use of the Microsoft Team Foundation Server for source code management and introduced processes I had used there.</p>
+            <p>My experience at Prophet was invaluable here as for example I introduced them to Microsoft Team Foundation Server as they were not using a source code management tool.</p>
 
-            <p>My first project was to improve the report page creation process.
-                Reports were web pages of the application, written in classic ASP that would query the database to display a list of columns and rows.
-                As well as having functionality to generate a PDF and CSV version of the report.
-                There were large swathes of repetition in the code base so I created (in my lunch break) and utilised my <a href="https://github.com/sidfishus/ScriptableTemplate">Scriptable Template</a> to greatly speed up the creation of report pages.
+            <p>
+                My first project was to improve the report page creation process of the ERP web applications.
+                Reports were web pages that contained a table consisting of rows and columns, and the ability to generate a PDF and CSV version of the same data.
+                There were large swathes of repeated code in the reports so I created (in my lunch break) and utilised
+                my <a href="https://github.com/sidfishus/ScriptableTemplate">Scriptable Template</a> to greatly speed up the process of creating reports.
                 I go in to great detail about this works <Link to="/portfolio/scriptabletemplate">here</Link>.
-                I took the aspects of the existing reports that were replicated and moved them in to a template, and passed in the parameters such as the title of report, database query, and columns.
+                I took the aspects of the existing reports that were duplicated and moved them in to a template, and passed in the variables such as the
+                title of report, database query, and columns as parameters to the template.
                 This reduced the actual code required to produce a report to (depending on the number of columns) usually less than 100 lines of simple C# code.
-                The current method of producing CSV and PDF output was tedious because it involved re-executing the SQL query and using a COM object to manually craft the PDF or CSV.
-                Effectively the code for each report was replicated 3 times due to the 3 formats (HTML, CSV and PDF).
-                There had to be a better way to do it than this surely.
-                I did some googling and found a third party library that would convert from <a href="https://www.evopdf.com/html-to-pdf-converter.aspx">HTML to PDF</a>.
-                To utilise this I added some markers in the produced HTML of the report which were HTML comments indicating which parts of the HTML that I wanted to convert to PDF.
-                I wrote a helper COM object in .NET that would take a HTML string as a parameter, parse it according to the markers, convert it to PDF using the library, and then return that to be viewed through the library.
-                I added a HTML button that when clicked would obtain the HTML from the DOM, use the VB script CreateObject function to create my COM object and do the parsing.
-                I did a similar concept to convert a HTML table to CSV using the <a href="https://html-agility-pack.net/">HTML Agility Pack</a> .NET library.
-                The whole point of this was so that the HTML was only required to be produced once.
+            </p>
+            <p>
+                The current method of producing CSV and PDF output was also tedious because it involved re-executing the SQL query used to populate the web page and using a COM object
+                to manually craft the PDF or CSV.
+                Effectively the code for each report was replicated 3 times due to there being 3 formats (HTML, CSV and PDF).
+                To me this was/is madness and the solution I came up with was simple: the report is already generated but in HTML format, why not simply convert that HTML to the other formats.
+                I did some 'Googling' and found a third party library that can convert <a href="https://www.evopdf.com/html-to-pdf-converter.aspx">HTML into PDF</a>.
+                I utilise this I wrote a helper COM object in C#/.NET/Interop that would facilitate the conversion to PDF by:
+                <ol>
+                    <li>Taking the report HTML string (accessed from the DOM in Javascript) as a parameter,</li>
+                    <li>Parse it according to the markers to strip out the relevant parts,</li>
+                    <li>Convert it to PDF using the third party library,</li>
+                    <li>And then return the binary of the PDF to be viewed in the browser.</li>
+                </ol>
+                This was executed from the web page via a HTML button that when clicked would obtain the HTML from the DOM, use the VB script CreateObject function to create an instance of
+                the COM object and call it to facilitate the conversion.
+            </p>
+            <p>
+                I used a similar process to above to convert a HTML table in to CSV using
+                the <a href="https://html-agility-pack.net/">HTML Agility Pack</a> .NET library to traverse the HTML table and churn out a CSV.
+            </p>
+            <p>
+                The funamental principal was that the reports only had to be generated once.
+                This principal, plus the use of my new scriptable template library now meant that new report pages could be created in a fraction of the time it was
+                previously taking, as well as making them considerably easier to maintain due to there being no repetition.
             </p>
 
             <p>
-                The next project was to convert the 2 classic ASP web systems to ASP .NET.
+                The next significant project I worked on was to convert the 2 classic ASP web systems to ASP .NET.
                 To do this I created my <a href="https://github.com/sidfishus/TextParse">Text Parse</a> library.
                 I go in to great detail about this <Link to="/portfolio/textparse">here</Link> and there is a live example <Link to="/textparse">here</Link>.
             </p>
 
             <h2>Acquisition</h2>
             <p>
-                Not long after starting the .NET conversion project the company I was working for was acquired by a FTSE 250 company.
-                They already had existing systems in place and would eventually be phasing out our 2 web systems, any large scale development on them was given the kybosh.
-                They did not however do any development in house so they took the 3 of us on to take over the support and development of their existing bespoke systems created for them by contractors and software vendors.
+                Not long after starting the .NET conversion project the company I was working for was acquired by a FTSE 250 housing company.
+                They already had existing systems that replicated a lot of the functionality that our 2 ERP applications offered, and therefore any large scale development on them
+                was given the kybosh and removed the need to convert the codebase from classic ASP to ASP .NET.
+                There was a silver lining though, they did not do software development in house and decided to take on the 3 of us on to take over the support and development of
+                their existing systems which were created and supported by a mish-mash of contractors and software houses.
+                They were also looking to implement new systems in the future for which they were struggling to find off-the-shelf software solutions for.
                 This is the position I am in currently.
+                The acquisition has been advantageous to me because it means I'm professionally using the very latest web and cloud technologies such as Azure, React, Typescript
+                and ASP .NET MVC Core and have a large opinion in what technologies are used going forward.
             </p>
 
             <h2>Intranet</h2>
             <p>
-                They have an intranet which is a modern web application utilising ASP .NET Core, Webpack, Typescript, React, Cosmos DB, and is hosted in Azure.
-                Many Azure features are used such as App Services, the application is split between an API process and a client process.
-                Azure storage: queues, blobs.
-                Azure webjobs, function apps.
-                Azure Acive Directory, single sign on, Redis cache.
-                Sharepoint SPFX which is allows a administrator to utilise React and Javascript to create forms.
-                Administrator's add content via Sharepoint which is propogated to the backend Cosmos DB via Office365 Flow/Power Automate.
-                I go in to detail regarding the organisational chart project I have completed <Link to="/portfolio/misc">here</Link>.
+                When I joined, the company recently had a intranet built for them by a contractor who was leaving and this was handed over to me to develop and support.
+                This is a modern mobile friendly isomorphic web application utilising ASP .NET MVC Core, Webpack, Typescript and React and is hosted as 2 app services in Azure -
+                a ASP .NET MVC Core application that deals with authentication and executes and serves the Javascript user interface, and a seperate ASP .NET MVC Core API.
             </p>
             <p>
-                I'm currently working on rewriting the process that images are uploaded to articles and announcements by using SPFX and React and the ASP .NET MVC Core API Azure application.
+                It also utilises many Azure features such as:
+                <ol>
+                    <li>Queue storage for holding messages from Office365 Flow/Power Automate,</li>
+                    <li>Blob storage for holding files such as images and logs,</li>
+                    <li>Function apps to receive and duplicate articles from the customer facing external website via a HTTP message,</li>
+                    <li>Cosmos/Document DB to hold all of the data,</li>
+                    <li>Webjobs for handling blob and queue trigger events and for running scheduled processes,</li>
+                    <li>Azure Active Directory including single sign on for authentication and access to the companies list of users.</li>
+                </ol>
+            </p>
+            <p>
+                Sharepoint is used to manage the content hosted on the intranet but also it's configuration via inbuilt Sharepoint functionality
+                and Sharepoint SPFX webparts.
+                The SPFX allows developers to create React/Javascript forms within the Sharepoint front-end that have access
+                to the Sharepoint functionality and also the .NET API hosted in Azure all of the Azure features used by the intranet.
+            </p>
+            <p>
+                I go in to detail regarding the organisational chart project I have completed <Link to="/portfolio/misc">here</Link>.
+                I've also recently drastically improved the way that articles are created by creating a new dedicated SPFX webpart in React that features a better user
+                interface and workflow to the original application.
             </p>
 
             <h2>Health and Safety Application</h2>
             <p>A ASP .NET MVC and React single page application which I created from scratch.
                 I go in to a lot of detail about this <Link to="/portfolio/hands">here</Link>. 
+                I'm currently working on the second phase of this project.
             </p>
 
             <h2>Customer Service Application</h2>
             <p>
-                Whenever there is a fault with a recently built house by the company (under warranty), the customer logs the issue with the customer service department.
-                They then use a client to log the issue and nominate a sub contractor.
-                The application to log the issue is a clientside .NET Windows GUI executable frontend data and transactions are facilitated using Entity Framework and a server side .NET API process.
+                Whenever there is a fault with a house built by the company which is still under warranty the dedicated customer services applications are
+                used to facilitate the issue being fixed. This consists of a variety of .NET/ASP .NET applications for which I am the lead developer on.
+                The process is as follows:
+                <ol>
+                    <li>The house owner records the issue with the customer service department,</li>
+                    <li>The Custom service department uses the client side .NET Windows GUI executable to record the issue and nominate a subcontractor.
+                        Data is stored using SQL Server and is read/written by the application using MS Entity Framework and web services,
+                    </li>
+                    <li>
+                        A server side .NET Windows service (Workflow Service) polls for various events and does the work necessary to progress the issue.
+                        In the case of a subcontractor being nominated, it emails the subcontractor explaining they have been nominated to fix an issue.
+                    </li>
+                    <li>
+                        The subcontractor email contains a link to the mobile application which is a ASP .NET application set up in IIS on premise.
+                        Clicking on the link opens a screen where they can either accept or reject.
+                    </li>
+                    <li>
+                        The Workflow Service sends email reminders and moves the issue on iteratively until the subcontractor has been to the appointment,
+                        resolved the issue, and the customer has given confirmation of the fix.
+                    </li>
+                    <li>
+                        The final application is another ASP .NET web application that the customer service department use as a dashboard to list
+                        the open issues and their current state ordered by urgency/priority.
+                    </li>
+                </ol>
             </p>
             <p>
-                A server side .NET Windows service (Workflow Service) polls for type of various events and it does the work necessary to progress the issue.
-                In the case of a subcontractror being nominated, it emails the subcontractor requesting them to accept or reject the nomination.
-                The subcontractor email contains a link to the mobile application which is a ASP .NET application set up in IIS on premise.
-                Clicking the link shows them a screen where they accept or reject, and the workflow service will update accordingly.
-                The Workflow Service moves the issue on iteratively until the subcontractor has been to the appointment, resolved the issue, and the customer has given confirmation of the fix.
-            </p>
-            <p>
-                There is also a dashboard which is another ASP .NET application that the customer service department can use to see a list of all of the open issues and their current state ordered by urgency.
-                A service side ASP .NET API process services the data to the mobile, dashboard, and Workflow Service applications.
+                {/* //sidtodo here */}
+                Some features I have developed for this are:
+                <ul>
+                    <li>Ability for subcontractors to upload images against issues within the mobile application,</li>
+                    <li>Switched the front-end of the dashboard from ASP .NET to React for far improved responsiveness,</li>
+                    <li>A mass plot address import using Excel and VSTO,</li>
+                </ul>
             </p>
         </SegmentDemo>
     );
 };
 
+// most complex algorithms
+// forgotten over time
 const ProphetPLC: React.FunctionComponent<{}> = () => {
 
     return (
