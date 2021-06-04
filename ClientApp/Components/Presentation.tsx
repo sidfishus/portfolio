@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { HEADING_COLOUR } from "../theme";
-import { Segment, Label, Container } from "semantic-ui-react";
+import { Segment, Label, Container, Modal } from "semantic-ui-react";
 
 export interface ICodeProps {
     children: React.ReactNode;
@@ -77,5 +77,37 @@ export const SegmentSubSection: React.FunctionComponent<ISegmentSubSection> = (p
             {Heading()}
             {children}
         </>
+    );
+};
+
+export interface IFullScreenModalImageProps {
+    open: boolean;
+    src: string;
+    fClose: () => void;
+};
+
+export const FullScreenModalImage: React.FunctionComponent<IFullScreenModalImageProps> = (props) => {
+
+    const { open, src, fClose } = props;
+
+    return (
+        <Modal
+            open={open}
+            //size="fullscreen"
+            style={{
+                backgroundImage: `url(${src})`,
+                width: "100%",
+                height: "99%",
+                marginTop: "-0.9%",
+
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+                backgroundColor: "rgba(0,0,0,.1)"
+            }}
+        >
+            <a onClick={fClose} className="closeButton"></a>
+            {/*<span style={{fontSize: "36", marginLeft: "98%", marginTop: "5%"}}>x</span>*/}
+        </Modal>
     );
 };

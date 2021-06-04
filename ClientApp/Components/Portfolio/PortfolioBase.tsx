@@ -1,9 +1,10 @@
 
 import * as React from "react";
+import { useState } from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Table } from "semantic-ui-react";
+import { Table, Modal, Image } from "semantic-ui-react";
 import { Carousel } from "react-responsive-carousel";
-import { SegmentDemo, ContainerDemo } from "../Presentation";
+import { SegmentDemo, ContainerDemo, FullScreenModalImage } from "../Presentation";
 
 export interface ICarouselImg {
     src: string;
@@ -17,39 +18,53 @@ export interface IPortfolioBaseProps extends IRoutedCompProps {
 
 interface IPortfolioCarouselProps {
     imgs: ICarouselImg[];
+    SetOpenImg: (idx: number) => void;
 };
 
-export const PortfolioBase: React.SFC<IPortfolioBaseProps> = (props) => {
+//sidtodo test app on mobile!!! display text when showing text parse on mobile.
+//sidtodo: the icon's have stopped working (see text parse) following move to non min semantic CSS.
+export const PortfolioBase: React.FunctionComponent<IPortfolioBaseProps> = (props) => {
+
+    const [openImg, SetOpenImg] = useState<number>(null);
 
     const { writeUp, carouselImgs } = props;
 
     return (
-        <ContainerDemo>
-            {writeUp}
+        <>
+            <FullScreenModalImage
+                open={openImg!==null}
+                src={((openImg !== null)?props.carouselImgs[openImg].src : "")}
+                fClose={()=>SetOpenImg(null)}
+            />
 
-            {carouselImgs &&
-                <SegmentDemo heading="Images">
-                    <PortfolioCarousel
-                        imgs={carouselImgs}
-                    />
-                </SegmentDemo>
-            }
-        </ContainerDemo>
+            <ContainerDemo>
+                {writeUp}
+
+                {carouselImgs &&
+                    <SegmentDemo heading="Images">
+                        <PortfolioCarousel
+                            imgs={carouselImgs}
+                            SetOpenImg={SetOpenImg}
+                        />
+                    </SegmentDemo>
+                }
+            </ContainerDemo>
+        </>
     );
 };
 
 const PortfolioCarousel: React.SFC<IPortfolioCarouselProps> = (props) => {
 
-    const { imgs } = props;
-
-    //sidtodo change width for different screen size
+    const { imgs, SetOpenImg } = props;
 
     return (
         <Carousel
             showArrows={true}
-            width={700}
             infiniteLoop={true}
             useKeyboardArrows={true}
+            onClickItem={(index: number, item: React.ReactNode)=>{
+                SetOpenImg(index);
+            }}
         >
             {imgs.map((iterImg, i) => CarouselImgJSX(iterImg, i))}
         </Carousel>
@@ -85,10 +100,10 @@ export interface ITechnologyInfo {
     descr: JSX.Element;
 };
 
-const TechnologyTableRow = (info: ITechnologyInfo): JSX.Element => {
+const TechnologyTableRow = (info: ITechnologyInfo, idx: number): JSX.Element => {
 
     return (
-        <Table.Row>
+        <Table.Row key={idx}>
             <Table.Cell>{info.name}</Table.Cell>
             <Table.Cell>{info.descr}</Table.Cell>
         </Table.Row>

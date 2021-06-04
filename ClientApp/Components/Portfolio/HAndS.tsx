@@ -119,7 +119,7 @@ const technology: ITechnologyInfo[] = [
 
     {
         name: <>React Hot Loader Version 4.12.21 (<a href="https://github.com/gaearon/react-hot-loader">https://github.com/gaearon/react-hot-loader</a>)</>,
-        descr: <>Changes to the Raect code updates in real time without the need to refresh the screen for quicker development.</>
+        descr: <>Changes to the React code updates in real time without the need to refresh the screen for quicker development.</>
     },
 
     {
