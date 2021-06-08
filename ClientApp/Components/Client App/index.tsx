@@ -46,9 +46,12 @@ const ClientApp: React.FunctionComponent<IClientAppProps> = (props) => {
     );
 };
 
+// These correlate with the media queries in semantic.css.
 export enum eScreenResolution {
-    THINNER_THAN_LAPTOP = 0,
-    LAPTOP_WIDTH_OR_LARGER = 1
+    Mobile = 0,
+    Tablet = 1,
+    SmallMonitor=2,
+    LargeMonitor=3,
 };
 
 const CreateRerenderAppFunction = (): () => void => {
@@ -61,8 +64,10 @@ const CreateRerenderAppFunction = (): () => void => {
 const CreateMediaMatching = (ReRender: () => void): MatchMediaResult => {
 
     const mediaQueryList = [
-        "(max-width: 1250px)",			// THINNER_THAN_LAPTOP
-        "(min-width: 1251px)",		    // LAPTOP_WIDTH_OR_LARGER
+        "(max-width: 767px)",			                    // Mobile
+        "(min-width: 768px) and (max-width: 991px)",	    // Tablet
+        "(min-width: 992px) and (max-width: 1199px)",	    // Small monitor
+        "(min-width: 1200px)",	                            // Large monitor
     ];
 
     return MatchMedia(window, mediaQueryList, ReRender, 100);

@@ -51,7 +51,7 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                 Effectively the code for each report was replicated 3 times due to there being 3 formats (HTML, CSV and PDF).
                 To me this was/is madness and the solution I came up with was simple: the report is already generated but in HTML format, why not simply convert that HTML to the other formats.
                 I did some 'Googling' and found a third party library that can convert <a href="https://www.evopdf.com/html-to-pdf-converter.aspx">HTML into PDF</a>.
-                I utilise this I wrote a helper COM object in C#/.NET/Interop that would facilitate the conversion to PDF by:
+                To utilise this I wrote a helper COM object in C#/.NET/Interop that would facilitate the conversion to PDF by:
                 <ol>
                     <li>Taking the report HTML string (accessed from the DOM in Javascript) as a parameter,</li>
                     <li>Parse it according to the markers to strip out the relevant parts,</li>

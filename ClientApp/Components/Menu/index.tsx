@@ -49,7 +49,7 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
     }
 
     const menuType: eMenuType =
-        ((mediaMatching.FirstMatching() === eScreenResolution.THINNER_THAN_LAPTOP)?
+        ((mediaMatching.FirstMatching() < eScreenResolution.SmallMonitor)?
             eMenuType.menuTypeVertical:
             eMenuType.menuTypeHorizontal
         );

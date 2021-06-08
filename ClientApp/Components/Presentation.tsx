@@ -2,30 +2,63 @@
 import * as React from "react";
 import { HEADING_COLOUR } from "../theme";
 import { Segment, Label, Container, Modal } from "semantic-ui-react";
+import { MatchMediaResult } from "../Library/MediaMatching";
+import { eScreenResolution } from "./Client App";
 
 export interface ICodeProps {
     children: React.ReactNode;
+    inline?: boolean;
+    mediaMatching?: MatchMediaResult;
 };
 
-const Code_codeStyle = {
-    backgroundColor: "whitesmoke",
-    padding: "16px"
+const fCode_codeStyle = (props: ICodeProps) => {
+
+    const { inline, mediaMatching } = props;
+
+    let styles: any={
+        backgroundColor: "whitesmoke"
+    };
+
+    if(!inline) {
+        styles.padding="16px";
+        styles.tabSize="3";
+
+        if(mediaMatching) {
+            const firstMatching=mediaMatching.FirstMatching();
+            if(firstMatching === eScreenResolution.Mobile) {
+                // Smaller font when viewed on a mobile
+                styles.fontSize = "10px";
+                styles.padding="1px";
+                styles.tabSize="2";
+                styles.lineHeight="12px";
+            }
+            else if(firstMatching === eScreenResolution.Tablet) {
+                styles.fontSize = "12px";
+                styles.padding="1em";
+                styles.tabSize="3";
+                styles.lineHeight="14px";
+            }
+        }
+    }
+
+    return styles;
 };
 
 //// Component for displaying code
 export const Code: React.FunctionComponent<ICodeProps> = (props) => {
 
-    const { children } = props;
+    const { children, inline } = props;
+
+    if(inline) return <code style={fCode_codeStyle(props)}>{children}</code>;
 
     return (
-        <pre style={Code_codeStyle}>
+        <pre style={fCode_codeStyle(props)}>
             <code>
                 {children}
             </code>
         </pre>
     );
 };
-
 
 export interface ISegmentDemoProps {
     children: React.ReactNode;

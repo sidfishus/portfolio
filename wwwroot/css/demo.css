@@ -22,7 +22,7 @@
   opacity: 0.3;
 }
 .closeButton:hover {
-  opacity: 1;
+  opacity: 0.9;
   cursor: pointer;
 }
 .closeButton:before, .closeButton:after {

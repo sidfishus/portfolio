@@ -5,6 +5,7 @@ import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
 import { Table, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Code, SegmentDemo, SegmentSubSection } from "../Presentation";
+import { eScreenResolution } from "../Client App";
 
 export interface ITextParsePortfolioProps extends IRoutedCompProps {
 };
@@ -13,7 +14,7 @@ export const TextParsePortfolio: React.SFC<ITextParsePortfolioProps> = (props) =
     return (
         <PortfolioBase
             {...props}
-            writeUp={WriteUp()}
+            writeUp={WriteUp(props)}
             carouselImgs={carouselImgs}
         />
     );
@@ -106,7 +107,17 @@ const carouselImgs : ICarouselImg[] = [
     },
 ];
 
-const WriteUp = (): JSX.Element => {
+const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
+
+    const { mediaMatching } = props;
+
+    if(!mediaMatching) return null;
+
+    const firstMatching =mediaMatching.FirstMatching(); 
+
+    const wrapSample = ((firstMatching === eScreenResolution.Mobile)?true:false);
+    const isTablet = ((firstMatching === eScreenResolution.Tablet)?true:false);
+
     return (
         <>
             <SegmentDemo heading="Text Parse Library">
@@ -148,10 +159,10 @@ const WriteUp = (): JSX.Element => {
                 <SegmentSubSection nested={1} heading="User Created Parse Algorithms (UCPA)">
                     <p>I figured that it should be possible be able to parse and replace/convert anything providing I could describe the routine as a series of steps and checks. E.g. to match against words that contain only a series of lowercase a-z characters you could describe the algorithm in psuedo as follows:</p>
                     <ol>
-                    <li>Validate that we are at the beginning of the input text, or the preceding character is whitespace. <code>// Validate beginning of word</code></li>
-                    <li>Validate that the character at the current position is lowercase and is a-z. <code>// Validate word is at least one character in length</code></li>
-                    <li>Move until a character is found that is not lower case a-z, or we find the end of the string. <code>// Find the first non a-z character</code></li>
-                    <li>Validate that we have reached the end of the text, or the current character is a space. <code>// Reached the end of the word</code></li>
+                    <li>Validate that we are at the beginning of the input text, or the preceding character is whitespace. <br/><Code inline>// Validate beginning of word</Code></li>
+                    <li>Validate that the character at the current position is lowercase and is a-z. <br/><Code inline>// Validate word is at least one character in length</Code></li>
+                    <li>Move until a character is found that is not lower case a-z, or we find the end of the string. <br/><Code inline>// Find the first non a-z character</Code></li>
+                    <li>Validate that we have reached the end of the text, or the current character is a space. <br/><Code inline>// Reached the end of the word</Code></li>
                     </ol>
                     <p>When described in this manner it is very easy to understand the intention and purpose of each step as well as the algorithm as a whole - at least it seems this way to me as someone who has been programming since 2001. Furthermore, if the four steps are encapsulated into their own sub routine and are given an apt name it could be reused in future. This will reduce bugs (it's already tested) and increase the readability of parse algorithms by making them more terse (remove duplication by turning 4 steps in to 1). It's also trivial to create unit tests to prove the accuracy of the sub routine as well as provide regression testing as the parse library evolves over time.</p>
                 </SegmentSubSection>
@@ -209,13 +220,12 @@ const WriteUp = (): JSX.Element => {
 
             <SegmentSubSection heading="Simple Example">
                 <p>Below is a simple example I created for the purpose of illustrating the syntax of a TextParse program.
-                    For more complex examples see the built in examples at
-                    <Link to="/textparse">https://chrissiddall.azurewebsites.net/textparse</Link>:
+                    For more complex examples see the built in examples at <Link to="/textparse">https://chrissiddall.azurewebsites.net/textparse</Link>:
                 </p>
-                <Code>using System;<br/>
+                <Code mediaMatching={mediaMatching}>using System;<br/>
                 using Sid.Parse.TextPatternParser;<br/>
-                using StringComparison = Sid.Parse.TextPatternParser.StringComparison;<br/>
-                using Sid.Log;<br/>
+                using StringComparison = {wrapSample && <><br/>&#9;</>}Sid.Parse.TextPatternParser.StringComparison;<br/>
+                using Sid.Log;<br/><br/>
 
                 namespace TextParseTesting<br/>
                 &#123;<br/>
@@ -223,27 +233,31 @@ const WriteUp = (): JSX.Element => {
                 &#9;&#123;<br/>
                 &#9;&#9;static void Main(string[] args)<br/>
                 &#9;&#9;&#123;<br/>
-                &#9;&#9;&#9;ILog log=null;<br/><br/>
-                            
-                &#9;&#9;&#9;var stmtList = new StatementList(log);<br/><br/>
-
+                &#9;&#9;&#9;ILog log=null;<br/>
+                &#9;&#9;&#9;var stmtList = new StatementList(log);<br/>
                 &#9;&#9;&#9;var orStmt=new OrComparison(log);<br/><br/>
 
                 &#9;&#9;&#9;var options=new Options(log);<br/>
                 &#9;&#9;&#9;options.CaseSensitive=false;<br/>
 
-                &#9;&#9;&#9;var knownGreetings=new string[]&#123;"hello","hi","hey","yo","hiya"&#125;;<br/>
-                &#9;&#9;&#9;Array.ForEach(knownGreetings,(str) =&gt; orStmt.Add(new StringComparison(log,options,str)));<br/>
+                &#9;&#9;&#9;var knownGreetings={wrapSample && <><br/>&#9;&#9;&#9;&#9;</>}
+                    new string[]&#123;"hello","hi","hey","yo","hiya"&#125;;<br/>
+                &#9;&#9;&#9;Array.ForEach(knownGreetings,{wrapSample && <><br/>&#9;&#9;&#9;&#9;</>}
+                    (str) =&gt; orStmt.Add(new StringComparison({wrapSample && <><br/>&#9;&#9;&#9;&#9;</>}
+                    log,options,str)));<br/>
                 &#9;&#9;&#9;stmtList.Add(orStmt);<br/><br/>
 
-                &#9;&#9;&#9;Console.WriteLine("Hello..");<br/>
+                &#9;&#9;&#9;Console.WriteLine("Hello.. (please respond)");<br/>
                 &#9;&#9;&#9;var userInput=Console.ReadLine();<br/><br/>
 
                 &#9;&#9;&#9;var parser=new Parser(log);<br/>
                 &#9;&#9;&#9;int numMatches;<br/>
-                &#9;&#9;&#9;parser.Extract(userInput,null,stmtList,null,null,out numMatches,(unused1,unused2,unused3)=&gt;null,null);<br/><br/>
+                &#9;&#9;&#9;parser.Extract(userInput,null,stmtList,null,{wrapSample && <><br/>&#9;&#9;&#9;&#9;</>}
+                    null,out numMatches,{(wrapSample || isTablet) && <><br/>&#9;&#9;&#9;&#9;</>}
+                    (unused1,unused2,unused3)=&gt;null,null);<br/><br/>
 
-                &#9;&#9;&#9;Console.WriteLine("Greeting &#123;0&#125;understood.",((numMatches&gt;=1)?"":"not "));<br/>
+                &#9;&#9;&#9;Console.WriteLine("Greeting &#123;0&#125;understood.",{wrapSample && <><br/>&#9;&#9;&#9;&#9;</>}
+                    ((numMatches&gt;=1)?"":"not "));<br/>
                 &#9;&#9;&#125;<br/>
                 &#9;&#125;<br/>
                 &#125;</Code>

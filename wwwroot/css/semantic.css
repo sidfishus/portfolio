@@ -1,4 +1,8 @@
- /*
+/*
+Downloaded from: https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css
+*/
+
+/*
  * # Semantic UI - 2.4.2
  * https://github.com/Semantic-Org/Semantic-UI
  * http://www.semantic-ui.com/
@@ -5146,8 +5150,8 @@
  @media only screen and (max-width: 767px) {
    .ui.container {
      width: auto !important;
-     margin-left: 1em !important;
-     margin-right: 1em !important;
+     margin-left: 3px !important;
+     margin-right: 3px !important;
    }
  
    .ui.grid.container {
@@ -18647,8 +18651,18 @@
         Padded
  --------------------*/
  
- .ui.padded.segment {
-   padding: 1.5em;
+ /* Mobile */
+ @media only screen and (max-width: 767px) {
+  .ui.padded.segment {
+    padding: 0.5em;
+  }
+ }
+
+ /* Everything else */
+ @media only screen and (min-width: 768px) {
+  .ui.padded.segment {
+    padding: 1.5em;
+  }
  }
  
  .ui[class*="very padded"].segment {

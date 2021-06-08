@@ -22,7 +22,6 @@ interface IPortfolioCarouselProps {
 };
 
 //sidtodo test app on mobile!!! display text when showing text parse on mobile.
-//sidtodo: the icon's have stopped working (see text parse) following move to non min semantic CSS.
 export const PortfolioBase: React.FunctionComponent<IPortfolioBaseProps> = (props) => {
 
     const [openImg, SetOpenImg] = useState<number>(null);
@@ -41,7 +40,7 @@ export const PortfolioBase: React.FunctionComponent<IPortfolioBaseProps> = (prop
                 {writeUp}
 
                 {carouselImgs &&
-                    <SegmentDemo heading="Images">
+                    <SegmentDemo heading="Images (click to view full screen)">
                         <PortfolioCarousel
                             imgs={carouselImgs}
                             SetOpenImg={SetOpenImg}

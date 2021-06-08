@@ -80,18 +80,29 @@ const HelloWorld: React.FunctionComponent<IHomeProps> = (props) => {
 
     if(!mediaMatching) return null;
 
-    const resolutionDependantCode: React.ReactNode =
-        ((mediaMatching.FirstMatching() === eScreenResolution.THINNER_THAN_LAPTOP)?
-            (
-                <>
-                    &nbsp;&nbsp;&nbsp;printf("Hello world!");<br/>
-                    &nbsp;&nbsp;&nbsp;printf("Welcome to my cloud based portfolio!");<br/>
-                </>
-            ):
-            (
-                <>&nbsp;&nbsp;&nbsp;printf("Hello world! Welcome to my cloud based portfolio!");<br/></>
-            )
-        );
+    let resolutionDependantCode;
+    switch(mediaMatching.FirstMatching()) {
+        case eScreenResolution.Mobile:
+            resolutionDependantCode=<>
+                &nbsp;&nbsp;&nbsp;printf("Hello world!");<br/>
+                &nbsp;&nbsp;&nbsp;printf("Welcome to my cloud "<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;"based portfolio!");<br/>
+            </>
+            break;
+
+        case eScreenResolution.Tablet:
+            resolutionDependantCode=<>
+                &nbsp;&nbsp;&nbsp;printf("Hello world!");<br/>
+                &nbsp;&nbsp;&nbsp;printf("Welcome to my cloud based portfolio!");<br/>
+            </>
+            break;
+
+        case eScreenResolution.SmallMonitor:
+        case eScreenResolution.LargeMonitor:
+            resolutionDependantCode=
+                <>&nbsp;&nbsp;&nbsp;printf("Hello world! Welcome to my cloud based portfolio!");<br/></>;
+            break;
+    }
 
     return (
         <Code>
@@ -167,6 +178,11 @@ const AboutThisSite: React.FunctionComponent<{}> = () => {
                 <p>
                     Typically, I have added more features and have gone in to far more detail than I originally intended and
                     it will only expand over time.
+                </p>
+                <p>
+                    I have developed this specifically to work on mobiles, tablets, and laptops/computers, but it is best viewed on
+                    a large screen and this is particularily true for the <Link to="./textparse">text parse user interface</Link>
+                    due to it's complexity.
                 </p>
             </SegmentSubSection>
 
