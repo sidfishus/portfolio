@@ -2,11 +2,12 @@
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
 import { ContainerDemo, SegmentDemo } from "../Presentation";
+import { CalcDurationYears } from "../../Library/DateTime";
 
 export interface IAboutMeProps {
 };
 
-//sidtodo about me section include pictures - family and fishing, kickboxing
+//TODO about me section include pictures - family and fishing, kickboxing
 export const AboutMe: React.FunctionComponent<IAboutMeProps & IRoutedCompProps> = (props) => {
 
     return (
@@ -17,12 +18,12 @@ export const AboutMe: React.FunctionComponent<IAboutMeProps & IRoutedCompProps> 
     );
 };
 
-//sidtodo attach my personality chart
+//TODO attach my personality chart
 const AboutMeSection: React.FunctionComponent<{}> = () => {
 
     return (
         <SegmentDemo heading="About Me">
-            <p>I am a devoted father to my 6 year old son and this has has a very positive effect on my attitude towards life.
+            <p>I am a devoted father to my {CalcDurationYears("2014-02-16")} year old son and this has had a very positive effect on my attitude towards life.
                 My father has had a significant influence on my personality (thankyou) and I owe a lot to him,
                 and I am hoping to replicate this with my son. Arthur if you are reading this, your father loves you very much.
             </p>
@@ -32,7 +33,7 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
                 Out of these I took kickboxing the most seriously for which I did between the ages of 7 and 18 for Don's Gym in
                 Coventry,
                 had 10 amateur fights including a British title bout (I lost) and even helped teach women and children's classes.
-                When I lost interest in sports around the age of 18 physical activity was replaced by going to raves where
+                When my interest in sports wained around the age of 18 physical activity was replaced by going to raves where
                 I could dance for up to 12 hours at a time fueled by the music and atmosphere, alcohol, Red Bull and Pro Plus
                 caffeine tablets!
                 I now rigorously exercise for over 1 hour 6 days a week and combined with a good diet I strive to live past 100.

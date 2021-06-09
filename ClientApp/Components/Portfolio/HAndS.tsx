@@ -40,12 +40,14 @@ const technology: ITechnologyInfo[] = [
     },
 
     {
-        name: <>React Bootstrap Version 0.32 <a href="https://react-bootstrap.github.io/">(https://react-bootstrap.github.io/)</a></>,
+        //name: <>React Bootstrap Version 0.32 <a href="https://react-bootstrap.github.io/">(https://react-bootstrap.github.io/)</a></>,
+        name: <a href="https://react-bootstrap.github.io/">React Bootstrap Version 0.32</a>,
         descr: <>The Bootstrap theme and UI engine but rewritten for React applications (no jQuery).</>
     },
 
     {
-        name: <>React Bootstrap Datatables Version 2.2 (<a href="https://github.com/react-bootstrap-table/react-bootstrap-table2">https://github.com/react-bootstrap-table/react-bootstrap-table2</a>)</>,
+        //name: <>React Bootstrap Datatables Version 2.2 (<a href="https://github.com/react-bootstrap-table/react-bootstrap-table2">https://github.com/react-bootstrap-table/react-bootstrap-table2</a>)</>,
+        name: <a href="https://github.com/react-bootstrap-table/react-bootstrap-table2">React Bootstrap Datatables Version 2.2</a>,
         descr: <>The Bootstrap data table feature for React applications (no jQuery).</>
     },
 
@@ -75,22 +77,26 @@ const technology: ITechnologyInfo[] = [
     },
 
     {
-        name: <>Recharts Version 1.8.5 (<a href="https://recharts.org/">https://recharts.org/</a>)</>,
+        //name: <>Recharts Version 1.8.5 (<a href="https://recharts.org/">https://recharts.org/</a>)</>,
+        name: <a href="https://recharts.org/">Recharts Version 1.8.5</a>,
         descr: <>A powerful and extensive React graph library for creating reports.</>
     },
 
     {
-        name: <>React Router Version 4.3.1 (<a href="https://reactrouter.com/web/guides/quick-start">https://reactrouter.com/web/guides/quick-start</a>)</>,
+        //name: <>React Router Version 4.3.1 (<a href="https://reactrouter.com/web/guides/quick-start">https://reactrouter.com/web/guides/quick-start</a>)</>,
+        name: <a href="https://reactrouter.com/web/guides/quick-start">React Router Version 4.3.1</a>,
         descr: <>Clientside navigation/routing enables the Javascript application to work as a single page application (does not redirect to the server for navigation).</>
     },
 
     {
-        name: <>React Dropzone Version 10.2.2 (<a href="https://github.com/react-dropzone/react-dropzone">https://github.com/react-dropzone/react-dropzone</a>)</>,
+        //name: <>React Dropzone Version 10.2.2 (<a href="https://github.com/react-dropzone/react-dropzone">https://github.com/react-dropzone/react-dropzone</a>)</>,
+        name: <a href="https://github.com/react-dropzone/react-dropzone">React Dropzone Version 10.2.2</a>,
         descr: <>A user interface component for uploading files.</>
     },
 
     {
-        name: <>React Signature Canvas Version 1.0.3 (<a href="https://www.npmjs.com/package/react-signature-canvas">https://www.npmjs.com/package/react-signature-canvas</a>)</>,
+        //name: <>React Signature Canvas Version 1.0.3 (<a href="https://www.npmjs.com/package/react-signature-canvas">https://www.npmjs.com/package/react-signature-canvas</a>)</>,
+        name: <a href="https://www.npmjs.com/package/react-signature-canvas">React Signature Canvas Version 1.0.3</a>,
         descr: <>A user interface component for recording signatures.</>
     },
 
@@ -102,23 +108,27 @@ const technology: ITechnologyInfo[] = [
     },
 
     {
-        name: <>Evo HTML to PDF (<a href="https://www.evopdf.com/html-to-pdf-converter.aspx">https://www.evopdf.com/html-to-pdf-converter.aspx</a>)</>,
+        //name: <>Evo HTML to PDF (<a href="https://www.evopdf.com/html-to-pdf-converter.aspx">https://www.evopdf.com/html-to-pdf-converter.aspx</a>)</>,
+        name: <a href="https://www.evopdf.com/html-to-pdf-converter.aspx">Evo HTML to PDF</a>,
         descr: <>A third party library which converts HTML to PDF. Most of the application's screens have the ability to produce A3 or A4, landscape or portrait PDF's by converting the relevant HTML held in the browser DOM.</>
     },
 
     {
-        name: <>Text Parse Version 1.0.15 (<Link to="/portfolio/textparse">/portfolio/textparse</Link>, <Link to="/textparse">/textparse</Link>, <a href="https://github.com/sidfishus/TextParse">https://github.com/sidfishus/TextParse</a>)</>,
+        //name: <>Text Parse Version 1.0.15 (<Link to="/portfolio/textparse">/portfolio/textparse</Link>, <Link to="/textparse">/textparse</Link>, <a href="https://github.com/sidfishus/TextParse">https://github.com/sidfishus/TextParse</a>)</>,
+        name: <Link to="/textparse">Text Parse Version 1.0.15</Link>,
         descr: <>My .NET text parsing library which aids in the process of producing PDF's based on HTML. The HTML output from the browser DOM needs to be transformed in order for it look appropriate on a PDF. For example 'a' tags need to be changed so they do not look like links, and pagination buttons must be removed from data tables.</>
     },
 
     {
-        name: <>Scriptable Template (<Link to="/portfolio/scriptabletemplate">/portfolio/scriptabletemplate</Link>, <a href="https://github.com/sidfishus/ScriptableTemplate">https://github.com/sidfishus/ScriptableTemplate</a>)</>,
+        //name: <>Scriptable Template (<Link to="/portfolio/scriptabletemplate">/portfolio/scriptabletemplate</Link>, <a href="https://github.com/sidfishus/ScriptableTemplate">https://github.com/sidfishus/ScriptableTemplate</a>)</>,
+        name: <Link to="/portfolio/scriptabletemplate">Scriptable Template</Link>,
         descr: <>My .NET library which allows templates to be parameterised and scripted with the aim of removing duplication in code.
             I used this for generating SQL stored procedures which provide the data for the reports and share the same concepts and repeated code but with the performance benefits of inline SQL, as opposed to moving anything that is repeated in to sub SQL views and functions. Also, bug fixes to the shared SQL code can be deployed to all of the stored procedures which use it by executing a single command.</>
     },
 
     {
-        name: <>React Hot Loader Version 4.12.21 (<a href="https://github.com/gaearon/react-hot-loader">https://github.com/gaearon/react-hot-loader</a>)</>,
+        //name: <>React Hot Loader Version 4.12.21 (<a href="https://github.com/gaearon/react-hot-loader">https://github.com/gaearon/react-hot-loader</a>)</>,
+        name: <a href="https://github.com/gaearon/react-hot-loader">React Hot Loader Version 4.12.21</a>,
         descr: <>Changes to the React code updates in real time without the need to refresh the screen for quicker development.</>
     },
 

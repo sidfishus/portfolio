@@ -1117,7 +1117,7 @@ export class IsWhitespaceComparisonStatement extends ComparisonStatement {
     }
 
     Icon(): SemanticICONS {
-        return null;
+        return "window minimize outline";
     }
 
     Children(): TextParseStatement[] | null {

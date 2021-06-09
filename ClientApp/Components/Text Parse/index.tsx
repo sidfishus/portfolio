@@ -12,6 +12,8 @@ import useConstant from "use-constant";
 import { ParseExamplesDropdown, eParseExample, eParseBuiltInExample} from "./Examples";
 import { ffGetVariables, TextParseVariable, VariablesMatch } from "./Variables";
 import { HEADING_COLOUR } from "../../theme";
+import { eScreenResolution } from "../Client App";
+import { MatchMediaResult } from "../../Library/MediaMatching";
 
 export interface ITextParseProps {
 };
@@ -30,6 +32,8 @@ interface IStatementListCtrlProps {
     RemoveStatement: (selStmt: ISelectedStatement) => void;
     modalState: IModalState|null;
     SetModalState: (state: IModalState|null) => void;
+    isMobile: boolean;
+    mediaMatching: MatchMediaResult;
 };
 
 interface IAddInsertParseStatementCtrlProps {
@@ -205,6 +209,7 @@ interface ICustomFunctionsProps {
     firstFailingFunction: TextParseFunction;
     CreateTextParsefunction: (ctrName: string) => TextParseFunction;
     builtInExample: eParseBuiltInExample;
+    mediaMatching: MatchMediaResult;
 };
 
 interface ICustomFunctionCtrlProps {
@@ -723,6 +728,12 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
     const _CreateParseStatement = (stmtType: eStatementType): TextParseStatement => CreateParseStatement(nameIndexes, stmtType);
 
     const fGetVariables = ffGetVariables(statements);
+
+    const { mediaMatching } = props;
+    if(!mediaMatching) return null;
+
+    const firstMatching = mediaMatching.FirstMatching();
+    const isMobile=((firstMatching === eScreenResolution.Mobile)?true:false);
     
     //// Render
     
@@ -866,6 +877,9 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
         <>
             <Container>
                 <Form>
+                    {isMobile &&
+                        <>Please note this is best used on a larger screen.<br/></>
+                    }
                     <CustomFunctions
                         {...props}
                         functions={functions}
@@ -881,6 +895,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                         firstFailingFunction={firstFailingFunction}
                         CreateTextParsefunction={CreateTextParsefunction}
                         builtInExample={builtInExample}
+                        mediaMatching={mediaMatching}
                     />
                     <Segment padded>
                         <Label color={HEADING_COLOUR} attached="top" icon={((builtInExample === null && !statements.length || firstFailingStatement)?"cancel":"check")} content="Parse Statement List" />
@@ -895,6 +910,8 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
                                 RemoveStatement={_RemoveStatement}
                                 modalState={modalState}
                                 SetModalState={SetModalState}
+                                isMobile={isMobile}
+                                mediaMatching={mediaMatching}
                             />
                         }
 
@@ -1571,11 +1588,13 @@ const StatementListItem: React.SFC<ITextParseProps & IStatementListCtrlProps & {
     level: number,
     stmtCount: number,
     siblings: TextParseStatement[],
-    parentStmt: TextParseStatement
+    parentStmt: TextParseStatement,
+    isMobile: boolean,
+    mediaMatching: MatchMediaResult
 }> = (props) => {
 
     const { stmt, SetSelStatement, selStatement, idx, level, stmtCount, ChangeStatementOrder, RemoveStatement,
-        modalState, SetModalState, statements, siblings, parentStmt } = props;
+        modalState, SetModalState, statements, siblings, parentStmt, isMobile, mediaMatching } = props;
 
     const paddingBlankSpace=((level>1)?" ".repeat(10*(level-1)) : "");
 
@@ -1594,6 +1613,8 @@ const StatementListItem: React.SFC<ITextParseProps & IStatementListCtrlProps & {
                 key={CreateStatementKey(iterStmt,"li")}
                 siblings={children}
                 parentStmt={stmt}
+                isMobile={isMobile}
+                mediaMatching={mediaMatching}
             />
         );
     }) : null);
@@ -1609,6 +1630,40 @@ const StatementListItem: React.SFC<ITextParseProps & IStatementListCtrlProps & {
     const hasUpButton=(idx !==0);
     const hasDownButton=(idx !== stmtCount-1);
 
+    const isTablet = ((mediaMatching.FirstMatching() === eScreenResolution.Tablet)?true:false);
+
+    const upDownCloseButtons = (
+        <>
+            <Icon name="pencil" onClick={() => SetSelStatement(stmt)} />
+            {hasUpButton && <Icon name="caret up" onClick={() => ChangeStatementOrder(CreateSelStatement(stmt),-1)} />}
+            {!hasUpButton && <Icon /> }
+            {hasDownButton && <Icon name="caret down" onClick={() => ChangeStatementOrder(CreateSelStatement(stmt),1)} />}
+            {!hasDownButton && <Icon /> }
+
+            <TextParseModal
+                key={`del-${stmt.UID}-${stmt.type}`}
+                trigger={<Icon name="close" onClick={() => {
+                    SetModalState({
+                        type: eModalType.mtClearSingleStatement,
+                        selStmt: CreateSelStatement(stmt)
+                    });
+                }} />}
+                title="Confirm Delete"
+                message={`Are you sure you want to delete this text parse statement? This action cannot be undone.`}
+                onYes={() => {
+                    if(CompareSelectedStatement(selStatement,stmt) || StatementIsAChildOf(stmt, selStatement)) {
+                        SetSelStatement(null);
+                    }
+                    SetModalState(null);
+                    RemoveStatement(stmt);
+                }}
+                onNo={() => SetModalState(null)}
+                onCancel={() => SetModalState(null)}
+                show={(modalState!==null && modalState.type===eModalType.mtClearSingleStatement && CompareSelectedStatement(modalState.selStmt,stmt))}
+            />
+        </>
+    );
+
     return (
         <Fragment
             key={`${stmt.UID}-${stmt.type}`}
@@ -1617,6 +1672,12 @@ const StatementListItem: React.SFC<ITextParseProps & IStatementListCtrlProps & {
                 active={CompareSelectedStatement(selStatement,stmt)}
                 {...rowExtraProps}
             >
+                {isMobile &&
+                    <Table.Cell style={{textAlign: "right"}}>
+                        {upDownCloseButtons}
+                    </Table.Cell>
+                }
+
                 <Table.Cell
                     onClick={() => {
                         SetSelStatement(stmt);
@@ -1628,36 +1689,19 @@ const StatementListItem: React.SFC<ITextParseProps & IStatementListCtrlProps & {
                     {heading}
                 </Table.Cell>
 
-                <Table.Cell>
-                    {idx<(siblings.length -1) && <b>{StatementChildThenOrDescr(parentStmt)}</b>}
-                </Table.Cell>
+                {!isMobile &&
+                    <>
+                        <Table.Cell>
+                            {idx<(siblings.length -1) && <b>{StatementChildThenOrDescr(parentStmt)}</b>}
+                        </Table.Cell>
 
-                <Table.Cell textAlign="right" width={2}>
-                    {hasUpButton && <Icon name="caret up" onClick={() => ChangeStatementOrder(CreateSelStatement(stmt),-1)} />}
-                    {hasDownButton && <Icon name="caret down" onClick={() => ChangeStatementOrder(CreateSelStatement(stmt),1)} />}
+                        <Table.Cell width={((isTablet)?3:2)} textAlign="right">
+                            {upDownCloseButtons}
+                        </Table.Cell>
+                    </>
+                }
 
-                    <TextParseModal
-                        key={`del-${stmt.UID}-${stmt.type}`}
-                        trigger={<Icon name="close" onClick={() => {
-                            SetModalState({
-                                type: eModalType.mtClearSingleStatement,
-                                selStmt: CreateSelStatement(stmt)
-                            });
-                        }} />}
-                        title="Confirm Delete"
-                        message={`Are you sure you want to delete this text parse statement? This action cannot be undone.`}
-                        onYes={() => {
-                            if(CompareSelectedStatement(selStatement,stmt) || StatementIsAChildOf(stmt, selStatement)) {
-                                SetSelStatement(null);
-                            }
-                            SetModalState(null);
-                            RemoveStatement(stmt);
-                        }}
-                        onNo={() => SetModalState(null)}
-                        onCancel={() => SetModalState(null)}
-                        show={(modalState!==null && modalState.type===eModalType.mtClearSingleStatement && CompareSelectedStatement(modalState.selStmt,stmt))}
-                    />
-                </Table.Cell>
+                {isMobile && idx<(siblings.length -1) && <Table.Cell><b>{StatementChildThenOrDescr(parentStmt)}</b></Table.Cell>}
 
             </Table.Row>
 
@@ -1668,7 +1712,8 @@ const StatementListItem: React.SFC<ITextParseProps & IStatementListCtrlProps & {
 
 const StatementListCtrl: React.SFC<ITextParseProps & IStatementListCtrlProps> = (props) => {
 
-    const { statements, modalState, SetModalState, SetStatements, SetSelStatement } = props;
+    const { statements, modalState, SetModalState, SetStatements, SetSelStatement,
+        isMobile, mediaMatching } = props;
 
     const items=statements.map((stmt,idx) => {
         return (
@@ -1681,6 +1726,8 @@ const StatementListCtrl: React.SFC<ITextParseProps & IStatementListCtrlProps> = 
                 key={CreateStatementKey(stmt,"li")}
                 siblings={statements}
                 parentStmt={null}
+                isMobile={isMobile}
+                mediaMatching={mediaMatching}
             />
         );
     });
@@ -2956,9 +3003,44 @@ const CustomFuncTableRowProps = (
 
 const CustomFunctionList: React.SFC<ITextParseProps & ICustomFunctionsProps> = (props) => {
 
-    const { functions, SetFunctions, SetModalState, modalState, selFunctionIdx, SetSelFunctionIdx } = props;
+    const { functions, SetFunctions, SetModalState, modalState, selFunctionIdx,
+        SetSelFunctionIdx, mediaMatching } = props;
 
     if(!functions.length) return null;
+
+    const isMobile=((mediaMatching.FirstMatching()==eScreenResolution.Mobile)?true:false);
+
+    const CreateCloseButton = (iterFunc: TextParseFunction,funcIdx: number): JSX.Element => {
+        return (
+            <TextParseModal
+                key={`del-${funcIdx}`}
+                trigger={<Icon name="close" onClick={() => {
+                    SetModalState({
+                        type: eModalType.mtDeleteCustomFunction,
+                        funcIdx: funcIdx
+                    });
+                }} />}
+                title="Confirm Delete"
+                message={`Are you sure you want to delete this custom function? This action cannot be undone.`}
+                onYes={() => {
+                    SetModalState(null);
+                    const updatedFunctions=functions.filter((unused,innerFuncIdx) => innerFuncIdx!==funcIdx);
+                    SetFunctions(updatedFunctions);
+
+                    // Update the selected row if necessary
+                    if(selFunctionIdx>funcIdx) {
+                        SetSelFunctionIdx(selFunctionIdx-1);
+                    }
+                    else if(selFunctionIdx===funcIdx) {
+                        SetSelFunctionIdx(null);
+                    }
+                }}
+                onNo={() => SetModalState(null)}
+                onCancel={() => SetModalState(null)}
+                show={(modalState!==null && modalState.type===eModalType.mtDeleteCustomFunction && modalState.funcIdx === funcIdx)}
+            />
+        );
+    };
 
     return (
         <Table
@@ -2976,6 +3058,12 @@ const CustomFunctionList: React.SFC<ITextParseProps & ICustomFunctionsProps> = (
                             key={funcIdx}
                             {...CustomFuncTableRowProps(iterFunc, functions, funcIdx)}
                         >
+                            {isMobile &&
+                                <Table.Cell textAlign="right" width={2}>
+                                    {CreateCloseButton(iterFunc,funcIdx)}
+                                </Table.Cell>
+                            }
+
                             <Table.Cell
                                 onClick={() => SetSelFunctionIdx(funcIdx)}
                             >
@@ -2988,36 +3076,12 @@ const CustomFunctionList: React.SFC<ITextParseProps & ICustomFunctionsProps> = (
                                     }
                                 </>
                             </Table.Cell>
-                            <Table.Cell textAlign="right" width={2}>
 
-                                <TextParseModal
-                                    key={`del-${funcIdx}`}
-                                    trigger={<Icon name="close" onClick={() => {
-                                        SetModalState({
-                                            type: eModalType.mtDeleteCustomFunction,
-                                            funcIdx: funcIdx
-                                        });
-                                    }} />}
-                                    title="Confirm Delete"
-                                    message={`Are you sure you want to delete this custom function? This action cannot be undone.`}
-                                    onYes={() => {
-                                        SetModalState(null);
-                                        const updatedFunctions=functions.filter((unused,innerFuncIdx) => innerFuncIdx!==funcIdx);
-                                        SetFunctions(updatedFunctions);
-
-                                        // Update the selected row if necessary
-                                        if(selFunctionIdx>funcIdx) {
-                                            SetSelFunctionIdx(selFunctionIdx-1);
-                                        }
-                                        else if(selFunctionIdx===funcIdx) {
-                                            SetSelFunctionIdx(null);
-                                        }
-                                    }}
-                                    onNo={() => SetModalState(null)}
-                                    onCancel={() => SetModalState(null)}
-                                    show={(modalState!==null && modalState.type===eModalType.mtDeleteCustomFunction && modalState.funcIdx === funcIdx)}
-                                />
-                            </Table.Cell>
+                            {!isMobile &&
+                                <Table.Cell textAlign="right" width={2}>
+                                    {CreateCloseButton(iterFunc,funcIdx)}
+                                </Table.Cell>
+                            }
                         </Table.Row>
                     );
                 })}

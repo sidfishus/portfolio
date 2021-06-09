@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Code, SegmentDemo, ContainerDemo, SegmentSubSection } from "../Presentation";
 import { MatchMediaResult } from "../../Library/MediaMatching";
 import { eScreenResolution } from "../Client App";
+import { CalcDurationYears } from "../../Library/DateTime";
 
 interface IHomeProps extends IRoutedCompProps {
 };
@@ -36,8 +37,7 @@ interface IHomeProps extends IRoutedCompProps {
 
 //  financially viable but also rewarding and puts me to the test, has an impact on the world around me
 
-//sidtodo page for my live mixes!
-
+//TODO page for my live mixes!
 export const Home: React.FunctionComponent<IHomeProps> = (props) => {
 
 
@@ -58,7 +58,7 @@ const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
         <SegmentDemo heading="Introduction">
             <HelloWorld {...props} />
             <p>
-                My name is Chris Siddall, I am the fine age of 35 years old (1985) and I am based in Tamworth Staffordshire.
+                My name is Chris Siddall, I am the fine age of {CalcDurationYears("1985-07-11")} years old (1985) and I am based in Tamworth Staffordshire.
                 I have had a passion for computer programming since discovering it at the age of 16, and have created
                 this application as a means of demonstrating my skills, to catalog my work and experience,
                 and to give an insight into my personality.
@@ -197,7 +197,7 @@ const AboutThisSite: React.FunctionComponent<{}> = () => {
 
             <SegmentSubSection heading="Pages">
                 <p>The pages that make up this site as well as a brief description:</p>
-                <Table>
+                <Table compact>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell style={{minWidth: 150}}>Page</Table.HeaderCell>
@@ -253,7 +253,7 @@ const UsefulLinks: React.FunctionComponent<{}> = () => {
         <SegmentDemo heading="Useful Links">
             <SegmentSubSection>
                 <p>A list of useful links:</p>
-                <Table>
+                <Table compact>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell style={{minWidth: 150}}>Link</Table.HeaderCell>

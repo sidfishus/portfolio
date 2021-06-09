@@ -111,7 +111,7 @@ const TechnologyTableRow = (info: ITechnologyInfo, idx: number): JSX.Element => 
 
 export const TechnologyTable = (infoList: ITechnologyInfo[]): JSX.Element => {
     return (
-        <Table>
+        <Table compact>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>Technology</Table.HeaderCell>

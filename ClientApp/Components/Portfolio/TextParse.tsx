@@ -220,7 +220,7 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
 
             <SegmentSubSection heading="Simple Example">
                 <p>Below is a simple example I created for the purpose of illustrating the syntax of a TextParse program.
-                    For more complex examples see the built in examples at <Link to="/textparse">https://chrissiddall.azurewebsites.net/textparse</Link>:
+                    For more complex examples see the built in examples <Link to="/textparse">here</Link>:
                 </p>
                 <Code mediaMatching={mediaMatching}>using System;<br/>
                 using Sid.Parse.TextPatternParser;<br/>
@@ -334,7 +334,7 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
             <SegmentDemo heading="Statement Types">
                 <SegmentSubSection>
                     <p>Below is the current list of statement types with notes explaining their usage:</p>
-                    <Table>
+                    <Table compact>
                     <Table.Header>
                     <Table.Row>
                     <Table.HeaderCell>Type</Table.HeaderCell>

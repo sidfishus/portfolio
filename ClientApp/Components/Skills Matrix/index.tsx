@@ -4,6 +4,8 @@ import { IRoutedCompProps } from "../../routes";
 import { Table, TableHeaderProps } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { ContainerDemo, SegmentDemo, SegmentSubSection} from "../Presentation";
+import { CalcDurationYears } from "../../Library/DateTime";
+import moment from "moment";
 
 export interface ISkillsMatrixProps {
 };
@@ -94,32 +96,46 @@ const CreateSkillRow = (skill: ISkillRow): JSX.Element => {
 };
 
 const YearString = (years: number): string => {
+    if(years === 0) return "< 1 year";
     if(years === 1) return "1 year";
     return `${years} years`;
 };
 
 const SkillsExperienceString = (skill: ISkillRow): string => {
-    if(!skill.experienceCommercial) {
-        if(!skill.experienceTotal) return "N/A";
-        return YearString(skill.experienceTotal);
-    }
-    if(skill.experienceTotal>skill.experienceCommercial) {
-        return `${YearString(skill.experienceTotal)} (${YearString(skill.experienceCommercial)} commercial)`;
+    if(skill.experienceCommercial===0) {
+        if(skill.experienceTotal===0) return "Less than 1 year";
+        return YearString(CalcExperience(skill.experienceTotal));
     }
 
-    return `${YearString(skill.experienceCommercial)} commercial`;
+    const experienceTotal=CalcExperience(skill.experienceTotal);
+    const experienceCommercial=CalcExperience(skill.experienceCommercial);
+
+    if(experienceTotal>experienceCommercial) {
+        return `${YearString(experienceTotal)} (${YearString(experienceCommercial)} commercial)`;
+    }
+
+    return `${YearString(experienceCommercial)} commercial`;
 };
+
+type tExperienceRange = {
+    startDate: string;
+    endDate?: string;
+};
+
+type tExperience = number|Array<number|tExperienceRange>;
 
 interface ISkillRow {
     technology: string;
-    experienceTotal: number;
-    experienceCommercial: number;
+    experienceTotal: tExperience;
+    experienceCommercial: tExperience;
     areas: JSX.Element;
 };
 
 const AreaLinkBreak: React.SFC = () => {
     return <><br/><br/></>;
 };
+
+//sidtodo put experience in terms of date ranges
 
 // This was done October 2020 (will need to be updated over time)
 const skillsMatrix: ISkillRow[] = [
@@ -136,6 +152,7 @@ const skillsMatrix: ISkillRow[] = [
             records and transactional model framework (same concept as Entity Framework), XML manipulation,
             Windows services, GUI applications, highly complex algorithms, warehouse management, electronic data interchange, 
             checksums and encryption, PC 3D game using <a href="https://www.ogre3d.org/">OGRE</a>,
+            basic DirectX,
             IRC bots, raw HTTP connections, remote debugging, SQL database schema upgrades,
             low level ODBC API's, Microsoft SAL and more.</>
     },
@@ -148,8 +165,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "SQL",
-        experienceTotal: 14, 
-        experienceCommercial: 14,
+        experienceTotal: [{startDate: "2006-06-01"}], 
+        experienceCommercial: [{startDate: "2006-06-01"}],
         areas: <>Microsoft SQL Management Studio various versions, large scale database creation, 
             indexing and performance, partitioning, highly complex queries involving millions of records.</>
     },
@@ -174,8 +191,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "Javascript",
-        experienceTotal: 4, 
-        experienceCommercial: 3,
+        experienceTotal: [1 /* Spare time */, {startDate: "2018-02-01"} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: "2018-02-01"}],
         areas: <>Modern features through the use of Babel, Webpack / Babel, Node, Gulp, client and server-side
             pre-rendering, object oriented programming, functional programming, unit testing, React, Redux, 
             hot module replacement, aspnet-webpack, Flow (Facebook), Identity Server 4 OIDC client, Axios.<AreaLinkBreak/>
@@ -187,8 +204,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "Typescript",
-        experienceTotal: 3, 
-        experienceCommercial: 3,
+        experienceTotal: [1 /* Spare time */, {startDate: "2018-02-01"} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: "2018-02-01"}],
         areas: <>Modern object oriented programming features (classes/interfaces/types e.t.c.), static type checking
             and compilation, incorporation with Webpack.<AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>,
@@ -197,8 +214,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "React",
-        experienceTotal: 4, 
-        experienceCommercial: 3,
+        experienceTotal: [1 /* Spare time */, {startDate: "2018-02-01"} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: "2018-02-01"}],
         areas: <>Hooks (React.FunctionComponent), class components (React.Component and React.PureComponent),
             stateless function components (React.SFC), Semantic UI React, React Bootstrap, Material UI, signature capture,
             drop zone, Recharts, React Router, React GA (Google Analytics), SPFX (Sharepoint O365),
@@ -383,7 +400,25 @@ const SortSkillsMatrixByTechnology = (lhs: ISkillRow, rhs: ISkillRow): number =>
 };
 
 const SortSkillsByExperience = (lhs: ISkillRow, rhs: ISkillRow): number => {
-    const rv= lhs.experienceTotal-rhs.experienceTotal;
+    const rv= CalcExperience(lhs.experienceTotal)-CalcExperience(rhs.experienceTotal);
     if(rv) return rv;
-    return lhs.experienceCommercial-rhs.experienceCommercial;
+    return CalcExperience(lhs.experienceCommercial)-CalcExperience(rhs.experienceCommercial);
 };
+
+const CalcExperience = (exp: tExperience):number => {
+    const expType=typeof exp;
+    if(expType === "number") return exp as number;
+    
+    const expAsArray = exp as Array<number|tExperienceRange>;
+
+    const totalYears=expAsArray.reduce((acc, iterVal) => {
+       if(typeof iterVal === "number") return (acc as number)+(iterVal as number);
+
+       const iterRange = iterVal as tExperienceRange;
+       const endDate = ((iterRange.endDate !== undefined)?iterRange.endDate : moment());
+
+       return (acc as number)+CalcDurationYears(iterRange.startDate, endDate);
+    },0) as number;
+
+    return totalYears;
+}

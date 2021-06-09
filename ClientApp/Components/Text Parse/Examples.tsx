@@ -6,13 +6,15 @@ import { TextParseStatement, eStatementType, StringOffsetComparisonStatement, St
     eCustomComparisonOperator, CaptureComparisonStatement, StringComparisonStatement, SetVariableStatement} from "./StatementTypes";
 import { ITextParseProps } from "./index";
 import useConstant from "use-constant";
-import { Dropdown, Form, Label } from "semantic-ui-react";
+import { Dropdown, Form, Label, LabelProps } from "semantic-ui-react";
 import { TextParseFunction, eCustomFunctionOperator } from "./CustomFunctions";
 import { CreateLengthOperand, CreateArbitraryValueOperand, CreateFunctionOperand,
     CreateCurrentPositionOperand, 
     CreateVariableOperand} from "./Operands";
 import { eParseOutputType } from "./index";
 import { CreateTextParseVariable } from "./Variables";
+import { MatchMediaResult } from "../../Library/MediaMatching";
+import { eScreenResolution } from "../Client App";
 
 export interface IParseExamplesDropdownProps {
     parseExample: eParseExample;
@@ -27,6 +29,7 @@ export interface IParseExamplesDropdownProps {
     SetParseOuputType: (type: eParseOutputType) => void;
     SetBuiltInExample: (type: eParseBuiltInExample) => void;
     SetReplaceFormat: (fmt: string) => void;
+    mediaMatching: MatchMediaResult;
 };
 
 // These are indexes in to the 'ParseExampleOptionsArray' array.
@@ -47,7 +50,8 @@ export enum eParseBuiltInExample {
 
 interface IParseExampleOption {
     text: string;
-    description?: string;
+    description?: JSX.Element;
+    fDescription?: (mediaMatching: MatchMediaResult) => JSX.Element;
     GetStatements?: (
         CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
         functions: TextParseFunction[]
@@ -86,7 +90,7 @@ const vbsAddParenthesisInput: string =
 
 const ParseExampleOptionsArray = (): IParseExampleOption[] => {
 
-    const isPalindromeDescr = "Returns whether the input text is a palindrome: https://en.wikipedia.org/wiki/Palindrome";
+    const isPalindromeDescr = <>Returns whether the input text is a palindrome: https://en.wikipedia.org/wiki/Palindrome</>;
     const extractPalindromeInput = "Even abcba positioned bbb words cbbc are ppppgpppp palindromes qweewq";
 
     return [
@@ -118,7 +122,7 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.extractPalindromes
         {
             text: "Extract palindromes",
-            description: "Extract the palindrome words from a sentence: https://en.wikipedia.org/wiki/Palindrome",
+            description: <>Extract the palindrome words from a sentence: https://en.wikipedia.org/wiki/Palindrome</>,
             GetStatements: GetExtractPalindromesStatements(false),
             GetFunctions: GetExtractPalindromesFunctions(false),
             ParseInput: extractPalindromeInput,
@@ -128,8 +132,8 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.extractNotPalindromes
         {
             text: "Extract not palindromes",
-            description: "Extract the words which are not palindromes from a sentence: " +
-                "https://en.wikipedia.org/wiki/Palindrome",
+            description: <>Extract the words which are not palindromes from a sentence:
+                https://en.wikipedia.org/wiki/Palindrome</>,
             GetStatements: GetExtractPalindromesStatements(true),
             GetFunctions: GetExtractPalindromesFunctions(true),
             ParseInput: extractPalindromeInput,
@@ -139,15 +143,25 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.vbsAddParenthesis
         {
             text: "VB Script add parenthesis (built in)",
-            description: "A complex replace example which converts VB Script procedure calls to VB .NET procedure "+
-                "calls by adding parenthesis around the arguments. This was created as part of an application which " +
-                "converts classic ASP code to ASP .NET. "+
-                "Because this uses functionality which is not available in this UI currently the statement list "+
-                "and functions e.t.c. cannot be "+
-                "shown but has been added as a demonostration of what can be achieved using the TextParse library. "+
-                "The text parse code for this can be found in Github in a function named "+
-                "'AddParenthesisToFunctionCalls': "+
-                "https://github.com/sidfishus/TextParse/blob/master/Library/dotNETConversion.cs.",
+            fDescription: (mediaMatching: MatchMediaResult) => {
+                let descr=
+                    "A complex replace example which converts VB Script procedure calls to VB .NET procedure "+
+                    "calls by adding parenthesis around the arguments. This was created as part of an application which " +
+                    "converts classic ASP code to ASP .NET. "+
+                    "Because this uses functionality which is not available in this UI currently the statement list "+
+                    "and functions e.t.c. cannot be "+
+                    "shown but has been added as a demonostration of what can be achieved using the TextParse library. "+
+                    "The text parse code for this can be found in Github in a function named "+
+                    "'AddParenthesisToFunctionCalls': "+
+                    "https://github.com/sidfishus/TextParse/";
+
+                if(mediaMatching.FirstMatching() !== eScreenResolution.Mobile) {
+                    descr = descr + "blob/master/Library/dotNETConversion.cs.";
+                    return <>{descr}</>;
+                }
+
+                return <>{descr}<br/>blob/master/Library/dotNETConversion.cs</>;
+            },
             ParseInput: vbsAddParenthesisInput,
             BuiltInType: eParseBuiltInExample.vbsAddParenthesis,
         },
@@ -155,7 +169,7 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.capturePersonDetails
         {
             text: "Capture extract example",
-            description: "A simple CSV parsing example demonostrating the replace format feature.",
+            description: <>A simple CSV parsing example demonostrating the replace format feature.</>,
             GetFunctions: GetCaptureExtractExampleFunctions,
             GetStatements: GetCaptureExtractExampleStatements,
             ParseInput: "Bjarne Stroustrup,30/12/1950,Male,Ada Lovelace,10/12/1815,Female,Anders Hejlsberg,"+
@@ -167,7 +181,7 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
         //eParseExample.captureHTMLTags
         {
             text: "Capture HTML control elements",
-            description: "A simple example which captures all of the control elements from HTML code",
+            description: <>A simple example which captures all of the control elements from HTML code</>,
             GetStatements: GetCaptureHTMLElementsStatements,
             ParseInput: "<html><body><form><input type=\"text\" value=\"hi\"/><label>hello</label><button>Click</button></form></body></html>",
             ParseOuputType: eParseOutputType.potExtractAll,
@@ -181,11 +195,32 @@ export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IP
 
     const {parseExample, SetParseExample, SetStatements, SetSelStatement, SetFunctions, SetSelFunctionIdx,
         CreateTextParsefunction, CreateParseStatement, SetParseInputText, SetParseOuputType,
-        SetBuiltInExample, SetReplaceFormat }=props;
+        SetBuiltInExample, SetReplaceFormat, mediaMatching }=props;
 
     const examples = useConstant(ParseExampleOptionsArray);
 
+    const isMobile = ((mediaMatching.FirstMatching() === eScreenResolution.Mobile)?true:false);
+
     const parseExampleObj=examples[parseExample];
+
+    let descriptionJsx=null;
+    if(parseExampleObj.description || parseExampleObj.fDescription) {
+
+        const descr=((parseExampleObj.description)?
+            parseExampleObj.description : parseExampleObj.fDescription(mediaMatching)
+        );
+
+        const labelProps: LabelProps = {};
+        if(isMobile) {
+            // Long descriptions cause the label to go over the width of the screen for some reason.
+            // This prevents that from happening.
+            labelProps.style = {
+                maxWidth: "96%"
+            };
+        }
+
+        descriptionJsx=<Label pointing="left" {...labelProps}>{descr}</Label>;
+    }
 
     return (
         <Form.Field>
@@ -230,9 +265,7 @@ export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IP
                 </Dropdown>
             </span>
 
-            {parseExampleObj.description && 
-                <Label pointing="left">{parseExampleObj.description}</Label>
-            }
+            {descriptionJsx}
         </Form.Field>
     );
 };
