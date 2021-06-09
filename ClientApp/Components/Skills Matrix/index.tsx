@@ -103,7 +103,7 @@ const YearString = (years: number): string => {
 
 const SkillsExperienceString = (skill: ISkillRow): string => {
     if(skill.experienceCommercial===0) {
-        if(skill.experienceTotal===0) return "Less than 1 year";
+        if(skill.experienceTotal===0) return "N/A";
         return YearString(CalcExperience(skill.experienceTotal));
     }
 
@@ -135,14 +135,14 @@ const AreaLinkBreak: React.SFC = () => {
     return <><br/><br/></>;
 };
 
-//sidtodo put experience in terms of date ranges
+const ProphetStartDate: string = "2006-06-01";
+const WestleighCountrysideStartDate: string = "2018-02-01";
 
-// This was done October 2020 (will need to be updated over time)
 const skillsMatrix: ISkillRow[] = [
     {
         technology: "C++",
-        experienceTotal: 17, 
-        experienceCommercial: 12,
+        experienceTotal: 17 /* Spare time before and including working for Prophet */, 
+        experienceCommercial: 12 /* Prophet */,
         areas: <>Windows API, COM DLL, COM OCX GUI components, templates, object oriented programming,
             functional programming , Winsock TCP/IP, C++ 11 features,
             STL / Boost (bind, functions and
@@ -165,17 +165,17 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "SQL",
-        experienceTotal: [{startDate: "2006-06-01"}], 
-        experienceCommercial: [{startDate: "2006-06-01"}],
+        experienceTotal: [{startDate: ProphetStartDate} /* Prophet to current */], 
+        experienceCommercial: [{startDate: ProphetStartDate} /* Prophet to current */],
         areas: <>Microsoft SQL Management Studio various versions, large scale database creation, 
             indexing and performance, partitioning, highly complex queries involving millions of records.</>
     },
     {
         technology: "Git / Github",
-        experienceTotal: 3, 
-        experienceCommercial: 3,
+        experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate}],
         areas: <>Command lines, repository creation, Github/NuGet package creation, integration with Team Foundation Server and
-            Visual Code, I manage my own <a href="https://github.com/sidfishus">Github account</a> which has 8 repositories.</>
+            Visual Code, I manage my own <a href="https://github.com/sidfishus">Github account</a> which has a number of repositories.</>
     },
     {
         technology: "Delphi / Pascal",
@@ -185,14 +185,14 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "Microsoft Windows 32Bit and 64Bit",
-        experienceTotal: 19, 
-        experienceCommercial: 14,
+        experienceTotal: [{startDate: "2001-09-01"}],
+        experienceCommercial: [{startDate: ProphetStartDate} /* Prophet to current */],
         areas: <>All versions from Windows 98 upwards.</>
     },
     {
         technology: "Javascript",
-        experienceTotal: [1 /* Spare time */, {startDate: "2018-02-01"} /* Westleigh/Countryside */], 
-        experienceCommercial: [{startDate: "2018-02-01"}],
+        experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate}],
         areas: <>Modern features through the use of Babel, Webpack / Babel, Node, Gulp, client and server-side
             pre-rendering, object oriented programming, functional programming, unit testing, React, Redux, 
             hot module replacement, aspnet-webpack, Flow (Facebook), Identity Server 4 OIDC client, Axios.<AreaLinkBreak/>
@@ -204,8 +204,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "Typescript",
-        experienceTotal: [1 /* Spare time */, {startDate: "2018-02-01"} /* Westleigh/Countryside */], 
-        experienceCommercial: [{startDate: "2018-02-01"}],
+        experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate}],
         areas: <>Modern object oriented programming features (classes/interfaces/types e.t.c.), static type checking
             and compilation, incorporation with Webpack.<AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>,
@@ -214,8 +214,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "React",
-        experienceTotal: [1 /* Spare time */, {startDate: "2018-02-01"} /* Westleigh/Countryside */], 
-        experienceCommercial: [{startDate: "2018-02-01"}],
+        experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate}],
         areas: <>Hooks (React.FunctionComponent), class components (React.Component and React.PureComponent),
             stateless function components (React.SFC), Semantic UI React, React Bootstrap, Material UI, signature capture,
             drop zone, Recharts, React Router, React GA (Google Analytics), SPFX (Sharepoint O365),
@@ -228,8 +228,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: ".NET",
-        experienceTotal: 6, 
-        experienceCommercial: 5,
+        experienceTotal: [2 /* Spare time */, 2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>Entity Framework various versions, installer/deployment system, COM interop, Windows services,
             SQL database interaction, Rosylyn compiler framework, desktop and mobile GUI applications, 
             various command line utilities, SQL Server Compact Remote Data Access,
@@ -243,22 +243,22 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "Microsoft Visual Studio and Team Foundation Server (TFS)",
-        experienceTotal: 17, 
-        experienceCommercial: 14,
+        experienceTotal: [{startDate: "2002-06-01"}], 
+        experienceCommercial: [{startDate: ProphetStartDate}],
         areas: <>Versions 6.0 / 2008 / 2012 / 2017, TFS using both TFS and Git modes, macros,
             keyboard shortcuts, advanced debugging, disassembly for native Windows C/C++ programs.</>
     },
     {
         technology: "Azure Dev Ops",
-        experienceTotal: 3, 
-        experienceCommercial: 3,
+        experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>The usual Git functionality, building and deployment to Azure, repos and pipelines
             and is used in the <Link to="/portfolio/misc">intranet application</Link> which I manage.</>
     },
     {
         technology: "Azure",
-        experienceTotal: 3, 
-        experienceCommercial: 3,
+        experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>App services, function apps, storage accounts, Cosmos DB, Azure Active Directory,
             Redis Cache, Kudu.
             <AreaLinkBreak/> 
@@ -267,14 +267,14 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "IIS",
-        experienceTotal: 4, 
-        experienceCommercial: 3,
+        experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>Versions 6 - 10, development, test, and live on-premise web site hosting.</>
     },
     {
         technology: "ASP .NET",
-        experienceTotal: 4, 
-        experienceCommercial: 3,
+        experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>MVC, MVC Core, Web Forms, Web Services, dedicated protected API's using inbuilt authorisation,
             dedicated identity servers, server side pre-rendering, hot module replacement,
             SPA's and SPA/Node services.<AreaLinkBreak/>
@@ -286,8 +286,8 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "C#",
-        experienceTotal: 6, 
-        experienceCommercial: 5,
+        experienceTotal: [2 /* Spare time */, 2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>Object oriented programming, functional programming, generics, multiple threading,
             'Task' / async / await, see .NET for more.<AreaLinkBreak/>
             Used in the majority of my <a href="">Github repositories</a> but specifically in the
@@ -322,21 +322,21 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "Microsoft Visual Code",
-        experienceTotal: 4, 
-        experienceCommercial: 3,
+        experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>C#, Javascript, Typescript, React, Webpack, Babel, Gulp, NuGet, Git, extensions,
             .NET command line applications, ASP .NET / MVC / MVC Core.</>
     },
     {
         technology: "Object Oriented Programming",
-        experienceTotal: 17, 
-        experienceCommercial: 14,
+        experienceTotal: [{startDate: "2003-01-01"}], 
+        experienceCommercial: [{startDate: ProphetStartDate}],
         areas: <>C++, C#, Javascript, Typescript, Eiffel, Action Script, VB, React, Java.</>
     },
     {
         technology: "Functional Programming",
-        experienceTotal: 5, 
-        experienceCommercial: 3,
+        experienceTotal: [2 /* Spare time */, 3 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
+        experienceCommercial: [3 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>C++, C#, Javascript, Typescript.</>
     },
     {
