@@ -21,7 +21,6 @@ interface IPortfolioCarouselProps {
     SetOpenImg: (idx: number) => void;
 };
 
-//sidtodo test app on mobile!!! display text when showing text parse on mobile.
 export const PortfolioBase: React.FunctionComponent<IPortfolioBaseProps> = (props) => {
 
     const [openImg, SetOpenImg] = useState<number>(null);

@@ -42,7 +42,6 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
     const [verticalOpenState,SetVerticalOpenState] = React.useState<boolean>(false);
 
     if(!mediaMatching) {
-        //sidtodo test
         return (
             <br />
         );
@@ -221,7 +220,6 @@ interface IMenuHeaderProps {
     SetVerticalOpenState: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-//sidtodo finish the logo and test the vertical view when have better internet
 const MenuVerticle = (props: IMenuHeaderProps): JSX.Element => {
 
     const { verticalOpenState, SetVerticalOpenState} = props;

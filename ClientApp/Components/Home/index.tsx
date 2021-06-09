@@ -12,34 +12,11 @@ import { CalcDurationYears } from "../../Library/DateTime";
 interface IHomeProps extends IRoutedCompProps {
 };
 
-//sidtodo catalog of my favourite tunes.
-//sidtodo book recommendations
-//sidtodo test on a mobile, and desktop.
-
-//sidtodo: create a short video?
-
-//sidtodo
-//topics:
-//  purpose of site: catalog my work, demonstrate my skills, experience, give a flavour in to who i am
-//      covers my work from approx 2017 onwards.
-//  can see the power and future of software, everything is going to become an app
-//  feel free to request a copy of my cv..
-//  explain tech used to create the site, where the code can be found
-//  about me
-//  background
-//  how i got in to coding
-//  current and future projects: social media app using Material UI, cryptocurrency. like to do more on unit testing and writing functional code. brilliant concept
-//  coding preferences, backend, full stack, prefer to use UI library
-//  versatility, ability to learn on the fly
-//  professional experience, cv furlough giving me time to finish
-//  what the site offers: live React app e.t.c.
-// educational game to explain programming to children
-
-//  financially viable but also rewarding and puts me to the test, has an impact on the world around me
-
+//TODO catalog of my favourite tunes.
+//TODO book recommendations
+//TODO: create a short video?
 //TODO page for my live mixes!
 export const Home: React.FunctionComponent<IHomeProps> = (props) => {
-
 
     return (
         <>
