@@ -277,7 +277,6 @@ const Logo: React.FunctionComponent<ILogoProps> = (props)  => {
     );
 };
 
-//sidtodo test on different screen sizes
 const MenuHorizontal = (props: IMenuHeaderProps): JSX.Element => {
 
     const children = [

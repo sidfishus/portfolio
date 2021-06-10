@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable } from "./PortfolioBase";
+import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable, CreateRepoUrl } from "./PortfolioBase";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
 
 export interface IMiscPortfolioProps extends IRoutedCompProps {
@@ -19,27 +19,27 @@ export const MiscPortfolio: React.SFC<IMiscPortfolioProps> = (props) => {
 
 const carouselImgs : ICarouselImg[] =[
     {
-        src: "/img/misc/orgchart1.jpg",
+        src: CreateRepoUrl("wwwroot/img/misc/orgchart1.jpg"),
         text: "Organisational chart: select the top level division."
     },
 
     {
-        src: "/img/misc/orgchart2.jpg",
+        src: CreateRepoUrl("wwwroot/img/misc/orgchart2.jpg"),
         text: "Organisational chart: select the department."
     },
 
     {
-        src: "/img/misc/orgchart3.jpg",
+        src: CreateRepoUrl("wwwroot/img/misc/orgchart3.jpg"),
         text: "Organisational chart: see the department members along with the department head."
     },
 
     {
-        src: "/img/misc/orgchart4.jpg",
+        src: CreateRepoUrl("wwwroot/img/misc/orgchart4.jpg"),
         text: "Organisational chart: select a user and see their team and manager..."
     },
 
     {
-        src: "/img/misc/orgchart5.jpg",
+        src: CreateRepoUrl("wwwroot/img/misc/orgchart5.jpg"),
         text: "Organisational chart: ...as well as their direct reports."
     },
 ];

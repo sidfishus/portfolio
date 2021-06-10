@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable } from "./PortfolioBase";
+import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable, CreateRepoUrl } from "./PortfolioBase";
 import { Link } from "react-router-dom";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
 
@@ -231,130 +231,129 @@ const WriteUp = (): JSX.Element => {
     );
 };
 
-//sidtodo change the pages to load from github instead of locally
 const carouselImgs: ICarouselImg[] = [
     {
-        src: "/img/hands/homepage1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/homepage1.jpg"),
         text: "Home page which includes live graphs rendered using Recharts."
     },
 
     {
-        src: "/img/hands/aireport1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/aireport1.jpg"),
         text: "AI report creation."
     },
 
     {
-        src: "/img/hands/aireport2.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/aireport2.jpg"),
         text: "AI report creation."
     },
 
     {
-        src: "/img/hands/aireport3.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/aireport3.jpg"),
         text: "AI report creation."
     },
 
     {
-        src: "/img/hands/aireport4.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/aireport4.jpg"),
         text: "AI report creation."
     },
 
     {
-        src: "/img/hands/ailist1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/ailist1.jpg"),
         text: "AI report list using React Bootstrap Data Tables."
     },
 
     {
-        src: "/img/hands/ailist2.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/ailist2.jpg"),
         text: "AI report list using React Bootstrap Data Tables."
     },
 
     {
-        src: "/img/hands/ailist3.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/ailist3.jpg"),
         text: "General PDF export functionality available on most screens."
     },
 
     {
-        src: "/img/hands/ailist4.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/ailist4.jpg"),
         text: "General PDF export functionality available on most screens."
     },
 
     {
-        src: "/img/hands/boardreportfilter1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/boardreportfilter1.jpg"),
         text: "Report filters."
     },
 
     {
-        src: "/img/hands/report1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/report1.jpg"),
         text: "Reporting."
     },
 
     {
-        src: "/img/hands/report2.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/report2.jpg"),
         text: "Reporting."
     },
 
     {
-        src: "/img/hands/report3.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/report3.jpg"),
         text: "Reporting."
     },
 
     {
-        src: "/img/hands/report4.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/report4.jpg"),
         text: "Reporting."
     },
 
     {
-        src: "/img/hands/report5.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/report5.jpg"),
         text: "Reporting."
     },
 
     {
-        src: "/img/hands/report6.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/report6.jpg"),
         text: "Reporting."
     },
 
     {
-        src: "/img/hands/report7.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/report7.jpg"),
         text: "Reporting."
     },
 
     {
-        src: "/img/hands/staticdataentry1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/staticdataentry1.jpg"),
         text: "Static data maintenance."
     },
 
     {
-        src: "/img/hands/staticdataentry2.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/staticdataentry2.jpg"),
         text: "Static data maintenance."
     },
 
     {
-        src: "/img/hands/usermaintenance1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/usermaintenance1.jpg"),
         text: "User maintenance."
     },
 
     {
-        src: "/img/hands/usermaintenance2.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/usermaintenance2.jpg"),
         text: "User maintenance."
     },
 
     {
-        src: "/img/hands/mobilehome1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/mobilehome1.jpg"),
         text: "Mobile layout for the home page."
     },
 
     {
-        src: "/img/hands/mobileaireport1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/mobileaireport1.jpg"),
         text: "Mobile layout for the AI report form."
     },
 
     {
-        src: "/img/hands/tablethome1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/tablethome1.jpg"),
         text: "Tablet (Ipad) layout for the home page."
     },
 
     {
-        src: "/img/hands/tabletaireport1.jpg",
+        src: CreateRepoUrl("wwwroot/img/hands/tabletaireport1.jpg"),
         text: "Tablet (Ipad) layout for the AI report form."
     },
 ];

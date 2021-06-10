@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
+import { PortfolioBase, ICarouselImg, CreateRepoUrl } from "./PortfolioBase";
 import { Table, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Code, SegmentDemo, SegmentSubSection } from "../Presentation";
@@ -22,87 +22,87 @@ export const TextParsePortfolio: React.SFC<ITextParsePortfolioProps> = (props) =
 
 const carouselImgs : ICarouselImg[] = [
     {
-        src: "/img/textparse/palindromeexample.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/palindromeexample.jpg"),
         text: "Example which determines whether a word is a palindrome."
     },
 
     {
-        src: "/img/textparse/extractpalindromeexample.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/extractpalindromeexample.jpg"),
         text: "Example which extracts the words which are palindromes."
     },
 
     {
-        src: "/img/textparse/captureextractexample.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/captureextractexample.jpg"),
         text: "Example which extracts values using a replace format."
     },
 
     {
-        src: "/img/textparse/replaceparenexample.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/replaceparenexample.jpg"),
         text: "Example which converts VB script to VB .NET (function calls)."
     },
 
     {
-        src: "/img/textparse/statementtypes.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/statementtypes.jpg"),
         text: "List of statement types (subset available in the UI)."
     },
 
     {
-        src: "/img/textparse/customfunction1.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customfunction1.jpg"),
         text: "Custom function creation."
     },
 
     {
-        src: "/img/textparse/customfunction2.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customfunction2.jpg"),
         text: "Custom functions and custom variable creation."
     },
 
     {
-        src: "/img/textparse/customfunction3.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customfunction3.jpg"),
         text: "Custom functions and custom variables."
     },
 
     {
-        src: "/img/textparse/customfunction4.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customfunction4.jpg"),
         text: "Custom functions and custom variables."
     },
 
     {
-        src: "/img/textparse/customfunction5.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customfunction5.jpg"),
         text: "Custom functions and custom variables."
     },
 
     {
-        src: "/img/textparse/userdefinedvariables.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/userdefinedvariables.jpg"),
         text: "User defined variables."
     },
 
     {
-        src: "/img/textparse/customcomparison1.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison1.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: "/img/textparse/customcomparison2.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison2.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: "/img/textparse/customcomparison3.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison3.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: "/img/textparse/customcomparison4.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison4.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: "/img/textparse/customcomparison5.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison5.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: "/img/textparse/consoleoutput1.jpg",
+        src: CreateRepoUrl("wwwroot/img/textparse/consoleoutput1.jpg"),
         text: "The generated C# code is output to the console."
     },
 ];

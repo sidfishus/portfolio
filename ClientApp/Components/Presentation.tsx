@@ -98,7 +98,7 @@ export const SegmentSubSection: React.FunctionComponent<ISegmentSubSection> = (p
 
     const { heading, children, nested} = props;
 
-    //sidtodo use the nesting level.
+    //TODO use the nesting level - assumes max nesting level of 1.
     const Heading = (): JSX.Element => {
         if(!heading) return null;
         if(nested===undefined || nested===null) return <h3>{heading}</h3>;

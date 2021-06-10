@@ -123,3 +123,8 @@ export const TechnologyTable = (infoList: ITechnologyInfo[]): JSX.Element => {
         </Table>
     );
 }
+
+export const CreateRepoUrl = (url: string): string => {
+
+    return `https://github.com/sidfishus/react-spa-demo/blob/master/${url}?raw=true`;
+}
