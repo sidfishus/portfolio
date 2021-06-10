@@ -13,15 +13,17 @@
 //sidtodo test these when live.
 // The point of referencing the Github repo instead of Azure is to reduce Azure bandwidth LOL.
 #if DEBUG
-    //string jsClientFilename="/js/main-client-debug.js";
-    string jsClientFilename="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/js/main-client-debug.js";
+    // Can't reference repository JS files due to this error:
+    // Refused to execute script from '..' because its MIME type ('text/plain') is not executable, and strict MIME
+    // type checking is enabled.
+    string jsClientFilename="/js/main-client-debug.js";
     string jsServerFilename="Server/main-server-debug";
     string reactElementName="reactDebug";
     string semanticCSS="/css/semantic.css";
     string carouselCSS="/css/carousel.min.css";
     string demoCSS="/css/demo.css";
 #else
-    //sidtodo reference live.
+    
     string jsClientFilename="/js/main-client.js";
     string jsServerFilename="Server/main-server";
     string reactElementName="react";
