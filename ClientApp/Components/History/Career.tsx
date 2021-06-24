@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { ContainerDemo, SegmentDemo } from "../Presentation";
+import { ContainerDemo, SegmentDemo, SegmentSubSection } from "../Presentation";
 import { Link } from "react-router-dom";
 
 export interface ICareerProps {
@@ -21,7 +21,7 @@ export const Career: React.FunctionComponent<ICareerProps & IRoutedCompProps> = 
 const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
 
     return (
-        <SegmentDemo heading="House Construction Company">
+        <SegmentDemo heading="House Construction Company (Feb 2018 to Present)">
             <p>In my later years at Prophet I felt I had reached a plateau and was at the top of the learning curve.
                 I had registered my CV on a job board and was receiving a substantial amount of emails from recruiters regarding .NET and web development jobs due to me having .NET experience.
             </p>
@@ -127,8 +127,8 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
 
             <h2>Customer Service Application</h2>
             <p>
-                Whenever there is a fault with a house built by the company which is still under warranty the dedicated customer services applications are
-                used to facilitate the issue being fixed. This consists of a variety of .NET/ASP .NET applications for which I am the lead developer on.
+                Whenever there is a fault with a property built by the company which is still under warranty the dedicated customer services applications
+                facilitate the issue being fixed. This consists of a variety of .NET/ASP .NET applications for which I am the lead developer on.
                 The process is as follows:
                 <ol>
                     <li>The house owner records the issue with the customer service department,</li>
@@ -154,87 +154,250 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                 </ol>
             </p>
             <p>
-                {/* //sidtodo here */}
-                Some features I have developed for this are:
+                Significant features I have developed for this are:
                 <ul>
                     <li>Ability for subcontractors to upload images against issues within the mobile application,</li>
-                    <li>Switched the front-end of the dashboard from ASP .NET to React for far improved responsiveness,</li>
-                    <li>A mass plot address import using Excel and VSTO,</li>
+                    <li>Switched the dashboard from ASP .NET to pure client-side Javascript/React for improved responsiveness,</li>
+                    <li>A mass plot address import using Excel and Visual Studio Tools for Office.</li>
                 </ul>
             </p>
         </SegmentDemo>
     );
 };
 
-// most complex algorithms
-// forgotten over time
+//sidtodo most complex algorithms
+//sidtodo forgotten over time
 const ProphetPLC: React.FunctionComponent<{}> = () => {
 
     return (
-        <SegmentDemo heading={<a href="https://www.prophetize.com/">Prophet PLC</a>}>
+        <SegmentDemo heading={<><a href="https://www.prophetize.com/">Prophet PLC</a> (2006 to Feb 2018)</>}>
+            <h2>Introduction</h2>
             <p>
-                I had my last exam in May 2006 and was rewarded with an upper second class batchelors degree with honours in computing.
-                Around this time my friend had spotted a job in the local newspaper which they thought I suited.
-                It was a role looking for junior programmers with experience of C++, COM, Windows API, MFC and SQL.
-            </p>
-            <p>
-                I applied, had an interview which included a C++ test and was given the job!
-                Prophet are the leading ERP software provider for the fresh food and horticultural industry.
-                Prophet software is a steep learning curve but I proved my capabilities by instantly becoming fluent and quickly becoming an integral part of the programming team.
-            </p>
-            <p>
-                I was continually being thrown into the deep end.
-                Within the first 12 months I was the lead programmer on a software project to operate a robotic warehouse.
-                This consisted of various cranes and conveyor belts that transport pallets, and contraptions like a fruit grader, and tipper, automatic barcode scanning.
-                The warehouse was controlled by a PLC that ran on a Unix system.
-                My software did all of the interfacing with the PLC which was via a TCP/IP Winsock socket connection and a protocol of messages known as "telegrams".
-                My software ran in real time 24/7, and if it crashed or had a bug, it would literally bring the warehoue to a halt.
-                We had examples where the PLC would send erroneous rogue telegrams and we had to prove this to the vendor by recording all telegrams sent and received.
-            </p>
-
-            <p>I did make mistakes in the beginning, I don't think I was ready for that sort of pressure but the project succeeded and I learned some valuable lessons.
-                Working like this taught me the important aspect of software resilience.
-                Forgetting to deallocate memory or using uninitialised variables were costly and also difficult to find errors.
+                I had my last exam in May 2006 and earned an upper second class batchelors degree with honours in computing.
+                Around this time my friend referred me to a job advertisement in a local newspaper looking for junior
+                programmers with experience of C++, COM, the Windows API and SQL.
+                I applied, had an interview, and was given the job!
             </p>
 
             <p>
-                My software was a Win32 C++ executable consisting of multiple threads that were assigned different jobs, and the main thread that would continually poll/ping the other threads to ensure they were still alive.
-                Commands to for example move a pallet would arrive from the main Prophet ERP application by way of a text file in a specified directory that was polled by one of the threads.
-                Commands were then parsed and the appropriate sequence of telegrams were then sent to the PLC to perform the task.
-                If there was an issue such as the pallet source location was inaccessible, the PLC would send a telgram back and I would have to determine a different strategy.
-                I also created VB scripts that would house keep the warehouse when operating volumes were low, and determine the most appropriate destination location for incoming pallets based on the properties (date/grade/type) of the fresh produce on it.
+                Prophet are (at least at the time) the leading ERP software provider for supply chain food and
+                horticultural businesses with regards to supply chain.
+                The software consists of a large collection of C++ COM objects encapsulating business rules and a
+                set of ActiveX controls to enhance the user interface. The front end of the applications are written in C++,
+                Delphi and C# and data access is provided by SQL.
+            </p>
+
+            <h2>Object Oriented Architecture</h2>
+            <p>Prophet effectively had their own version of the Entity Framework which was entirely written in C++.
+                {/* //sidtodo finish */}
+            </p>
+
+            <p>Database constraints</p>
+
+            <p>Effectively had their own version of Entity Framework, where database records were mapped to C++ COM
+            objects which had a number of interfaces and handled the business logic</p>
+
+            <h2>Robotic Warehouse</h2>
+            <p>
+                Working for Prophet was a steep learning curve but I proved my capabilities by quickly becoming an
+                effective part of the business.
+                I was continually thrown into the deep end during my time there and within 12 months of joining I was
+                the lead programmer on a software project to operate a state of the art robotic warehouse.
+                This consisted of various cranes and conveyor belts that transport pallets, and contraptions such as a
+                fruit grader, and tipper, and automatic barcode scanners.
+                The hardware of the warehouse was controlled via a PLC that ran on a Unix system and my software
+                provided the connection between that and the main Prophet ERP application.
+            </p>
+            <p>
+                Communication with the PLC was achieved via a TCP/IP Winsock socket connection and a protocol of
+                messages/packets known as "telegrams" which were just a 32 bit number to indicate the type of
+                command/event and an array of bytes containing the necessary parameters such as the pallet
+                identifier.
+                My software ran in real time 24/7 and if it crashed it would literally bring the warwehouse to a halt
+                and therefore the system had to be bomb proof.
             </p>
 
             <p>
-                I was also the technical lead on a number of projects involving mobile devices that would run on .NET, for example delivery drivers where there was limited internet connectivity.
+                My software was a Win32 C++ executable consisting of multiple threads that were programmed with
+                different roles, including a "brain" thread which would coordinate work and ensure all threads
+                were kept alive.
+                Commands issued by the main ERP application, for example to move a pallet, were sent as a text
+                file and parsed by my executable and then the appropriate sequence of telegrams were sent
+                to the PLC to perform the task.
+                If the task could not physically be performed, such as the destination location was inaccessible,
+                the PLC would issue a 'change strategy' telgram and my application would flag the location
+                as 'suspect' and then determine a new route.
+                We also had examples where the PLC would send erroneous rogue telegrams and we had to prove
+                this to the vendor as a bug by recording all telegrams sent and received.
             </p>
 
             <p>
-                My main area of expertise at Prophet was "EDI", which is the transmission of electronic data between trading companies.
-                The consisted of types of XML files or messages that were produced according to an XSD standard which followed <a href="https://en.wikipedia.org/wiki/EDIFACT">EDIFACT</a>
-                For example there was an order type, an <a href="https://en.wikipedia.org/wiki/Advance_ship_notice">ASN</a>, invoice, e.t.c.
-                Incoming files/messages went through a complex pipeline of services that held them in a raw message queue, did various levels of validation, and handled them in the appropriate order and trigger the appropriate actions in the ERP database.
+                Other cool parts of the project was a 'putaway' script that based on the type and grade of
+                fruit(s) present on a pallet, would determine the most appropriate location for that pallet
+                by matching against a row in a user configurable 'cube'. I also created a house keeping
+                script that would re-organise the warehouse over night based on the same logic.
+            </p>
+
+            <h2>EDI</h2>
+
+            <p>
+                My main area of expertise at Prophet was
+                <a href="https://en.wikipedia.org/wiki/Electronic_data_interchange">"EDI"</a>, which is the
+                transmission of electronic data between trading companies.
+                EDI at Prophet was facilitated by the sending of XML files and HTTP messages that were produced
+                according to a particular in house XSD standard based on
+                <a href="https://en.wikipedia.org/wiki/EDIFACT">EDIFACT</a>.
+            </p>
+
+            <p>
+                We had a complex pipeline of services that would receive EDI and copy the data to a
+                database hierarchy known as the raw message queue, do various levels of validation and process
+                it in the appropriate order and trigger the appropriate actions in the ERP database.
                 Again these were real time systems where resilience and efficiency was key.
             </p>
 
+            <h2>Paltrack</h2>
+            <p>I can't discuss my time at Prophet without mentioning Paltrack because it was such a behemoth of a
+                project and formed a significant amount of my experience at Prophet.</p>
+            <p>Paltrack was/is the EDI process model used in South Africa for tracking pallet stock data between
+                depots. The various depots along a pallet's route from where the fruit was initially grown and through
+                the country to one of the ports send text files containing all of the data pertinent to the pallet and
+                the event. Companies that require this data (such as companies involved in the selling of the fruit)
+                subscribe to and use it to populate their ERP system(s).
+            </p>
             <p>
-                In approximately 2013 I was promoted to the role of "lead developer".
-                From then on I was writing less code and spent more time supervising other developers.
-                Depending on the size and type of project, and developer availability, I could have up to 5 developers working for me.
-                For projects I would typically receive a design specification which varied in quality, ask the designers questions until the design was actually complete, ask any technical questions.
-                Then produce a programmer's document detailing the technical changes required and breaking the work in to parcels of work that could be distributed among the developers.
-                I would answer any questions, and formally review their code to ensure a certain level of quality and that they had followed my instructions.
-                I would typically do the harder pieces if I was not confident of the others, or lack of developer availability.
+                There are different types of EDI file which
+                are sent at the different stages of a pallet's lifetime at the depot:
+            </p>
+            <ul>
+                <li>A PIFI file (intake first intake) is sent when a pallet arrives at the depot that is not
+                currently on the Paltrack system,</li>
+                <li>A PITI file (transfer intake) is sent when a pallet arrives at the
+                depot as a transfer from another depot,</li>
+                <li>A PS (stock file) is sent periodically to detail the stock
+                currently held at that depot,</li>
+                <li>A PO file (outtake) is sent when a pallet leaves the depot,</li>
+                <li>And a MT file (ship mates) is sent in relation to pallets being shipped.</li>
+            </ul>
+
+            <h3>Out of Sequence (OOS) Detector!</h3>
+            <p>A massive complexity with Paltrack was that the EDI files could arrive <u>out of sequence</u> (TIA!).
+            For example, a pallet could arrive on a stock file before it had been received on a first intake file.
+            The requirement of the system was to create and process a "dummy" intake file
+            based on the data in the stock file and then process the stock file as normal.
+            </p>
+
+            <p>An even more complex example was when part of a pallet was split/moved to another pallet.
+                A normal scenario was to receive a PO file for pallet C which in the main ERP system would cause
+                the stock on pallet C to be order allocated, when in actuality pallet C had originally existed
+                on pallet A and then moved to pallet B.
+                But you could receive a PO (and other files for pallet C) before
+                the intake file for pallet A was received.
+                If we were lucky to see the intake file for pallet A, the transactions for pallet C would have to be
+                wound backwards, effectively rolled back, which included clearing audits, and then replayed in
+                a certain way.
+            </p>
+
+            <p>The system needed a way of detecting conditions like those above, as well as determining whether a
+                EDI file was in sequence, because entirely different processes would need to happen in the ERP
+                system and coordinated so they occured in the correct order and at the right time.
+            </p>
+
+            <p>
+                At the beginning of the project when I was on a site trip with my manager, we realised we had not fully
+                understood the paltrack process flow in that you would receive multiple files of the same type for
+                a given pallet due to there being multiple depots/warehouses (that send the files).
+                This meant the existing EDI file coordinator had to be redesigned and rewritten because it's complexity
+                had just exponentially grown. The timescale was short because we were on site to oversee the user
+                testing, so late evening on a Sunday around the swimming pool back at the hotel, the concept of the
+                "out of sequence (OOS) detector" was hatched between myself and my manager..
+            </p>
+
+            <p>
+                There were already early versions of a number of applications which update the ERP system
+                according to the Paltrack EDI data, however they now needed to be coordinated in a much
+                more intelligent way.
+                Each pallet stock level row in a given EDI file had a corresponding row in the database once it had
+                been imported and
+                there was a field to represent the status of each of these applications against it.
+                Whilst being processed, the relevant database row was locked.
+                On a poll, the OOS detector looks for pallets/files that were waiting to be coordinated
+                via a SQL query and using the 'readpast' feature exclude pallets which had any EDI rows that
+                were locked in the database (i.e. it was currently being processed).
+                For pallets remaining, the entire EDI history was then returned from SQL in the order in which
+                the events happened and loaded in to memory in the C++ portion of the application.
+                This then included piecing together history where stock was moved from one pallet to another
+                and other complex scenarios.
+            </p>
+            <p>
+                Per pallet, it was then a case of determining the current state of it, and tag the relevant
+                status field on the EDI database row that was to be processed next 
+                as 'pending processing' so the relevant process would trigger and do the work.
+                This had to happen as quickly as possible because data was expected
+                to be accessible in the ERP system in real time from the point of EDI being received,
+                and the system could see up to 60,000 pallets per hour at the busiest times.
+                As time went on and more obscure scenarios were found, these were coded in to the detector to
+                handle them appropriately and remove the need for user intervention.
+            </p>
+
+            <h2>Promotion</h2>
+            <p>
+                In 2013 I was promoted to the role of "lead developer" and from then on I spent less time
+                writing code and more time formally supervising other developers and liasing with the other parts
+                of the business.
+            </p>
+            <p>
+                Depending on the size and type of project and developer availability, I would have up to 5 developers working for me.
+                The typical process for projects was to disect the design specification which varied in quality and detail,
+                ask the designers questions until the design was complete, and then ask any technical questions.
+                I then produced a programmer's document detailing the technical changes required (and how) broken up in to
+                individual units/parcels of work so it could be distributed among the developers, though I typically did
+                the most complex and involved work myself.
+                This document would then be used to estimate the time required which would have a bearing on the
+                overall cost charged to the customer.
+            </p>
+            <p>
+               Throughout the development stage I would mentor and answer questions, and formally review the code
+               and documentation produced to ensure a certain level of quality and confirm my instructions were
+               followed.
+               I believe this change to my role was very beneficial to the business due to the ability of
+               the junior developers and the steep learning journey required to become an effective Prophet developer,
+               and the prior lack of technical seniority with time available to provide supervision.
+            </p>
+
+            <h2>.NET / C#</h2>
+            <p>The majority of the code I wrote was C++, with some Delphi front end work and VB scripting thrown in
+                to provide bespoke functionality, however some projects used C# and the .NET framework.
+            </p>
+            <p>
+                For example one project involved a Windows CE mobile scanner device with the .NET framework installed.
+                This was a multi-screen GUI application used by delivery drivers where there was limited and
+                sporadic internet connectivity when driving around Ireland.
+                Using Microsoft SQL RDA push and pull technology, drivers download and store their daily route in a
+                hierarchy of SQL tables local to the device and make the deliveries and record various information
+                such as signatures and amounts delivered. This would then synchronise back to the main Prophet ERP
+                database when a connection was available.
             </p>
             
-            <p>Throughout all of this this period of my life I was continually put through my paces, and definitely helped with maturing in to an adult and earning my stripes to transition from a junior to a senior programmer</p>
-
-            <p>The main technologies we used were Windows, C++, COM, STL, SQL, Delphi, C#/.NET, VB script, XML.</p>
-
-            <p>A lot of the work involved highly complicated algorithms such as splitting database records, loading history and drip feeding records to be processed.
+            <h2>Conclusion</h2>
+            <p>I think about my time at Prophet a lot</p> 
+            
+            <p>Throughout all of this this period of my life I was continually put through my paces, and definitely helped with maturing in to an adult and earning my stripes to transition from a junior to a senior programmer.
+                was not for the faint of heart in terms of pressure and awkward situations and just the general rigors of working there.
             </p>
 
-            <p>Effectively had their own version of Entity Framework, where database records were mapped to C++ COM objects which had a number of interfaces and handled the business logic</p>
+            <p>Excelled in support logs, problem solving, being thrown in to the deep end with new projects etc</p>
+            <p>The abillity to be given something I had not seen before, pick it up and move it along</p>
+
+            <p>With the advent of blockchain, I wonder how that is going to affect the sector. Vechain built on Ethereum, smart contracts, supply chain management</p>
+
+            <p>I may have gone in to too much detail on certain things but I want to express the complexity of systems I have cut my teeth on in terms of programming.
+                That will be applicable whatever the programming languages and technologies used.
+            </p>
+
+
+            <p>The main technologies we used were Windows, C++, COM, STL, SQL, Delphi, C#/.NET, VB script, XML. //sidtodo</p>
+
         </SegmentDemo>
     );
 };

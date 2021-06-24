@@ -78,6 +78,7 @@ export const MatchMedia = (
 
 	// A function which is called when the media changes
 	const InternalOnMediaChange = () => {
+
 		// If the timer is already started, re-run once again
 		if (delayMediaChange.timerStarted) {
 			delayMediaChange.restartTimer = true;

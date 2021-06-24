@@ -214,9 +214,9 @@ export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IP
         if(isMobile) {
             // Long descriptions cause the label to go over the width of the screen for some reason.
             // This prevents that from happening.
-            labelProps.style = {
-                maxWidth: "96%"
-            };
+            // labelProps.style = {
+            //     maxWidth: "96%"
+            // };
         }
 
         descriptionJsx=<Label pointing="left" {...labelProps}>{descr}</Label>;

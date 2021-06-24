@@ -35,12 +35,13 @@ const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
         <SegmentDemo heading="Introduction">
             <HelloWorld {...props} />
             <p>
-                My name is Chris Siddall, I am the fine age of {CalcDurationYears("1985-07-11")} years old (1985) and I am based in Tamworth Staffordshire.
+                My name is Chris Siddall, I am {CalcDurationYears("1985-07-11")} years old (1985) and I am based in
+                Tamworth Staffordshire.
                 I have had a passion for computer programming since discovering it at the age of 16, and have created
                 this application as a means of demonstrating my skills, to catalog my work and experience,
                 and to give an insight into my personality.
-                More than simply advertise myself, I want to express my true self and life story to my family and
-                future generations, and store memories for my future self to or look back on.
+                More than simply an advertisement, I want to express myself and life story to my family and store memories
+                for my future self to look back on and help jog my memory as I forget a lot of details as I get older!
                 So unless I am discussing technical details it is my deliberate intention to not sound overly
                 formal or professional.
             </p>
