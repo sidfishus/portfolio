@@ -180,8 +180,10 @@ const ProphetPLC: React.FunctionComponent<{}> = () => {
             </p>
 
             <p>
-                Prophet are (at least at the time) the leading ERP software provider for supply chain food and
-                horticultural businesses with regards to supply chain.
+                Prophet are (at least at the time) the leading provider of ERP software for supply chain management
+                in the food and horticultural industry. The current and future versions 
+            </p>
+            <p>
                 The software consists of a large collection of C++ COM objects encapsulating business rules and a
                 set of ActiveX controls to enhance the user interface. The front end of the applications are written in C++,
                 Delphi and C# and data access is provided by SQL.
@@ -378,23 +380,45 @@ const ProphetPLC: React.FunctionComponent<{}> = () => {
                 such as signatures and amounts delivered. This would then synchronise back to the main Prophet ERP
                 database when a connection was available.
             </p>
+            <p>
+                I spent time developing the remote installer and deployment system which was built using .NET and C#.
+            </p>
             
             <h2>Conclusion</h2>
-            <p>I think about my time at Prophet a lot</p> 
-            
-            <p>Throughout all of this this period of my life I was continually put through my paces, and definitely helped with maturing in to an adult and earning my stripes to transition from a junior to a senior programmer.
-                was not for the faint of heart in terms of pressure and awkward situations and just the general rigors of working there.
+
+            <p>My experience working for Prophet had a very positive impact on my personality and skills and mindset
+                towards software development. I consider this part of my career invaluable in 'earning my stripes'
+                to transition from a talented junior developer with no commercial experience, into a professional and
+                confident senior and lead developer wanting to take on responsibility and ownership.
+            </p>
+            <p>
+                I worked alongside and was mentored by some very gifted, intelligent and experienced developers, and
+                I was continually challenged and put through my paces.
+                I'm not sure if I've gone in to too much detail about my experiences working for Prophet, my intention
+                is to express the level of complexity and environment that I have become comfortable working in
+                from an early stage in my career.
+                Working for Prophet was not for the faint of heart due to the awkward situations and pressure
+                you could be put under as well as the general rigors of working there, but I excelled.
             </p>
 
-            <p>Excelled in support logs, problem solving, being thrown in to the deep end with new projects etc</p>
-            <p>The abillity to be given something I had not seen before, pick it up and move it along</p>
-
-            <p>With the advent of blockchain, I wonder how that is going to affect the sector. Vechain built on Ethereum, smart contracts, supply chain management</p>
-
-            <p>I may have gone in to too much detail on certain things but I want to express the complexity of systems I have cut my teeth on in terms of programming.
-                That will be applicable whatever the programming languages and technologies used.
+            <p>
+                I think my greatest ability was that I could diligently cope with and progress any task given to me.
+                Prophet had a codebase of over 2 million lines of code and regularly the owner's of specific areas of
+                code would leave the company and leave knowledge gaps.
+                This meant any developer with the ability to do so would instantly have to take on new areas of the
+                system without a handover or training.
+                Having to resolve urgent issues with systems and code you had not seen before was a regular occurence
+                but was something I feel I was particularly good at.
             </p>
 
+            <p>With the advent of blockchain (Bitcoin), I wonder how it will affect the supply chain management of
+                fresh produce
+                sector that Prophet is currently the leader in.
+                For example there is a blockchain technology named <a href="https://www.vechain.com/">Vechain</a> which
+                provides supply chain management via blockchain on the Ethereum network.
+                Having a lot of experience working on EDI, and in particular seeing the flakeyness of Paltrack, I can firmly see
+                the advantages that would be gained if it was replaced with blockchain technology.
+            </p>
 
             <p>The main technologies we used were Windows, C++, COM, STL, SQL, Delphi, C#/.NET, VB script, XML. //sidtodo</p>
 

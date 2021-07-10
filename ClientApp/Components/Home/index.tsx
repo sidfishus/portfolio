@@ -29,6 +29,7 @@ export const Home: React.FunctionComponent<IHomeProps> = (props) => {
     );
 };
 
+//sidtodo embelished vain attempt tomake me sound better than i am. honest. hyperbolic
 const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
 
     return (

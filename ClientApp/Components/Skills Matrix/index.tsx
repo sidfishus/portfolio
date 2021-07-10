@@ -148,12 +148,15 @@ const skillsMatrix: ISkillRow[] = [
             STL / Boost (bind, functions and
             adaptors, containers and algorithms, memory management and smart pointers), MFC, low level
             debugging, performance monitoring tools, multiple thread and process pipeline architecture,
-            <a href="https://github.com/sidfishus/BlockAllocator">heap memory management</a>, managed database
-            records and transactional model framework (same concept as Entity Framework), XML manipulation,
-            Windows services, GUI applications, highly complex algorithms, warehouse management, electronic data interchange, 
+            heap memory management - <a href="https://github.com/sidfishus/BlockAllocator">example</a>,
+            XML manipulation,
+            Windows services, GUI applications, highly complex algorithms, warehouse management,
+            complex data structures, 
+            database record splitting, electronic data interchange, 
             checksums and encryption, PC 3D game using <a href="https://www.ogre3d.org/">OGRE</a>,
             basic DirectX,
-            IRC bots, raw HTTP connections, remote debugging, SQL database schema upgrades,
+            IRC bots, raw HTTP connections, remote debugging, Winsock TCP/IP,
+            SQL database schema upgrades,
             low level ODBC API's, Microsoft SAL and more.</>
     },
     {
@@ -174,14 +177,16 @@ const skillsMatrix: ISkillRow[] = [
         technology: "Git / Github",
         experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate}],
-        areas: <>Command lines, repository creation, Github/NuGet package creation, integration with Team Foundation Server and
-            Visual Code, I manage my own <a href="https://github.com/sidfishus">Github account</a> which has a number of repositories.</>
+        areas: <>Command lines, repository creation, Github/NuGet package creation, integration with Team Foundation
+            Server and Visual Code, I manage my own <a href="https://github.com/sidfishus">Github account</a> which
+            has a number of repositories.</>
     },
     {
         technology: "Delphi / Pascal",
         experienceTotal: 12, 
         experienceCommercial: 12,
-        areas: <>Large scale Windows executables incorporating C++ COM ActiveX controls.</>
+        areas: <>Large scale Windows executables including 100's of individual screens and incorporating
+        C++ COM ActiveX controls.</>
     },
     {
         technology: "Microsoft Windows 32Bit and 64Bit",
@@ -193,14 +198,13 @@ const skillsMatrix: ISkillRow[] = [
         technology: "Javascript",
         experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate}],
-        areas: <>Modern features through the use of Babel, Webpack / Babel, Node, Gulp, client and server-side
+        areas: <>Modern language features through the use of Babel, Webpack, Node, Gulp, server-side
             pre-rendering, object oriented programming, functional programming, unit testing, React, Redux, 
             hot module replacement, aspnet-webpack, Flow (Facebook), Identity Server 4 OIDC client, Axios.<AreaLinkBreak/>
            It is used in the <Link to="/portfolio/misc">intranet application</Link>,
-            <Link to="/portfolio/hands">data capture and reporting application</Link>,
-            <Link to="/portfolio/dpa">distributed SPA</Link>,
-            <Link to="/textparse">text parse user interface</Link> and the social media application which is in the
-            early stages.</>
+            <Link to="/portfolio/hands">healty and safety application</Link>,
+            <Link to="/portfolio/dpa">distributed SPA</Link> and the
+            <Link to="/textparse">text parse user interface</Link>.</>
     },
     {
         technology: "Typescript",
@@ -217,14 +221,13 @@ const skillsMatrix: ISkillRow[] = [
         experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate}],
         areas: <>Hooks (React.FunctionComponent), class components (React.Component and React.PureComponent),
-            stateless function components (React.SFC), Semantic UI React, React Bootstrap, Material UI, signature capture,
+            stateless function components (React.SFC), Semantic UI React, React Bootstrap, signature capture,
             drop zone, Recharts, React Router, React GA (Google Analytics), SPFX (Sharepoint O365),
             lazy loading (React.Lazy). <AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>,
             <Link to="/portfolio/hands">data capture and reporting application</Link>,
-            <Link to="/portfolio/dpa">distributed SPA</Link>,
-            <Link to="/textparse">text parse user interface</Link> and the social media application which
-            is in progress.</>
+            <Link to="/portfolio/dpa">distributed SPA</Link> and the
+            <Link to="/textparse">text parse user interface</Link>.</>
     },
     {
         technology: ".NET",
@@ -232,8 +235,8 @@ const skillsMatrix: ISkillRow[] = [
         experienceCommercial: [2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>Entity Framework various versions, installer/deployment system, COM interop, Windows services,
             SQL database interaction, Rosylyn compiler framework, desktop and mobile GUI applications, 
-            various command line utilities, SQL Server Compact Remote Data Access,
-            LINQ and LINQ extensions, dependancy injection.</>
+            command line utilities, SQL Server Compact Remote Data Access,
+            LINQ and LINQ extensions, dependancy injection, ASP .NET (seperate heading).</>
     },
     {
         technology: "Unix",
@@ -245,25 +248,27 @@ const skillsMatrix: ISkillRow[] = [
         technology: "Microsoft Visual Studio and Team Foundation Server (TFS)",
         experienceTotal: [{startDate: "2002-06-01"}], 
         experienceCommercial: [{startDate: ProphetStartDate}],
-        areas: <>Versions 6.0 / 2008 / 2012 / 2017, TFS using both TFS and Git modes, macros,
+        areas: <>Versions 6.0 / 2008 / 2012 / 2017 / 2019, TFS using both TFS and Git modes, macros,
             keyboard shortcuts, advanced debugging, disassembly for native Windows C/C++ programs.</>
     },
     {
         technology: "Azure Dev Ops",
         experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
-        areas: <>The usual Git functionality, building and deployment to Azure, repos and pipelines
+        areas: <>The usual Git functionality, builds and deployment to Azure, repos and pipelines
             and is used in the <Link to="/portfolio/misc">intranet application</Link> which I manage.</>
     },
     {
         technology: "Azure",
         experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
-        areas: <>App services, function apps, storage accounts, Cosmos DB, Azure Active Directory,
+        areas: <>App services, function apps, storage accounts, queues, blob and file storage,
+            Cosmos/Document DB (Json), Azure Active Directory,
             Redis Cache, Kudu.
             <AreaLinkBreak/> 
             It is used to host <a href="https://github.com/sidfishus/react-spa-demo">THIS</a> application using an Azure
-            account I created and manage and the <Link to="/portfolio/misc">intranet application</Link> which I also manage.</>
+            account I created and manage as well as the <Link to="/portfolio/misc">intranet application</Link>
+            which I manage.</>
     },
     {
         technology: "IIS",
@@ -275,24 +280,25 @@ const skillsMatrix: ISkillRow[] = [
         technology: "ASP .NET",
         experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
-        areas: <>MVC, MVC Core, Web Forms, Web Services, dedicated protected API's using inbuilt authorisation,
+        areas: <>MVC, MVC Core, Web Forms, Web Services, protected API's using inbuilt authorisation,
             dedicated identity servers, server side pre-rendering, hot module replacement,
             SPA's and SPA/Node services.<AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>, 
-            <Link to="/portfolio/hands">data capture and reporting application</Link>,
+            <Link to="/portfolio/hands">health and safety application</Link>,
             <Link to="/portfolio/dpa">distributed SPA</Link>,
-            <Link to="/textparse">text parse user interface</Link> and the social media application which
-            is in progress.</>
+            <Link to="/textparse">text parse user interface</Link>.</>
     },
     {
         technology: "C#",
-        experienceTotal: [2 /* Spare time */, 2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceTotal: [2 /* Spare time */, 2 /* Prophet */,
+            {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>Object oriented programming, functional programming, generics, multiple threading,
             'Task' / async / await, see .NET for more.<AreaLinkBreak/>
-            Used in the majority of my <a href="">Github repositories</a> but specifically in the
-            <Link to="/portfolio/textparse">text parse library</Link> and the
-            <Link to="/portfolio/scriptabletemplate">scriptable template</Link>.</>
+            Used in the majority of my <a href="">Github repositories</a> but most comprehensively in the
+            <Link to="/portfolio/textparse">text parse library</Link>,
+            <Link to="/portfolio/scriptabletemplate">scriptable template library</Link> and the
+            <a href="https://github.com/sidfishus/CoinbaseProTools">Coinbase Pro Tools application</a>.</>
     },
     {
         technology: "Authentication / authorisation",
@@ -303,7 +309,7 @@ const skillsMatrix: ISkillRow[] = [
             (ASP .NET).
             <AreaLinkBreak/>
             Used in the <Link to="/portfolio/dpa">distributed SPA</Link>
-            and the <Link to="/portfolio/hands">data capture and reporting application</Link>. <AreaLinkBreak/>
+            and the <Link to="/portfolio/hands">health and safety application</Link>. <AreaLinkBreak/>
             Out of everything I find this subject the most complex and challenging.</>
     },
     {
@@ -312,13 +318,13 @@ const skillsMatrix: ISkillRow[] = [
         experienceCommercial: 7,
         areas: <>Largescale classic ASP web applications, warehouse management scripts,
             order allocation and splitter scripts (complex bespoke algorithms),
-            bespoke extensions and features, syntax conversion to VB .NET.</>
+            bespoke extensions and features, automatic syntax conversion from VB script to VB .NET.</>
     },
     {
         technology: "Visual Basic/VB .NET",
         experienceTotal: 3, 
         experienceCommercial: 1,
-        areas: <>ASP .NET, Windows GUI, Winsock TCP/IP, Win API, COM.</>
+        areas: <>ASP .NET, Windows GUI, Winsock TCP/IP, Windows API and COM.</>
     },
     {
         technology: "Microsoft Visual Code",
@@ -343,9 +349,10 @@ const skillsMatrix: ISkillRow[] = [
         technology: "Unit Testing",
         experienceTotal: 4, 
         experienceCommercial: 2,
-        areas: <>Automated testing of pure functions, integration with libraries for making assertions, 
-            I use this where necessary taking in to account time constraints and the importance of the
-            code being tested. <AreaLinkBreak/>
+        areas: <>Adhoc unit testing, automated testing of pure functions and
+            integration with libraries for making assertions.<AreaLinkBreak/>
+            I would like to work for a company that uses the test driven development (TDD) paradigm or where unit
+            testing is a formal part of the development process.
             I have not used a testing framework. <AreaLinkBreak/>
             You can see examples of unit testing in my <Link to="/portfolio/textparse">text parse library</Link> and
             my <a href="https://github.com/sidfishus/BlockAllocator">C++ heap memory management library</a>.</>
@@ -354,9 +361,10 @@ const skillsMatrix: ISkillRow[] = [
         technology: "Assembly Language",
         experienceTotal: 3, 
         experienceCommercial: 2,
-        areas: <>I have created small ASM programs that run on 16 bit Windows DOS for pleasure and a deeper understanding.
-            <AreaLinkBreak/>I have used program disassembly of native Windows 32bit executables for low level performance
-            comparisons.</>
+        areas: <>I have created small ASM programs that run on 16 bit Windows DOS for pleasure and a deeper
+            understanding of how programs are actually executed by the hardware.
+            <AreaLinkBreak/>I have used program disassembly within Visual Studio when debugging native Windows
+            executables for low level performance comparisons.</>
     },
     {
         technology: "Miscellaneous and Minor",
@@ -364,9 +372,49 @@ const skillsMatrix: ISkillRow[] = [
         experienceCommercial: 0,
         areas: <><a href="https://github.com/sidfishus/PowerBIManageEngineExtension">Power BI custom data connectors
             using the M language</a>, DOS scripting, Perl scripting, MS Graph (O365), Flow/Power Automate (O365),
-            Sharepoint and SPFX consuming data from AAD authorised API's, Java, HTML, CSS (a weakness) and more which
-            has now faded from my memory!</>
+            Sharepoint and SPFX consuming data from Azure Active Directory authorised API's, Java, HTML,
+            CSS (a weakness) and more which has faded from my memory!</>
     },
+
+    {
+        technology: "Cryptocurrency and Trading",
+        experienceTotal: [{startDate: "2020-06-01"}], 
+        experienceCommercial: 0,
+        areas: <>
+            I have invested in a number of the major cryptocurrency technologies and after a lot of research
+            I firmly understand their use case and potential.
+            I have created a .NET/C# trading application (
+            <a href="https://github.com/sidfishus/CoinbaseProTools">here</a>) in my spare time which uses the
+            public Coinbase Pro API to aid
+            in trading cryptocurrency so it's not necessary to continually watch the prices. Offers features
+            such as alerts, triggers and automatically
+            'buying the dip' which are not available on the Coinbase Pro web application.
+            </>
+    },
+
+    {
+        technology: "Enterprise Resource Planning (ERP) Software",
+        experienceTotal: [{startDate: ProphetStartDate} /* Prophet to current */], 
+        experienceCommercial: [{startDate: ProphetStartDate} /* Prophet to current */],
+        areas: <>
+            I have worked extensively on ERP type software in my roles at Prophet (
+                fresh produce/supply chain) and the house construction company.
+            I go in to more detail <Link to="/history/career">here</Link>.
+        </>
+    },
+
+    {
+        technology: "Electronic Data Interchange (EDI) Software",
+        experienceTotal: [{startDate: ProphetStartDate, endDate: WestleighCountrysideStartDate} /* Prophet */], 
+        experienceCommercial: [{startDate: ProphetStartDate, endDate: WestleighCountrysideStartDate} /* Prophet */],
+        areas: <>
+            A substantial part of my role at Prophet involved the development of EDI software.
+            This included 2 automated highly complex multi-process pipeline systems written mostly in C++, for
+            example the sending and receiving of eletronic invoices/orders/shipment notifications e.t.c.
+            Other notable technologies were XML, XSD, and XSL.
+            I go in to a lot of detail about this <Link to="/history/career">here</Link>.
+        </>
+    }
 ];
 
 const SortedSkillsMatrix = (sortColumn:eSkillsMatrixSortColumn,sortDirection:eSortDirection) => {

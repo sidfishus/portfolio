@@ -100,7 +100,7 @@ const Hobbies: React.FunctionComponent<{}> = () => {
         <SegmentDemo heading="Hobbies">
             <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and passionately fish in all weather conditions.</p>
             <p>
-                From as far back as I can remember I have been very fond of listening to dance music.
+                "From as far back as I can remember" I have been very fond of listening to dance music.
                 Coding whilst listening to tunes puts me in a happy place!
                 In my early to mid 20's I was heavily into live music events such as raves, club events and festivals and my favourite genre's are trance, hard house/dance, drum and bass, and UK hardcore.
                 Around this time I learned to mix my favourite categories of music using CDJ's (CD version of vinyl records) and played out approximately 10 times at small to medium club events.

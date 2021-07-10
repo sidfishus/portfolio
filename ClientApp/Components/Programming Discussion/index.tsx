@@ -26,15 +26,75 @@ export const ProgrammingDiscussion: React.FunctionComponent<IProgrammingDiscussi
     );
 };
 
+//sidtodo
+// as i grow older i'm not sure i want to spend so much time focusing on the lowest level details possible.
+//better to write self testing code as opposed to 
+//detract from the readability and terseness 
+
+// declarative, less concerned with the how
+
+//scale up the hardware which will only increase over time
 const CppDemo: React.FunctionComponent<{}> = () => {
 
     return (
         <SegmentDemo heading="C++">
             <p>
-                For 15 years I was a C++ stalwart, being mentored and inspired by some very intelligent and experienced C++ coders whilst working for Prophet and this experience was invaluable.
-                This taught me the importance of being meticulous, and writing careful and resilient code which is robust enough to run in a production environment.
-                At the time we were very fixated on having as much of the code statically analysable as possible (like for example using MS SAL Annotations), to allow the compiler to pick up C++ style bugs and maximise efficiency.
-                I understand the inner workings of C++ more so than any other language, there is not much you cannot achieve when you combine it's OO design and templates.
+                For 15 years I was a C++ stalwart, being mentored and inspired by some very intelligent and
+                experienced C++ coders whilst working for Prophet and this experience was invaluable.
+                This taught me the importance of being meticulous, and writing careful and resilient code which is
+                robust enough to run in a real-time production environment.
+            </p>
+
+            <p>C++ is a very powerful language //sidtodo here.
+            </p>
+
+            <p>
+                I understand the inner workings of C++ more so than any other language, for example the fact
+                that polymorphic functions are achieved through the use
+                of a virtual table pointer and this adds 4/8 bytes to the size of an object.
+                As well as the fact that
+                <a href="https://stackoverflow.com/questions/6308915/member-fields-order-of-construction"> class
+                and struct member variables are constructed in the order in which they are declared</a> and not
+                the order in which they are specified in the constructor!
+                I fixed at least one bug caused by this obscurity in a production environment - who wants to spend
+                time fixing bugs like these?!
+                So I'm not sure if it's necessary to have such a deep understanding of a given technology.
+                Upon transitioning to web I've been able to become competent in a plethora of technologies in a short
+                space of time without needing to know low level implementation details as these.
+            </p>
+
+            <p>
+                Significant resources were spent on low level details such as statically analysing as much of the
+                code as possible (for example through proliferating the codebase with
+                <a href="https://docs.microsoft.com/en-us/cpp/code-quality/using-sal-annotations-to-reduce-c-cpp-code-defects?view=msvc-160"> Microsoft SAL Annotations</a>
+                to allow the compiler to find C/C++ style errors) and pushing as much of the overhead to the
+                compiler to maximise runtime efficiency.
+                I felt this detracted from the readability and terseness of the code, made it slower to produce and
+                was another hurdle for the less competent programmers.
+                I would rather spend the time writing self testing code through the use of unit tests.
+            </p>
+
+            <p>
+                Templates and STL are very powerful - gives you the powers of functional features but made inline ..
+            </p>
+
+                <p>
+
+                
+
+                
+
+
+                
+
+                
+                
+
+                beginning to prefer more declarative style langauges where you are more concerned with teh 'what' and less concerned with the intricate details of 'how'
+                
+                there is not much you cannot achieve when you combine it's OO design and templates.
+
+
                 However I believe the amount of flexibility you have comes at a cost in terms of readability, development time, loss of sight of the bigger picture, and potential for bugs.
                 Plus there are less developers out there who actually competent in the language (pointers put a lot of people off!).
                 The <a href="https://en.cppreference.com/w/cpp/utility/functional/placeholders">STL syntax</a> at times is very awkard, which in this case definitely results in the loss of readability for the sake of efficiency.
@@ -49,6 +109,7 @@ const CppDemo: React.FunctionComponent<{}> = () => {
     );
 };
 
+//sidtodo async await etc
 const DotNetAndCSharp: React.FunctionComponent<{}> = () => {
     
     return (
