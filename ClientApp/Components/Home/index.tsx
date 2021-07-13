@@ -160,7 +160,7 @@ const AboutThisSite: React.FunctionComponent<{}> = () => {
                 </p>
                 <p>
                     I have developed this specifically to work on mobiles, tablets, and laptops/computers, but it is best viewed on
-                    a large screen and this is particularily true for the <Link to="./textparse">text parse user interface</Link>
+                    a large screen and this is particularily true for the <Link to="./textparse">text parse user interface </Link>
                     due to it's complexity.
                 </p>
             </SegmentSubSection>

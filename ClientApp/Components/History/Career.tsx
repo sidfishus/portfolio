@@ -17,7 +17,6 @@ export const Career: React.FunctionComponent<ICareerProps & IRoutedCompProps> = 
     );
 };
 
-/* //sidtodo here */
 const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
 
     return (
@@ -165,8 +164,6 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
     );
 };
 
-//sidtodo most complex algorithms
-//sidtodo forgotten over time
 const ProphetPLC: React.FunctionComponent<{}> = () => {
 
     return (
@@ -181,23 +178,24 @@ const ProphetPLC: React.FunctionComponent<{}> = () => {
 
             <p>
                 Prophet are (at least at the time) the leading provider of ERP software for supply chain management
-                in the food and horticultural industry. The current and future versions 
-            </p>
-            <p>
-                The software consists of a large collection of C++ COM objects encapsulating business rules and a
-                set of ActiveX controls to enhance the user interface. The front end of the applications are written in C++,
-                Delphi and C# and data access is provided by SQL.
+                in the food and horticultural industry.
+                Data access was provided by SQL and ODBC and the software consisted of a large collection of C++ COM
+                objects and a set of ActiveX controls to enhance the user interface.
+                The front end of the applications are written in C++, Delphi and C#.
             </p>
 
             <h2>Object Oriented Architecture</h2>
             <p>Prophet effectively had their own version of the Entity Framework which was entirely written in C++.
-                {/* //sidtodo finish */}
+                Each database table had an associated C++ wrapper COM object that derived from a core set of
+                interfaces. For example there was an interface that dealt with property changes, and an interface
+                that dealt with commit validation state checking to enforce business rules.
             </p>
 
-            <p>Database constraints</p>
-
-            <p>Effectively had their own version of Entity Framework, where database records were mapped to C++ COM
-            objects which had a number of interfaces and handled the business logic</p>
+            <p>
+                This approach allowed the objects to be used in a generic way.
+                Database records could be loaded, viewed, edited and saved on screen through each wrapper object
+                supporting the core interfaces. And complex values involving multiple records could be calculated.
+            </p>
 
             <h2>Robotic Warehouse</h2>
             <p>
@@ -419,8 +417,6 @@ const ProphetPLC: React.FunctionComponent<{}> = () => {
                 Having a lot of experience working on EDI, and in particular seeing the flakeyness of Paltrack, I can firmly see
                 the advantages that would be gained if it was replaced with blockchain technology.
             </p>
-
-            <p>The main technologies we used were Windows, C++, COM, STL, SQL, Delphi, C#/.NET, VB script, XML. //sidtodo</p>
 
         </SegmentDemo>
     );

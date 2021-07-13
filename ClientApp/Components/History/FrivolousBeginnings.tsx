@@ -20,7 +20,7 @@ export const FrivolousBeginnings: React.FunctionComponent<IFrivolousBeginningsPr
     );
 };
 
-//sidtodo try to find screenshots from my PC - old D drive.
+//TODO try to find screenshots from my PC - old D drive.
 const MSNChat: React.FunctionComponent<{}> = () => {
     
     return (
