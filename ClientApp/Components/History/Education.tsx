@@ -22,7 +22,7 @@ const ComputingBSc: React.FunctionComponent<{}> = () => {
         <SegmentDemo heading="Computing BSc - Coventry University 2003-2006">
             <p>From the moment I started scripting on
                 <Link to="/history/frivolousbeginnings"> MSN Chat</Link> I knew programming was what I wanted to do as a
-                career. I was loving doing it as a hobbie but learning a living from it would be the holy grail.
+                career. I was loving doing it as a hobbie but earning a living from it would be the holy grail.
             </p>
             <p>
                 At the time I was studying a variety of subjects at A level in sixth form without any real idea of what I wanted to do.

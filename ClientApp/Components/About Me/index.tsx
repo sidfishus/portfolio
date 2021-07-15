@@ -33,17 +33,17 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
                 Out of these I took kickboxing the most seriously for which I did between the ages of 7 and 18 for Don's Gym in
                 Coventry,
                 had 10 amateur fights including a British title bout (I lost) and even helped teach women and children's classes.
-                When my interest in sports wained around the age of 18 physical activity was replaced by going to raves where
+                When my interest in sports dipped around the age of 18 physical activity was replaced by going to raves where
                 I could dance for up to 12 hours at a time fueled by the music and atmosphere, alcohol, Red Bull and Pro Plus
                 caffeine tablets!
-                I now rigorously exercise for over 1 hour 6 days a week and combined with a good diet I strive to live past 100.
+                I now rigorously exercise for 1 hour a day most days and combined with a good diet I strive to live past 100.
             </p>
             <p>
                 I am naturally an introvert, content in solitude, but I appreciate the value of family and human
                 connection and the necessity of working with others.
-                If my mood or the atmosphere takes me, or if I am surrounded by introverts then I can become more extrovert.
-                I adapt my personality to best suit the situation and group dynamics.
-                I pride myself on being labeled a geek and consider myself a very confident and creative deep outside of the
+                If my mood or the atmosphere takes me I can become very extrovert,
+                I generally adapt my personality to best suit the situation and group dynamics.
+                I pride myself on being labeled a geek and consider myself a confident and creative deep outside of the
                 box thinker who takes a fresh and direct approach to solving problems and I get a buzz out of this.
                 I aim to be organised and focus my attention on one thing at a time, I actively strive to not multi task.
                 I have proved myself to work well under pressure but I believe time constraints kill creativity!
@@ -56,12 +56,11 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
                 Weaknesses that I am working on are new surroundings, situations and meeting new people initially makes me anxious.
                 Social interaction is not as natural for me than is programming.
                 If I had to choose between working with software or humans then I would definitely choose
-                software because it is far simpler to understand!
+                software because it is logical and far simpler to understand!
                 I feel uncomfortable when I have to be spontaneous and I find it easier to express myself and explain technical
                 information through writing and diagrams rather than through speech.
-                I show leadership qualities such as taking responsibility and leading by example but I'm not sure if I would
-                consider myself a leader because I have high expectations and need to work on getting the best
-                out of people.
+                I show leadership qualities but I'm not sure if I consider myself a leader because I have high expectations
+                and need to work on getting the best out of people.
             </p>
             
             <p>In my opinion my biggest asset as a programmer is my lengthy and varied experience which I feel gives me the
@@ -98,19 +97,26 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
 const Hobbies: React.FunctionComponent<{}> = () => {
     return (
         <SegmentDemo heading="Hobbies">
-            <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and passionately fish in all weather conditions.</p>
+            <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and passionately fish in all weather conditions.
+                My current personal best carp is a 42lb common known as "The Mosaic" from my syndicate lake in Bromsgrove.
+                I also have an interest in the science of carp bait formulation and have been producing my own bait
+                and lures for approximately {CalcDurationYears("2010-01-01")} years.
+            </p>
             <p>
-                "From as far back as I can remember" I have been very fond of listening to dance music.
+                "From as far back as I can remember" I have been an avid listener of dance music.
                 Coding whilst listening to tunes puts me in a happy place!
                 In my early to mid 20's I was heavily into live music events such as raves, club events and festivals and my favourite genre's are trance, hard house/dance, drum and bass, and UK hardcore.
-                Around this time I learned to mix my favourite categories of music using CDJ's (CD version of vinyl records) and played out approximately 10 times at small to medium club events.
+                Around this time I learned to mix my favourite categories of music using CDJ's (CD version of vinyl) and played out approximately 10 times at small to medium club events.
                 I have been to Glastonbury 4 times which is something everyone should experience at least once.
                 Those days are behind me now but I am still very passionate about music due to it's wonderful natural stimulating effects and will occasionally dust off the decks and smash them up.
             </p>
             <p>
-                Whereas in the past I would read books such as fishing novels and A Song of Ice and Fire, and watch Netflix movies and TV series, I spend a lot of that time now listening to pod casts and politics.
-                With having less free time available, it works well with me because I can listen to pod casts whilst simultaneously writing code.
-                2020 has been the most eventful year of my life due to the emergence of Covid19 and the American elections and I believe we will see significant changes to our way of life over the next 5 years.
+                Whereas in the past I read a lot of books such as fishing novels and A Song of Ice and Fire, and watched Netflix movies and TV series,
+                I now spend a lot of that time listening to pod casts. There is such a variety of free to download audio content available and
+                there are many subjects that I am passionate about.
+                I have recently started to invest in and research cryptocurrency and blockchain technologies and is a
+                sector I would like to work in, I
+                believe it is going to be revolutionary in the next 50 years.
             </p>
         </SegmentDemo>
     );

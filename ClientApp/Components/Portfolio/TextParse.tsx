@@ -142,10 +142,10 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
                     <p>I was tasked with a project to convert a large ERP web application from classic ASP to ASP .NET because support for it from Microsoft was soon to expire. The application consisted of 13 modules including 100's of sourcecode files and after making the changes necessary to convert a single file it was clear that an automated process was needed.</p>
                     <p>Classic ASP uses the VB script language for dynamic rendering whereas ASP .NET uses VB .NET. After manually converting a couple of code files to ASP .NET there seemed to be approximately 20 syntactical differences between the languages. Effectively what I was looking to achieve was to create a transpiler that converts from VB script to VB .NET.
                     I fathomed that if each 'type' of syntax conversion would take 1-3 days to complete it would be an acceptable amount of time to automate the conversion of the entire application considering there are approximately 20 of them.</p>
-                    <p>I started my investigation by trying regular expressions which I've successfully used to do simple parsing in the past. I quickly gave up on this idea because it was clear I would have to become the regex master of master's in order to achieve. I also did not appreciate the unintuitive syntax, lack of readability, or the inability to extend or add diagnostic tools or gain any kind of feedback. It seemed to me like a black box consisting of only mathematical jargon. I then considered using other existing parsing tools but steered away from this because I did not want to spend time learning somebody else's work only to be frustrated with it's usage and learn it only does 90% of what I need. If I created my own parser however I would be completely in control and could design it from the ground up to work exactly how I wanted it to.</p>
+                    <p>I started my investigation by trying regular expressions which I've successfully used to do simple parsing in the past. I quickly gave up on this idea because it was clear I would have to become the regex master of master's in order to achieve what I needed. I also did not appreciate the unintuitive syntax, lack of readability, or the inability to extend or add diagnostic tools or gain any kind of feedback. It seemed to me like a black box consisting of only mathematical jargon. I then considered using other existing parsing tools but steered away from this because I did not want to spend time learning somebody else's work only to be frustrated with it's usage and learn it only does 90% of what I need. If I created my own parser however I would be completely in control and could design it from the ground up to work exactly how I wanted it to.</p>
                     <p>My process in theory was to:</p>
                     <ol>
-                    <li>Choose a module and run the conversion against it.</li>
+                    <li>Choose one of the application modules and run the conversion against it.</li>
                     <li>Test that module until a bug/syntax error was found.</li>
                     <li>Fix the parse operation that deals with converting that particular syntax or create a new one.</li>
                     <li>Goto step 1 until no more bugs are found during testing.</li>
@@ -157,7 +157,7 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
 
             <SegmentSubSection heading="Theory">
                 <SegmentSubSection nested={1} heading="User Created Parse Algorithms (UCPA)">
-                    <p>I figured that it should be possible be able to parse and replace/convert anything providing I could describe the routine as a series of steps and checks. E.g. to match against words that contain only a series of lowercase a-z characters you could describe the algorithm in psuedo as follows:</p>
+                    <p>I figured that it should be possible to parse and replace/convert anything providing I could describe the routine as a series of steps and checks. E.g. to match against words that contain only a series of lowercase a-z characters you could describe the algorithm in psuedo as follows:</p>
                     <ol>
                     <li>Validate that we are at the beginning of the input text, or the preceding character is whitespace. <br/><Code inline>// Validate beginning of word</Code></li>
                     <li>Validate that the character at the current position is lowercase and is a-z. <br/><Code inline>// Validate word is at least one character in length</Code></li>
@@ -530,7 +530,7 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
                     <li>Match: display whether the input matches the parse statements.</li>
                     <li>Extract single: extract and display the first item which matches the parse statements.</li>
                     <li>Extract all: extract and display all items which match the parse statements.</li>
-                    <li>Replace: replace entries matching the parse statement list according to the replace format and retain any text which does not match</li>
+                    <li>Replace: replace entries matching the parse statement list according to the replace format and retain any text which does not match.</li>
                     </ol>
                     </li>
                     <li>7 fully working built in examples including a complex example which converts all classic ASP procedure calls to the ASP .NET equivalent.</li>

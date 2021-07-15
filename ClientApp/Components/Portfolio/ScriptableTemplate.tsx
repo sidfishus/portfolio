@@ -67,7 +67,7 @@ const WriteUp = (props: IScriptableTemplatePortfolioProps): JSX.Element => {
                     <p>Features that are missing or that could be improved:</p>
                     <ul>
                         <li>The ability to comment the script code does not exist.</li>
-                        <li>Whitespace in between text and script in templates carries to the output file.</li>
+                        <li>Whitespace in between text and script in templates carries across to the output file.</li>
                     </ul>
                 </SegmentSubSection>
             </SegmentDemo>

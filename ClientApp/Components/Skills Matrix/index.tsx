@@ -192,7 +192,7 @@ const skillsMatrix: ISkillRow[] = [
         technology: "Microsoft Windows 32Bit and 64Bit",
         experienceTotal: [{startDate: "2001-09-01"}],
         experienceCommercial: [{startDate: ProphetStartDate} /* Prophet to current */],
-        areas: <>All versions from Windows 98 upwards.</>
+        areas: <>Most versions from Windows 98 upwards.</>
     },
     {
         technology: "Javascript",
@@ -202,9 +202,9 @@ const skillsMatrix: ISkillRow[] = [
             pre-rendering, object oriented programming, functional programming, unit testing, React, Redux, 
             hot module replacement, aspnet-webpack, Flow (Facebook), Identity Server 4 OIDC client, Axios.<AreaLinkBreak/>
            It is used in the <Link to="/portfolio/misc">intranet application</Link>,
-            <Link to="/portfolio/hands">healty and safety application</Link>,
-            <Link to="/portfolio/dpa">distributed SPA</Link> and the
-            <Link to="/textparse">text parse user interface</Link>.</>
+            <Link to="/portfolio/hands"> health and safety application</Link>,
+            <Link to="/portfolio/dpa"> distributed SPA</Link> and the
+            <Link to="/textparse"> text parse user interface</Link>.</>
     },
     {
         technology: "Typescript",
@@ -213,8 +213,8 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>Modern object oriented programming features (classes/interfaces/types e.t.c.), static type checking
             and compilation, incorporation with Webpack.<AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>,
-            <Link to="/portfolio/dpa">distributed SPA</Link> and the
-            <Link to="/textparse">text parse user interface</Link>.</>
+            <Link to="/portfolio/dpa"> distributed SPA</Link> and the
+            <Link to="/textparse"> text parse user interface</Link>.</>
     },
     {
         technology: "React",
@@ -225,9 +225,9 @@ const skillsMatrix: ISkillRow[] = [
             drop zone, Recharts, React Router, React GA (Google Analytics), SPFX (Sharepoint O365),
             lazy loading (React.Lazy). <AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>,
-            <Link to="/portfolio/hands">data capture and reporting application</Link>,
-            <Link to="/portfolio/dpa">distributed SPA</Link> and the
-            <Link to="/textparse">text parse user interface</Link>.</>
+            <Link to="/portfolio/hands"> data capture and reporting application</Link>,
+            <Link to="/portfolio/dpa"> distributed SPA</Link> and the
+            <Link to="/textparse"> text parse user interface</Link>.</>
     },
     {
         technology: ".NET",
@@ -236,7 +236,7 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>Entity Framework various versions, installer/deployment system, COM interop, Windows services,
             SQL database interaction, Rosylyn compiler framework, desktop and mobile GUI applications, 
             command line utilities, SQL Server Compact Remote Data Access,
-            LINQ and LINQ extensions, dependancy injection, ASP .NET (seperate heading).</>
+            LINQ and LINQ extensions, dependency injection, ASP .NET (seperate heading).</>
     },
     {
         technology: "Unix",
@@ -267,7 +267,7 @@ const skillsMatrix: ISkillRow[] = [
             Redis Cache, Kudu.
             <AreaLinkBreak/> 
             It is used to host <a href="https://github.com/sidfishus/react-spa-demo">THIS</a> application using an Azure
-            account I created and manage as well as the <Link to="/portfolio/misc">intranet application</Link>
+            account I created and manage as well as the <Link to="/portfolio/misc">intranet application </Link>
             which I manage.</>
     },
     {
@@ -280,13 +280,13 @@ const skillsMatrix: ISkillRow[] = [
         technology: "ASP .NET",
         experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
-        areas: <>MVC, MVC Core, Web Forms, Web Services, protected API's using inbuilt authorisation,
+        areas: <>MVC, MVC Core versions 2-3, Web Forms, Web Services, REST API's using inbuilt authorisation,
             dedicated identity servers, server side pre-rendering, hot module replacement,
             SPA's and SPA/Node services.<AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>, 
-            <Link to="/portfolio/hands">health and safety application</Link>,
-            <Link to="/portfolio/dpa">distributed SPA</Link>,
-            <Link to="/textparse">text parse user interface</Link>.</>
+            <Link to="/portfolio/hands"> health and safety application</Link>,
+            <Link to="/portfolio/dpa"> distributed SPA</Link>,
+            <Link to="/textparse"> text parse user interface</Link>.</>
     },
     {
         technology: "C#",
@@ -296,9 +296,9 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>Object oriented programming, functional programming, generics, multiple threading,
             'Task' / async / await, see .NET for more.<AreaLinkBreak/>
             Used in the majority of my <a href="">Github repositories</a> but most comprehensively in the
-            <Link to="/portfolio/textparse">text parse library</Link>,
-            <Link to="/portfolio/scriptabletemplate">scriptable template library</Link> and the
-            <a href="https://github.com/sidfishus/CoinbaseProTools">Coinbase Pro Tools application</a>.</>
+            <Link to="/portfolio/textparse"> text parse library</Link>,
+            <Link to="/portfolio/scriptabletemplate"> scriptable template library</Link> and the
+            <a href="https://github.com/sidfishus/CoinbaseProTools"> Coinbase Pro Tools application</a>.</>
     },
     {
         technology: "Authentication / authorisation",
@@ -308,7 +308,7 @@ const skillsMatrix: ISkillRow[] = [
             and IUser (ASP .NET) for validating user authorisation, API's secured using Azure AD and single sign on
             (ASP .NET).
             <AreaLinkBreak/>
-            Used in the <Link to="/portfolio/dpa">distributed SPA</Link>
+            Used in the <Link to="/portfolio/dpa">distributed SPA </Link>
             and the <Link to="/portfolio/hands">health and safety application</Link>. <AreaLinkBreak/>
             Out of everything I find this subject the most complex and challenging.</>
     },
@@ -397,8 +397,8 @@ const skillsMatrix: ISkillRow[] = [
         experienceTotal: [{startDate: ProphetStartDate} /* Prophet to current */], 
         experienceCommercial: [{startDate: ProphetStartDate} /* Prophet to current */],
         areas: <>
-            I have worked extensively on ERP type software in my roles at Prophet (
-                fresh produce/supply chain) and the house construction company.
+            I have worked extensively on ERP type software in my roles at Prophet (fresh
+            produce/supply chain) and the house construction company.
             I go in to more detail <Link to="/history/career">here</Link>.
         </>
     },

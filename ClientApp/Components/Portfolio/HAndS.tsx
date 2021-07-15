@@ -140,7 +140,6 @@ const technology: ITechnologyInfo[] = [
 
 const WriteUp = (): JSX.Element => {
 
-    //sidtodo format the first section - too many paragraphs
     return (
         <>
         

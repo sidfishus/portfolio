@@ -15,7 +15,6 @@ export const CurrentAndFuture: React.FunctionComponent<ICurrentAndFutureProps & 
     );
 };
 
-//sidtodo created a company
 const CurrentAndFutureSection: React.FunctionComponent<{}> = () => {
 
     return (
@@ -60,7 +59,7 @@ const CurrentAndFutureSection: React.FunctionComponent<{}> = () => {
                 and computer games due to them being other interests of mine.
             </p>
             <p>
-                I am in a position where I can undertake contract roles, and where possible I would like to
+                I am pursueing both permanent and contract roles, and where possible I would like to
                 work at least part time remotely due to the flexibility this offers and to minimise travel and
                 maximise time with my family. I've been working from home since the original lockdown and now spend
                 the time I would usually be travelling devoted to exercise instead.

@@ -39,3 +39,8 @@
 .closeButton:after {
   transform: rotate(-45deg);
 }
+
+.boldLink {
+  color: red;
+  font-weight: bold;
+}

@@ -28,7 +28,7 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
             <p>I could see the benefit of being experienced in both C++ and .NET/web technologies and it would hopefully open up more job opportunities as well.</p>
             <p>I began doing some web programming in my spare time: ASP .NET, Javascript, Babel/Webpack and React.
                 I then got a job as a senior developer as part of a 3 person development team for a house construction company in February 2018 so I could get some professional experience.
-                It appealed to me because I had a lot more control over the technologies used and the technical solutions employed, far more leeway than I ever had at Prophet.
+                This role appealed to me because I had a lot more control over the technologies used and the technical solutions employed, far more leeway than I ever had at Prophet.
                 They had 2 large scale ERP SQL web applications hosted in classic ASP which they were looking to transition to ASP .NET and I would be the lead on this as well as take over the development leadership.
             </p>
 
@@ -49,11 +49,11 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                 to manually craft the PDF or CSV.
                 Effectively the code for each report was replicated 3 times due to there being 3 formats (HTML, CSV and PDF).
                 To me this was/is madness and the solution I came up with was simple: the report is already generated but in HTML format, why not simply convert that HTML to the other formats.
-                I did some 'Googling' and found a third party library that can convert <a href="https://www.evopdf.com/html-to-pdf-converter.aspx">HTML into PDF</a>.
+                I did some 'Googling' and found a third party library that converts <a href="https://www.evopdf.com/html-to-pdf-converter.aspx">HTML into PDF</a>.
                 To utilise this I wrote a helper COM object in C#/.NET/Interop that would facilitate the conversion to PDF by:
                 <ol>
                     <li>Taking the report HTML string (accessed from the DOM in Javascript) as a parameter,</li>
-                    <li>Parse it according to the markers to strip out the relevant parts,</li>
+                    <li>Parse it according to the markers to strip out the unwanted parts,</li>
                     <li>Convert it to PDF using the third party library,</li>
                     <li>And then return the binary of the PDF to be viewed in the browser.</li>
                 </ol>
@@ -73,7 +73,8 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
             <p>
                 The next significant project I worked on was to convert the 2 classic ASP web systems to ASP .NET.
                 To do this I created my <a href="https://github.com/sidfishus/TextParse">Text Parse</a> library.
-                I go in to great detail about this <Link to="/portfolio/textparse">here</Link> and there is a live example <Link to="/textparse">here</Link>.
+                I go in to great detail about this <Link to="/portfolio/textparse">here</Link> and there is a live example <Link to="/textparse">here </Link>
+                (see the 'VB Script add parenthesis' built in example).
             </p>
 
             <h2>Acquisition</h2>
@@ -86,14 +87,14 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                 They were also looking to implement new systems in the future for which they were struggling to find off-the-shelf software solutions for.
                 This is the position I am in currently.
                 The acquisition has been advantageous to me because it means I'm professionally using the very latest web and cloud technologies such as Azure, React, Typescript
-                and ASP .NET MVC Core and have a large opinion in what technologies are used going forward.
+                and ASP .NET MVC Core and have a big opinion in what technologies are used going forward.
             </p>
 
             <h2>Intranet</h2>
             <p>
                 When I joined, the company recently had a intranet built for them by a contractor who was leaving and this was handed over to me to develop and support.
                 This is a modern mobile friendly isomorphic web application utilising ASP .NET MVC Core, Webpack, Typescript and React and is hosted as 2 app services in Azure -
-                a ASP .NET MVC Core application that deals with authentication and executes and serves the Javascript user interface, and a seperate ASP .NET MVC Core API.
+                a ASP .NET MVC Core application that deals with authentication and renders and serves the Javascript user interface, and a seperate ASP .NET MVC Core REST API.
             </p>
             <p>
                 It also utilises many Azure features such as:
@@ -106,16 +107,12 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                     <li>Azure Active Directory including single sign on for authentication and access to the companies list of users.</li>
                 </ol>
             </p>
+
             <p>
-                Sharepoint is used to manage the content hosted on the intranet but also it's configuration via inbuilt Sharepoint functionality
-                and Sharepoint SPFX webparts.
-                The SPFX allows developers to create React/Javascript forms within the Sharepoint front-end that have access
-                to the Sharepoint functionality and also the .NET API hosted in Azure all of the Azure features used by the intranet.
-            </p>
-            <p>
-                I go in to detail regarding the organisational chart project I have completed <Link to="/portfolio/misc">here</Link>.
-                I've also recently drastically improved the way that articles are created by creating a new dedicated SPFX webpart in React that features a better user
-                interface and workflow to the original application.
+                Sharepoint is used to manage the content hosted on the intranet as well as it's configuration via inbuilt Sharepoint functionality
+                and Sharepoint React SPFX webparts.
+                2 projects I have completed are an organisational chart and a SPFX user interface for creating and editing company articles,
+                these are explained in detail on the <Link to="/portfolio/misc">miscellaneous portfolio page</Link>.
             </p>
 
             <h2>Health and Safety Application</h2>
@@ -126,12 +123,12 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
 
             <h2>Customer Service Application</h2>
             <p>
-                Whenever there is a fault with a property built by the company which is still under warranty the dedicated customer services applications
+                Whenever there is a fault with a property which is still under warranty the dedicated customer services applications
                 facilitate the issue being fixed. This consists of a variety of .NET/ASP .NET applications for which I am the lead developer on.
                 The process is as follows:
                 <ol>
                     <li>The house owner records the issue with the customer service department,</li>
-                    <li>The Custom service department uses the client side .NET Windows GUI executable to record the issue and nominate a subcontractor.
+                    <li>The customer service department uses the client side .NET Windows GUI executable to record the issue and nominate a subcontractor.
                         Data is stored using SQL Server and is read/written by the application using MS Entity Framework and web services,
                     </li>
                     <li>
@@ -173,7 +170,7 @@ const ProphetPLC: React.FunctionComponent<{}> = () => {
                 I had my last exam in May 2006 and earned an upper second class batchelors degree with honours in computing.
                 Around this time my friend referred me to a job advertisement in a local newspaper looking for junior
                 programmers with experience of C++, COM, the Windows API and SQL.
-                I applied, had an interview, and was given the job!
+                I applied, had an interview and was given the job!
             </p>
 
             <p>
@@ -213,7 +210,7 @@ const ProphetPLC: React.FunctionComponent<{}> = () => {
                 messages/packets known as "telegrams" which were just a 32 bit number to indicate the type of
                 command/event and an array of bytes containing the necessary parameters such as the pallet
                 identifier.
-                My software ran in real time 24/7 and if it crashed it would literally bring the warwehouse to a halt
+                My software ran in real time 24/7 and if it crashed it would literally bring the warehouse to a halt
                 and therefore the system had to be bomb proof.
             </p>
 
@@ -403,8 +400,8 @@ const ProphetPLC: React.FunctionComponent<{}> = () => {
                 I think my greatest ability was that I could diligently cope with and progress any task given to me.
                 Prophet had a codebase of over 2 million lines of code and regularly the owner's of specific areas of
                 code would leave the company and leave knowledge gaps.
-                This meant any developer with the ability to do so would instantly have to take on new areas of the
-                system without a handover or training.
+                This meant any developer with the ability to do so would instantly be required to take on new areas of the
+                system with little handover or training.
                 Having to resolve urgent issues with systems and code you had not seen before was a regular occurence
                 but was something I feel I was particularly good at.
             </p>

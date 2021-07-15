@@ -42,9 +42,14 @@ const carouselImgs : ICarouselImg[] =[
         src: CreateRepoUrl("wwwroot/img/misc/orgchart5.jpg"),
         text: "Organisational chart: ...as well as their direct reports."
     },
+
+    {
+        src: CreateRepoUrl("wwwroot/img/misc/articles v2.jpg"),
+        text: "Articles React SPFX Webpart."
+    },
 ];
 
-const technology: ITechnologyInfo[] = [
+const orgChartTechnology: ITechnologyInfo[] = [
     {
         name: <>ASP .NET MVC Core 2</>,
         descr: <>Hosts the web application as well as providing API's and access to the database, authentication, and more.</>
@@ -101,32 +106,96 @@ const technology: ITechnologyInfo[] = [
     },
 ];
 
+const articlesTechnology: ITechnologyInfo[] = [
+
+    {
+        name: <>ASP .NET MVC Core 2</>,
+        descr: <>Provides read and write access to the database through the use of REST API's.</>
+    },
+
+    {
+        name: <>React / JSX</>,
+        descr: <>User interface and clientside dynamic page rendering.</>
+    },
+
+    {
+        name: <>Sharepoint SPFX</>,
+        descr: <>Sharepoint framework which allows you to use React within Sharepoint.</>
+    },
+
+    {
+        name: <>Typescript Version 2.5.3</>,
+        descr: <>Static type checking in the Javascript code.</>
+    },
+
+    {
+        name: <>Azure Cosmos DB</>,
+        descr: <>Persists and provides access to the dynamic data which is consumed by the application.</>
+    },
+
+    {
+        name: <>React Quill</>,
+        descr:<>Rich text and content editor.</>
+    },
+
+    {
+        name: <>Azure Blob Storage</>,
+        descr:<>Stores the images.</>
+    },
+];
+
 const WriteUp = (): JSX.Element => {
     return (
-        <SegmentDemo heading="Organisational Chart">
-            <SegmentSubSection>
-                <p>A web based representation of a company's organisational hierarchy which is generated dynamically
-                    according to Sharepoint and Azure Active Directory.
-                </p>
-            </SegmentSubSection>
+        <>
+            <SegmentDemo heading="Organisational Chart">
+                <SegmentSubSection>
+                    <p>A web based representation of a company's organisational hierarchy which is generated dynamically
+                        according to Sharepoint and Azure Active Directory.
+                    </p>
+                </SegmentSubSection>
 
-            <SegmentSubSection heading="Technology">
-                <p>Below is the list of technology incoorporated:</p>
-                {TechnologyTable(technology)}
-            </SegmentSubSection>
+                <SegmentSubSection heading="Technology">
+                    <p>Below is the list of technology incoorporated:</p>
+                    {TechnologyTable(orgChartTechnology)}
+                </SegmentSubSection>
 
-            <SegmentSubSection heading="Process">
-                <p>The Azure webjob synchronises user details between Azure Active Directory and Azure Cosmos DB.
-                    User's create the organisational structure in Sharepoint and this is pushed across to Cosmos DB.
-                    Selecting a division, region, department or user calls a Redux dispatch method to load the associated
-                    data from Cosmos DB via a HTTP call to the relevant API controller method.
-                    As the Redux store updates as a result of the dispatch method, the screen is re-rendered by React to
-                    show the updated organisational hierarchy.
-                    Selecting a user propogates their hierarchy by showing their manager, team, and those that report to them.
-                    Selecting the manager causes the same information to be loaded and displayed for them and so on until
-                    the Group CEO is at the top.
-                </p>
-            </SegmentSubSection>
-        </SegmentDemo>
+                <SegmentSubSection heading="Process">
+                    <p>The Azure webjob synchronises user details between Azure Active Directory and Azure Cosmos DB.
+                        User's create the organisational structure in Sharepoint and this is pushed across to Cosmos DB.
+                        Selecting a division, region, department or user calls a Redux dispatch method to load the associated
+                        data from Cosmos DB via a HTTP call to the relevant API controller method.
+                        As the Redux store updates as a result of the dispatch method, the screen is re-rendered by React to
+                        show the updated organisational hierarchy.
+                        Selecting a user propogates their hierarchy by showing their manager, team, and those that report to them.
+                        Selecting the manager causes the same information to be loaded and displayed for them and so on until
+                        the Group CEO is at the top.
+                    </p>
+                </SegmentSubSection>
+            </SegmentDemo>
+
+            <SegmentDemo heading="Articles Sharepoint SPFX React Webpart">
+                <SegmentSubSection>
+                    <p>A user interface for creating and editing company articles that are displayed on an intranet.
+                    </p>
+                </SegmentSubSection>
+
+                <SegmentSubSection heading="Technology">
+                    <p>Below is the list of technology incoorporated:</p>
+                    {TechnologyTable(articlesTechnology)}
+                </SegmentSubSection>
+
+                <SegmentSubSection heading="Process">
+                    <p>
+                        The list of articles is persisted in Azure Cosmos DB as an array of JSON objects.
+                        The API process provides REST API's
+                        for consuming and updating the articles in the database and the React SPFX user interface
+                        accesses these via HTTP get and post messages.
+                        Images are uploaded to Azure blob storage via the REST API's. A preview feature allows
+                        articles to be created as draft and previewed on the intranet before they are published live.
+                    </p>
+                </SegmentSubSection>
+            </SegmentDemo>
+
+        </>
     );
 };

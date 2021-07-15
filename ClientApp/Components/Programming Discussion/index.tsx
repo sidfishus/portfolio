@@ -33,7 +33,8 @@ const CppDemo: React.FunctionComponent<{}> = () => {
             <p>
                 I understand the inner workings of C++ more so than any other language, for example the fact
                 that polymorphic functions are achieved through the use
-                of a virtual table pointer and this adds 4/8 bytes to the size of an object.
+                of a virtual table pointer and this adds 4/8 bytes to the size of an object as well as requiring an
+                extra dereference.
                 As well as the fact that
                 <a href="https://stackoverflow.com/questions/6308915/member-fields-order-of-construction"> class
                 and struct member variables are constructed in the order in which they are declared</a> and not
@@ -84,7 +85,7 @@ const CppDemo: React.FunctionComponent<{}> = () => {
                 simple syntax and that don't require you to use things like <Code inline={true}>static_cast&lt;int&gt;</Code>.
                 I don't think it's a good idea or necessary to create large scale systems where the majority of the code
                 base is C++. Computer games where efficiency is key is an exception, but with
-                <a href="https://en.wikipedia.org/wiki/Moore%27s_law">Moore's law</a> and the advent
+                <a href="https://en.wikipedia.org/wiki/Moore%27s_law"> Moore's law</a> and the advent
                 of cloud based computing you can simply scale up or scale out.
             </p>
 
@@ -129,7 +130,7 @@ const DotNetAndCSharp: React.FunctionComponent<IProgrammingDiscussionProps & IRo
                 With C# and .NET, gone are the days of using Windows API C functions such as '_beginThreadEx' and
                 'CreateWindowEx' that take a ton of obscure parameters, or having to create things like
                 "message pumps" *shudders*. And writing multi-threaded code is now an absolute dream through the
-                use of the async and await keywords. Async and await make it so simple to leverage more of the
+                use of Task and the async and await keywords. These make it so simple to leverage more of the
                 available hardware and encourages developer's to create multiple threaded applications and this
                 is further enhanced with so much of the .NET framework functions having async versions.
             </p>
