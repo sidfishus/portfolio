@@ -170,8 +170,9 @@ const skillsMatrix: ISkillRow[] = [
         technology: "SQL",
         experienceTotal: [{startDate: ProphetStartDate} /* Prophet to current */], 
         experienceCommercial: [{startDate: ProphetStartDate} /* Prophet to current */],
-        areas: <>Microsoft SQL Management Studio various versions, large scale database creation, 
-            indexing and performance, partitioning, highly complex queries involving millions of records.</>
+        areas: <>Microsoft SQL Management Studio various versions, on-premise and Azure based hosting,
+            large scale database creation, indexing and performance, partitioning, highly complex
+            queries involving millions of records.</>
     },
     {
         technology: "Git / Github",
@@ -260,11 +261,11 @@ const skillsMatrix: ISkillRow[] = [
     },
     {
         technology: "Azure",
-        experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
+        experienceTotal: [1 /* Personal projects */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>App services, function apps, storage accounts, queues, blob and file storage,
             Cosmos/Document DB (Json), Azure Active Directory,
-            Redis Cache, Kudu.
+            Redis Cache, Kudu, SQL.
             <AreaLinkBreak/> 
             It is used to host <a href="https://github.com/sidfishus/react-spa-demo">THIS</a> application using an Azure
             account I created and manage as well as the <Link to="/portfolio/misc">intranet application </Link>
@@ -294,7 +295,7 @@ const skillsMatrix: ISkillRow[] = [
             {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [2 /* Prophet */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>Object oriented programming, functional programming, generics, multiple threading,
-            'Task' / async / await, see .NET for more.<AreaLinkBreak/>
+            'Task' / async / await, parsing, see .NET for more.<AreaLinkBreak/>
             Used in the majority of my <a href="">Github repositories</a> but most comprehensively in the
             <Link to="/portfolio/textparse"> text parse library</Link>,
             <Link to="/portfolio/scriptabletemplate"> scriptable template library</Link> and the

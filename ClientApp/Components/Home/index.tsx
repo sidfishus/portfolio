@@ -40,9 +40,8 @@ const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
                 I have had a passion for computer programming since discovering it at the age of 16, and have created
                 this application as a means of demonstrating my skills, to catalog my work and experience,
                 and to give an insight into my personality.
-                More than simply an advertisement, I want to express myself and life story to my family.
-                So unless I am discussing technical details it is my deliberate intention to not sound overly
-                formal or professional.
+                More than simply an advertisement, I also want to use this space to express myself and life story to
+                my family.
             </p>
             <p>The entire sourcecode for this application can be found on <a href="https://github.com/sidfishus/react-spa-demo">Github</a>
             . For enquiries, constructive comments, or to request a copy of my CV word
