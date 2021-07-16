@@ -170,7 +170,7 @@ const Javascript: React.FunctionComponent<{}> = () => {
         <SegmentDemo heading="Javascript/Typescript">
             <p>
                 Javascript is the language I have learned most recently, it is very refreshing to come from
-                strong static typed languages such as C++ and take advantage of it's very simple and forgiving syntax.
+                strong static typed languages such as C++ and take advantage of it's very simple and forgiving nature.
             </p>
             <p>
                 The concept of transpilation is very much a bit of me!

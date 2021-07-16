@@ -21,7 +21,6 @@ const ClientApp: React.FunctionComponent<IClientAppProps> = (props) => {
     const mediaMatching = useConstant(()=>CreateMediaMatching(ReRender));
 
     if(!debug) {
-        //sidtodo test when live in Azure.
         //// Google Analytics
         // Record the server loaded path
         ReactGA.initialize("UA-179122198-1");
