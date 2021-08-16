@@ -52,16 +52,6 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
                 To honestly sum myself up I would say I'm a critical free thinker, confident, driven,
                 motivated, adaptable and quick to learn, direct, meticulous, and obsessive.
             </p>
-            <p>
-                Weaknesses that I am working on are new surroundings, situations and meeting new people initially makes me anxious.
-                Social interaction is not as natural for me than is programming.
-                If I had to choose between working with software or humans then I would definitely choose
-                software because it is logical and far simpler to understand!
-                I feel uncomfortable when I have to be spontaneous and I find it easier to express myself and explain technical
-                information through writing and diagrams rather than through speech.
-                I show leadership qualities but I'm not sure if I consider myself a leader because I have high expectations
-                and need to work on getting the best out of people.
-            </p>
             
             <p>In my opinion my biggest asset as a programmer is my lengthy and varied experience which I feel gives me the
                 almost natural ability to be versatile and learn and apply new concepts, languages and frameworks on the fly.
@@ -78,12 +68,9 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
             <p>
                 I consider myself a full stack developer but I have a definite preference and strength for
                 creative software design and backend development.
-                I am better placed being concerned with how things work as opposed to nuances in the user interface.
-                Of the widely used web technologies I have the least experience in CSS and LESS.
                 I prefer to
                 reuse a ready built user interface platform like Semantic UI React which I have used in this site
                 instead of spending valuable time making trivial presentation changes. That's just my opinion.
-                And I could not tell you all of the latest features of HTML5.
             </p>
             <p>If I could change anything about myself it would be to remove my need for sleep and rest.
                 There is so much that I would like to pursue but unfortunately I cannot do it all at the moment.

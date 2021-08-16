@@ -199,18 +199,11 @@ const SplitBots: React.FunctionComponent<{}> = () => {
                 The original MSN chat hackers/programmers had devised programs ("split bots") that would take advantage of channels splitting by connecting 100's of sockets to
                 the directory server and repeatedly send the create channel command on a cycle.
                 If you were lucky enough to send the create command at the exact time you would be rewarded with the recreation of the channel and become the new owner.
-                I knew of one programmer who actually had a botnet with infected computers running their split application - ridiculous when you think about it, but the competition
-                was fierce!
-                Botnets are something which I've never used myself, but I did create my own split bots in mIRC and then later on a standalone application written in C++, and used these to gain
+                I created my own split bots in mIRC and then later on a standalone application written in C++, and used these to gain
                 ownership of each of the 3 key channels at least once.
                 A similar analogy to the power grab surrounding the 3 MSN Chat key channels is US politics, except there were more than 2 parties involved.
                 An election is analogous to the server's splitting - effectively a transfer of power - if a single group gained access to 2 or more of the channels (presidency, senate and house)
                 after the server reboot had finished then they really were in control.
-            </p>
-
-            <p>
-                The skullduggery involved in attempting to steal these channels went as far as making friends with the MSN Chat admins and persuading them
-                to close them (so they could be split) for fake reasons pertaining to violating the MSN Chat code of conduct!
             </p>
         </SegmentDemo>
     );
