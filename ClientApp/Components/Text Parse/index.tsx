@@ -14,6 +14,7 @@ import { ffGetVariables, TextParseVariable, VariablesMatch } from "./Variables";
 import { HEADING_COLOUR } from "../../theme";
 import { eScreenResolution } from "../Client App";
 import { MatchMediaResult } from "../../Library/MediaMatching";
+import { Link } from "react-router-dom";
 
 export interface ITextParseProps {
 };
@@ -877,8 +878,9 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
         <>
             <Container>
                 <Form>
+                    <>For an in-depth explanation of what this is see <Link to="portfolio/textparse">here</Link>.</>
                     {isMobile &&
-                        <>Please note this is best used on a larger screen.<br/></>
+                        <> Please note this is best used on a larger screen.<br/></>
                     }
                     <CustomFunctions
                         {...props}
