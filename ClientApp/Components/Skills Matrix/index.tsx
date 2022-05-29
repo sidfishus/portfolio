@@ -4,7 +4,7 @@ import { IRoutedCompProps } from "../../routes";
 import { Table, TableHeaderProps } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { ContainerDemo, SegmentDemo, SegmentSubSection} from "../Presentation";
-import { CalcDurationYears } from "../../Library/DateTime";
+import { CalcDurationYears, CalcDuration, CalcDurationTotalMonths } from "../../Library/DateTime";
 import moment from "moment";
 
 export interface ISkillsMatrixProps {
@@ -92,13 +92,8 @@ const CreateSkillRow = (skill: ISkillRow): JSX.Element => {
             <Table.Cell>{SkillsExperienceString(skill)}</Table.Cell>
             <Table.Cell>{skill.areas}</Table.Cell>
         </Table.Row>
+        
     );
-};
-
-const YearString = (years: number): string => {
-    if(years === 0) return "< 1 year";
-    if(years === 1) return "1 year";
-    return `${years} years`;
 };
 
 const SkillsExperienceString = (skill: ISkillRow): string => {
@@ -237,7 +232,8 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>Entity Framework various versions, installer/deployment system, COM interop, Windows services,
             SQL database interaction, Rosylyn compiler framework, desktop and mobile GUI applications, 
             command line utilities, SQL Server Compact Remote Data Access,
-            LINQ and LINQ extensions, dependency injection, ASP .NET (seperate heading).</>
+            LINQ and LINQ extensions, dependency injection, ASP .NET (seperate heading), Razor templates,
+            NUnit.</>
     },
     {
         technology: "Unix",
@@ -257,19 +253,20 @@ const skillsMatrix: ISkillRow[] = [
         experienceTotal: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
         areas: <>The usual Git functionality, builds and deployment to Azure, repos and pipelines
-            and is used in the <Link to="/portfolio/misc">intranet application</Link> which I manage.</>
+            and is used in the <Link to="/portfolio/misc">intranet application</Link> which I managed.</>
     },
     {
         technology: "Azure",
         experienceTotal: [1 /* Personal projects */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
-        areas: <>App services, function apps, storage accounts, queues, blob and file storage,
-            Cosmos/Document DB (Json), Azure Active Directory,
-            Redis Cache, Kudu, SQL.
+        areas: <>App services, functions, storage accounts, queues, blob and file storage,
+            Cosmos/Document DB (Json), Azure Active Directory, Redis Cache, Kudu, SQL, Service Bus,
+            Docker, Kubernetes, Container Registry, API Gateway, Front Door, Log Analytics,
+            Application Insights, Kusto, Load Testing (jMeter).
             <AreaLinkBreak/> 
             It is used to host <a href="https://github.com/sidfishus/react-spa-demo">THIS</a> application using an Azure
             account I created and manage as well as the <Link to="/portfolio/misc">intranet application </Link>
-            which I manage.</>
+            which I managed.</>
     },
     {
         technology: "IIS",
@@ -281,7 +278,7 @@ const skillsMatrix: ISkillRow[] = [
         technology: "ASP .NET",
         experienceTotal: [1 /* Spare time */, {startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */], 
         experienceCommercial: [{startDate: WestleighCountrysideStartDate} /* Westleigh/Countryside */],
-        areas: <>MVC, MVC Core versions 2-3, Web Forms, Web Services, REST API's using inbuilt authorisation,
+        areas: <>MVC, Web Forms, Web Services, SOAP and REST API's using various authorisation models,
             dedicated identity servers, server side pre-rendering, hot module replacement,
             SPA's and SPA/Node services.<AreaLinkBreak/>
             It is used in the <Link to="/portfolio/misc">intranet application</Link>, 
@@ -373,8 +370,8 @@ const skillsMatrix: ISkillRow[] = [
         experienceCommercial: 0,
         areas: <><a href="https://github.com/sidfishus/PowerBIManageEngineExtension">Power BI custom data connectors
             using the M language</a>, DOS scripting, Perl scripting, MS Graph (O365), Flow/Power Automate (O365),
-            Sharepoint and SPFX consuming data from Azure Active Directory authorised API's, Java, HTML,
-            CSS and more which has faded from my memory!</>
+            Sharepoint and SPFX consuming data from Azure Active Directory authorised API's, jMeter, Groovy, Jira,
+            XML, XSD, XSLT, JSON, HTML, CSS and more which has faded from my memory!</>
     },
 
     {
@@ -456,18 +453,29 @@ const SortSkillsByExperience = (lhs: ISkillRow, rhs: ISkillRow): number => {
 
 const CalcExperience = (exp: tExperience):number => {
     const expType=typeof exp;
-    if(expType === "number") return exp as number;
+    if(expType === "number") return ((exp as number) * 12);
     
     const expAsArray = exp as Array<number|tExperienceRange>;
 
-    const totalYears=expAsArray.reduce((acc, iterVal) => {
-       if(typeof iterVal === "number") return (acc as number)+(iterVal as number);
+    const totalMonths=expAsArray.reduce((acc, iterVal) => {
+       if(typeof iterVal === "number") return (acc as number)+((iterVal as number) * 12);
 
        const iterRange = iterVal as tExperienceRange;
        const endDate = ((iterRange.endDate !== undefined)?iterRange.endDate : moment());
 
-       return (acc as number)+CalcDurationYears(iterRange.startDate, endDate);
+       return (acc as number)+(CalcDurationTotalMonths(iterRange.startDate, endDate));
     },0) as number;
 
-    return totalYears;
+    return totalMonths;
 }
+
+const YearString = (months: number): string => {
+    if(months < 12) return "< 1 year";
+    if(months < 18) return "1 year";
+
+    const numYears=Math.floor(months/12);
+
+    const remainingMonths=months-(numYears*12);
+
+    return `${numYears}${(remainingMonths>=6 ? ".5" : "")} years`;
+};

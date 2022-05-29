@@ -44,7 +44,10 @@ const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
                 my family.
             </p>
             <p>The entire sourcecode for this application can be found on <a href="https://github.com/sidfishus/react-spa-demo">Github</a>
-            . For enquiries, constructive comments, or to request a copy of my CV word
+            , and a containerised version also exists 
+            <a href="https://github.com/sidfishus/NCReactPortfolioWebsite"> here</a> and
+            <a href="https://github.com/sidfishus/NCReactPortfolioTextParseService"> here</a>.
+            For enquiries, constructive comments, or to request a copy of my CV word
                 document feel free to contact me <a href="mailto:sidnet001@gmail.com">here</a>.
             </p>
         </SegmentDemo>

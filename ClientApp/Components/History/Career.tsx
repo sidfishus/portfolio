@@ -20,7 +20,7 @@ export const Career: React.FunctionComponent<ICareerProps & IRoutedCompProps> = 
 const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
 
     return (
-        <SegmentDemo heading="House Construction Company (Feb 2018 to Present)">
+        <SegmentDemo heading="Westleigh/Countryside Properties (Feb 2018 to September 2021)">
             <p>In my later years at Prophet I felt I had reached a plateau and was at the top of the learning curve.
                 I had registered my CV on a job board and was receiving a substantial amount of emails from recruiters regarding .NET and web development jobs due to me having .NET experience.
             </p>
