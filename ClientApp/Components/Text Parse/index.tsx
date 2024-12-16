@@ -308,7 +308,7 @@ interface ISetVariableInputCtrlProps extends ITextParseStatementState {
 
 // Select a row in the statement list control
 const fSelectStatement: (
-    SetSelStatement: (selStmt: ISelectedStatement) => void,
+    SetSelStatement: (selStmt: ISelectedStatement|null) => void,
     subSelectedStatementType: number,
     SetSubSelectedStatementType: (newType: eStatementType) => void
 ) =>
@@ -342,12 +342,13 @@ const MoveStatementGeneric =
     (statements: Array<TextParseStatement>,
     SetStatements: (statements: Array<TextParseStatement>) => void,
     selStmt: ISelectedStatement,
-    fMove: (statements: Array<TextParseStatement>, selectedIdx: number, parentStmt: TextParseStatement|null) => Array<TextParseStatement>,
+    fMove: (statements: Array<TextParseStatement>, selectedIdx: number|null,
+            parentStmt: TextParseStatement|null) => Array<TextParseStatement>,
     parentStmt: TextParseStatement|null
 ): void => {
 
     // Find the index of the item that changed
-    let changedIdx: number=null;
+    let changedIdx: number|null=null;
     let isChangedAtThisLevel=false;
 
     for(let i=0;i<statements.length;++i) {
@@ -878,7 +879,7 @@ export const TextParse: React.FunctionComponent<ITextParseProps & IRoutedCompPro
         <>
             <Container>
                 <Form>
-                    <>For an in-depth explanation of what this is see <Link to="portfolio/textparse">here</Link>.</>
+                    <b>For an in-depth explanation of what this is see <Link to="portfolio/textparse">here</Link>.</b>
                     {isMobile &&
                         <> Please note this is best used on a larger screen.<br/></>
                     }

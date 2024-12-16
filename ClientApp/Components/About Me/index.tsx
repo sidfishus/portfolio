@@ -7,7 +7,6 @@ import { CalcDurationYears } from "../../Library/DateTime";
 export interface IAboutMeProps {
 };
 
-//TODO about me section include pictures - family and fishing, kickboxing
 export const AboutMe: React.FunctionComponent<IAboutMeProps & IRoutedCompProps> = (props) => {
 
     return (
@@ -64,13 +63,6 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
                 level details of N number of technologies in order to be effective.
                 Having a "can do" and "never give up" type attitude is a prerequisite for being a successful programmer
                 when each project you work on incorporates at least one significant technology which is new to you.
-            </p>
-            <p>
-                I consider myself a full stack developer but I have a definite preference and strength for
-                creative software design and backend development.
-                I prefer to
-                reuse a ready built user interface platform like Semantic UI React which I have used in this site
-                instead of spending valuable time making trivial presentation changes. That's just my opinion.
             </p>
             <p>If I could change anything about myself it would be to remove my need for sleep and rest.
                 There is so much that I would like to pursue but unfortunately I cannot do it all at the moment.

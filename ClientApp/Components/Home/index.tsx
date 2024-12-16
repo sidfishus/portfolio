@@ -132,11 +132,6 @@ const aboutSections: IAboutSection[] = [
             </>
     },
     {
-        section: <Link to="/programmingdiscussion">Programming Discussion</Link>,
-        descr: <>My opinion and feelings towards the various computer programming technologies and concepts I am
-            experienced in.</>
-    },
-    {
         section: <><Link to="/skillsmatrix" className="boldLink">Skills Matrix</Link></>,
         descr: skillsMatrixDescr,
     },

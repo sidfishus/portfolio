@@ -1,8 +1,7 @@
 
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import App from "./Components/Client App";
-import { BrowserRouter } from "react-router-dom";
+
+import * as ReactDOM from "react-dom/client";
+import { ClientApp } from "./Components/Client App";
 
 function RenderApp() {
 
@@ -13,14 +12,8 @@ function RenderApp() {
 		reactElement = document.getElementById("reactDebug");
 	}
 
-	if (reactElement) {
-
-		ReactDOM.render(
-			<BrowserRouter>
-				<App debug={debug} />
-			</BrowserRouter>
-		, reactElement);
-	}
+	if (reactElement)
+		ReactDOM.createRoot(reactElement).render(<ClientApp debug={debug}/>);
 }
 
 RenderApp();

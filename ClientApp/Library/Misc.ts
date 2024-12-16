@@ -17,7 +17,7 @@ const INT32_MIN=-2147483648;
 export const IsA32BitSignedNumber = (val: string): boolean => {
 
     const asNum=parseInt(val,10);
-    let rv=(val && val!=="" && !isNaN(asNum));
+    let rv=!!(val && val!=="" && !isNaN(asNum));
     if(rv) {
         rv=(asNum>=INT32_MIN && asNum<=INT32_MAX);
     }

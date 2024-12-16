@@ -1,18 +1,17 @@
 
 import * as React from "react";
 import { Routes } from "../../routes";
-import { useHistory } from "react-router-dom";
-import { hot } from "react-hot-loader/root";
+import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
 import ReactGA from "react-ga";
 import { MatchMediaResult, MatchMedia } from "../../Library/MediaMatching";
 import useConstant from "use-constant";
 
-export type IClientAppProps = {
+export type IAppProps = {
     debug: boolean;
 };
 
 // Note: this is only ever called when the app is rendered in the browser. SSR does not use this component.
-const ClientApp: React.FunctionComponent<IClientAppProps> = (props) => {
+export const ClientApp: React.FunctionComponent<IAppProps> = (props) => {
 
     const { debug } = props;
 
@@ -26,22 +25,28 @@ const ClientApp: React.FunctionComponent<IClientAppProps> = (props) => {
         ReactGA.initialize("UA-179122198-1");
         ReactGA.pageview(window.location.pathname + window.location.search);
 
+        /*
+        //sidtodo
         // Record client-side changes
         const history = useHistory();
-        history.listen((location: any) => {
+        history.listen((location: any) => {+
             ReactGA.set({ page: location.pathname });
             ReactGA.pageview(location.pathname);
         });
+        */
     }
 
     const windowAsAny: any = window;
 
+    const router=createBrowserRouter(createRoutesFromElements(
+        Routes({
+            prerenderData: windowAsAny.prerenderData,
+            SSR: false,
+            mediaMatching: mediaMatching
+        })));
+
 	return (
-        <Routes
-            prerenderData={windowAsAny.prerenderData}
-            SSR={false}
-            mediaMatching={mediaMatching}
-        />
+        <RouterProvider router={router} />
     );
 };
 
@@ -71,6 +76,3 @@ const CreateMediaMatching = (ReRender: () => void): MatchMediaResult => {
 
     return MatchMedia(window, mediaQueryList, ReRender, 100);
 };
-
-// For hot module replacement: https://github.com/gaearon/react-hot-loader
-export default hot(ClientApp);
