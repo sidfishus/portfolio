@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 
 namespace react_spa
 {
@@ -30,17 +29,6 @@ namespace react_spa
             services
                 .AddControllersWithViews()
                 .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
-
-            // For debugging server side javascript via Node
-            services.AddNodeServices(options =>
-            {
-                if (m_HostingEnvironment.IsDevelopment())
-                {
-                    options.InvocationTimeoutMilliseconds=1000000;
-                    options.LaunchWithDebugging = true;
-                    options.DebuggingPort = 9250;
-                }
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,18 +37,6 @@ namespace react_spa
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
-                // 'npm install webpack-dev-middleware' is required for this
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true,
-                    // See: https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.spaservices.webpack.webpackdevmiddlewareoptions.reacthotmodulereplacement?view=aspnetcore-2.2
-                    // 'npm install --save-dev aspnet-webpack-react' is required for this
-                    ReactHotModuleReplacement = true,
-                    // Key - corresponds with the path in webpack module.exports output.publicPath
-                    // 'npm install --save-dev aspnet-webpack' is required for this
-                    HotModuleReplacementEndpoint = "/wwwroot/__webpack_hmr"
-                });
             }
             else
             {
