@@ -52,7 +52,7 @@ interface IAddInsertParseStatementCtrlProps {
 
 interface ITypeDropdownProps {
     selectedStatementType: eStatementType;
-    SetSelectedStatementType: (type?: eStatementType) => void;
+    SetSelectedStatementType: (type: eStatementType) => void;
     comparisonOnly: boolean;
 };
 
@@ -152,11 +152,11 @@ interface IExecuteParseButtonCtrlProps {
     SetReplaceResult: (result: IParseReplaceResult) => void;
     updatePending: boolean;
     functions: Array<TextParseFunction>;
-    firstFailingStatement: TextParseStatement;
-    firstFailingFunction: TextParseFunction;
-    parseInputError: string;
+    firstFailingStatement: TextParseStatement|null;
+    firstFailingFunction: TextParseFunction|null;
+    parseInputError: string|null;
     fGetVariables: () => TextParseVariable[];
-    builtInExample: eParseBuiltInExample;
+    builtInExample: eParseBuiltInExample|null;
 };
 
 interface IParseOutputGeneralErrorCtrlProps {
@@ -193,7 +193,7 @@ interface IReplaceFormatCtrlProps {
 
 interface IReplaceResultCtrlProps {
     replaceResult: IParseReplaceResult;
-    builtInExample: eParseBuiltInExample;
+    builtInExample: eParseBuiltInExample|null;
 };
 
 interface ICustomFunctionsProps {
@@ -312,7 +312,7 @@ const fSelectStatement: (
     subSelectedStatementType: number,
     SetSubSelectedStatementType: (newType: eStatementType) => void
 ) =>
-    (newSelStatement: TextParseStatement) => void = (SetSelStatement, subSelectedStatementType, SetSubSelectedStatementType) => {
+    (newSelStatement: TextParseStatement|null) => void = (SetSelStatement, subSelectedStatementType, SetSubSelectedStatementType) => {
 
     return newSelStatement => {
 
@@ -635,7 +635,7 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
 
     // Selected statement
     let selStatement: ISelectedStatement|null;
-    let SetSelStatement: (stmt: TextParseStatement) => void;
+    let SetSelStatement: (stmt: TextParseStatement|null) => void;
     {
         const state=useState<ISelectedStatement|null>(null);
         selStatement=state[0];
@@ -649,7 +649,7 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
     const [parseInputText,SetParseInputText] = useState<string>("");
     // Because the input text is not controlled, we need to have a 'ref' to it so we can update it directly in the
     // DOM programatically.
-    const parseInputTextRef=useRef(null);
+    const parseInputTextRef=useRef<HTMLInputElement>(null);
 
     //// Parse output type checkbox
     const [outputType,SetOutputType] = useState<eParseOutputType>(eParseOutputType.potMatch);
@@ -734,7 +734,8 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
     const fGetVariables = ffGetVariables(statements);
 
     const { mediaMatching } = props;
-    if(!mediaMatching) return null;
+    if(!mediaMatching)
+        return <></>;
 
     const firstMatching = mediaMatching.FirstMatching();
     const isMobile=((firstMatching === eScreenResolution.Mobile)?true:false);
@@ -871,7 +872,7 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
         }
     }
 
-    const firstFailingStatement=statements.find(iterStmt => !iterStmt.CanSave(statements));
+    const firstFailingStatement=statements.find(iterStmt => !iterStmt.CanSave(statements)) ?? null;
     const firstFailingFunction=
         functions.find((iterFunc, funcIdx) => !iterFunc.IsValid(functions, funcIdx)) ?? null;
     const parseInputError=((parseInputText!==null && parseInputText!=="")?null:"Please enter parse input before attempting to parse.");
@@ -951,7 +952,7 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
 
                                     <UpdateInputCtrl
                                         {...props}
-                                        statement={selectedStatement}
+                                        statement={selectedStatement!}
                                         SetStatement={_UpdateStatement}
                                         GetValue={TextParseStatement.GetName}
                                         SetValue={TextParseStatement.SetName}
@@ -967,7 +968,7 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
 
                                     <UpdateInputCtrl
                                         {...props}
-                                        statement={selectedStatement}
+                                        statement={selectedStatement!}
                                         SetStatement={_UpdateStatement}
                                         GetValue={TextParseStatement.GetKeyedDescription}
                                         SetValue={TextParseStatement.SetKeyedDescription}
@@ -1104,8 +1105,10 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
                             CreateParseStatement={_CreateParseStatement}
                             SetParseInputText={(text: string) => {
                                 SetParseInputText(text);
-                                // Without this the text on the screen will not update
-                                if(parseInputTextRef.current) parseInputTextRef.current.value=text;
+                                if(parseInputTextRef.current) {
+                                    // Without this the text on the screen will not update
+                                    parseInputTextRef.current.value = text;
+                                }
                             }}
                             SetParseOuputType={SetOutputType}
                             SetBuiltInExample={SetBuiltInExample}
