@@ -7,7 +7,7 @@ import { CalcDurationYears } from "../../Library/DateTime";
 export interface IAboutMeProps {
 };
 
-export const AboutMe: React.FunctionComponent<IAboutMeProps & IRoutedCompProps> = (props) => {
+export const AboutMe = (props: IAboutMeProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
@@ -17,8 +17,7 @@ export const AboutMe: React.FunctionComponent<IAboutMeProps & IRoutedCompProps> 
     );
 };
 
-//TODO attach my personality chart
-const AboutMeSection: React.FunctionComponent<{}> = () => {
+const AboutMeSection = () => {
 
     return (
         <SegmentDemo heading="About Me">
@@ -73,7 +72,7 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
     );
 };
 
-const Hobbies: React.FunctionComponent<{}> = () => {
+const Hobbies = () => {
     return (
         <SegmentDemo heading="Hobbies">
             <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and passionately fish in all weather conditions.

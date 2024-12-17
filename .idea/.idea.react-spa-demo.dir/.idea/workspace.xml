@@ -4,14 +4,44 @@
     <projectFile profileName="IIS Express">react spa.csproj</projectFile>
     <projectFile profileName="react_spa">react spa.csproj</projectFile>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="22b41944-905c-40fb-ab54-b1964dd62066" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Client App/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Client App/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/ExecuteParse.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/ExecuteParse.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/StatementTypes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/StatementTypes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Variables.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Variables.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Library/ContainerMethods.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Library/ContainerMethods.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Library/HttpHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Library/HttpHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/boot-client.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/boot-client.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/routes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/TextParseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/TextParseController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ErrorViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ExecuteBuiltInModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteBuiltInModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ExecuteExtractModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteExtractModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ExecuteMatchModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteMatchModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ExecuteReplaceModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteReplaceModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/TextParseBuiltInExampleModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseBuiltInExampleModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/TextParseExtractModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseExtractModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/TextParseReplaceModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseReplaceModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/TextParseResultBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseResultBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/SPA.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/SPA.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nuget.config" beforeDir="false" afterPath="$PROJECT_DIR$/nuget.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react spa.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/react spa.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,8 +59,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../TextParse/Library/dotNETConversion.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -43,15 +72,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "dec-2024-update",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.react spa: react_spa.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dec-2024-update&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.react spa: IIS Express">
+}</component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.react spa: react_spa">
     <configuration name="react spa: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/react spa.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v3.1" />
@@ -93,6 +127,7 @@
       <updated>1734354783273</updated>
       <workItem from="1734354784976" duration="22000" />
       <workItem from="1734373908749" duration="147000" />
+      <workItem from="1734421900923" duration="9903000" />
     </task>
     <task id="LOCAL-00001" summary="WIP">
       <option name="closed" value="true" />

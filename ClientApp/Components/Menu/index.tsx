@@ -34,7 +34,7 @@ enum eMenuType {
     menuTypeHorizontal=2
 };
 
-export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
+export const DemoMenu = (props: IDemoMenuProps) => {
 
     const { activeMenuId, mediaMatching } = props;
 
@@ -254,7 +254,7 @@ interface ILogoProps {
     style?: object;
 };
 
-const Logo: React.FunctionComponent<ILogoProps> = (props)  => {
+const Logo = (props: ILogoProps)  => {
 
     const style = ((props.style)?props.style:{});
 

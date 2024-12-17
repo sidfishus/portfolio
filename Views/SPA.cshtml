@@ -43,7 +43,7 @@
         <div id="@reactElementName" asp-prerender-module="@jsServerFilename" asp-prerender-data="prerenderData"></div>
 
         @{
-            string ssrOnly=Environment.GetEnvironmentVariable("SSR_Only");
+            var ssrOnly=Environment.GetEnvironmentVariable("SSR_Only");
             if(ssrOnly == null || ssrOnly=="0")
             {
                 <script src=@jsClientFilename></script>

@@ -6,7 +6,7 @@ import { ContainerDemo, SegmentDemo } from "../Presentation";
 export interface ICurrentAndFutureProps {
 };
 
-export const CurrentAndFuture: React.FunctionComponent<ICurrentAndFutureProps & IRoutedCompProps> = (props) => {
+export const CurrentAndFuture = (_: ICurrentAndFutureProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
@@ -15,7 +15,7 @@ export const CurrentAndFuture: React.FunctionComponent<ICurrentAndFutureProps & 
     );
 };
 
-const CurrentAndFutureSection: React.FunctionComponent<{}> = () => {
+const CurrentAndFutureSection = () => {
 
     return (
         <SegmentDemo heading="Current and Future">

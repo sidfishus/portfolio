@@ -13,6 +13,7 @@ namespace react_spa
 {
     public class Startup
     {
+        const string ViteCorsPolicy="ViteCorsPolicy";
         IWebHostEnvironment m_HostingEnvironment;
 
         public Startup(IWebHostEnvironment environment, IConfiguration configuration)
@@ -29,6 +30,18 @@ namespace react_spa
             services
                 .AddControllersWithViews()
                 .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+            
+#if DEBUG
+            services.AddCors(options =>
+            {
+                // Required when debugging the SPA using Vite.
+                options.AddPolicy(name: ViteCorsPolicy,
+                    policy  =>
+                    {
+                        policy.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
+                    });
+            });
+#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +61,10 @@ namespace react_spa
             app.UseStaticFiles();
 
             app.UseRouting();
+            
+#if DEBUG
+            app.UseCors(ViteCorsPolicy);
+#endif
 
             app.UseEndpoints(endpoints =>
             {

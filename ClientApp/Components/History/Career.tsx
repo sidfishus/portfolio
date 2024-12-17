@@ -1,13 +1,13 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { ContainerDemo, SegmentDemo, SegmentSubSection } from "../Presentation";
+import { ContainerDemo, SegmentDemo } from "../Presentation";
 import { Link } from "react-router-dom";
 
 export interface ICareerProps {
 };
 
-export const Career: React.FunctionComponent<ICareerProps & IRoutedCompProps> = (props) => {
+export const Career = (_: ICareerProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
@@ -17,7 +17,7 @@ export const Career: React.FunctionComponent<ICareerProps & IRoutedCompProps> = 
     );
 };
 
-const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
+const HouseConstructionCompany = () => {
 
     return (
         <SegmentDemo heading="Westleigh/Countryside Properties (Feb 2018 to September 2021)">
@@ -161,7 +161,7 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
     );
 };
 
-const ProphetPLC: React.FunctionComponent<{}> = () => {
+const ProphetPLC = () => {
 
     return (
         <SegmentDemo heading={<><a href="https://www.prophetize.com/">Prophet PLC</a> (2006 to Feb 2018)</>}>

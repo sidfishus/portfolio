@@ -8,12 +8,13 @@ import useConstant from "use-constant";
 
 export type IAppProps = {
     debug: boolean;
+    apiRoot: string|null;
 };
 
 // Note: this is only ever called when the app is rendered in the browser. SSR does not use this component.
-export const ClientApp: React.FunctionComponent<IAppProps> = (props) => {
+export const ClientApp = (props: IAppProps) => {
 
-    const { debug } = props;
+    const { debug, apiRoot } = props;
 
     const ReRender = CreateRerenderAppFunction();
 
@@ -42,7 +43,8 @@ export const ClientApp: React.FunctionComponent<IAppProps> = (props) => {
         Routes({
             prerenderData: windowAsAny.prerenderData,
             SSR: false,
-            mediaMatching: mediaMatching
+            mediaMatching: mediaMatching,
+            apiRoot: apiRoot
         })));
 
 	return (

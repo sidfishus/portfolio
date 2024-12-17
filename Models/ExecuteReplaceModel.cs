@@ -2,17 +2,17 @@
 namespace react_spa {
 
     public class ExecuteReplaceModel {
-        public string Code {
+        public string? Code {
             get;
             set;
         }
 
-        public string ReturnVariableName {
+        public string? ReturnVariableName {
             get;
             set;
         }
 
-        public string[] UsingStatements {
+        public string[]? UsingStatements {
             get;
             set;
         }

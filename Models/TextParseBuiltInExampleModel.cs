@@ -2,7 +2,7 @@
 namespace react_spa {
     public class TextParseBuiltInExampleModel {
         
-        public string ReplacedText
+        public required string ReplacedText
         {
             get;
             set;

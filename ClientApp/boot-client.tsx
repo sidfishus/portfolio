@@ -6,14 +6,17 @@ import { ClientApp } from "./Components/Client App";
 function RenderApp() {
 
 	let debug=false;
-	let reactElement = document.getElementById("react");
-	if(!reactElement) {
+	let reactRootElement = document.getElementById("react");
+	if(!reactRootElement) {
 		debug=true;
-		reactElement = document.getElementById("reactDebug");
+		reactRootElement = document.getElementById("reactDebug");
 	}
 
-	if (reactElement)
-		ReactDOM.createRoot(reactElement).render(<ClientApp debug={debug}/>);
+	if (reactRootElement) {
+		ReactDOM.createRoot(reactRootElement).render(
+			<ClientApp debug={debug} apiRoot={reactRootElement.dataset.apiroot ?? null}/>
+		);
+	}
 }
 
 RenderApp();

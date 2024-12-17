@@ -25,11 +25,15 @@ namespace react_spa.Controllers
         [HttpPost("ExecuteReplace")]
         public async Task<ActionResult<TextParseReplaceModel>> ExecuteReplace(ExecuteReplaceModel model)
         {
+            if (string.IsNullOrEmpty(model.ReturnVariableName) || string.IsNullOrEmpty(model.Code))
+                return BadRequest();
+            
             return await ControllerFunctionAsync<TextParseReplaceModel>(async() => {
 
                 var rv=new TextParseReplaceModel();
 
-                var replaceRVObj=await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv,true);
+                var replaceRVObj=await CompileAndExecuteCode(
+                    model.Code,model.ReturnVariableName,model.UsingStatements,rv,true);
                 if(replaceRVObj!=null) {
 
                     var replaceRV=(ReplaceRV)replaceRVObj;
@@ -45,11 +49,15 @@ namespace react_spa.Controllers
         [HttpPost("ExecuteExtract")]
         public async Task<ActionResult<TextParseExtractModel>> ExecuteExtract(ExecuteExtractModel model)
         {
+            if (string.IsNullOrEmpty(model.ReturnVariableName) || model.Code == null)
+                return BadRequest();
+            
             return await ControllerFunctionAsync<TextParseExtractModel>(async() => {
 
                 var rv=new TextParseExtractModel();
 
-                rv.ExtractedText=(List<string>) await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv,false);
+                rv.ExtractedText=(List<string>?) await CompileAndExecuteCode(
+                    model.Code,model.ReturnVariableName,model.UsingStatements,rv,false);
                 return rv;
             });
         }
@@ -57,11 +65,15 @@ namespace react_spa.Controllers
         [HttpPost("ExecuteMatch")]
         public async Task<ActionResult<TextParseMatchModel>> ExecuteMatch(ExecuteMatchModel model)
         {
+            if (string.IsNullOrEmpty(model.ReturnVariableName) || string.IsNullOrEmpty(model.Code))
+                return BadRequest();
+            
             return await ControllerFunctionAsync<TextParseMatchModel>(async() => {
 
                 var rv=new TextParseMatchModel();
 
-                var numMatching=await CompileAndExecuteCode(model.Code,model.ReturnVariableName,model.UsingStatements,rv,false);
+                var numMatching=await CompileAndExecuteCode(
+                    model.Code,model.ReturnVariableName,model.UsingStatements,rv,false);
                 if(numMatching!=null) {
                     rv.NumMatching=(int) numMatching;
                 }
@@ -70,30 +82,34 @@ namespace react_spa.Controllers
         }
 
         [HttpPost("ExecuteBuiltInExample")]
-        public async Task<ActionResult<TextParseBuiltInExampleModel>> ExecuteBuiltInExample(ExecuteBuiltInModel model)
+        public ActionResult<TextParseBuiltInExampleModel> ExecuteBuiltInExample(ExecuteBuiltInModel model)
         {
-            return await ControllerFunctionAsync<TextParseBuiltInExampleModel>(async() => {
-                var rvModel=new TextParseBuiltInExampleModel();
-                int numMatches=0;
-                await Task.Run(() => {
-                    switch(model.Example) {
-                        case ExecuteBuiltInModel.eParseBuiltInExample.vbsAddParenthesis:
-                            rvModel.ReplacedText=dotNETConversion.AddParenthesisToFunctionCalls(null,model.Input,out numMatches);
-                            break;
+            if(model.Input == null || model.Example == null || !Enum.IsDefined(model.Example.Value))
+                return BadRequest();
+            
+            return ControllerFunction<TextParseBuiltInExampleModel>(() => {
+                int numMatches;
+                string replacedText;
+                switch(model.Example) {
+                    default:
+                    case ExecuteBuiltInModel.eParseBuiltInExample.vbsAddParenthesis:
+                        replacedText=dotNETConversion.AddParenthesisToFunctionCalls(
+                            null,model.Input,out numMatches);
+                        break;
+                }
 
-                        default:
-                            throw new Exception($"Invalid built in example type: {model.Example}");
-                    }
-                });
-                rvModel.NumMatching=numMatches;
-                return rvModel;
+                return new TextParseBuiltInExampleModel()
+                {
+                    NumMatching = numMatches,
+                    ReplacedText = replacedText
+                };
             });
         }
 
-        private async Task<object> CompileAndExecuteCode(
+        private async Task<object?> CompileAndExecuteCode(
             string clientCode,
             string returnVariableName,
-            string[] usingStatements,
+            string[]? usingStatements,
             TextParseResultBase output,
             bool loadThisDLL) {
 
@@ -164,10 +180,13 @@ namespace react_spa.Controllers
                     Assembly assembly = Assembly.Load(ms.ToArray());
 
                     //// Invoke the function
-                    Type type = assembly.GetType("Sid.CompileAndExecuteCode");
-                    object obj = Activator.CreateInstance(type);
+                    var type = assembly.GetType("Sid.CompileAndExecuteCode");
+                    if(type == null)
+                        throw new Exception($"Can't find type {assemblyName}");
+                    
+                    var activatedCodeInstance = Activator.CreateInstance(type);
 
-                    object rv=null;
+                    object? rv=null;
 
                     // Run the task
                     await Task.WhenAny(Task.Run(() => {
@@ -176,7 +195,7 @@ namespace react_spa.Controllers
                             rv=type.InvokeMember("Go",
                                 BindingFlags.Default | BindingFlags.InvokeMethod,
                                 null,
-                                obj,
+                                activatedCodeInstance,
                                 null);
                         }
                         catch(Exception e) {

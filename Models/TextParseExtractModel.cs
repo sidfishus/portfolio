@@ -5,7 +5,7 @@ namespace react_spa.Models {
 
     public sealed class TextParseExtractModel : TextParseResultBase {
         
-        public List<string> ExtractedText
+        public List<string>? ExtractedText
         {
             get;
             set;

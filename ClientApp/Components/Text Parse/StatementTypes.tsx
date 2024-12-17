@@ -174,8 +174,8 @@ export interface ITextParseStatementState {
 };
 
 const CanSaveChildren = (
-    children: TextParseStatement[],
-    fullStmtList: TextParseStatement[]
+    children: TextParseStatement[]|null,
+    fullStmtList: TextParseStatement[]|null
 ): boolean => {
 
     if(!children) return true;
@@ -193,11 +193,11 @@ export const CanSaveUniqueName = (
 
     const stmtNameLower=stmt.name.toLowerCase();
 
-    const duplicateNameStmt: TextParseStatement= stmtList.find(iterStmt => {
+    const duplicateNameStmt = stmtList.find(iterStmt => {
 
         if(iterStmt.UID !== stmt.UID) {
             if(iterStmt.name.toLowerCase() === stmtNameLower) return true;
-            if(iterStmt.Children() && !CanSaveUniqueName(stmt, iterStmt.Children())) return true;
+            if(iterStmt.Children() && !CanSaveUniqueName(stmt, iterStmt.Children()!)) return true;
         }
         return false;
     });
@@ -267,7 +267,7 @@ const CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt = (
 export abstract class TextParseStatement {
 
     public CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren: boolean=true
     ): boolean { 
 
@@ -279,10 +279,10 @@ export abstract class TextParseStatement {
 
     public abstract TypeDescription(): string; // This is static but you can't use abstract and static together in TS
     public abstract Copy(copyChildren: boolean): TextParseStatement;
-    public abstract Description(): string;
+    public abstract Description(): string|null;
     public abstract Icon(): SemanticICONS;
     public abstract Children(): TextParseStatement[] | null;
-    public abstract SetChildren(children?: TextParseStatement[]): void;
+    public abstract SetChildren(children?: TextParseStatement[]|null): void;
     public abstract GenerateCode(
         log: string,
         fAddStatement: (stmtCode: string) => string,
@@ -291,10 +291,11 @@ export abstract class TextParseStatement {
         fGenerateVarName: () => string
     ): string; // 'log' is reserved in case in the future we decide to use it
 
-    public UID: number; // Unique ID to reference this statement / type
+    public UID: number|null; // Unique ID to reference this statement / type
+    //@ts-ignore
     public type: eStatementType;
     public name: string;
-    public keyedDescription?: string;
+    public keyedDescription?: string|null;
 
     public static GetName(stmt: TextParseStatement): string {
         return stmt.name;
@@ -308,7 +309,7 @@ export abstract class TextParseStatement {
         return ((stmt.keyedDescription) ? stmt.keyedDescription : "");
     }
 
-    public static SetKeyedDescription(stmt: TextParseStatement, description?: string): void {
+    public static SetKeyedDescription(stmt: TextParseStatement, description?: string|null): void {
         stmt.keyedDescription=description;
     }
 
@@ -355,6 +356,7 @@ export abstract class TextParseStatement {
             this.name="";
             this.keyedDescription=null;
             this.UID=null;
+            this.SetChildren(null);
         }
 
         this.Heading=this.Heading.bind(this);
@@ -371,7 +373,7 @@ export abstract class TextParseStatement {
     }
 
     CanSaveName(
-        stmtList: TextParseStatement[]
+        stmtList: TextParseStatement[]|null
     ): boolean {
 
         const { name } = this;
@@ -480,7 +482,7 @@ export class StringComparisonStatement extends ComparisonStatement {
     }
 
     CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren=true
     ): boolean {
         if(!StringComparisonStatement.ValidateStr(this)) {
@@ -494,12 +496,12 @@ export class StringComparisonStatement extends ComparisonStatement {
         return "StringComparison";
     }
 
-    Copy(copyChildren: boolean): StringComparisonStatement {
+    Copy(_: boolean): StringComparisonStatement {
         const copy=new StringComparisonStatement(this);
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave, str, caseSensitive} = this;
         
         if(!CanSave(null, false)) {
@@ -517,15 +519,15 @@ export class StringComparisonStatement extends ComparisonStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
-        fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[],
-        fGenerateVarName: () => string
+        _: () => TextParseVariable[],
+        _1: TextParseFunction[],
+        _2: () => string
     ): string {
 
         const { caseSensitive, str, name } = this;
@@ -545,7 +547,7 @@ export class SkipWSStatement extends TextParseStatement {
     }
 
     CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren=true
     ): boolean {
         return super.CanSave(stmtList, checkChildren);
@@ -555,12 +557,12 @@ export class SkipWSStatement extends TextParseStatement {
         return "SkipWhitespaceOperation";
     }
 
-    Copy(copyChildren: boolean): SkipWSStatement {
+    Copy(_: boolean): SkipWSStatement {
         const copy=new SkipWSStatement(this);
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave } = this;
         
         if(!CanSave(null,false)) {
@@ -578,15 +580,15 @@ export class SkipWSStatement extends TextParseStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCode(
         log: string,
         fAddStatement: (stmtCode: string) => string,
-        fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[],
-        fGenerateVarName: () => string
+        _: () => TextParseVariable[],
+        _1: TextParseFunction[],
+        _2: () => string
     ): string {
 
         const { name } = this;
@@ -605,7 +607,7 @@ export class SkipWSStatement extends TextParseStatement {
 
 export class OrComparisonStatement extends ComparisonStatement {
 
-    children: Array<TextParseStatement>;
+    children!: Array<TextParseStatement> | null;
 
     constructor(
         copy?: OrComparisonStatement,
@@ -622,7 +624,7 @@ export class OrComparisonStatement extends ComparisonStatement {
     }
 
     CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren=true
     ): boolean {
         // Must have at least 2 children
@@ -643,10 +645,10 @@ export class OrComparisonStatement extends ComparisonStatement {
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { children } = this;
 
-        return `Or statement consisting of ${children.length} comparison(s)`;
+        return `Or statement consisting of ${children?.length ?? 0} comparison(s)`;
     }
 
     Icon(): SemanticICONS {
@@ -657,8 +659,8 @@ export class OrComparisonStatement extends ComparisonStatement {
         return this.children;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
-        this.children=children;
+    SetChildren(children?: TextParseStatement[]|null): void {
+        this.children=children ?? null;
     }
 
     AddStatement(code: string): string {
@@ -682,11 +684,13 @@ export class OrComparisonStatement extends ComparisonStatement {
                 ${name}.Name="${name}";
             `;
 
-        for(let i=0;i<children.length;++i) {
+        if(children) {
+            for (let i = 0; i < children.length; ++i) {
 
-            const iterChild=children[i];
+                const iterChild = children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log,AddStatement, fGetVariables, functions, fGenerateVarName));
+                rv = rv.concat(iterChild.GenerateCode(log, AddStatement, fGetVariables, functions, fGenerateVarName));
+            }
         }
 
         rv=rv.concat(
@@ -701,7 +705,7 @@ export class OrComparisonStatement extends ComparisonStatement {
 
 const CreateStatementListCode = (
     name: string,
-    stmtList: TextParseStatement[],
+    stmtList: TextParseStatement[]|null,
     log: string,
     fGetVariables: () => TextParseVariable[],
     functions: TextParseFunction[],
@@ -717,11 +721,13 @@ const CreateStatementListCode = (
         ${name}.Name="${name}";
         `;
 
-    for(let i=0;i<stmtList.length;++i) {
+    if(stmtList) {
+        for (let i = 0; i < stmtList.length; ++i) {
 
-        const iterChild=stmtList[i];
+            const iterChild = stmtList[i];
 
-        rv=rv.concat(iterChild.GenerateCode(log,AddStatement, fGetVariables, functions, fGenerateVarName));
+            rv = rv.concat(iterChild.GenerateCode(log, AddStatement, fGetVariables, functions, fGenerateVarName));
+        }
     }
 
     return rv;
@@ -729,7 +735,7 @@ const CreateStatementListCode = (
 
 export class StatementListComparisonStatement extends TextParseStatement {
 
-    children: Array<TextParseStatement>;
+    children!: Array<TextParseStatement>|null;
 
     constructor(
         copy?: StatementListComparisonStatement,
@@ -744,7 +750,7 @@ export class StatementListComparisonStatement extends TextParseStatement {
     }
 
     CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren=true
     ): boolean {
         // Must have at least 1 child
@@ -764,10 +770,10 @@ export class StatementListComparisonStatement extends TextParseStatement {
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { children } = this;
 
-        return `Statement list consisting of ${children.length} statement(s)`;
+        return `Statement list consisting of ${children?.length ?? 0} statement(s)`;
     }
 
     Icon(): SemanticICONS {
@@ -778,8 +784,8 @@ export class StatementListComparisonStatement extends TextParseStatement {
         return this.children;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
-        this.children=children;
+    SetChildren(children?: TextParseStatement[]|null): void {
+        this.children=children ?? null;
     }
 
     GenerateCode(
@@ -819,12 +825,12 @@ export class AdvanceToEndStatement extends TextParseStatement {
         return "AdvanceToTheEndOperation";
     }
 
-    Copy(copyChildren: boolean): AdvanceToEndStatement {
+    Copy(_: boolean): AdvanceToEndStatement {
         const copy=new AdvanceToEndStatement(this);
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave } = this;
         
         if(!CanSave(null, false)) {
@@ -842,15 +848,15 @@ export class AdvanceToEndStatement extends TextParseStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCode(
         log: string,
         fAddStatement: (stmtCode: string) => string,
-        fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[],
-        fGenerateVarName: () => string
+        _: () => TextParseVariable[],
+        _1: TextParseFunction[],
+        _2: () => string
     ): string {
 
         const { name } = this;
@@ -880,12 +886,12 @@ export class EndOfStringComparisonStatement extends ComparisonStatement {
         return "EndOfStringComparison";
     }
 
-    Copy(copyChildren: boolean): EndOfStringComparisonStatement {
+    Copy(_: boolean): EndOfStringComparisonStatement {
         const copy=new EndOfStringComparisonStatement(this);
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave } = this;
         
         if(!CanSave(null, false)) {
@@ -903,15 +909,15 @@ export class EndOfStringComparisonStatement extends ComparisonStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
-        fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[],
-        fGenerateVarName: () => string
+        _: () => TextParseVariable[],
+        _1: TextParseFunction[],
+        _2: () => string
     ): string {
 
         const { name } = this;
@@ -941,12 +947,12 @@ export class StartOfStringComparisonStatement extends ComparisonStatement {
         return "StartOfStringComparison";
     }
 
-    Copy(copyChildren: boolean): StartOfStringComparisonStatement {
+    Copy(_: boolean): StartOfStringComparisonStatement {
         const copy=new StartOfStringComparisonStatement(this);
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave } = this;
         
         if(!CanSave(null, false)) {
@@ -964,15 +970,15 @@ export class StartOfStringComparisonStatement extends ComparisonStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
-        fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[],
-        fGenerateVarName: () => string
+        _: () => TextParseVariable[],
+        _1: TextParseFunction[],
+        _2: () => string
     ): string {
 
         const { name } = this;
@@ -991,7 +997,7 @@ export class StartOfStringComparisonStatement extends ComparisonStatement {
 
 export class CaptureComparisonStatement extends TextParseStatement {
 
-    children: Array<TextParseStatement>;
+    children!: Array<TextParseStatement>|null;
 
     constructor(
         copy?: StatementListComparisonStatement,
@@ -1028,10 +1034,10 @@ export class CaptureComparisonStatement extends TextParseStatement {
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { children } = this;
 
-        return `Capture statement consisting of ${children.length} statement(s)`;
+        return `Capture statement consisting of ${children?.length ?? 0} statement(s)`;
     }
 
     Icon(): SemanticICONS {
@@ -1042,8 +1048,8 @@ export class CaptureComparisonStatement extends TextParseStatement {
         return this.children;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
-        this.children=children;
+    SetChildren(children?: TextParseStatement[]|null): void {
+        this.children=children ?? null;
     }
 
     AddStatement(code: string): string {
@@ -1073,11 +1079,13 @@ export class CaptureComparisonStatement extends TextParseStatement {
                 capturing.Add("${name}", ${captureVarName});
                 `;
 
-        for(let i=0;i<children.length;++i) {
+        if(children) {
+            for (let i = 0; i < children.length; ++i) {
 
-            const iterChild=children[i];
+                const iterChild = children[i];
 
-            rv=rv.concat(iterChild.GenerateCode(log, AddStatement, fGetVariables, functions, fGenerateVarName));
+                rv = rv.concat(iterChild.GenerateCode(log, AddStatement, fGetVariables, functions, fGenerateVarName));
+            }
         }
 
         rv=rv.concat(`
@@ -1101,12 +1109,12 @@ export class IsWhitespaceComparisonStatement extends ComparisonStatement {
         return "IsWhitespaceComparison";
     }
 
-    Copy(copyChildren: boolean): IsWhitespaceComparisonStatement {
+    Copy(_: boolean): IsWhitespaceComparisonStatement {
         const copy=new IsWhitespaceComparisonStatement(this);
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave } = this;
         
         if(!CanSave(null, false)) {
@@ -1124,14 +1132,14 @@ export class IsWhitespaceComparisonStatement extends ComparisonStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCodeDerived(
         log: string,
         fAddStatement: (stmtCode: string) => string,
-        fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        _: () => TextParseVariable[],
+        _1: TextParseFunction[]
     ): string {
 
         const { name } = this;
@@ -1150,9 +1158,9 @@ export class IsWhitespaceComparisonStatement extends ComparisonStatement {
 
 export class StringOffsetComparisonStatement extends ComparisonStatement {
 
-    public length: IParseOperand;
+    public length: IParseOperand|null;
     public caseSensitive: boolean;
-    public offset: IParseOperand;
+    public offset: IParseOperand|null;
     public reverse: boolean;
 
     constructor(copy?: StringOffsetComparisonStatement) {
@@ -1172,7 +1180,7 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
         }
     }
 
-    Copy(copyChildren: boolean): StringOffsetComparisonStatement {
+    Copy(_: boolean): StringOffsetComparisonStatement {
         const copy=new StringOffsetComparisonStatement(this);
         return copy;
     }
@@ -1182,9 +1190,12 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
     }
 
     CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren=true
     ): boolean {
+
+        if(this.offset === null || this.length === null)
+            return false;
 
         if(!ParseOperandIsValid(this.offset) || !ParseOperandIsValid(this.length))
             return false;
@@ -1193,7 +1204,7 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
     }
 
     // Just specify the name or the keyed description
-    Description(): string {
+    Description(): string|null {
         return null;
     }
 
@@ -1205,7 +1216,7 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCodeDerived(
@@ -1217,14 +1228,17 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
 
         const {caseSensitive,reverse,length,offset}=this;
 
+        if(length === null || offset === null)
+            return "";
+
         const caseSensitiveStr= BooleanAsString(caseSensitive);
 
         return fAddStatement(
             `new StringOffsetComparison(
                 ${log},
                 new Options(${log}){CaseSensitive=${caseSensitiveStr}},
-                ${ParseOperandCode(length,fGetVariables,functions)},
-                ${ParseOperandCode(offset,fGetVariables,functions)},
+                ${ParseOperandCode(length!,fGetVariables,functions)},
+                ${ParseOperandCode(offset!,fGetVariables,functions)},
                 ${reverse}
             )`);
     }
@@ -1232,11 +1246,11 @@ export class StringOffsetComparisonStatement extends ComparisonStatement {
 
 export abstract class SetVariableStatementBase extends TextParseStatement {
 
-    public variable: TextParseVariable;
+    public variable: TextParseVariable|null;
 
     constructor(copy?: SetVariableStatementBase) {
         super(copy);
-        if(!copy) {
+        if(!copy || !copy.variable) {
             this.variable=null;
         }
         else {
@@ -1252,7 +1266,7 @@ export abstract class SetVariableStatementBase extends TextParseStatement {
     }
 
     public static GetVarName(stmt: SetVariableStatementBase): string {
-        return stmt.variable?.name;
+        return stmt.variable?.name ?? "";
     }
 
     public static ValidateVarName(stmt: SetVariableStatementBase): boolean {
@@ -1264,7 +1278,7 @@ export abstract class SetVariableStatementBase extends TextParseStatement {
     }
 
     CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren=true
     ): boolean {
 
@@ -1283,7 +1297,7 @@ export class StorePosAsVariableStatement extends SetVariableStatementBase {
         }
     }
 
-    Copy(copyChildren: boolean): StorePosAsVariableStatement {
+    Copy(_: boolean): StorePosAsVariableStatement {
         const copy=new StorePosAsVariableStatement(this);
         return copy;
     }
@@ -1292,14 +1306,14 @@ export class StorePosAsVariableStatement extends SetVariableStatementBase {
         return "StoreCurrentPosition";
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave, variable } = this;
         
         if(!CanSave(null, false)) {
             return null;
         }
 
-        return `Store the current position in a variable named '${variable.name}'`;
+        return `Store the current position in a variable named '${variable!.name}'`;
     }
 
     Icon(): SemanticICONS {
@@ -1310,20 +1324,20 @@ export class StorePosAsVariableStatement extends SetVariableStatementBase {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCode(
         log: string,
         fAddStatement: (stmtCode: string) => string,
-        fGetVariables: () => TextParseVariable[],
-        functions: TextParseFunction[]
+        _: () => TextParseVariable[],
+        _1: TextParseFunction[]
     ): string {
 
         const { variable, name } = this;
 
         return `{
-            var ${name}=new StorePosAsVariable(${log}, ${EncodeString(variable.name)});
+            var ${name}=new StorePosAsVariable(${log}, ${EncodeString(variable?.name ?? "")});
             ${name}.Name=${EncodeString(name)};
             ${fAddStatement(name)}
         }
@@ -1333,7 +1347,7 @@ export class StorePosAsVariableStatement extends SetVariableStatementBase {
 
 export class AdvanceStatement extends TextParseStatement {
 
-    public advanceWhere: IParseOperand;
+    public advanceWhere!: IParseOperand|null;
 
     constructor(copy?: AdvanceStatement) {
         super(copy);
@@ -1342,7 +1356,7 @@ export class AdvanceStatement extends TextParseStatement {
         }
     }
 
-    Copy(copyChildren: boolean): AdvanceStatement {
+    Copy(_: boolean): AdvanceStatement {
         const copy=new AdvanceStatement(this);
         return copy;
     }
@@ -1351,7 +1365,7 @@ export class AdvanceStatement extends TextParseStatement {
         return "Advance";
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave } = this;
         
         if(!CanSave(null, false)) {
@@ -1369,7 +1383,7 @@ export class AdvanceStatement extends TextParseStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCode(
@@ -1382,7 +1396,7 @@ export class AdvanceStatement extends TextParseStatement {
         const { name, advanceWhere } = this;
 
         return `{
-            var ${name}=new Advance(${log}, ${ParseOperandCode(advanceWhere, fGetVariables, functions)});
+            var ${name}=new Advance(${log}, ${ParseOperandCode(advanceWhere!, fGetVariables, functions)});
             ${name}.Name=${EncodeString(name)};
             ${fAddStatement(name)}
         }
@@ -1392,8 +1406,8 @@ export class AdvanceStatement extends TextParseStatement {
 
 export class AdvanceUntilComparisonStatement extends TextParseStatement {
 
-    children: Array<TextParseStatement>;
-    forwards: boolean; // I.e. the direction in which to move
+    children!: Array<TextParseStatement>|null
+    forwards!: boolean; // I.e. the direction in which to move
 
     constructor(
         copy?: AdvanceUntilComparisonStatement,
@@ -1401,7 +1415,6 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
 
         super(copy, copyChildren);
         if(!copy) {
-
             this.type=eStatementType.AdvanceUntil_Comp;
             this.children = new Array<TextParseStatement>();
         }
@@ -1429,7 +1442,7 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
 
         return "Advance until comparison";
     }
@@ -1442,8 +1455,8 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
         return this.children;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
-        this.children=children;
+    SetChildren(children?: TextParseStatement[]|null): void {
+        this.children=children ?? null;
     }
 
     GenerateCode(
@@ -1465,7 +1478,7 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
         };
 
         const code = CreateStatementListIfMultipleOtherwiseReturnSingle(
-            children,
+            children!,
             AddComparison,
             log,
             fGetVariables,
@@ -1486,9 +1499,9 @@ export enum eCustomComparisonOperator {
 
 export class CustomComparisonStatement extends TextParseStatement {
 
-    public leftHandOperand: IParseOperand;
+    public leftHandOperand: IParseOperand|null;
     public operator: eCustomComparisonOperator;
-    public rightHandOperand: IParseOperand;
+    public rightHandOperand: IParseOperand|null;
 
     constructor(
         copy?: CustomComparisonStatement) {
@@ -1496,14 +1509,20 @@ export class CustomComparisonStatement extends TextParseStatement {
         super(copy);
         this.type=eStatementType.CustomComparison;
 
+        this.leftHandOperand=null;
+        this.rightHandOperand=null;
+
         if(!copy) {
-            this.leftHandOperand=null;
-            this.rightHandOperand=null;
+
             this.operator=eCustomComparisonOperator.equals;
         }
         else {
-            this.leftHandOperand=CopyParseOperand(copy.leftHandOperand);
-            this.rightHandOperand=CopyParseOperand(copy.rightHandOperand);
+            if(copy.leftHandOperand)
+                this.leftHandOperand=CopyParseOperand(copy.leftHandOperand);
+
+            if(copy.rightHandOperand)
+                this.rightHandOperand=CopyParseOperand(copy.rightHandOperand);
+
             this.operator=copy.operator;
         }
     }
@@ -1523,12 +1542,12 @@ export class CustomComparisonStatement extends TextParseStatement {
         return "CustomComparison";
     }
 
-    Copy(copyChildren: boolean): CustomComparisonStatement {
+    Copy(_: boolean): CustomComparisonStatement {
         const copy=new CustomComparisonStatement(this);
         return copy;
     }
 
-    Description(): string {
+    Description(): string|null {
 
         return "Custom comparison";
     }
@@ -1541,7 +1560,7 @@ export class CustomComparisonStatement extends TextParseStatement {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     GenerateCode(
@@ -1549,13 +1568,13 @@ export class CustomComparisonStatement extends TextParseStatement {
         fAddStatement: (stmtCode: string) => string,
         fGetVariables: () => TextParseVariable[],
         functions: TextParseFunction[],
-        fGenerateVarName: () => string
+        _: () => string
     ): string {
 
         const { leftHandOperand, rightHandOperand, operator, name } = this;
 
-        const leftOperandCode=ParseOperandMultipleCode(leftHandOperand,fGetVariables,functions, "pos", "str", "rs");
-        const rightOperandCode=ParseOperandMultipleCode(rightHandOperand,fGetVariables,functions, "pos", "str", "rs");
+        const leftOperandCode=ParseOperandMultipleCode(leftHandOperand!,fGetVariables,functions, "pos", "str", "rs");
+        const rightOperandCode=ParseOperandMultipleCode(rightHandOperand!,fGetVariables,functions, "pos", "str", "rs");
 
         const operatorCode=CustomComparisonOperatorCode(operator);
 
@@ -1595,7 +1614,7 @@ const CustomComparisonOperatorCode = (operator: eCustomComparisonOperator): stri
 
 export class SetVariableStatement extends SetVariableStatementBase {
 
-    public operand: IParseOperand;
+    public operand: IParseOperand|null;
 
     constructor(copy?: SetVariableStatement) {
         super(copy);
@@ -1607,7 +1626,7 @@ export class SetVariableStatement extends SetVariableStatementBase {
         }
     }
 
-    Copy(copyChildren: boolean): SetVariableStatement {
+    Copy(_: boolean): SetVariableStatement {
         const copy=new SetVariableStatement(this);
         return copy;
     }
@@ -1616,14 +1635,14 @@ export class SetVariableStatement extends SetVariableStatementBase {
         return "SetVariable";
     }
 
-    Description(): string {
+    Description(): string|null {
         const { CanSave, variable } = this;
         
         if(!CanSave(null, false)) {
             return null;
         }
 
-        return `Assign a variable named '${variable.name}'`;
+        return `Assign a variable named '${variable?.name ?? ""}'`;
     }
 
     Icon(): SemanticICONS {
@@ -1634,11 +1653,11 @@ export class SetVariableStatement extends SetVariableStatementBase {
         return null;
     }
 
-    SetChildren(children?: TextParseStatement[]): void {
+    SetChildren(_?: TextParseStatement[]): void {
     }
 
     CanSave(
-        stmtList: TextParseStatement[],
+        stmtList: TextParseStatement[]|null,
         checkChildren=true
     ): boolean {
         const { operand} = this;
@@ -1658,7 +1677,7 @@ export class SetVariableStatement extends SetVariableStatementBase {
         const { variable, name, operand } = this;
 
         return `{
-            var ${name}=new SetVariable(${log}, ${EncodeString(variable.name)}, ${ParseOperandCode(operand,fGetVariables,functions)});
+            var ${name}=new SetVariable(${log}, ${EncodeString(variable?.name ?? "")}, ${ParseOperandCode(operand!,fGetVariables,functions)});
             ${name}.Name=${EncodeString(name)};
             ${fAddStatement(name)}
         }

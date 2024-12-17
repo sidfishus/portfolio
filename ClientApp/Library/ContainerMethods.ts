@@ -25,7 +25,7 @@ export const MapAndRemoveIndex = <SRC_TYPE,DEST_TYPE>(
 export const FilterRecursive = <SRC_TYPE>(
     srcArray: SRC_TYPE[],
     fFilter: (filterItems: SRC_TYPE[], iterItem: SRC_TYPE, idx: number) => boolean,
-    fGetChildren: (iterItem: SRC_TYPE) => SRC_TYPE[],
+    fGetChildren: (iterItem: SRC_TYPE) => SRC_TYPE[]|null,
     filteredItems: SRC_TYPE[]=[]
 ): SRC_TYPE[] => {
 
@@ -39,7 +39,8 @@ export const FilterRecursive = <SRC_TYPE>(
 
         const children=fGetChildren(iterItem);
         if(children)
-            filteredItemsCopy = filteredItemsCopy.concat(FilterRecursive(children, fFilter, fGetChildren, filteredItemsCopy));
+            filteredItemsCopy = filteredItemsCopy.concat(
+                FilterRecursive(children, fFilter, fGetChildren, filteredItemsCopy));
     });
 
     return filteredItemsCopy;

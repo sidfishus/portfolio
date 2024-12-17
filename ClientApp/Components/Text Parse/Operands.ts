@@ -20,11 +20,10 @@ export interface IParseOperand {
     showArbitraryValueDialog?: boolean;
 };
 
-export const ParseOperandIsValid = (oper: IParseOperand) => {
-    return oper && (
-        oper.type!=eParseOperandType.arbitraryValue ||
-        (oper.type===eParseOperandType.arbitraryValue && oper.arbitraryValue!==undefined)
-    );
+export const ParseOperandIsValid = (oper: IParseOperand): boolean => {
+
+    return oper.type !== eParseOperandType.arbitraryValue ||
+        (oper!.type===eParseOperandType.arbitraryValue && oper!.arbitraryValue!==undefined);
 };
 
 // For a single operand

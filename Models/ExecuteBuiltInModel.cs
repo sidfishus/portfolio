@@ -7,12 +7,12 @@ public class ExecuteBuiltInModel {
         vbsAddParenthesis=1,
     }
     
-    public eParseBuiltInExample Example {
+    public eParseBuiltInExample? Example {
         get;
         set;
     }
 
-    public string Input {
+    public string? Input {
         get;
         set;
     }

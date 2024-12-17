@@ -25,6 +25,7 @@ export type IRoutesProps = {
     prerenderData: IPrerenderData;
     SSR: boolean;
     mediaMatching: MatchMediaResult;
+    apiRoot: string|null;
 };
 
 export type IRoutedCompProps = IRoutesProps;

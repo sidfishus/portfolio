@@ -6,7 +6,7 @@ import { ContainerDemo, SegmentDemo, Code } from "../Presentation";
 export interface IFrivolousBeginningsProps {
 };
 
-export const FrivolousBeginnings: React.FunctionComponent<IFrivolousBeginningsProps & IRoutedCompProps> = (props) => {
+export const FrivolousBeginnings = (_: IFrivolousBeginningsProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
@@ -20,8 +20,7 @@ export const FrivolousBeginnings: React.FunctionComponent<IFrivolousBeginningsPr
     );
 };
 
-//TODO try to find screenshots from my PC - old D drive.
-const MSNChat: React.FunctionComponent<{}> = () => {
+const MSNChat = () => {
     
     return (
         <>
@@ -182,8 +181,8 @@ const MSNChat: React.FunctionComponent<{}> = () => {
     );
 };
 
-/* sidtodo C++ split bot screenshot */
-const SplitBots: React.FunctionComponent<{}> = () => {
+/* TODO C++ split bot screenshot */
+const SplitBots = () => {
 
     return (
         <SegmentDemo heading="Split Bots..">
@@ -209,7 +208,7 @@ const SplitBots: React.FunctionComponent<{}> = () => {
     );
 };
 
-const VisualBasic: React.FunctionComponent<{}> = () => {
+const VisualBasic = () => {
 
     return (
         <SegmentDemo heading="Visual Basic">
@@ -241,7 +240,7 @@ const VisualBasic: React.FunctionComponent<{}> = () => {
     );
 };
 
-const ChatActiveXControl: React.FunctionComponent<{}> = () => {
+const ChatActiveXControl = () => {
 
     return (
         <SegmentDemo heading="Reverse Engineering the Authentication Algorithm">
@@ -274,7 +273,7 @@ const ChatActiveXControl: React.FunctionComponent<{}> = () => {
     );
 };
 
-const CPlusPlus: React.FunctionComponent<{}> = () => {
+const CPlusPlus = () => {
 
     return (
         <SegmentDemo heading="C++">
@@ -313,7 +312,7 @@ const CPlusPlus: React.FunctionComponent<{}> = () => {
     );
 };
 
-const TheEnd: React.FunctionComponent<{}> = () => {
+const TheEnd = () => {
     
     return (
         <SegmentDemo heading="The End">

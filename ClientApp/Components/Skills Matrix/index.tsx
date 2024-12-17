@@ -20,7 +20,7 @@ enum eSortDirection {
     scDesc=2
 };
 
-export const SkillsMatrix: React.FunctionComponent<ISkillsMatrixProps & IRoutedCompProps> = (props) => {
+export const SkillsMatrix = (props: ISkillsMatrixProps & IRoutedCompProps): JSX.Element => {
 
     const [sortColumn, SetSortColumn] = React.useState<eSkillsMatrixSortColumn>(eSkillsMatrixSortColumn.smcTechnology);
     const [sortDirection, SetSortDirection] = React.useState<eSortDirection>(eSortDirection.sdAsc);

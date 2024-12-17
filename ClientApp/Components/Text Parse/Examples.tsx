@@ -191,7 +191,7 @@ const ParseExampleOptionsArray = (): IParseExampleOption[] => {
     ];
 };
 
-export const ParseExamplesDropdown: React.FunctionComponent<ITextParseProps & IParseExamplesDropdownProps> = (props) => {
+export const ParseExamplesDropdown = (props: ITextParseProps & IParseExamplesDropdownProps): JSX.Element => {
 
     const {parseExample, SetParseExample, SetStatements, SetSelStatement, SetFunctions, SetSelFunctionIdx,
         CreateTextParsefunction, CreateParseStatement, SetParseInputText, SetParseOuputType,

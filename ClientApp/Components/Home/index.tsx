@@ -15,8 +15,7 @@ interface IHomeProps extends IRoutedCompProps {
 //TODO catalog of my favourite tunes.
 //TODO book recommendations
 //TODO: create a short video?
-//TODO page for my live mixes!
-export const Home: React.FunctionComponent<IHomeProps> = (props) => {
+export const Home = (props: IHomeProps) => {
 
     return (
         <>
@@ -29,7 +28,7 @@ export const Home: React.FunctionComponent<IHomeProps> = (props) => {
     );
 };
 
-const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
+const Introduction = (props: IHomeProps) => {
 
     return (
         <SegmentDemo heading="Introduction">
@@ -54,7 +53,7 @@ const Introduction: React.FunctionComponent<IHomeProps> = (props) => {
     );
 };
 
-const HelloWorld: React.FunctionComponent<IHomeProps> = (props) => {
+const HelloWorld = (props: IHomeProps) => {
 
     const { mediaMatching} = props;
 
@@ -168,7 +167,7 @@ const RenderAboutSectionRow = (section: IAboutSection, i: number): React.ReactNo
     );
 };
 
-const AboutThisSite: React.FunctionComponent<{}> = () => {
+const AboutThisSite = () => {
 
     return (
         <SegmentDemo heading="About This Site">
@@ -258,7 +257,7 @@ const RenderLinkSectionRow = (link: IUsefulLink, idx: number) => {
     );
 };
 
-const UsefulLinks: React.FunctionComponent<{}> = () => {
+const UsefulLinks = () => {
 
     return (
         <SegmentDemo heading="Useful Links">

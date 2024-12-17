@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export interface IEducationProps {
 };
 
-export const Education: React.FunctionComponent<IEducationProps & IRoutedCompProps> = (props) => {
+export const Education = (_: IEducationProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
@@ -16,7 +16,7 @@ export const Education: React.FunctionComponent<IEducationProps & IRoutedCompPro
     );
 };
 
-const ComputingBSc: React.FunctionComponent<{}> = () => {
+const ComputingBSc = () => {
 
     return (
         <SegmentDemo heading="Computing BSc - Coventry University 2003-2006">

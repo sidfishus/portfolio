@@ -21,9 +21,9 @@ interface IPortfolioCarouselProps {
     SetOpenImg: (idx: number) => void;
 };
 
-export const PortfolioBase: React.FunctionComponent<IPortfolioBaseProps> = (props) => {
+export const PortfolioBase = (props: IPortfolioBaseProps) => {
 
-    const [openImg, SetOpenImg] = useState<number>(null);
+    const [openImg, SetOpenImg] = useState<number|null>(null);
 
     const { writeUp, carouselImgs } = props;
 
