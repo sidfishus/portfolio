@@ -23,17 +23,16 @@ export type IPrerenderData = {
 
 export type IRoutesProps = {
     prerenderData: IPrerenderData;
-    SSR: boolean;
     mediaMatching: MatchMediaResult;
     apiRoot: string|null;
 };
 
 export type IRoutedCompProps = IRoutesProps;
 
-const NoRoutingMatch = (props: IRoutedCompProps) => {
+const NoRoutingMatch = (_: IRoutedCompProps) => {
     return (
         <div>
-            No Clientside Routing Match. {((props.SSR)? "Server rendered" : "Client rendered")}.
+            No Clientside Routing Match.
         </div>
     );
 };

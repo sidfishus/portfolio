@@ -11,7 +11,6 @@ export type IAppProps = {
     apiRoot: string|null;
 };
 
-// Note: this is only ever called when the app is rendered in the browser. SSR does not use this component.
 export const ClientApp = (props: IAppProps) => {
 
     const { debug, apiRoot } = props;
@@ -42,7 +41,6 @@ export const ClientApp = (props: IAppProps) => {
     const router=createBrowserRouter(createRoutesFromElements(
         Routes({
             prerenderData: windowAsAny.prerenderData,
-            SSR: false,
             mediaMatching: mediaMatching,
             apiRoot: apiRoot
         })));

@@ -21,7 +21,7 @@ export const Home = (props: IHomeProps) => {
         <>
             <ContainerDemo>
                 <Introduction {...props} />
-                <AboutThisSite />
+                <AboutThisApplication />
                 <UsefulLinks />
             </ContainerDemo>
         </>
@@ -167,10 +167,10 @@ const RenderAboutSectionRow = (section: IAboutSection, i: number): React.ReactNo
     );
 };
 
-const AboutThisSite = () => {
+const AboutThisApplication = () => {
 
     return (
-        <SegmentDemo heading="About This Site">
+        <SegmentDemo heading="About This Application">
             <SegmentSubSection>
                 <p>What better way to demonstrate my computer programming skills is there than to create a portfolio which is in itself
                     a computer program incorporating many of the technologies I am skilled in using?</p>
@@ -187,7 +187,7 @@ const AboutThisSite = () => {
                 </p>
                 <p>
                     I have developed this specifically to look good on mobiles, tablets, laptops and computers, but it is best viewed on
-                    a large screen and this is particularily true for the <Link to="./textparse">text parse user interface </Link>
+                    a large screen and this is particularly true for the <Link to="./textparse">text parse user interface </Link>
                     due to it's complexity.
                 </p>
             </SegmentSubSection>
