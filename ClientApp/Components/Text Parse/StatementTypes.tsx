@@ -291,7 +291,7 @@ export abstract class TextParseStatement {
         fGenerateVarName: () => string
     ): string; // 'log' is reserved in case in the future we decide to use it
 
-    public UID: number|null; // Unique ID to reference this statement / type
+    public UID: number; // Unique ID to reference this statement / type
     //@ts-ignore
     public type: eStatementType;
     public name: string;
@@ -355,7 +355,7 @@ export abstract class TextParseStatement {
         else {
             this.name="";
             this.keyedDescription=null;
-            this.UID=null;
+            this.UID=null!;
             this.SetChildren(null);
         }
 

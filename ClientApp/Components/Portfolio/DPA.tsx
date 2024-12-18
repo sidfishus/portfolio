@@ -34,7 +34,7 @@ const carouselImgs: ICarouselImg[] = [
     },
 ];
 
-export const DPAPortfolio: React.SFC<IDPAPortfolioProps> = (props) => {
+export const DPAPortfolio = (props: IDPAPortfolioProps) => {
     return (
         <PortfolioBase
             {...props}

@@ -10,7 +10,7 @@ import { eScreenResolution } from "../Client App";
 export interface ITextParsePortfolioProps extends IRoutedCompProps {
 };
 
-export const TextParsePortfolio: React.SFC<ITextParsePortfolioProps> = (props) => {
+export const TextParsePortfolio = (props: ITextParsePortfolioProps) => {
     return (
         <PortfolioBase
             {...props}
@@ -22,87 +22,87 @@ export const TextParsePortfolio: React.SFC<ITextParsePortfolioProps> = (props) =
 
 const carouselImgs : ICarouselImg[] = [
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/palindromeexample.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/palindromeexample.jpg"),
         text: "Example which determines whether a word is a palindrome."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/extractpalindromeexample.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/extractpalindromeexample.jpg"),
         text: "Example which extracts the words which are palindromes."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/captureextractexample.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/captureextractexample.jpg"),
         text: "Example which extracts values using a replace format."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/replaceparenexample.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/replaceparenexample.jpg"),
         text: "Example which converts VB script to VB .NET (function calls)."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/statementtypes.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/statementtypes.jpg"),
         text: "List of statement types (subset available in the UI)."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction1.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customfunction1.jpg"),
         text: "Custom function creation."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction2.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customfunction2.jpg"),
         text: "Custom functions and custom variable creation."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction3.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customfunction3.jpg"),
         text: "Custom functions and custom variables."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction4.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customfunction4.jpg"),
         text: "Custom functions and custom variables."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction5.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customfunction5.jpg"),
         text: "Custom functions and custom variables."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/userdefinedvariables.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/userdefinedvariables.jpg"),
         text: "User defined variables."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison1.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customcomparison1.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison2.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customcomparison2.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison3.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customcomparison3.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison4.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customcomparison4.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison5.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/customcomparison5.jpg"),
         text: "Custom comparisons."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/textparse/consoleoutput1.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/textparse/consoleoutput1.jpg"),
         text: "The generated C# code is output to the console."
     },
 ];
@@ -111,7 +111,8 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
 
     const { mediaMatching } = props;
 
-    if(!mediaMatching) return null;
+    if(!mediaMatching)
+        return <></>;
 
     const firstMatching =mediaMatching.FirstMatching(); 
 

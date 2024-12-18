@@ -28,7 +28,7 @@ interface IStatementListCtrlProps {
     statements: Array<TextParseStatement>;
     SetStatements: (statements: Array<TextParseStatement>) => void;
     selStatement: ISelectedStatement|null;
-    SetSelStatement: (statement: TextParseStatement) => void;
+    SetSelStatement: (statement: TextParseStatement|null) => void;
     ChangeStatementOrder: (selStmt: ISelectedStatement,orderDiff: number) => void;
     RemoveStatement: (selStmt: ISelectedStatement) => void;
     modalState: IModalState|null;
@@ -144,12 +144,12 @@ interface IExecuteParseButtonCtrlProps {
     input: string;
     disabled: boolean; // True when a parse is in progress
     SetParseInProgress: (inProgress: boolean) => void;
-    SetExtractResults: (result: IParseExtractResult) => void;
-    SetCompileErrors: (errs: string[]) => void;
-    SetGeneralError: (error: string) => void;
-    SetMatchResult: (res: number) => void;
+    SetExtractResults: (result: IParseExtractResult|null) => void;
+    SetCompileErrors: (errs: string[]|null) => void;
+    SetGeneralError: (error: string|null) => void;
+    SetMatchResult: (res: number|null) => void;
     replaceFormat: string;
-    SetReplaceResult: (result: IParseReplaceResult) => void;
+    SetReplaceResult: (result: IParseReplaceResult|null) => void;
     updatePending: boolean;
     functions: Array<TextParseFunction>;
     firstFailingStatement: TextParseStatement|null;
@@ -199,10 +199,10 @@ interface IReplaceResultCtrlProps {
 interface ICustomFunctionsProps {
     functions: Array<TextParseFunction>;
     SetFunctions: (functions: TextParseFunction[]) => void;
-    SetModalState: (state: IModalState) => void;
+    SetModalState: (state: IModalState|null) => void;
     modalState: IModalState|null;
     selFunctionIdx: number|null;
-    SetSelFunctionIdx: (idx: number) => void;
+    SetSelFunctionIdx: (idx: number|null) => void;
     SetCustomFunction: (func: TextParseFunction) => void;
     updater: SimpleDelayer;
     fGetVariables: () => TextParseVariable[];
@@ -233,7 +233,7 @@ interface ICustomFunctionOperandDropdownProps {
     data: IParseOperand;
     customFunction: TextParseFunction;
     SetCustomFunction: (func: TextParseFunction) => void;
-    SetOperand: (func: TextParseFunction, operand: IParseOperand) => void;
+    SetOperand: (func: TextParseFunction, operand: IParseOperand|null) => void;
     // Used for defining a unique key for the react ctrl
     name: string;
     updater: SimpleDelayer;
@@ -244,8 +244,8 @@ interface ICustomFunctionOperandDropdownProps {
 interface IParseOperandDropdownProps {
     fGetVariables: () => TextParseVariable[];
     functions: TextParseFunction[];
-    data: IParseOperand;
-    SetOperand: (operand: IParseOperand) => void;
+    data: IParseOperand|null;
+    SetOperand: (operand: IParseOperand|null) => void;
     // Used for defining a unique key for the react ctrl
     name: string;
     updater: SimpleDelayer;
@@ -1342,15 +1342,15 @@ const ExecuteParseButtonClick = (
     type: eParseOutputType,
     statements: Array<TextParseStatement>,
     SetParseInProgress: (inProgress: boolean) => void,
-    SetExtractResults: (results: IParseExtractResult) => void,
-    SetCompileErrors: (errors: string[]) => void,
-    SetGeneralError: (error: string) => void,
-    SetMatchResult: (res: number) => void,
+    SetExtractResults: (results: IParseExtractResult|null) => void,
+    SetCompileErrors: (errors: string[]|null) => void,
+    SetGeneralError: (error: string|null) => void,
+    SetMatchResult: (res: number|null) => void,
     replaceFormat: string,
-    SetReplaceResult: (result: IParseReplaceResult) => void,
+    SetReplaceResult: (result: IParseReplaceResult|null) => void,
     fGetVariables: () => TextParseVariable[],
     functions: TextParseFunction[],
-    builtInExample: eParseBuiltInExample,
+    builtInExample: eParseBuiltInExample|null,
     apiRoot: string|null
 ) => {
 
@@ -1581,7 +1581,7 @@ const ParseOutputType = (props: ITextParseProps & IParseOutputTypeCtrlProps) => 
     );
 };
 
-const StatementChildThenOrDescr = (parentStmt: TextParseStatement) => {
+const StatementChildThenOrDescr = (parentStmt: TextParseStatement|null) => {
     // The main statement list will not have a parent but it is effectively a statement list
     if(parentStmt === null) return "THEN";
 
@@ -1599,7 +1599,7 @@ const StatementListItem = (props: ITextParseProps & IStatementListCtrlProps & {
     level: number,
     stmtCount: number,
     siblings: TextParseStatement[],
-    parentStmt: TextParseStatement,
+    parentStmt: TextParseStatement|null,
     isMobile: boolean,
     mediaMatching: MatchMediaResult
 }) => {
@@ -1662,7 +1662,7 @@ const StatementListItem = (props: ITextParseProps & IStatementListCtrlProps & {
                 title="Confirm Delete"
                 message={`Are you sure you want to delete this text parse statement? This action cannot be undone.`}
                 onYes={() => {
-                    if(CompareSelectedStatement(selStatement,stmt) || StatementIsAChildOf(stmt, selStatement)) {
+                    if(CompareSelectedStatement(selStatement,stmt) || StatementIsAChildOf(stmt, selStatement!)) {
                         SetSelStatement(null);
                     }
                     SetModalState(null);
@@ -1670,7 +1670,8 @@ const StatementListItem = (props: ITextParseProps & IStatementListCtrlProps & {
                 }}
                 onNo={() => SetModalState(null)}
                 onCancel={() => SetModalState(null)}
-                show={(modalState!==null && modalState.type===eModalType.mtClearSingleStatement && CompareSelectedStatement(modalState.selStmt,stmt))}
+                show={(modalState!==null && modalState.type===eModalType.mtClearSingleStatement
+                    && CompareSelectedStatement(modalState.selStmt!,stmt))}
             />
         </>
     );
@@ -1815,6 +1816,7 @@ const CreateParseStatement = (
 
     const CreateStmt = (): TextParseStatement => {
         switch(stmtType) {
+            default:
             case eStatementType.String_Comp:
                 return new StringComparisonStatement();
 
@@ -1892,15 +1894,15 @@ const AddInsertParseStatement =
     const { nameIndexes, statements, selectedStatementType, SetStatements, selStmtIndex } = ctrlProps;
 
     // Create the new statement based on type.
-    const newStatement: TextParseStatement = CreateParseStatement(nameIndexes, selectedStatementType);
+    const newStatement: TextParseStatement = CreateParseStatement(nameIndexes, selectedStatementType!);
 
     //// Add/insert it
     // Get the new index
-    let newSelIndex;
+    let newSelIndex:number;
     if(statements.length == 0) {
         newSelIndex = 0;
     } else {
-        newSelIndex = ((isInsert) ? selStmtIndex : selStmtIndex + 1);
+        newSelIndex = ((isInsert) ? selStmtIndex! : selStmtIndex! + 1);
     }
 
     let updatedStatements: Array<TextParseStatement>;
@@ -2075,7 +2077,7 @@ const TypeDropdownCtrl = (props: ITextParseProps & ITypeDropdownProps) => {
         <Dropdown
             options={options}
             placeholder={"Statement Type"}
-            onChange={(e,value) => SetSelectedStatementType(value.value as number)}
+            onChange={(_,value) => SetSelectedStatementType(value.value as number)}
             {...additionalProps}
         />
     );
@@ -2183,8 +2185,11 @@ const StringComparisonInputCtrl =
                 SetStatement={SetStatement}
                 placeholder={placeHolderText}
                 title={placeHolderText}
+                //@ts-ignore
                 GetValue={StringComparisonStatement.GetStr}
+                //@ts-ignore
                 SetValue={StringComparisonStatement.SetStr}
+                //@ts-ignore
                 Validate={StringComparisonStatement.ValidateStr}
                 updater={updater}
                 name="string"
@@ -2219,12 +2224,12 @@ const OrComparisonInputCtrl = (props: ITextParseProps & ITextParseStatementState
     return (
         <AddNewParseStatementCtrls
             {...props}
-            statements={children}
+            statements={children!}
             SetStatements={(statements, selStmt) => {
 
                 const copy=new OrComparisonStatement(orStatement,false);
                 copy.children=statements;
-                SetSelStatement(selStmt);
+                SetSelStatement(selStmt!);
                 SetStatement(copy);
             }}
             selectedStatementType={subSelectedStatementType}
@@ -2249,12 +2254,12 @@ const CaptureComparisonInputCtrl =
     return (
         <AddNewParseStatementCtrls
             {...props}
-            statements={children}
+            statements={children!}
             SetStatements={(statements, selStmt) => {
 
                 const copy=new CaptureComparisonStatement(statementList,false);
                 copy.children=statements;
-                SetSelStatement(selStmt);
+                SetSelStatement(selStmt!);
                 SetStatement(copy);
             }}
             selectedStatementType={subSelectedStatementType}
@@ -2280,12 +2285,12 @@ const StatementListComparisonInputCtrl =
     return (
         <AddNewParseStatementCtrls
             {...props}
-            statements={children}
+            statements={children!}
             SetStatements={(statements, selStmt) => {
 
                 const copy=new StatementListComparisonStatement(statementList,false);
                 copy.children=statements;
-                SetSelStatement(selStmt);
+                SetSelStatement(selStmt!);
                 SetStatement(copy);
             }}
             selectedStatementType={subSelectedStatementType}
@@ -2319,7 +2324,7 @@ const StringOffsetComparisonInputCtrl = (props: IStringOffsetComparisonCtrlProps
                 fGetVariables={fGetVariables}
                 SetOperand={_oper => {
                     const updated=new StringOffsetComparisonStatement(statement);
-                    fUpdate(updated,_oper);
+                    fUpdate(updated,_oper!);
                     SetStatement(updated);
                 }}
                 data={operand}
@@ -2338,7 +2343,7 @@ const StringOffsetComparisonInputCtrl = (props: IStringOffsetComparisonCtrlProps
         <>
             <Form.Field>
                 {fOperandDropdown("offset",
-                    statement.offset,
+                    statement.offset!,
                     (comp, _oper) => comp.offset=_oper,
                     "(Offset)...",
                     "The offset index within the input string to begin comparing from"
@@ -2347,7 +2352,7 @@ const StringOffsetComparisonInputCtrl = (props: IStringOffsetComparisonCtrlProps
 
             <Form.Field>
                 {fOperandDropdown("length",
-                    statement.length,
+                    statement.length!,
                     (comp, _oper) => comp.length=_oper,
                     "(Length)...",
                     "How many characters to compare"
@@ -2639,7 +2644,7 @@ enum eParseOperandOptions {
 };
 
 const GetParseOperandSelIdx = (
-    data: IParseOperand,
+    data: IParseOperand|null,
     variableList: TextParseVariable[],
     functions: TextParseFunction[]
 ): number | undefined => {
@@ -2658,13 +2663,13 @@ const GetParseOperandSelIdx = (
 
         case eParseOperandType.variable:
             {
-                const foundIdx=variableList.findIndex(iterVar => data.MatchesVariable(iterVar));
+                const foundIdx=variableList.findIndex(iterVar => data.MatchesVariable!(iterVar));
                 return ((foundIdx>=0) ? eParseOperandOptions.variablesBegin + foundIdx : undefined);
             }
 
         case eParseOperandType.function:
             {
-                const foundIdx=functions.findIndex(iterFunc => data.MatchesFunction(iterFunc));
+                const foundIdx=functions.findIndex(iterFunc => data!.MatchesFunction!(iterFunc));
                 return ((foundIdx >= 0) ? eParseOperandOptions.functionsBegin + foundIdx : undefined);
             }
     }
@@ -2672,7 +2677,7 @@ const GetParseOperandSelIdx = (
 
 const ParseOperandDropdown_UpdateOperand = (
     selIdx: number,
-    orgOperand: IParseOperand,
+    orgOperand: IParseOperand|null,
     variableList: TextParseVariable[],
     functions: TextParseFunction[]
 ): IParseOperand => {
@@ -2690,7 +2695,7 @@ const ParseOperandDropdown_UpdateOperand = (
             if(orgOperand) {
 
                 return {
-                    ...CopyParseOperand(orgOperand),
+                    ...CopyParseOperand(orgOperand)!,
                     showArbitraryValueDialog: true,
                     arbitraryValueUpdate: ((orgOperand.arbitraryValue)!==undefined)?orgOperand.arbitraryValue.toString():"",
                 };
@@ -2719,8 +2724,8 @@ const CustomFunctionOperandDropdown = (props: ITextParseProps & ICustomFunctionO
 
     const { selFunctionIdx, name, customFunction, SetCustomFunction } = props;
 
-    const SetOperand= (operand: IParseOperand) => {
-        const updatedFunction=CopyTextParsefunction(customFunction);
+    const SetOperand= (operand: IParseOperand|null) => {
+        const updatedFunction=CopyTextParsefunction(customFunction)!;
         props.SetOperand(updatedFunction, operand);
         SetCustomFunction(updatedFunction);
     };
@@ -2746,7 +2751,7 @@ const ParseOperandDropdown = (props: ITextParseProps & IParseOperandDropdownProp
             key: value,
             text: `${iterFunc.Name()} (function)`,
             value: value,
-            selected: ((data && data.type === eParseOperandType.function && data.MatchesFunction(iterFunc))?true:false)
+            selected: ((data && data.type === eParseOperandType.function && data.MatchesFunction!(iterFunc))?true:false)
         };
     });
 
@@ -2810,7 +2815,7 @@ const ParseOperandDropdown = (props: ITextParseProps & IParseOperandDropdownProp
                 key: value,
                 text: `${variable.name} (variable)`,
                 value: value,
-                selected: ((data && data.type === eParseOperandType.variable && data.MatchesVariable(variable))?true:false)
+                selected: ((data && data.type === eParseOperandType.variable && data.MatchesVariable!(variable))?true:false)
             }
         }),
 
@@ -2827,12 +2832,12 @@ const ParseOperandDropdown = (props: ITextParseProps & IParseOperandDropdownProp
                 open={((data && data.showArbitraryValueDialog)?true:false)}
                 headerIcon="pencil"
                 headerText="Please Enter the Arbitrary Value (32 Bit Signed Integer)"
-                valid={((data && IsA32BitSignedNumber(data.arbitraryValueUpdate))?true:false)}
-                value={data?.arbitraryValueUpdate}
+                valid={((data && IsA32BitSignedNumber(data.arbitraryValueUpdate!))?true:false)}
+                value={data?.arbitraryValueUpdate ?? ""}
                 onChange={(value) => updater.DelayedCall(() => {
 
                     const updatedOperand={
-                        ...CopyParseOperand(data),
+                        ...CopyParseOperand(data)!,
                         arbitraryValueUpdate: value
                     };
 
@@ -2840,7 +2845,7 @@ const ParseOperandDropdown = (props: ITextParseProps & IParseOperandDropdownProp
                 })}
                 okAvailable={!updatePending}
                 onOk={() => {
-                    const updatedOperand=CreateArbitraryValueOperand(parseInt(data.arbitraryValueUpdate));
+                    const updatedOperand=CreateArbitraryValueOperand(parseInt(data!.arbitraryValueUpdate!));
                     SetOperand(updatedOperand);
                 }}
                 onCancel={() => {
@@ -2850,7 +2855,7 @@ const ParseOperandDropdown = (props: ITextParseProps & IParseOperandDropdownProp
 
                     } else {
                         const updatedOperand: IParseOperand={
-                            ...CopyParseOperand(data),
+                            ...CopyParseOperand(data)!,
                             arbitraryValueUpdate: undefined,
                             showArbitraryValueDialog: false
                         };
@@ -2869,7 +2874,7 @@ const ParseOperandDropdown = (props: ITextParseProps & IParseOperandDropdownProp
                 selectOnBlur={false}
                 title={title}
                 placeholder={placeholder}
-                onChange={(e, value) => {
+                onChange={(_, value) => {
                     const selIdx=(value.value as number);
 
                     const updatedOperand=ParseOperandDropdown_UpdateOperand(
@@ -2924,10 +2929,10 @@ const CustomFunctions = (props: ITextParseProps & ICustomFunctionsProps) => {
                                 <UpdateCustomFunctionCtrl
                                     ctrlName="name"
                                     placeholder="Name..."
-                                    value={selCustomFunc.Name()}
+                                    value={selCustomFunc!.Name()}
                                     SetValue={(updated,value) => updated.SetName(value)}
                                     title="Please enter a unique name for the function."
-                                    customFunction={selCustomFunc}
+                                    customFunction={selCustomFunc!}
                                     SetCustomFunction={SetCustomFunction}
                                     updater={updater}
                                     Validate={() => ValidateFuncName(selFunctionIdx, functions)}
@@ -2939,10 +2944,10 @@ const CustomFunctions = (props: ITextParseProps & ICustomFunctionsProps) => {
                                 <UpdateCustomFunctionCtrl
                                     ctrlName="descr"
                                     placeholder="Description... (optional)"
-                                    value={selCustomFunc.Description()}
+                                    value={selCustomFunc!.Description()}
                                     SetValue={(updated,value) => updated.SetDescription(value)}
                                     title="Describe the purpose of the function."
-                                    customFunction={selCustomFunc}
+                                    customFunction={selCustomFunc!}
                                     SetCustomFunction={SetCustomFunction}
                                     updater={updater}
                                     funcIdx={selFunctionIdx}
@@ -2959,10 +2964,10 @@ const CustomFunctions = (props: ITextParseProps & ICustomFunctionsProps) => {
                                     functions={operandFunctions}
                                     fGetVariables={fGetVariables}
                                     selFunctionIdx={selFunctionIdx}
-                                    customFunction={selCustomFunc}
+                                    customFunction={selCustomFunc!}
                                     SetCustomFunction={SetCustomFunction}
-                                    SetOperand={(_function,_oper) => _function.SetLeftHandOperand(_oper)}
-                                    data={selCustomFunc.LeftHandOperand()}
+                                    SetOperand={(_function,_oper) => _function.SetLeftHandOperand(_oper!)}
+                                    data={selCustomFunc!.LeftHandOperand()}
                                     name="left"
                                     updater={updater}
                                     updatePending={updatePending}
@@ -2974,7 +2979,7 @@ const CustomFunctions = (props: ITextParseProps & ICustomFunctionsProps) => {
                                 <CustomFunctionsOperatorDropdown
                                     {...props}
                                     SetCustomFunction={SetCustomFunction}
-                                    function={selCustomFunc}
+                                    function={selCustomFunc!}
                                 />
 
                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -2984,10 +2989,10 @@ const CustomFunctions = (props: ITextParseProps & ICustomFunctionsProps) => {
                                     functions={operandFunctions}
                                     fGetVariables={fGetVariables}
                                     selFunctionIdx={selFunctionIdx}
-                                    customFunction={selCustomFunc}
+                                    customFunction={selCustomFunc!}
                                     SetCustomFunction={SetCustomFunction}
-                                    SetOperand={(_function,_oper) => _function.SetRightHandOperand(_oper)}
-                                    data={selCustomFunc.RightHandOperand()}
+                                    SetOperand={(_function,_oper) => _function.SetRightHandOperand(_oper!)}
+                                    data={selCustomFunc!.RightHandOperand()}
                                     name="right"
                                     updater={updater}
                                     updatePending={updatePending}
@@ -3021,7 +3026,7 @@ const CustomFunctionList = (props: ITextParseProps & ICustomFunctionsProps) => {
 
     const isMobile=((mediaMatching.FirstMatching()==eScreenResolution.Mobile)?true:false);
 
-    const CreateCloseButton = (iterFunc: TextParseFunction,funcIdx: number): JSX.Element => {
+    const CreateCloseButton = (_: TextParseFunction,funcIdx: number): JSX.Element => {
         return (
             <TextParseModal
                 key={`del-${funcIdx}`}
@@ -3035,12 +3040,12 @@ const CustomFunctionList = (props: ITextParseProps & ICustomFunctionsProps) => {
                 message={`Are you sure you want to delete this custom function? This action cannot be undone.`}
                 onYes={() => {
                     SetModalState(null);
-                    const updatedFunctions=functions.filter((unused,innerFuncIdx) => innerFuncIdx!==funcIdx);
+                    const updatedFunctions=functions.filter((_,innerFuncIdx) => innerFuncIdx!==funcIdx);
                     SetFunctions(updatedFunctions);
 
                     // Update the selected row if necessary
-                    if(selFunctionIdx>funcIdx) {
-                        SetSelFunctionIdx(selFunctionIdx-1);
+                    if(selFunctionIdx!>funcIdx) {
+                        SetSelFunctionIdx(selFunctionIdx!-1);
                     }
                     else if(selFunctionIdx===funcIdx) {
                         SetSelFunctionIdx(null);
@@ -3131,6 +3136,7 @@ const InputModal = (props: IInputModalProps) => {
             />
             <Modal.Content>
                 <Form>
+                    {/* @ts-ignore */}
                     <Form.Field {...inputFieldExtraProps} required>
                         <Input defaultValue={value} onChange={e => onChange(e.target.value)} />
                     </Form.Field>
@@ -3170,8 +3176,11 @@ const SelectVariableNameInputCtrl = (props: ITextParseProps & ITextParseStatemen
             SetStatement={SetStatement}
             placeholder={placeHolderText}
             title={placeHolderText}
+            //@ts-ignore
             GetValue={SetVariableStatement.GetVarName}
+            //@ts-ignore
             SetValue={SetVariableStatement.SetVarName}
+            //@ts-ignore
             Validate={SetVariableStatement.ValidateVarName}
             updater={updater}
             name="varName"
@@ -3250,12 +3259,12 @@ const AdvanceUntilInputCtrl = (props: ITextParseProps & IAdvanceUntilInputCtrlPr
             <Form.Field>
                 <AddNewParseStatementCtrls
                     {...props}
-                    statements={children}
+                    statements={children!}
                     SetStatements={(statements, selStmt) => {
 
                         const copy=new AdvanceUntilComparisonStatement(statement,false);
                         copy.children=statements;
-                        SetSelStatement(selStmt);
+                        SetSelStatement(selStmt!);
                         SetStatement(copy);
                     }}
                     selectedStatementType={subSelectedStatementType}
@@ -3447,7 +3456,7 @@ const SetVariableInputCtrl = (props: ITextParseProps & ISetVariableInputCtrlProp
                     functions={functions}
                     fGetVariables={() => {
                         if(statement.variable)
-                            return fGetVariables().filter(iterVar => !VariablesMatch(iterVar, statement.variable));
+                            return fGetVariables().filter(iterVar => !VariablesMatch(iterVar, statement.variable!));
                         return fGetVariables();
                     }}
                     SetOperand={_oper => {

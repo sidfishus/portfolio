@@ -9,7 +9,7 @@ import { eScreenResolution } from "../Client App";
 export interface IScriptableTemplatePortfolioProps extends IRoutedCompProps {
 };
 
-export const ScriptableTemplatePortfolio: React.SFC<IScriptableTemplatePortfolioProps> = (props) => {
+export const ScriptableTemplatePortfolio = (props: IScriptableTemplatePortfolioProps) => {
     return (
         <PortfolioBase
             {...props}
@@ -34,7 +34,8 @@ const carouselImgs : ICarouselImg[] =[
 const WriteUp = (props: IScriptableTemplatePortfolioProps): JSX.Element => {
 
     const { mediaMatching } = props;
-    if(!mediaMatching) return null;
+    if(!mediaMatching)
+        return <></>;
 
     const firstMatching = mediaMatching.FirstMatching();
     const wrapCSharp = ((firstMatching == eScreenResolution.Mobile)?

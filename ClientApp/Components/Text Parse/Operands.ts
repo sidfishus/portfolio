@@ -46,14 +46,14 @@ export const ParseOperandCode = (
         case eParseOperandType.variable:
             {
                 const variableList=fGetVariables();
-                const variable=variableList.find(iterVar => oper.MatchesVariable(iterVar));
-                return `Operand.Variable<int>("${variable.name}")`;
+                const variable=variableList.find(iterVar => oper.MatchesVariable!(iterVar));
+                return `Operand.Variable<int>("${variable!.name}")`;
             }
 
         case eParseOperandType.function:
             {
-                const func=functions.find(iterFunc => oper.MatchesFunction(iterFunc));
-                return `Operand.CallFunction<int>("${func.Name()}")`;
+                const func=functions.find(iterFunc => oper.MatchesFunction!(iterFunc));
+                return `Operand.CallFunction<int>("${func!.Name()}")`;
             }
     }
 };
@@ -75,25 +75,25 @@ export const ParseOperandMultipleCode = (
             return posVarName;
 
         case eParseOperandType.arbitraryValue:
-            return operand.arbitraryValue.toString();
+            return operand.arbitraryValue!.toString();
 
         case eParseOperandType.variable:
             {
                 const variableList=fGetVariables();
-                const variable=variableList.find(iterVar => operand.MatchesVariable(iterVar));
-                return `(int)${runStateVarName}.GetVariable("${variable.name}")`;
+                const variable=variableList.find(iterVar => operand.MatchesVariable!(iterVar));
+                return `(int)${runStateVarName}.GetVariable("${variable!.name}")`;
             }
 
         case eParseOperandType.function:
             {
-                const func=functions.find(iterFunc => operand.MatchesFunction(iterFunc));
-                return `${runStateVarName}.CallFunction<int>("${func.Name()}", ${posVarName}, ${strVarName})`;
+                const func=functions.find(iterFunc => operand.MatchesFunction!(iterFunc));
+                return `${runStateVarName}.CallFunction<int>("${func!.Name()}", ${posVarName}, ${strVarName})`;
             }
     }
 };
 
 // At the moment of writing, a shallow copy is sufficient
-export const CopyParseOperand = (src: IParseOperand): IParseOperand => {
+export const CopyParseOperand = (src: IParseOperand|null): IParseOperand|null => {
     if(!src) return null;
     return {...src};
 };

@@ -1,0 +1,46 @@
+.no-left-border-demo {
+    border: none;
+    border-style: none;
+    background-color: green;
+}
+
+.ui.menu .no-left-border-demo:before {
+    width: 0px;
+}
+
+.flex-important {
+    display: flex !important;
+}
+
+/* Close button */
+.closeButton {
+  position: absolute;
+  right: 48px;
+  top: 16px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.3;
+}
+.closeButton:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+.closeButton:before, .closeButton:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 127px;
+  width: 25px;
+  background-color: darkgray;
+}
+.closeButton:before {
+  transform: rotate(45deg);
+}
+.closeButton:after {
+  transform: rotate(-45deg);
+}
+
+.boldLink {
+  color: red;
+  font-weight: bold;
+}

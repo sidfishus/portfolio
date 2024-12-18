@@ -10,7 +10,7 @@ type IStdPageProps = {
     menuId: eMenuId
 };
 
-export const StdPage : React.SFC<IStdPageProps> = (props: IStdPageProps) => {
+export const StdPage = (props: IStdPageProps) => {
 
     const { stdProps, pageRender, menuId } = props;
 

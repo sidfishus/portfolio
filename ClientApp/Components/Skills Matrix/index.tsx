@@ -20,7 +20,7 @@ enum eSortDirection {
     scDesc=2
 };
 
-export const SkillsMatrix = (props: ISkillsMatrixProps & IRoutedCompProps): JSX.Element => {
+export const SkillsMatrix = (_: ISkillsMatrixProps & IRoutedCompProps): JSX.Element => {
 
     const [sortColumn, SetSortColumn] = React.useState<eSkillsMatrixSortColumn>(eSkillsMatrixSortColumn.smcTechnology);
     const [sortDirection, SetSortDirection] = React.useState<eSortDirection>(eSortDirection.sdAsc);
@@ -126,7 +126,7 @@ interface ISkillRow {
     areas: JSX.Element;
 };
 
-const AreaLinkBreak: React.SFC = () => {
+const AreaLinkBreak = () => {
     return <><br/><br/></>;
 };
 
@@ -428,6 +428,7 @@ const SortedSkillsMatrix = (sortColumn:eSkillsMatrixSortColumn,sortDirection:eSo
 const SkillsMatrixSortFunc = (sortColumn:eSkillsMatrixSortColumn,
     sortDirection:eSortDirection): (lhs: ISkillRow, rhs: ISkillRow) => number => {
     switch(sortColumn) {
+        default:
         case eSkillsMatrixSortColumn.smcTechnology:
             return ((sortDirection==eSortDirection.sdAsc)?(a,b) =>
                 SortSkillsMatrixByTechnology(a,b):(a,b) => SortSkillsMatrixByTechnology(b,a));
@@ -435,9 +436,6 @@ const SkillsMatrixSortFunc = (sortColumn:eSkillsMatrixSortColumn,
         case eSkillsMatrixSortColumn.smcExperience:
             return ((sortDirection==eSortDirection.sdAsc)?(a,b) =>
                 SortSkillsByExperience(a,b):(a,b) => SortSkillsByExperience(b,a));
-
-        default:
-            return null;
     }
 };
 

@@ -305,7 +305,7 @@ const MenuItemAll = (props: IMenuItemProps): JSX.Element => {
 
     const active=(menuId === activeMenuId);
 
-    const onClick=((active)?null:props.onClick);
+    const onClick=((active)?undefined:props.onClick);
     
     return (
         <Menu.Item
@@ -364,7 +364,7 @@ const SubMenuItemHorizontal = (props: ISubMenuItemProps): JSX.Element => {
 
     const active=(menuId === activeMenuId);
 
-    const onClick=((active)?null:props.onClick);
+    const onClick=((active)?undefined:props.onClick);
 
     return (
         <Dropdown.Item
@@ -383,7 +383,7 @@ const SubMenuItemVerticle = (props: ISubMenuItemProps): JSX.Element => {
 
     const active=(menuId === activeMenuId);
 
-    const onClick=((active)?null:props.onClick);
+    const onClick=((active)?undefined:props.onClick);
 
     return (
         <Menu.Item

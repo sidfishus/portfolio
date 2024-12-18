@@ -9,31 +9,110 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22b41944-905c-40fb-ab54-b1964dd62066" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/prodindex.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Client App/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Client App/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/ExecuteParse.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/ExecuteParse.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/About Me/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/About Me/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/History/FrivolousBeginnings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/History/FrivolousBeginnings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Menu/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Menu/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/DPA.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/DPA.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/HAndS.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/HAndS.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/Misc.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/Misc.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/PortfolioBase.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/PortfolioBase.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/ScriptableTemplate.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/ScriptableTemplate.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/TextParse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/TextParse.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Skills Matrix/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Skills Matrix/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Standard Page/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Standard Page/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/CustomFunctions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/CustomFunctions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Examples.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Examples.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Operands.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Operands.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/StatementTypes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/StatementTypes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Variables.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/Variables.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/Components/Text Parse/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Text Parse/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Library/ContainerMethods.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Library/ContainerMethods.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Library/HttpHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Library/HttpHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/boot-client.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/boot-client.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/routes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/TextParseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/TextParseController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/ErrorViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/ExecuteBuiltInModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteBuiltInModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/ExecuteExtractModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteExtractModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/ExecuteMatchModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteMatchModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/ExecuteReplaceModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ExecuteReplaceModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/TextParseBuiltInExampleModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseBuiltInExampleModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/TextParseExtractModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseExtractModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/TextParseReplaceModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseReplaceModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/TextParseResultBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/TextParseResultBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/SPA.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/SPA.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/boot-server.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/HomeController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/main-server-debug.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/main-server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Startup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/SPA.cshtml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nuget.config" beforeDir="false" afterPath="$PROJECT_DIR$/nuget.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react spa.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/react spa.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/carousel.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/carousel.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/demo.css" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/demo.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/semantic.css" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/semantic.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/brand-icons.eot" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/brand-icons.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/brand-icons.svg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/brand-icons.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/brand-icons.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/brand-icons.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/brand-icons.woff" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/brand-icons.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/brand-icons.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/brand-icons.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/icons.eot" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/icons.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/icons.otf" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/icons.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/icons.svg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/icons.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/icons.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/icons.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/icons.woff" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/icons.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/icons.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/icons.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/outline-icons.eot" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/outline-icons.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/outline-icons.svg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/outline-icons.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/outline-icons.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/outline-icons.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/outline-icons.woff" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/outline-icons.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/themes/default/assets/fonts/outline-icons.woff2" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/themes/default/assets/fonts/outline-icons.woff2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/ailist1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/ailist1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/ailist2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/ailist2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/ailist3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/ailist3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/ailist4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/ailist4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/aireport1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/aireport1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/aireport2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/aireport2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/aireport3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/aireport3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/aireport4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/aireport4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/boardreportfilter1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/boardreportfilter1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/homepage1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/homepage1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/mobileaireport1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/mobileaireport1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/mobilehome1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/mobilehome1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/report1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/report1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/report2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/report2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/report3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/report3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/report4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/report4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/report5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/report5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/report6.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/report6.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/report7.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/report7.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/staticdataentry1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/staticdataentry1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/staticdataentry2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/staticdataentry2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/tabletaireport1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/tabletaireport1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/tablethome1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/tablethome1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/tablethome1.png" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/tablethome1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/usermaintenance1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/usermaintenance1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/hands/usermaintenance2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/hands/usermaintenance2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/ircdom-cookies.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/ircdom-cookies.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/ircdominator.gif" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/ircdominator.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/misc/articles v2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/misc/articles v2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/misc/orgchart1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/misc/orgchart1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/misc/orgchart2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/misc/orgchart2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/misc/orgchart3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/misc/orgchart3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/misc/orgchart4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/misc/orgchart4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/misc/orgchart5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/misc/orgchart5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/msn-webchat.png" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/msn-webchat.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/captureextractexample.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/captureextractexample.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/consoleoutput1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/consoleoutput1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customcomparison1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customcomparison1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customcomparison2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customcomparison2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customcomparison3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customcomparison3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customcomparison4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customcomparison4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customcomparison5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customcomparison5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customfunction1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customfunction1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customfunction2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customfunction2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customfunction3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customfunction3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customfunction4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customfunction4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/customfunction5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/customfunction5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/extractpalindromeexample.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/extractpalindromeexample.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/palindromeexample.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/palindromeexample.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/replaceparenexample.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/replaceparenexample.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/statementtypes.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/statementtypes.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/img/textparse/userdefinedvariables.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/img/textparse/userdefinedvariables.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/js/main-client-debug.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/js/main-client.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +138,14 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/234a93d637d5e17f1de0ec244dc09d402281d71bab8d9d5bb507e14f1c26c9/HttpProtocol.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/52db12b26a7626ce7a45785b1f723fab2dcc99e935fd23f3e9f033922e158bb3/DeveloperExceptionPageMiddlewareImpl.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/918aa32966267955c2bcd6ecbee8af7ab7d84b7cb6cef6443c7b1cd33546d6e/AuthorizationMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ead3ec14d6790e1e73ad896c8fe6d5f5d5b07e86e2fe691e8e4f9cd75fc15f/MapWhenMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bde5a0e5fb6491e71267549d64518746e9cfebd10d35f355da6815637e3c/AuthenticationMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f6f937e7fde51c3ca061c59112cdd35b76a72e9ef8821ac361c6ef71e90ea88/ControllerEndpointRouteBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../TextParse/Library/dotNETConversion.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/package-lock.json" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -77,30 +163,18 @@
     &quot;.NET Launch Settings Profile.react spa: react_spa.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dec-2024-update&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Sid\\RiderProjects\\react-spa-demo\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.react spa: react_spa">
-    <configuration name="react spa: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
-      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/react spa.csproj" />
-      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v3.1" />
-      <option name="LAUNCH_PROFILE_NAME" value="IIS Express" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
-      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
-      <option name="SEND_DEBUG_REQUEST" value="1" />
-      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="react spa: react_spa" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/react spa.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v3.1" />
@@ -128,6 +202,10 @@
       <workItem from="1734354784976" duration="22000" />
       <workItem from="1734373908749" duration="147000" />
       <workItem from="1734421900923" duration="9903000" />
+      <workItem from="1734530394231" duration="159000" />
+      <workItem from="1734530690448" duration="5372000" />
+      <workItem from="1734542468499" duration="1576000" />
+      <workItem from="1734544057011" duration="1908000" />
     </task>
     <task id="LOCAL-00001" summary="WIP">
       <option name="closed" value="true" />

@@ -20,14 +20,14 @@ export interface IParseExamplesDropdownProps {
     parseExample: eParseExample;
     SetParseExample: (pe: eParseExample) => void;
     SetStatements: (statements: Array<TextParseStatement>) => void;
-    SetSelStatement: (statement: TextParseStatement) => void;
+    SetSelStatement: (statement: TextParseStatement|null) => void;
     SetFunctions: (functions: TextParseFunction[]) => void;
-    SetSelFunctionIdx: (idx: number) => void;
+    SetSelFunctionIdx: (idx: number|null) => void;
     CreateTextParsefunction: (ctrName: string) => TextParseFunction;
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement;
     SetParseInputText: (text: string) => void;
     SetParseOuputType: (type: eParseOutputType) => void;
-    SetBuiltInExample: (type: eParseBuiltInExample) => void;
+    SetBuiltInExample: (type: eParseBuiltInExample|null) => void;
     SetReplaceFormat: (fmt: string) => void;
     mediaMatching: MatchMediaResult;
 };
@@ -207,7 +207,7 @@ export const ParseExamplesDropdown = (props: ITextParseProps & IParseExamplesDro
     if(parseExampleObj.description || parseExampleObj.fDescription) {
 
         const descr=((parseExampleObj.description)?
-            parseExampleObj.description : parseExampleObj.fDescription(mediaMatching)
+            parseExampleObj.description : parseExampleObj.fDescription!(mediaMatching)
         );
 
         const labelProps: LabelProps = {};
@@ -273,14 +273,14 @@ export const ParseExamplesDropdown = (props: ITextParseProps & IParseExamplesDro
 const OnSelectParseExample = (
     pe: IParseExampleOption,
     SetStatements: (stmts: TextParseStatement[]) => void,
-    SetSelStatement: (statement: TextParseStatement) => void,
+    SetSelStatement: (statement: TextParseStatement|null) => void,
     SetFunctions: (functions: TextParseFunction[]) => void,
-    SetSelFunctionIdx: (idx: number) => void,
+    SetSelFunctionIdx: (idx: number|null) => void,
     CreateTextParsefunction: (ctrName: string) => TextParseFunction,
     CreateParseStatement: (stmtType: eStatementType) => TextParseStatement,
     SetParseInputText: (text: string) => void,
     SetParseOuputType: (type: eParseOutputType) => void,
-    SetBuiltInExample: (type: eParseBuiltInExample) => void,
+    SetBuiltInExample: (type: eParseBuiltInExample|null) => void,
     SetReplaceFormat: (format: string) => void
 ) => {
 
@@ -301,7 +301,7 @@ const OnSelectParseExample = (
     
     SetBuiltInExample((pe.BuiltInType !== undefined)?pe.BuiltInType:null);
 
-    SetReplaceFormat((pe.replaceFormat !== undefined)?pe.replaceFormat:null);
+    SetReplaceFormat((pe.replaceFormat !== undefined)?pe.replaceFormat:"");
 };
 
 const GetIsPalindromeStatements = (caseSensitive: boolean): (
@@ -530,7 +530,7 @@ enum eExtractPalindromeFunctionPos {
 };
 
 const GetExtractPalindromesFunctions = (
-    notPalindromes: boolean
+    _: boolean
 ): (
     CreateTextParsefunction: (ctrName: string) => TextParseFunction
  ) => TextParseFunction[] => {

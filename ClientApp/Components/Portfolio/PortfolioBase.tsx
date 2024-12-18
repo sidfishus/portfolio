@@ -51,7 +51,7 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
     );
 };
 
-const PortfolioCarousel: React.SFC<IPortfolioCarouselProps> = (props) => {
+const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 
     const { imgs, SetOpenImg } = props;
 
@@ -60,7 +60,7 @@ const PortfolioCarousel: React.SFC<IPortfolioCarouselProps> = (props) => {
             showArrows={true}
             infiniteLoop={true}
             useKeyboardArrows={true}
-            onClickItem={(index: number, item: React.ReactNode)=>{
+            onClickItem={(index: number, _: React.ReactNode)=>{
                 SetOpenImg(index);
             }}
         >

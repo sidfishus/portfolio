@@ -7,7 +7,7 @@ import { CalcDurationYears } from "../../Library/DateTime";
 export interface IAboutMeProps {
 };
 
-export const AboutMe = (props: IAboutMeProps & IRoutedCompProps) => {
+export const AboutMe = (_: IAboutMeProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>

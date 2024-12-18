@@ -47,7 +47,7 @@ const MSNChat = () => {
                 </p>
                 <p>
                     <a href="https://en.wikipedia.org/wiki/MSN_Chat">MSN Chat</a> was a website that incorporated a directory listing of chat rooms (referred to as channels) that were split between specific topics (teen, computing, e.t.c.).
-                    Once you had created an account you could then select a channel and join it to speak to people from all over the world via your <a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/msn-webchat.png">internet browser</a>.
+                    Once you had created an account you could then select a channel and join it to speak to people from all over the world via your <a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/ClientApp/assets/img/msn-webchat.png">internet browser</a>.
                     You could also create your own public channel which gave you additional digital powers such as the ability to set the chat room subject, and mute, kick and ban other chatters.
                     To denote this, channel owners in the nickname list had a golden hammer icon next to their name, and channel hosts (less power) had a brown hammer
                     icon next to their name (ahh the memories).
@@ -70,9 +70,9 @@ const MSNChat = () => {
                 </p>
                 <p>
                     After venturing into lots of other channels and speaking to various people I found out that they were using 'bots' and 'scripts'.
-                    After more searching I found a user who was chatting to me via a bot named '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdominator.gif">IRC Dominator</a>' who explained some of it's features which were not available when connecting through a browser.
+                    After more searching I found a user who was chatting to me via a bot named '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/ClientApp/assets/img/ircdominator.gif">IRC Dominator</a>' who explained some of it's features which were not available when connecting through a browser.
                     Not being backwards in coming forward, I was quickly extracting the information from him on how to download and use it.
-                    I followed the instructions, which involved pasting '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/wwwroot/img/ircdom-cookies.jpg">cookies</a>' into the application (which were obtained by doing a 'view source' in a browser chat room session), keyed the name of the channel I wanted to join, and hit the enter key.
+                    I followed the instructions, which involved pasting '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/ClientApp/assets/ircdom-cookies.jpg">cookies</a>' into the application (which were obtained by doing a 'view source' in a browser chat room session), keyed the name of the channel I wanted to join, and hit the enter key.
                     Bosh, I was in!
                     The user was indeed telling the truth as this application boasted a plethora of cool features that up until now I had only dreamed of.
                     This helped me take my channel stealing and rank amongst the MSN Chat elite up to the next level!
@@ -81,7 +81,7 @@ const MSNChat = () => {
                     I was hearing more and more about what you could achieve with scripts and a lot of the information was going over my head at the time.
                     After lots of begging and some failed attempts I managed to talk someone in to sending me a working 'script' which consisted of an application called <a href="https://www.mirc.co.uk/">mIRC</a> and various text files.
                     As per my new best friend's advice, I ran the mIRC.exe and typed a number of commands into a prompt which included the same cookie approach as IRC Dominator and lastly typed "/join %#&lt;name of channel&gt;" and hit enter.
-                    Something positive seemed to be happening as large swathes of jargon produced in cool colours and ASCII art scrolled down the screen until a seperate window inside mIRC opened up which appeared to be a representation of the channel within the mIRC user interface.
+                    Something positive seemed to be happening as large swathes of jargon produced in cool colours and ASCII art scrolled down the screen until a separate window inside mIRC opened up which appeared to be a representation of the channel within the mIRC user interface.
                     I was logged in to the same channel via my browser and I noticed that the second user account I was using specifically within mIRC had indeed joined and could send and receive chat room events.
                     Yes! I had finally successfully connected via a script!
                 </p>

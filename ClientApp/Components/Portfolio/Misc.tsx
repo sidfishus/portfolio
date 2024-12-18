@@ -7,7 +7,7 @@ import { SegmentDemo, SegmentSubSection } from "../Presentation";
 export interface IMiscPortfolioProps extends IRoutedCompProps {
 };
 
-export const MiscPortfolio: React.SFC<IMiscPortfolioProps> = (props) => {
+export const MiscPortfolio = (props: IMiscPortfolioProps) => {
     return (
         <PortfolioBase
             {...props}
@@ -19,32 +19,32 @@ export const MiscPortfolio: React.SFC<IMiscPortfolioProps> = (props) => {
 
 const carouselImgs : ICarouselImg[] =[
     {
-        src: CreateRepoUrl("wwwroot/img/misc/orgchart1.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart1.jpg"),
         text: "Organisational chart: select the top level division."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/misc/orgchart2.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart2.jpg"),
         text: "Organisational chart: select the department."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/misc/orgchart3.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart3.jpg"),
         text: "Organisational chart: see the department members along with the department head."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/misc/orgchart4.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart4.jpg"),
         text: "Organisational chart: select a user and see their team and manager..."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/misc/orgchart5.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart5.jpg"),
         text: "Organisational chart: ...as well as their direct reports."
     },
 
     {
-        src: CreateRepoUrl("wwwroot/img/misc/articles v2.jpg"),
+        src: CreateRepoUrl("ClientApp/assets/img/misc/articles v2.jpg"),
         text: "Articles React SPFX Webpart."
     },
 ];
