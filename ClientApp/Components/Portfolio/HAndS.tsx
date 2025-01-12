@@ -240,65 +240,65 @@ const WriteUp = (): JSX.Element => {
 // 
 
 const carouselImgs: ICarouselImg[] = [
-    CreateImage(CreateRepoUrl("/img/hands/homepage1.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/homepage1.jpg"),
         "Home page which includes live graphs rendered using Recharts."),
 
-    CreateImage(CreateRepoUrl("/img/hands/aireport1.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/aireport1.jpg"),
         "AI report creation."),
 
-    CreateImage(CreateRepoUrl("/img/hands/aireport2.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/aireport2.jpg"),
         "AI report creation."),
 
-    CreateImage(CreateRepoUrl("/img/hands/aireport3.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/aireport3.jpg"),
         "AI report creation."),
 
-    CreateImage(CreateRepoUrl("/img/hands/aireport4.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/aireport4.jpg"),
         "AI report creation."),
 
-    CreateImage(CreateRepoUrl("/img/hands/ailist1.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/ailist1.jpg"),
         "AI report list using React Bootstrap Data Tables."),
 
-    CreateImage(CreateRepoUrl("/img/hands/ailist2.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/ailist2.jpg"),
         "AI report list using React Bootstrap Data Tables."),
 
-    CreateImage(CreateRepoUrl("/img/hands/ailist3.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/ailist3.jpg"),
         "General PDF export functionality available on most screens."),
 
-    CreateImage(CreateRepoUrl("/img/hands/ailist4.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/ailist4.jpg"),
         "General PDF export functionality available on most screens."),
 
-    CreateImage(CreateRepoUrl("/img/hands/boardreportfilter1.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/boardreportfilter1.jpg"),
         "Report filters."),
 
-    CreateImage(CreateRepoUrl("/img/hands/report1.jpg"),"Reporting."),
+    CreateImage(CreateRepoUrl("img/hands/report1.jpg"),"Reporting."),
 
-    CreateImage(CreateRepoUrl("/img/hands/report2.jpg"),"Reporting."),
+    CreateImage(CreateRepoUrl("img/hands/report2.jpg"),"Reporting."),
 
-    CreateImage(CreateRepoUrl("/img/hands/report3.jpg"),"Reporting."),
+    CreateImage(CreateRepoUrl("img/hands/report3.jpg"),"Reporting."),
 
-    CreateImage(CreateRepoUrl("/img/hands/report4.jpg"),"Reporting."),
+    CreateImage(CreateRepoUrl("img/hands/report4.jpg"),"Reporting."),
 
-    CreateImage(CreateRepoUrl("/img/hands/report5.jpg"),"Reporting."),
+    CreateImage(CreateRepoUrl("img/hands/report5.jpg"),"Reporting."),
 
-    CreateImage(CreateRepoUrl("/img/hands/report6.jpg"),"Reporting."),
+    CreateImage(CreateRepoUrl("img/hands/report6.jpg"),"Reporting."),
 
-    CreateImage(CreateRepoUrl("/img/hands/report7.jpg"),"Reporting."),
+    CreateImage(CreateRepoUrl("img/hands/report7.jpg"),"Reporting."),
 
-    CreateImage(CreateRepoUrl("/img/hands/staticdataentry1.jpg"),"Static data maintenance."),
+    CreateImage(CreateRepoUrl("img/hands/staticdataentry1.jpg"),"Static data maintenance."),
 
-    CreateImage(CreateRepoUrl("/img/hands/staticdataentry2.jpg"),"Static data maintenance."),
+    CreateImage(CreateRepoUrl("img/hands/staticdataentry2.jpg"),"Static data maintenance."),
 
-    CreateImage(CreateRepoUrl("/img/hands/usermaintenance1.jpg"),"User maintenance."),
+    CreateImage(CreateRepoUrl("img/hands/usermaintenance1.jpg"),"User maintenance."),
 
-    CreateImage(CreateRepoUrl("/img/hands/usermaintenance2.jpg"),"User maintenance."),
+    CreateImage(CreateRepoUrl("img/hands/usermaintenance2.jpg"),"User maintenance."),
 
-    CreateImage(CreateRepoUrl("/img/hands/mobilehome1.jpg"),"Mobile layout for the home page."),
+    CreateImage(CreateRepoUrl("img/hands/mobilehome1.jpg"),"Mobile layout for the home page."),
 
-    CreateImage(CreateRepoUrl("/img/hands/mobileaireport1.jpg"),"Mobile layout for the AI report form."),
+    CreateImage(CreateRepoUrl("img/hands/mobileaireport1.jpg"),"Mobile layout for the AI report form."),
 
-    CreateImage(CreateRepoUrl("/img/hands/tablethome1.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/tablethome1.jpg"),
         "Tablet (Ipad) layout for the home page."),
 
-    CreateImage(CreateRepoUrl("/img/hands/tabletaireport1.jpg"),
+    CreateImage(CreateRepoUrl("img/hands/tabletaireport1.jpg"),
         "Tablet (Ipad) layout for the AI report form."),
 ];

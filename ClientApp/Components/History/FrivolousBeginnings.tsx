@@ -2,6 +2,7 @@
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
 import { ContainerDemo, SegmentDemo, Code } from "../Presentation";
+import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface IFrivolousBeginningsProps {
 };
@@ -47,7 +48,7 @@ const MSNChat = () => {
                 </p>
                 <p>
                     <a href="https://en.wikipedia.org/wiki/MSN_Chat">MSN Chat</a> was a website that incorporated a directory listing of chat rooms (referred to as channels) that were split between specific topics (teen, computing, e.t.c.).
-                    Once you had created an account you could then select a channel and join it to speak to people from all over the world via your <a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/ClientApp/assets/img/msn-webchat.png">internet browser</a>.
+                    Once you had created an account you could then select a channel and join it to speak to people from all over the world via your <a href={CreateRepoUrl("img/msn-webchat.png")}>internet browser</a>.
                     You could also create your own public channel which gave you additional digital powers such as the ability to set the chat room subject, and mute, kick and ban other chatters.
                     To denote this, channel owners in the nickname list had a golden hammer icon next to their name, and channel hosts (less power) had a brown hammer
                     icon next to their name (ahh the memories).
@@ -70,9 +71,9 @@ const MSNChat = () => {
                 </p>
                 <p>
                     After venturing into lots of other channels and speaking to various people I found out that they were using 'bots' and 'scripts'.
-                    After more searching I found a user who was chatting to me via a bot named '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/ClientApp/assets/img/ircdominator.gif">IRC Dominator</a>' who explained some of it's features which were not available when connecting through a browser.
+                    After more searching I found a user who was chatting to me via a bot named '<a href={CreateRepoUrl("img/ircdominator.gif")}>IRC Dominator</a>' who explained some of it's features which were not available when connecting through a browser.
                     Not being backwards in coming forward, I was quickly extracting the information from him on how to download and use it.
-                    I followed the instructions, which involved pasting '<a href="https://raw.githubusercontent.com/sidfishus/react-spa-demo/master/ClientApp/assets/ircdom-cookies.jpg">cookies</a>' into the application (which were obtained by doing a 'view source' in a browser chat room session), keyed the name of the channel I wanted to join, and hit the enter key.
+                    I followed the instructions, which involved pasting '<a href={CreateRepoUrl("img/ircdom-cookies.jpg")}>cookies</a>' into the application (which were obtained by doing a 'view source' in a browser chat room session), keyed the name of the channel I wanted to join, and hit the enter key.
                     Bosh, I was in!
                     The user was indeed telling the truth as this application boasted a plethora of cool features that up until now I had only dreamed of.
                     This helped me take my channel stealing and rank amongst the MSN Chat elite up to the next level!
