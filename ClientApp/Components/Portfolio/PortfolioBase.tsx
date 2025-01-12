@@ -92,8 +92,7 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
     const carouselRef=useRef<HTMLDivElement>(null);
 
     //sidtodo loading file URL
-
-    //sidtodo can you stretch the mobile images?
+    //sidtodo legend / text
 
     const getThumbnailFileClass = (isSelected: boolean) => (isSelected
         ? "CarouselThumbnailsSelectedFile " + additionalThumbnailFileClass
@@ -107,6 +106,10 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
                 additionalFileClass={()=>additionalCarouselFileClass ?? ""}
                 chevronUrl={CreateRepoUrl("img/blue-chevron-left.svg")}
             />
+
+            <p style={{}} className={"legend"}>
+                {carouselImgs[imageIndex].text}
+            </p>
 
             <div style={{marginLeft: "-10px", marginRight: "-10px"}}>
                 <FileGrid
