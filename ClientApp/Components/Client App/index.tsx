@@ -5,21 +5,21 @@ import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "r
 import ReactGA from "react-ga4";
 import { MatchMediaResult, MatchMedia } from "../../Library/MediaMatching";
 import useConstant from "use-constant";
+import { IsDebug} from "../../IsDebug.ts";
 
 export type IAppProps = {
-    debug: boolean;
     apiRoot: string|null;
 };
 
 export const ClientApp = (props: IAppProps) => {
 
-    const { debug, apiRoot } = props;
+    const { apiRoot } = props;
 
     const ReRender = CreateRerenderAppFunction();
 
     const mediaMatching = useConstant(()=>CreateMediaMatching(ReRender));
 
-    if(!debug) {
+    if(!IsDebug) {
         //// Google Analytics
         // Record the server loaded path
         ReactGA.initialize("UA-179122198-1");

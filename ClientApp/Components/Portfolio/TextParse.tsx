@@ -6,7 +6,7 @@ import { Table, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Code, SegmentDemo, SegmentSubSection } from "../Presentation";
 import { eScreenResolution } from "../Client App";
-import { CreateRepoUrl} from "../../boot-client.tsx";
+import { CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface ITextParsePortfolioProps extends IRoutedCompProps {
 };

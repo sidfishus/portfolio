@@ -3,7 +3,7 @@ import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
 import {PortfolioBase, ICarouselImg, CreateImage} from "./PortfolioBase";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
-import {CreateRepoUrl} from "../../boot-client.tsx";
+import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface IBlytheMillShedsPortfolioProps extends IRoutedCompProps {
 };

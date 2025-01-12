@@ -9,7 +9,7 @@ import {
     CreateImage
 } from "./PortfolioBase";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
-import { CreateRepoUrl} from "../../boot-client.tsx";
+import { CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface IMiscPortfolioProps extends IRoutedCompProps {
 };
