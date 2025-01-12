@@ -1,0 +1,21 @@
+@use "../../StyleVariables.scss" as *;
+
+.SixteenByNineAspectRatio {
+  aspect-ratio: 16/9;
+}
+
+.CarouselThumbnailsFile,.CarouselThumbnailsSelectedFile {
+  width: 100px;
+
+  border: white solid 1.5px;
+  margin: 10px;
+
+  cursor: pointer;
+
+  object-fit: contain;
+}
+
+.CarouselThumbnailsSelectedFile {
+  box-shadow: 0 0 0 4px $blue;
+  cursor: default;
+}

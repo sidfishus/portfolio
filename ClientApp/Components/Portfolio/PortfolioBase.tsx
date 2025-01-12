@@ -4,10 +4,12 @@ import {useRef, useState} from "react";
 import { IRoutedCompProps } from "../../routes";
 import { Table } from "semantic-ui-react";
 import { SegmentDemo, ContainerDemo, FullScreenModalImage } from "../Presentation";
-import { Carousel, CarouselFileDetails} from "react-cscarousel";
+import {Carousel, CarouselFileDetails, ShowFileFromIndex} from "react-cscarousel";
 import "react-cscarousel/styles.css";
 import { FileGrid } from "react-csfilegrid";
 import "react-csfilegrid/styles.css";
+import "./Styles.scss";
+import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface ICarouselImg extends CarouselFileDetails {
     text: string;
@@ -16,10 +18,12 @@ export interface ICarouselImg extends CarouselFileDetails {
 export interface IPortfolioBaseProps extends IRoutedCompProps {
     writeUp: JSX.Element;
     carouselImgs: ICarouselImg[];
+    additionalCarouselFileClass?: string; //sidtodo make this mandatory
+    additionalThumbnailFileClass?: string;
 };
 
 interface IPortfolioCarouselProps {
-    imgs: ICarouselImg[];
+    mainProps: IPortfolioBaseProps;
     SetOpenImg: (idx: number) => void;
 };
 
@@ -43,7 +47,7 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
                 {carouselImgs &&
                     <SegmentDemo heading="Images (click to view full screen)">
                         <PortfolioCarousel
-                            imgs={carouselImgs}
+                            mainProps={props}
                             SetOpenImg={SetOpenImg}
                         />
                     </SegmentDemo>
@@ -53,6 +57,7 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
     );
 };
 
+//sidtodo remove
 /*
 files: FILE_T[];
     selectedId: bigint | null;
@@ -71,9 +76,16 @@ files: FILE_T[];
     onFileClick?: (idx: number, file: FILE_T) => void;
  */
 
+//sidtodo remove
+/*
+overrideFileClass?: (isSelected: boolean) => string;
+    overrideFileGridContainerClass?: string;
+ */
+
 const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 
-    const { imgs, SetOpenImg } = props;
+    const { mainProps, SetOpenImg } = props;
+    const { carouselImgs, additionalCarouselFileClass,additionalThumbnailFileClass } = mainProps;
 
     const [imageIndex, setImageIndex]=useState(0);
 
@@ -81,73 +93,29 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 
     //sidtodo loading file URL
 
-    //sidtodo thumbnails.
+    //sidtodo can you stretch the mobile images?
+
+    const getThumbnailFileClass = (isSelected: boolean) => (isSelected
+        ? "CarouselThumbnailsSelectedFile " + additionalThumbnailFileClass
+        : "CarouselThumbnailsFile " + additionalThumbnailFileClass);
 
     return (
         <>
             <Carousel
-                files={imgs} selectedId={imgs[imageIndex].id} setSelectedFile={setImageIndex} shouldLoad={true}
-                loadingFileUrl={"//sidtodo"} ref={carouselRef} onFileClick={idx => SetOpenImg(idx)}
+                files={carouselImgs} selectedId={carouselImgs[imageIndex].id} setSelectedFile={setImageIndex}
+                shouldLoad={true} loadingFileUrl={"//sidtodo"} ref={carouselRef} onFileClick={idx => SetOpenImg(idx)}
+                additionalFileClass={()=>additionalCarouselFileClass ?? ""}
+                chevronUrl={CreateRepoUrl("img/blue-chevron-left.svg")}
             />
 
-            <FileGrid
-                files={imgs.map(iterImg => iterImg.src)} selectedIndex={imageIndex}
-            />
+            <div style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                <FileGrid
+                    files={carouselImgs.map(iterImg => iterImg.src)} selectedIndex={imageIndex}
+                    onClick={idx => ShowFileFromIndex(carouselRef.current!, idx, "smooth")}
+                    overrideFileClass={getThumbnailFileClass}
+                />
+            </div>
         </>
-    );
-
-    /*return (
-        <Carousel
-            showArrows={true}
-            infiniteLoop={true}
-            useKeyboardArrows={true}
-            onClickItem={(index: number, _: React.ReactNode)=>{
-                SetOpenImg(index);
-            }}
-        >
-            {imgs.map((iterImg, i) => CarouselImgJSX(iterImg, i))}
-        </Carousel>
-    );*/
-};
-
-// You cannot use a React component for this, you get the following error:
-// "No images found! Can't build the thumb list without images. If you don't need thumbs, set showThumbs={false} in
-//  the Carousel. Note that it's not possible to get images rendered inside custom components"
-const CarouselImgJSX: any = (img: ICarouselImg, imgIdx: number) => {
-
-    /*
-    const divStyle: React.CSSProperties = {
-        width: "fit-content",
-        height: "fit-content",
-        //objectFit: "cover",
-
-
-        backgroundSize: "cover",
-        //backgroundRepeat: "no-repeat",
-        margin: "auto",
-
-        backgroundPosition: "bottom",
-    };
-
-    return (
-        <div key={`img-${imgIdx}`} style={divStyle}>
-            <img src={img.src} />
-            <p className="legend">{img.text}</p>
-        </div>
-    );
-
-     */
-
-    //sidtodo try setting properties on the img directly.
-    const imgStyle: React.CSSProperties = {
-        objectFit: "contain",
-    };
-
-    return (
-        <div key={`img-${imgIdx}`} style={{backgroundColor: "red"}}>
-            <img src={img.src} style={imgStyle} />
-            <p className="legend">{img.text}</p>
-        </div>
     );
 };
 

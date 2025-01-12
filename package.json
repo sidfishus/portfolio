@@ -27,11 +27,12 @@
     "react-cslib": "^1.0.2",
     "react-dom": "^18.3.1",
     "react-ga4": "^2.1.0",
+    "react-router-dom": "^7.1.1",
     "semantic-ui-react": "^2.1.5",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.15.0",
+    "use-constant": "^1.1.1",
     "vite": "^6.0.1",
-    "react-router-dom": "^7.1.1",
-    "use-constant": "^1.1.1"
+    "sass-embedded": "^1.83.1"
   }
 }

@@ -21,6 +21,8 @@ export const HAndSPortfolio = (props: IHAndSPortfolioProps) => {
             {...props}
             writeUp={WriteUp()}
             carouselImgs={carouselImgs}
+            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
         />
     );
 };
