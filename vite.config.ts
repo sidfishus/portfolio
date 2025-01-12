@@ -8,6 +8,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         app: "./prodindex.html"
+      },
+      output: {
+        assetFileNames: "styles.css",
       }
     },
     outDir: "wwwroot",

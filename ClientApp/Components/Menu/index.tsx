@@ -12,21 +12,24 @@ export interface IDemoMenuProps extends IRoutedCompProps {
 
 export enum eMenuId {
     home=1,
-    textParse=2,
-    portfolioStart=3,
-    portfolioDPA=3,
-    portfolioHAndS=4,
-    portfolioTextParse=5,
-    portfolioScriptableTemplate=6,
-    portfolioMisc=7,
-    // Keep this as the last portfolio item + 1
-    portfolioEnd=8,
-    skillsMatrix=8,
-    aboutMe=9,
-    frivolousBeginnings=10,
-    education=11,
-    career=12,
-    currentAndFuture=13,
+    textParse,
+    portfolioBlytheMillSheds,
+    portfolioStart=portfolioBlytheMillSheds,
+    portfolioDPA,
+    portfolioHAndS,
+    portfolioTextParse,
+    portfolioScriptableTemplate,
+    portfolioMisc,
+    // Keep this as the last portfolio item
+    portfolioLast=portfolioMisc,
+    skillsMatrix,
+    aboutMe,
+    frivolousBeginnings,
+    historyStart=frivolousBeginnings,
+    education,
+    career,
+    currentAndFuture,
+    historyLast=currentAndFuture
 };
 
 enum eMenuType {
@@ -80,6 +83,9 @@ export const DemoMenu = (props: IDemoMenuProps) => {
 
                     SubMenuHeader({
                         text: "History",
+                        firstMenuId: eMenuId.historyStart,
+                        lastMenuId: eMenuId.historyLast,
+                        activeMenuId: activeMenuId,
                         children: [
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
@@ -117,7 +123,18 @@ export const DemoMenu = (props: IDemoMenuProps) => {
 
                     SubMenuHeader({
                         text: "Portfolio",
+                        firstMenuId: eMenuId.portfolioStart,
+                        lastMenuId: eMenuId.portfolioLast,
+                        activeMenuId: activeMenuId,
                         children: [
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioBlytheMillSheds,
+                                children: <>Blythe Mill Sheds</>,
+                                onClick: ()=> navigate("/portfolio/blythemillsheds"),
+                                key: "blythemillsheds"
+                            }),
+
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.portfolioDPA,
@@ -321,6 +338,9 @@ const MenuItemAll = (props: IMenuItemProps): JSX.Element => {
 interface ISubMenuHeaderProps {
     text: string;
     children: JSX.Element[];
+    firstMenuId: eMenuId;
+    lastMenuId: eMenuId;
+    activeMenuId: eMenuId;
 };
 
 const SubMenuHeaderVerticle = (props: ISubMenuHeaderProps): JSX.Element => {
@@ -341,8 +361,10 @@ const SubMenuHeaderHorizontal = (props: ISubMenuHeaderProps): JSX.Element => {
 
     const { children, text} = props;
 
+    const submenuIsActive = props.activeMenuId >= props.firstMenuId && props.activeMenuId <= props.lastMenuId;
+
     return (
-        <Dropdown text={text} item key={text}>
+        <Dropdown text={text} item key={text} className={(submenuIsActive ? "active" : undefined)} >
             <Dropdown.Menu>
                 {children}
             </Dropdown.Menu>

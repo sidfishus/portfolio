@@ -1,9 +1,16 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable, CreateRepoUrl } from "./PortfolioBase";
+import {
+    PortfolioBase,
+    ICarouselImg,
+    ITechnologyInfo,
+    TechnologyTable,
+    CreateImage
+} from "./PortfolioBase";
 import { Link } from "react-router-dom";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
+import { CreateRepoUrl} from "../../boot-client.tsx";
 
 export interface IHAndSPortfolioProps extends IRoutedCompProps {
 };
@@ -230,129 +237,68 @@ const WriteUp = (): JSX.Element => {
     );
 };
 
+// 
+
 const carouselImgs: ICarouselImg[] = [
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/homepage1.jpg"),
-        text: "Home page which includes live graphs rendered using Recharts."
-    },
+    CreateImage(CreateRepoUrl("img/hands/homepage1.jpg"),
+        "Home page which includes live graphs rendered using Recharts."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/aireport1.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport1.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/aireport2.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport2.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/aireport3.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport3.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/aireport4.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport4.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/ailist1.jpg"),
-        text: "AI report list using React Bootstrap Data Tables."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist1.jpg"),
+        "AI report list using React Bootstrap Data Tables."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/ailist2.jpg"),
-        text: "AI report list using React Bootstrap Data Tables."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist2.jpg"),
+        "AI report list using React Bootstrap Data Tables."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/ailist3.jpg"),
-        text: "General PDF export functionality available on most screens."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist3.jpg"),
+        "General PDF export functionality available on most screens."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/ailist4.jpg"),
-        text: "General PDF export functionality available on most screens."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist4.jpg"),
+        "General PDF export functionality available on most screens."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/boardreportfilter1.jpg"),
-        text: "Report filters."
-    },
+    CreateImage(CreateRepoUrl("img/hands/boardreportfilter1.jpg"),
+        "Report filters."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/report1.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report1.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/report2.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report2.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/report3.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report3.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/report4.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report4.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/report5.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report5.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/report6.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report6.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/report7.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report7.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/staticdataentry1.jpg"),
-        text: "Static data maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/staticdataentry1.jpg"),"Static data maintenance."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/staticdataentry2.jpg"),
-        text: "Static data maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/staticdataentry2.jpg"),"Static data maintenance."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/usermaintenance1.jpg"),
-        text: "User maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/usermaintenance1.jpg"),"User maintenance."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/usermaintenance2.jpg"),
-        text: "User maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/usermaintenance2.jpg"),"User maintenance."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/mobilehome1.jpg"),
-        text: "Mobile layout for the home page."
-    },
+    CreateImage(CreateRepoUrl("img/hands/mobilehome1.jpg"),"Mobile layout for the home page."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/mobileaireport1.jpg"),
-        text: "Mobile layout for the AI report form."
-    },
+    CreateImage(CreateRepoUrl("img/hands/mobileaireport1.jpg"),"Mobile layout for the AI report form."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/tablethome1.jpg"),
-        text: "Tablet (Ipad) layout for the home page."
-    },
+    CreateImage(CreateRepoUrl("img/hands/tablethome1.jpg"),
+        "Tablet (Ipad) layout for the home page."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/hands/tabletaireport1.jpg"),
-        text: "Tablet (Ipad) layout for the AI report form."
-    },
+    CreateImage(CreateRepoUrl("img/hands/tabletaireport1.jpg"),
+        "Tablet (Ipad) layout for the AI report form."),
 ];

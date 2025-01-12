@@ -4,6 +4,7 @@ import { TextParse } from "./Components/Text Parse";
 import { StdPage } from "./Components/Standard Page";
 import { Home } from "./Components/Home";
 import { eMenuId } from "./Components/Menu";
+import { BlytheMillShedsPortfolio } from "./Components/Portfolio/BlytheMillSheds.tsx";
 import { DPAPortfolio } from "./Components/Portfolio/DPA";
 import { HAndSPortfolio } from "./Components/Portfolio/HAndS";
 import { TextParsePortfolio } from "./Components/Portfolio/TextParse";
@@ -54,6 +55,16 @@ const HomeRouted = (props: IRoutedCompProps) => {
             pageRender={() => <Home {...props} />}
             stdProps={props}
             menuId={eMenuId.home}
+        />
+    );
+};
+
+const BlytheMillShedsPortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <BlytheMillShedsPortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioBlytheMillSheds}
         />
     );
 };
@@ -175,6 +186,7 @@ export const Routes = (props: IRoutedCompProps) => {
         <Route path="/home" element={<HomeRouted {...props} />} />,
         <Route path="/textparse" element={<TextParseRouted {...props} />} />,
         <Route path="/portfolio">
+            <Route path="blythemillsheds" element={<BlytheMillShedsPortfolioRouted {...props} />} />
             <Route path="dpa" element={<DPAPortfolioRouted {...props} />} />
             <Route path="hands" element={<HAndSPortfolioRouted {...props} />} />
             <Route path="textparse" element={<TextParsePortfolioRouted {...props} />} />

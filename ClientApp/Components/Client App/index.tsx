@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Routes } from "../../routes";
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { MatchMediaResult, MatchMedia } from "../../Library/MediaMatching";
 import useConstant from "use-constant";
 
@@ -23,7 +23,10 @@ export const ClientApp = (props: IAppProps) => {
         //// Google Analytics
         // Record the server loaded path
         ReactGA.initialize("UA-179122198-1");
-        ReactGA.pageview(window.location.pathname + window.location.search);
+        ReactGA.send({
+            hitType: "pageview",
+            page: window.location.pathname + window.location.search
+        });
 
         /*
         //sidtodo

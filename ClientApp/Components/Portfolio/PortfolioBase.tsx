@@ -1,13 +1,15 @@
 
 import * as React from "react";
-import { useState } from "react";
+import {useRef, useState} from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Table, Modal, Image } from "semantic-ui-react";
-import { Carousel } from "react-responsive-carousel";
+import { Table } from "semantic-ui-react";
 import { SegmentDemo, ContainerDemo, FullScreenModalImage } from "../Presentation";
+import { Carousel, CarouselFileDetails} from "react-cscarousel";
+import "react-cscarousel/styles.css";
+import { FileGrid } from "react-csfilegrid";
+import "react-csfilegrid/styles.css";
 
-export interface ICarouselImg {
-    src: string;
+export interface ICarouselImg extends CarouselFileDetails {
     text: string;
 };
 
@@ -51,11 +53,50 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
     );
 };
 
+/*
+files: FILE_T[];
+    selectedId: bigint | null;
+    setSelectedFile: SetSelectedFileFunc<FILE_T>;
+    fileDir?: string;
+    autoChangeMs?: number;
+    loadFileOverride?: (url: string) => Promise<string>;
+    shouldLoad: boolean;
+    autoLoadLeftAndRightFiles?: boolean;
+    additionalFileClass?: (isLoading: boolean) => string;
+    additionalFileContainerClass?: string;
+    loadingFileUrl: string;
+    chevronUrl?: string;
+    overrideLeftChevronClass?: string;
+    overrideRightChevronClass?: string;
+    onFileClick?: (idx: number, file: FILE_T) => void;
+ */
+
 const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 
     const { imgs, SetOpenImg } = props;
 
+    const [imageIndex, setImageIndex]=useState(0);
+
+    const carouselRef=useRef<HTMLDivElement>(null);
+
+    //sidtodo loading file URL
+
+    //sidtodo thumbnails.
+
     return (
+        <>
+            <Carousel
+                files={imgs} selectedId={imgs[imageIndex].id} setSelectedFile={setImageIndex} shouldLoad={true}
+                loadingFileUrl={"//sidtodo"} ref={carouselRef} onFileClick={idx => SetOpenImg(idx)}
+            />
+
+            <FileGrid
+                files={imgs.map(iterImg => iterImg.src)} selectedIndex={imageIndex}
+            />
+        </>
+    );
+
+    /*return (
         <Carousel
             showArrows={true}
             infiniteLoop={true}
@@ -66,7 +107,7 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
         >
             {imgs.map((iterImg, i) => CarouselImgJSX(iterImg, i))}
         </Carousel>
-    );
+    );*/
 };
 
 // You cannot use a React component for this, you get the following error:
@@ -74,20 +115,37 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 //  the Carousel. Note that it's not possible to get images rendered inside custom components"
 const CarouselImgJSX: any = (img: ICarouselImg, imgIdx: number) => {
 
-    // Credits to 'https://stackoverflow.com/questions/11757537/css-image-size-how-to-fill-not-stretch/43001159' for this.
-    // It centers images that are too small to fit with the rest of the images, the key part is the 'background size'.
-    // const divStyle: React.CSSProperties = {
-    //     width: 700,
-    //     height: 394,
-    //     backgroundSize: "cover",
-    //     backgroundRepeat: "no-repeat",
-    //     backgroundPosition: "50% 50%",
-    //     margin: "auto",
-    // };
+    /*
+    const divStyle: React.CSSProperties = {
+        width: "fit-content",
+        height: "fit-content",
+        //objectFit: "cover",
+
+
+        backgroundSize: "cover",
+        //backgroundRepeat: "no-repeat",
+        margin: "auto",
+
+        backgroundPosition: "bottom",
+    };
 
     return (
-        <div key={`img-${imgIdx}`} >
+        <div key={`img-${imgIdx}`} style={divStyle}>
             <img src={img.src} />
+            <p className="legend">{img.text}</p>
+        </div>
+    );
+
+     */
+
+    //sidtodo try setting properties on the img directly.
+    const imgStyle: React.CSSProperties = {
+        objectFit: "contain",
+    };
+
+    return (
+        <div key={`img-${imgIdx}`} style={{backgroundColor: "red"}}>
+            <img src={img.src} style={imgStyle} />
             <p className="legend">{img.text}</p>
         </div>
     );
@@ -124,7 +182,14 @@ export const TechnologyTable = (infoList: ITechnologyInfo[]): JSX.Element => {
     );
 }
 
-export const CreateRepoUrl = (url: string): string => {
-
-    return `https://github.com/sidfishus/react-spa-demo/blob/master/${url}?raw=true`;
-}
+export const CreateImage = (() => {
+    let id: bigint=0n;
+    return (src: string, text: string): ICarouselImg => {
+        id = id + 1n;
+        return {
+            src: src,
+            id: id,
+            text: text
+        };
+    };
+})();

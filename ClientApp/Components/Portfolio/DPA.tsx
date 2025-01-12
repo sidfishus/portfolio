@@ -1,37 +1,27 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
+import { PortfolioBase, ICarouselImg, CreateImage } from "./PortfolioBase";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
 
 export interface IDPAPortfolioProps extends IRoutedCompProps {
 };
 
 const carouselImgs: ICarouselImg[] = [
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss1.png",
-        text: "Clientside Identity Server login using React and Semantic UI."
-    },
+    CreateImage("https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss1.png",
+        "Clientside Identity Server login using React and Semantic UI."),
 
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss2.png",
-        text: "User must grant permissions for the application to impersonate them."
-    },
+    CreateImage("https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss2.png",
+        "User must grant permissions for the application to impersonate them."),
 
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss3.png",
-        text: "Logged in successfully.",
-    },
+    CreateImage("https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss3.png",
+        "Logged in successfully."),
 
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss4.png",
-        text: "Calling a protected web API."
-    },
+    CreateImage("https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss4.png",
+        "Calling a protected web API."),
 
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss5.png",
-        text: "Demo result from a protected API."
-    },
+    CreateImage("https://raw.githubusercontent.com/sidfishus/distributedspa/master/ss5.png",
+        "Demo result from a protected API."),
 ];
 
 export const DPAPortfolio = (props: IDPAPortfolioProps) => {
@@ -49,10 +39,10 @@ const WriteUp = (): JSX.Element => {
         <>
             <SegmentDemo heading="Distributed SPA">
                 <SegmentSubSection>
-                    <p>A distributed isomorphic React single page application (SPA) hosted via .NET MVC Core 2.2 with seperate client, API, and identity server applications. The code for which can be found at: <a href="https://github.com/sidfishus/distributedspa/" target="_blank">https://github.com/sidfishus/distributedspa/</a></p>
+                    <p>A distributed isomorphic React single page application (SPA) hosted via .NET MVC Core 2.2 with separate client, API, and identity server applications. The code for which can be found at: <a href="https://github.com/sidfishus/distributedspa/" target="_blank">https://github.com/sidfishus/distributedspa/</a></p>
                     <p>The purpose of this is to provide a template for modern clientside web applications. Developed using Chrome, and tested on IE and Edge browsers. Developed using the Microsoft Visual Code IDE and includes integrated build and debugging tasks.</p>
                     <p>There is a video by the Identity Server 4 creators which is available on YouTube that describes authentication and the distributed model used in this project: <a href="https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo" target="_blank" rel="nofollow">https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo</a>.</p>
-                    <p>The 3 applications are split between 4 code projects (see the seperate headings below).</p>
+                    <p>The 3 applications are split between 4 code projects (see the separate headings below).</p>
                 </SegmentSubSection>
             </SegmentDemo>
 

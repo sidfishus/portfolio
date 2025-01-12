@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
+import {PortfolioBase, ICarouselImg, CreateImage} from "./PortfolioBase";
 import { Code, SegmentDemo, SegmentSubSection } from "../Presentation";
 import { Segment } from "semantic-ui-react";
 import { eScreenResolution } from "../Client App";
@@ -20,15 +20,11 @@ export const ScriptableTemplatePortfolio = (props: IScriptableTemplatePortfolioP
 };
 
 const carouselImgs : ICarouselImg[] =[
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_borders.jpg",
-        text: "This is the output file produced by the above application when viewed in a web browser."
-    },
+    CreateImage("https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_borders.jpg",
+        "This is the output file produced by the above application when viewed in a web browser."),
 
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_noborders.jpg",
-        text: "This is the output file produced by the above application but with the 'TableBorder' variable specified as 'false' in Main.cs."
-    }
+    CreateImage("https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_noborders.jpg",
+        "This is the output file produced by the above application but with the 'TableBorder' variable specified as 'false' in Main.cs.")
 ];
 
 const WriteUp = (props: IScriptableTemplatePortfolioProps): JSX.Element => {

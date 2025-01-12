@@ -1,8 +1,15 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable, CreateRepoUrl } from "./PortfolioBase";
+import {
+    PortfolioBase,
+    ICarouselImg,
+    ITechnologyInfo,
+    TechnologyTable,
+    CreateImage
+} from "./PortfolioBase";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
+import { CreateRepoUrl} from "../../boot-client.tsx";
 
 export interface IMiscPortfolioProps extends IRoutedCompProps {
 };
@@ -18,35 +25,23 @@ export const MiscPortfolio = (props: IMiscPortfolioProps) => {
 };
 
 const carouselImgs : ICarouselImg[] =[
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart1.jpg"),
-        text: "Organisational chart: select the top level division."
-    },
+    CreateImage(CreateRepoUrl("img/misc/orgchart1.jpg"),
+        "Organisational chart: select the top level division."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart2.jpg"),
-        text: "Organisational chart: select the department."
-    },
+    CreateImage(CreateRepoUrl("img/misc/orgchart2.jpg"),
+        "Organisational chart: select the department."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart3.jpg"),
-        text: "Organisational chart: see the department members along with the department head."
-    },
+    CreateImage(CreateRepoUrl("img/misc/orgchart3.jpg"),
+        "Organisational chart: see the department members along with the department head."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart4.jpg"),
-        text: "Organisational chart: select a user and see their team and manager..."
-    },
+    CreateImage(CreateRepoUrl("img/misc/orgchart4.jpg"),
+        "Organisational chart: select a user and see their team and manager..."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/misc/orgchart5.jpg"),
-        text: "Organisational chart: ...as well as their direct reports."
-    },
+    CreateImage(CreateRepoUrl("img/misc/orgchart5.jpg"),
+        "Organisational chart: ...as well as their direct reports."),
 
-    {
-        src: CreateRepoUrl("ClientApp/assets/img/misc/articles v2.jpg"),
-        text: "Articles React SPFX Webpart."
-    },
+    CreateImage(CreateRepoUrl("img/misc/articles v2.jpg"),
+        "Articles React SPFX Webpart."),
 ];
 
 const orgChartTechnology: ITechnologyInfo[] = [

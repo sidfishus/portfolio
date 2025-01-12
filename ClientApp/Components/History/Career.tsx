@@ -94,7 +94,7 @@ const HouseConstructionCompany = () => {
             <p>
                 When I joined, the company recently had a intranet built for them by a contractor who was leaving and this was handed over to me to develop and support.
                 This is a modern mobile friendly isomorphic web application utilising ASP .NET MVC Core, Webpack, Typescript and React and is hosted as 2 app services in Azure -
-                a ASP .NET MVC Core application that deals with authentication and renders and serves the Javascript user interface, and a seperate ASP .NET MVC Core REST API.
+                a ASP .NET MVC Core application that deals with authentication and renders and serves the Javascript user interface, and a separate ASP .NET MVC Core REST API.
             </p>
             <p>
                 It also utilises many Azure features such as:

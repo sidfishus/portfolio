@@ -232,14 +232,14 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>Entity Framework various versions, installer/deployment system, COM interop, Windows services,
             SQL database interaction, Rosylyn compiler framework, desktop and mobile GUI applications, 
             command line utilities, SQL Server Compact Remote Data Access,
-            LINQ and LINQ extensions, dependency injection, ASP .NET (seperate heading), Razor templates,
+            LINQ and LINQ extensions, dependency injection, ASP .NET (separate heading), Razor templates,
             NUnit.</>
     },
     {
-        technology: "Unix",
-        experienceTotal: 2, 
-        experienceCommercial: 0,
-        areas: <>Emacs, GCC, complex C programs including TCP/IP sockets.</>
+        technology: "Unix / Linux",
+        experienceTotal: 3,
+        experienceCommercial: 2,
+        areas: <>Emacs, Vi, GCC, complex C programs including TCP/IP sockets, Docker.</>
     },
     {
         technology: "Microsoft Visual Studio and Team Foundation Server (TFS)",
