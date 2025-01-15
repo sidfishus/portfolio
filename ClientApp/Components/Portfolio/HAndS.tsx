@@ -23,9 +23,26 @@ export const HAndSPortfolio = (props: IHAndSPortfolioProps) => {
             carouselImgs={carouselImgs}
             additionalCarouselFileClass={"SixteenByNineAspectRatio"}
             additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
+            heading={heading}
         />
     );
 };
+
+const heading=(
+    <SegmentDemo heading="Health and Safety System (CAIRS)">
+        <SegmentSubSection>
+            <p>CAIRS is a responsive and mobile/tablet friendly data capture and reporting health and safety system used by a house construction company.</p>
+            <p>It is based on-premise and incoorporates a ASP .NET MVC and SQL back end with a Javascript and React single page application front end.</p>
+            <p>It is used to record accidents and incidents, labour returns and safety observations.
+                These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
+            </p>
+            <p>The application has been designed and hand crafted to work specifically with 7 different screen resolutions ranging from small phones up to a typical computer screen of 1920 x 1200 pixels.</p>
+            <p>The CAIRS system including data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout, and third party libraries was created entirely by myself.
+                Developed using Microsoft Visual Studio 2017 with TFS integration for source code control with all technology choices being made by myself .
+            </p>
+        </SegmentSubSection>
+    </SegmentDemo>
+);
 
 const technology: ITechnologyInfo[] = [
     {
@@ -151,21 +168,6 @@ const WriteUp = (): JSX.Element => {
 
     return (
         <>
-        
-            <SegmentDemo heading="Health and Safety System (CAIRS)">
-                <SegmentSubSection>
-                    <p>CAIRS is a responsive and mobile/tablet friendly data capture and reporting health and safety system used by a house construction company.</p>
-                    <p>It is based on-premise and incoorporates a ASP .NET MVC and SQL back end with a Javascript and React single page application front end.</p>
-                    <p>It is used to record accidents and incidents, labour returns and safety observations.
-                        These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
-                    </p>
-                    <p>The application has been designed and hand crafted to work specifically with 7 different screen resolutions ranging from small phones up to a typical computer screen of 1920 x 1200 pixels.</p>
-                    <p>The CAIRS system including data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout, and third party libraries was created entirely by myself.
-                        Developed using Microsoft Visual Studio 2017 with TFS integration for source code control with all technology choices being made by myself .
-                    </p>
-                </SegmentSubSection>
-            </SegmentDemo>
-
             <SegmentDemo heading="Task / Design">
                 <SegmentSubSection>
                     <p>The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets.</p>
@@ -231,7 +233,7 @@ const WriteUp = (): JSX.Element => {
 
             <SegmentDemo heading="Technology">
                 <SegmentSubSection>
-                    <p>Below is the list of technology incoorporated:</p>
+                    <p>Below is the list of technology incorporated:</p>
                     {TechnologyTable(technology)}
                 </SegmentSubSection>
             </SegmentDemo>

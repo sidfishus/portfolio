@@ -30,22 +30,27 @@ export const DPAPortfolio = (props: IDPAPortfolioProps) => {
             {...props}
             writeUp={WriteUp()}
             carouselImgs={carouselImgs}
+            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
+            heading={heading}
         />
     );
 };
 
+const heading=(
+    <SegmentDemo heading="Distributed SPA">
+        <SegmentSubSection>
+            <p>A distributed isomorphic React single page application (SPA) hosted via .NET MVC Core 2.2 with separate client, API, and identity server applications. The code for which can be found at: <a href="https://github.com/sidfishus/distributedspa/" target="_blank">https://github.com/sidfishus/distributedspa/</a></p>
+            <p>The purpose of this is to provide a template for modern clientside web applications. Developed using Chrome, and tested on IE and Edge browsers. Developed using the Microsoft Visual Code IDE and includes integrated build and debugging tasks.</p>
+            <p>There is a video by the Identity Server 4 creators which is available on YouTube that describes authentication and the distributed model used in this project: <a href="https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo" target="_blank" rel="nofollow">https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo</a>.</p>
+            <p>The 3 applications are split between 4 code projects (see the separate headings below).</p>
+        </SegmentSubSection>
+    </SegmentDemo>
+);
+
 const WriteUp = (): JSX.Element => {
     return (
         <>
-            <SegmentDemo heading="Distributed SPA">
-                <SegmentSubSection>
-                    <p>A distributed isomorphic React single page application (SPA) hosted via .NET MVC Core 2.2 with separate client, API, and identity server applications. The code for which can be found at: <a href="https://github.com/sidfishus/distributedspa/" target="_blank">https://github.com/sidfishus/distributedspa/</a></p>
-                    <p>The purpose of this is to provide a template for modern clientside web applications. Developed using Chrome, and tested on IE and Edge browsers. Developed using the Microsoft Visual Code IDE and includes integrated build and debugging tasks.</p>
-                    <p>There is a video by the Identity Server 4 creators which is available on YouTube that describes authentication and the distributed model used in this project: <a href="https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo" target="_blank" rel="nofollow">https://www.youtube.com/watch?edufilter=NULL&amp;v=eF2myGRT8bo</a>.</p>
-                    <p>The 3 applications are split between 4 code projects (see the separate headings below).</p>
-                </SegmentSubSection>
-            </SegmentDemo>
-
             <SegmentDemo heading="Client">
                 <SegmentSubSection>
                     <p>A modern Javascript React SPA which calls a protected external web API. When not logged in the application redirects the user to the identity server for authentication. Incorporates a .NET and Node JS server back end, and a Javascript client application.</p>

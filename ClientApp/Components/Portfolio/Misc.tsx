@@ -20,6 +20,9 @@ export const MiscPortfolio = (props: IMiscPortfolioProps) => {
             {...props}
             writeUp={WriteUp()}
             carouselImgs={carouselImgs}
+            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
+            heading={null}
         />
     );
 };

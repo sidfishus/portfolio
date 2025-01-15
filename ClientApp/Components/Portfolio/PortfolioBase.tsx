@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import {useRef, useState} from "react";
+import {ReactNode, useRef, useState} from "react";
 import { IRoutedCompProps } from "../../routes";
 import { Table } from "semantic-ui-react";
 import { SegmentDemo, ContainerDemo, FullScreenModalImage } from "../Presentation";
@@ -12,14 +12,16 @@ import "./Styles.scss";
 import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface ICarouselImg extends CarouselFileDetails {
-    text: string;
+    text: ReactNode;
 };
 
 export interface IPortfolioBaseProps extends IRoutedCompProps {
+    heading: JSX.Element|null;
     writeUp: JSX.Element;
     carouselImgs: ICarouselImg[];
     additionalCarouselFileClass?: string; //sidtodo make this mandatory
     additionalThumbnailFileClass?: string;
+    thumbnailImgs?: string[];
 };
 
 interface IPortfolioCarouselProps {
@@ -31,7 +33,7 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
 
     const [openImg, SetOpenImg] = useState<number|null>(null);
 
-    const { writeUp, carouselImgs } = props;
+    const { writeUp, carouselImgs, heading } = props;
 
     return (
         <>
@@ -42,7 +44,7 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
             />
 
             <ContainerDemo>
-                {writeUp}
+                {heading}
 
                 {carouselImgs &&
                     <SegmentDemo heading="Images (click to view full screen)">
@@ -52,35 +54,12 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
                         />
                     </SegmentDemo>
                 }
+
+                {writeUp}
             </ContainerDemo>
         </>
     );
 };
-
-//sidtodo remove
-/*
-files: FILE_T[];
-    selectedId: bigint | null;
-    setSelectedFile: SetSelectedFileFunc<FILE_T>;
-    fileDir?: string;
-    autoChangeMs?: number;
-    loadFileOverride?: (url: string) => Promise<string>;
-    shouldLoad: boolean;
-    autoLoadLeftAndRightFiles?: boolean;
-    additionalFileClass?: (isLoading: boolean) => string;
-    additionalFileContainerClass?: string;
-    loadingFileUrl: string;
-    chevronUrl?: string;
-    overrideLeftChevronClass?: string;
-    overrideRightChevronClass?: string;
-    onFileClick?: (idx: number, file: FILE_T) => void;
- */
-
-//sidtodo remove
-/*
-overrideFileClass?: (isSelected: boolean) => string;
-    overrideFileGridContainerClass?: string;
- */
 
 const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 
@@ -91,8 +70,9 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 
     const carouselRef=useRef<HTMLDivElement>(null);
 
-    //sidtodo loading file URL
-    //sidtodo legend / text
+    const thumbnails = mainProps.thumbnailImgs
+        ? mainProps.thumbnailImgs
+        : carouselImgs.map(iterImg => iterImg.src);
 
     const getThumbnailFileClass = (isSelected: boolean) => (isSelected
         ? "CarouselThumbnailsSelectedFile " + additionalThumbnailFileClass
@@ -102,18 +82,19 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
         <>
             <Carousel
                 files={carouselImgs} selectedId={carouselImgs[imageIndex].id} setSelectedFile={setImageIndex}
-                shouldLoad={true} loadingFileUrl={"//sidtodo"} ref={carouselRef} onFileClick={idx => SetOpenImg(idx)}
+                shouldLoad={true} loadingFileUrl={CreateRepoUrl("img/Spinner@1x-1.0s-200px-200px.svg")}
+                ref={carouselRef} onFileClick={idx => SetOpenImg(idx)}
                 additionalFileClass={()=>additionalCarouselFileClass ?? ""}
                 chevronUrl={CreateRepoUrl("img/blue-chevron-left.svg")}
             />
 
-            <p style={{}} className={"legend"}>
+            <div className={"CarouselImageText"}>
                 {carouselImgs[imageIndex].text}
-            </p>
+            </div>
 
             <div style={{marginLeft: "-10px", marginRight: "-10px"}}>
                 <FileGrid
-                    files={carouselImgs.map(iterImg => iterImg.src)} selectedIndex={imageIndex}
+                    files={thumbnails} selectedIndex={imageIndex}
                     onClick={idx => ShowFileFromIndex(carouselRef.current!, idx, "smooth")}
                     overrideFileClass={getThumbnailFileClass}
                 />
@@ -155,12 +136,13 @@ export const TechnologyTable = (infoList: ITechnologyInfo[]): JSX.Element => {
 
 export const CreateImage = (() => {
     let id: bigint=0n;
-    return (src: string, text: string): ICarouselImg => {
+    return (src: string, text: ReactNode, additionalClass?: string): ICarouselImg => {
         id = id + 1n;
         return {
             src: src,
             id: id,
-            text: text
+            text: text,
+            additionalClass: additionalClass
         };
     };
 })();

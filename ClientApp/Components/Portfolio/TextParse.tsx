@@ -17,9 +17,31 @@ export const TextParsePortfolio = (props: ITextParsePortfolioProps) => {
             {...props}
             writeUp={WriteUp(props)}
             carouselImgs={carouselImgs}
+            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
+            heading={heading}
         />
     );
 };
+
+const heading=(
+    <SegmentDemo heading="Text Parse Library">
+        <SegmentSubSection>
+            <p>TextParse is a .NET C# library I created for parsing and replacing text. The principal behind it is that the user uses C# class syntax to describe a series of steps that encapsulates a parse routine which is then executed iteratively in a linear fashion against the specified input text. The use case for it's creation was to create a parser that:</p>
+            <ol>
+                <li>Can parse complex formats.</li>
+                <li>Is accurate.</li>
+                <li>Terse but easily understandable for a programmer.</li>
+                <li>Gives good feedback and diagnostics.</li>
+                <li>Is easy to reuse.</li>
+                <li>Is expandable.</li>
+                <li>Can be used with automatic unit and regression testing.</li>
+            </ol>
+            <p>The full code for this library can be found at <a href="https://github.com/sidfishus/TextParse">https://github.com/sidfishus/TextParse</a>.</p>
+            <p>See below for more details.</p>
+        </SegmentSubSection>
+    </SegmentDemo>
+);
 
 const carouselImgs : ICarouselImg[] = [
     
@@ -40,7 +62,7 @@ const carouselImgs : ICarouselImg[] = [
     ),
 
     CreateImage(CreateRepoUrl("img/textparse/statementtypes.jpg"),
-        "List of statement types (subset available in the UI)."
+        "The subset list of statement types which are available in the UI."
     ),
 
     CreateImage(CreateRepoUrl("img/textparse/customfunction1.jpg"),
@@ -106,23 +128,6 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
 
     return (
         <>
-            <SegmentDemo heading="Text Parse Library">
-                <SegmentSubSection>
-                    <p>TextParse is a .NET C# library I created for parsing and replacing text. The principal behind it is that the user uses C# class syntax to describe a series of steps that encapsulates a parse routine which is then executed iteratively in a linear fashion against the specified input text. The use case for it's creation was to create a parser that:</p>
-                    <ol>
-                    <li>Can parse complex formats.</li>
-                    <li>Is accurate.</li>
-                    <li>Terse but easily understandable for a programmer.</li>
-                    <li>Gives good feedback and diagnostics.</li>
-                    <li>Is easy to reuse.</li>
-                    <li>Is expandable.</li>
-                    <li>Can be used with automatic unit and regression testing.</li>
-                    </ol>
-                    <p>The full code for this library can be found at <a href="https://github.com/sidfishus/TextParse">https://github.com/sidfishus/TextParse</a>.</p>
-                    <p>See below for more details.</p>
-                </SegmentSubSection>
-            </SegmentDemo>
-
             <SegmentDemo heading="Concept">
                 <SegmentSubSection heading="Background">
                     <p>I was tasked with a project to convert a large ERP web application from classic ASP to ASP .NET because support for it from Microsoft was soon to expire. The application consisted of 13 modules including 100's of sourcecode files and after making the changes necessary to convert a single file it was clear that an automated process was needed.</p>

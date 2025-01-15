@@ -19,3 +19,25 @@
   box-shadow: 0 0 0 4px $blue;
   cursor: default;
 }
+
+.CarouselImageText {
+  text-align: center;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+.BackgroundSizeOriginalSize {
+  background-size: 529px 590px;
+}
+
+@media (min-width: calc(550px * 0.666) + 50px) {
+  .SelectStyles {
+    // I assume the x 0.666 is because I have my desktop resolution set to 150%.
+    background-size: calc(529px * 0.666) calc(590px * 0.666);
+  }
+}
+
+.BlytheMillShedsThumbs {
+  height: 100px;
+}
