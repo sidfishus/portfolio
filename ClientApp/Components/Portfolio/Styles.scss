@@ -1,7 +1,16 @@
 @use "../../StyleVariables.scss" as *;
 
-.SixteenByNineAspectRatio {
-  aspect-ratio: 16/9;
+//sidtodo variable for 990
+@media (min-width: 990px) {
+  .SixteenByNineAspectRatio {
+    aspect-ratio: 16/9;
+  }
+}
+
+@media (max-width: 989px) {
+  .SixteenByNineAspectRatio {
+    aspect-ratio: 11/16;
+  }
 }
 
 .CarouselThumbnailsFile,.CarouselThumbnailsSelectedFile {
@@ -31,13 +40,20 @@
   background-size: 529px 590px;
 }
 
-@media (min-width: calc(550px * 0.666) + 50px) {
-  .SelectStyles {
-    // I assume the x 0.666 is because I have my desktop resolution set to 150%.
-    background-size: calc(529px * 0.666) calc(590px * 0.666);
-  }
-}
-
 .BlytheMillShedsThumbs {
   height: 100px;
+}
+
+.FishingWebAppThumbs {
+  height: 100px;
+}
+
+//// Individual images
+// I assume the x 0.666 is because I have my desktop resolution set to 150%.
+
+// BMS
+@media (min-width: 990px) {
+  .SelectStyles {
+    background-size: calc(529px * 0.666) calc(590px * 0.666);
+  }
 }

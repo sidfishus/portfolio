@@ -32,13 +32,13 @@ const carouselImgs: ICarouselImg[] = [
 ];
 
 const thumbnailImgs: string[] = [
-    CreateRepoUrl("img/blythemillsheds/Thumbs/hometopdesktop.jpg"),
-    CreateRepoUrl("img/blythemillsheds/Thumbs/requestaquotedesktop.png"),
+    CreateRepoUrl("img/blythemillsheds/hometopdesktop.jpg"),
+    CreateRepoUrl("img/blythemillsheds/requestaquotedesktop.png"),
     CreateRepoUrl("img/blythemillsheds/selectstyles.png"),
-    CreateRepoUrl("img/blythemillsheds/Thumbs/customerreviewsdesktop.png"),
+    CreateRepoUrl("img/blythemillsheds/customerreviewsdesktop.png"),
     CreateRepoUrl("img/blythemillsheds/Thumbs/gallerydesktop.jpg"),
     CreateRepoUrl("img/blythemillsheds/Thumbs/hometopmobile.jpg"),
-    CreateRepoUrl("img/blythemillsheds/homemiddlemobile.png"),
+    CreateRepoUrl("img/blythemillsheds/Thumbs/homemiddlemobile.jpg"),
     CreateRepoUrl("img/blythemillsheds/Thumbs/gallerymobile.jpg"),
     CreateRepoUrl("img/blythemillsheds/menumobile.png")
 ];

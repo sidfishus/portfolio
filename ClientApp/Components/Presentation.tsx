@@ -86,6 +86,7 @@ export interface IContainerDemoProps {
 //// All pages should be wrapped by a container
 export const ContainerDemo = (props: IContainerDemoProps) => {
     return <Container>{props.children}</Container>
+    //return <div style={{minWidth: "calc(100vw - 20px)", marginLeft: "10px", marginRight: "10px"}}>{props.children}</div>;
 }
 
 export interface ISegmentSubSection {

@@ -17,6 +17,7 @@ import { Education } from "./Components/History/Education";
 import { Career } from "./Components/History/Career";
 import { CurrentAndFuture } from "./Components/History/CurrentAndFuture";
 import { MatchMediaResult } from "./Library/MediaMatching";
+import {FishingWebAppPortfolio} from "./Components/Portfolio/FishingWebApp.tsx";
 
 
 export type IPrerenderData = {
@@ -65,6 +66,16 @@ const BlytheMillShedsPortfolioRouted = (props: IRoutedCompProps) => {
             pageRender={() => <BlytheMillShedsPortfolio {...props} />}
             stdProps={props}
             menuId={eMenuId.portfolioBlytheMillSheds}
+        />
+    );
+};
+
+const FishingWebAppPortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <FishingWebAppPortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioFishingWebApp}
         />
     );
 };
@@ -186,6 +197,7 @@ export const Routes = (props: IRoutedCompProps) => {
         <Route path="/home" element={<HomeRouted {...props} />} />,
         <Route path="/textparse" element={<TextParseRouted {...props} />} />,
         <Route path="/portfolio">
+            <Route path="fishingwebapp" element={<FishingWebAppPortfolioRouted {...props} />} />
             <Route path="blythemillsheds" element={<BlytheMillShedsPortfolioRouted {...props} />} />
             <Route path="dpa" element={<DPAPortfolioRouted {...props} />} />
             <Route path="hands" element={<HAndSPortfolioRouted {...props} />} />

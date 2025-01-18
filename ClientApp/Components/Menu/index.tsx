@@ -13,10 +13,11 @@ export interface IDemoMenuProps extends IRoutedCompProps {
 export enum eMenuId {
     home=1,
     textParse,
+    portfolioFishingWebApp,
+    portfolioStart=portfolioFishingWebApp,
     portfolioBlytheMillSheds,
-    portfolioStart=portfolioBlytheMillSheds,
-    portfolioDPA,
     portfolioHAndS,
+    portfolioDPA,
     portfolioTextParse,
     portfolioScriptableTemplate,
     portfolioMisc,
@@ -127,6 +128,14 @@ export const DemoMenu = (props: IDemoMenuProps) => {
                         lastMenuId: eMenuId.portfolioLast,
                         activeMenuId: activeMenuId,
                         children: [
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioFishingWebApp,
+                                children: <>Fishing Web App</>,
+                                onClick: ()=> navigate("/portfolio/fishingwebapp"),
+                                key: "fishingwebapp"
+                            }),
+
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.portfolioBlytheMillSheds,
