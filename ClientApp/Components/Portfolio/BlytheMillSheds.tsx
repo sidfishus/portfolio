@@ -89,6 +89,7 @@ const WriteUp = (): JSX.Element => {
                             </li>
                             <li>Entirely customised CSS.
                             </li>
+                            <li>My <a href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive React carousel NPM package.</li>
                             <li>An <a href={"https://elfsight.com/"}>Elf Sight</a> widget for displaying customer
                                 reviews from Facebook, Google, and Yell.
                             </li>
