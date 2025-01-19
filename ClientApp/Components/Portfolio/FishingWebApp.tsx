@@ -11,9 +11,9 @@ export interface IFishingWebAppPortfolioProps extends IRoutedCompProps {
 //sidtodo redo the register fishery one: new border
 const carouselImgs: ICarouselImg[] = [
     CreateImage(CreateRepoUrl("img/fishingwebapp/dropdownsearch1.png"),
-        <>Dropdown search control</>),
+        <>Handmade dropdown search control</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/dropdownsearch2.png"),
-        <>Dropdown search control</>),
+        <>Handmade dropdown search control</>),
 ];
 
 const thumbnailImgs: string[] = [
@@ -28,7 +28,7 @@ export const FishingWebAppPortfolio = (props: IFishingWebAppPortfolioProps) => {
             writeUp={WriteUp()}
             carouselImgs={carouselImgs}
             thumbnailImgs={thumbnailImgs}
-            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalCarouselFileClass={"PortfolioCarouselResponsiveFileClass"}
             additionalThumbnailFileClass={"FishingWebAppThumbs"}
             heading={heading}
         />

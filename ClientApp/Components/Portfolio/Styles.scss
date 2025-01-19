@@ -1,16 +1,18 @@
 @use "../../StyleVariables.scss" as *;
 
-//sidtodo variable for 990
+.SixteenByNineAspectRatio {
+  aspect-ratio: 16/9;
+}
+
 @media (min-width: 990px) {
-  .SixteenByNineAspectRatio {
+  .PortfolioCarouselResponsiveFileClass {
     aspect-ratio: 16/9;
   }
 }
 
-//sidtodo here: give it a better name
 //sidtodo here: test on different screen sizes.
-@media (max-width: 600px) {
-  .SixteenByNineAspectRatio {
+@media (max-width: 550px) {
+  .PortfolioCarouselResponsiveFileClass {
     aspect-ratio: 5/8;
   }
 }

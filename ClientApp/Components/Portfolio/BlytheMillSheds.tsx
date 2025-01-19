@@ -38,7 +38,7 @@ const thumbnailImgs: string[] = [
     CreateRepoUrl("img/blythemillsheds/customerreviewsdesktop.png"),
     CreateRepoUrl("img/blythemillsheds/Thumbs/gallerydesktop.jpg"),
     CreateRepoUrl("img/blythemillsheds/Thumbs/hometopmobile.jpg"),
-    CreateRepoUrl("img/blythemillsheds/Thumbs/homemiddlemobile.jpg"),
+    CreateRepoUrl("img/blythemillsheds/homemiddlemobile.png"),
     CreateRepoUrl("img/blythemillsheds/Thumbs/gallerymobile.jpg"),
     CreateRepoUrl("img/blythemillsheds/menumobile.png")
 ];
@@ -50,7 +50,7 @@ export const BlytheMillShedsPortfolio = (props: IBlytheMillShedsPortfolioProps) 
             writeUp={WriteUp()}
             carouselImgs={carouselImgs}
             thumbnailImgs={thumbnailImgs}
-            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalCarouselFileClass={"PortfolioCarouselResponsiveFileClass"}
             additionalThumbnailFileClass={"BlytheMillShedsThumbs"}
             heading={heading}
         />
@@ -60,7 +60,7 @@ export const BlytheMillShedsPortfolio = (props: IBlytheMillShedsPortfolioProps) 
 const heading=(
     <SegmentDemo heading="Blythe Mill Sheds">
         <SegmentSubSection>
-            <p><a href={"https://blythemillsheds.co.uk"}>Blythe Mill Sheds</a> is a responsive mobile first web
+            <p><a href={"https://blythemillsheds.co.uk"}>Blythe Mill Sheds</a> is a responsive mobile first single page
                 application I created for a client in 2023 to their specifications.
                 The purpose of the application is to advertise their business and provide a form for customers
                 to request quotes.</p>
@@ -80,21 +80,26 @@ const WriteUp = (): JSX.Element => {
                 <SegmentSubSection>
                     <ul>
                         <ul>
-                            <li>Entirely customised CSS.
-                            </li>
-                            <li>Responsive for mobiles, tablets and a variety of desktop screen sizes</li>
                             <li>
                                 Search engine optimisation (SEO) including directing search engine crawlers to static
                                 HTML output for better indexing.
                             </li>
-                            <li>A <a href={"https://elfsight.com/"}>Elf Sight</a> widget for displaying customer
-                                reviews.
+                            <li>Specifically developed and tested on mobiles, tablets and a variety of desktop screen
+                                sizes.
+                            </li>
+                            <li>Entirely customised CSS.
+                            </li>
+                            <li>An <a href={"https://elfsight.com/"}>Elf Sight</a> widget for displaying customer
+                                reviews from Facebook, Google, and Yell.
                             </li>
                             <li>
-                                Google maps.
+                                Google maps integration.
                             </li>
                             <li>
-                                Email functionality via SendGrid and it's REST API
+                                Email functionality provided by SendGrid and it's REST API.
+                            </li>
+                            <li>
+                                Traffic telemetry is recorded and can be visualised thanks to Google Analytics.
                             </li>
                         </ul>
                     </ul>
@@ -103,7 +108,7 @@ const WriteUp = (): JSX.Element => {
 
             <SegmentDemo heading="Technology">
                 <SegmentSubSection>
-                    <p>Below is the list of technology incorporated:</p>
+                <p>Below is the list of technology incorporated:</p>
                     {TechnologyTable(technology)}
                 </SegmentSubSection>
             </SegmentDemo>
@@ -113,16 +118,24 @@ const WriteUp = (): JSX.Element => {
 
 const technology: ITechnologyInfo[] = [
     {
-        name: <>ASP .NET 6 / C#</>,
-        descr: <>.</>
+        name: <>C# / .NET 6</>,
+        descr: <>The backend server side application is written in C#.</>
     },
     {
-        name: <>Typescript version 5.6.2</>,
-        descr: <>All of the front-end application is written in Typescript. I'll always use this over pure Javascript where possible.</>
+        name: <>ASP .NET</>,
+        descr: <>Incorporates ASP .NET to host the static content and controller based REST API.</>
+    },
+    {
+        name: <>Typescript version 5x</>,
+        descr: <>All of the front-end application is written in Typescript.</>
+    },
+    {
+        name: <><a href={"https://react.dev/"}>React</a> Version 19</>,
+        descr: <>Uses the latest features of React such as hooks and ref as direct props to create a react web user interface.</>
     },
     {
         name: <><a href={"https://vite.dev/"}>Vite</a> Version 6</>,
-        descr: <>Development and production version front-end application bundler. I prefer Variety over Webpack for a variety of reasons.</>
+        descr: <>Development and production build front-end application bundler.</>
     },
     {
         name: <><a href={"https://sass-lang.com/"}>Sass</a></>,
@@ -130,15 +143,11 @@ const technology: ITechnologyInfo[] = [
     },
     {
         name: <><a href={"https://reactrouter.com/"}>React Router</a> Version 7</>,
-        descr: <>.</>
+        descr: <>Client side routing.</>
     },
     {
         name: <><a href={"https://sendgrid.com/"}>Send Grid</a> REST API</>,
-        descr: <>Sends quotes from the web application to a specified email address.</>
-    },
-    {
-        name: <><a href={"https://react.dev/"}>React</a> Version 19</>,
-        descr: <>.</>
+        descr: <>Quotes are sent from the web application through an Ionos proxy to the SendGrid and to a specified email address.</>
     },
     {
         name: <><a href={"https://www.npmjs.com/package/react-ga4"}>react-ga4</a></>,
