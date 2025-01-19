@@ -84,6 +84,7 @@ const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
                 files={carouselImgs} selectedId={carouselImgs[imageIndex].id} setSelectedFile={setImageIndex}
                 shouldLoad={true} loadingFileUrl={CreateRepoUrl("img/Spinner@1x-1.0s-200px-200px.svg")}
                 ref={carouselRef} onFileClick={idx => SetOpenImg(idx)}
+                additionalFileContainerClass={"PortfolioCarouselContainer"}
                 additionalFileClass={()=>additionalCarouselFileClass ?? ""}
                 chevronUrl={CreateRepoUrl("img/blue-chevron-left.svg")}
             />
