@@ -27,12 +27,16 @@ const carouselImgs: ICarouselImg[] = [
         <>Begin a new fishing session</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/cast1.png"),
         <>Cast</>),
+    CreateImage(CreateRepoUrl("img/fishingwebapp/cast2.png"),
+        <>Cast</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/editspot1.png"),
         <>Record a spot details</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/editspot2.png"),
         <>Record a spot details</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/editspot3.png"),
         <>Record a spot details</>),
+    CreateImage(CreateRepoUrl("img/fishingwebapp/createhook1.png"),
+        <>Record end tackle / bait details for generating reports!</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/googleidentity3.png"),
         <>Google One Tap Identity (splash screen unfinished!)</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/googleidentity2.png"),
@@ -51,9 +55,11 @@ const thumbnailImgs: string[] = [
     CreateRepoUrl("img/fishingwebapp/registerswim1.png"),
     CreateRepoUrl("img/fishingwebapp/newsession2.png"),
     CreateRepoUrl("img/fishingwebapp/cast1.png"),
+    CreateRepoUrl("img/fishingwebapp/cast2.png"),
     CreateRepoUrl("img/fishingwebapp/editspot1.png"),
     CreateRepoUrl("img/fishingwebapp/editspot2.png"),
     CreateRepoUrl("img/fishingwebapp/editspot3.png"),
+    CreateRepoUrl("img/fishingwebapp/createhook1.png"),
     CreateRepoUrl("img/fishingwebapp/googleidentity3.png"),
     CreateRepoUrl("img/fishingwebapp/googleidentity2.png"),
     CreateRepoUrl("img/fishingwebapp/googleidentity1.png"),
@@ -77,7 +83,28 @@ export const FishingWebAppPortfolio = (props: IFishingWebAppPortfolioProps) => {
 const heading=(
     <SegmentDemo heading="Fishing Web Application">
         <SegmentSubSection>
-            <p>Fishing web application</p>
+            <p>Back in 2018 my partner suggested to me, "why don't you make an application for fishing". This
+                sparked the cogs ticking in my brain and a burst of ideas came to me in very quick succession.
+                A combination of my 2 biggest hobbies.
+
+                In 2022 I decided to start putting this into fruition.
+
+                This initially started as a native mobile application using React Native, but after spending a lot of
+                time getting frustrated with what felt like a very raw technology (at least at the time), I had the
+                brainwave that the web is the way to go. Ultimately, what these technologies which try to work over
+                different platforms are just trying to re-create what a feature packed browser like Chrome already
+                achieves: a cross platform way, which has deep linking built in to the operating system.
+
+                . After seeing the direction the web is going in with the explosion of new technologies
+                (Web Assembly, Svelte, local first..), and the pleasure I get from developing in web, I decided to go
+                web and not look back.
+
+                The purpose of this application is to record telemetry related to fishing, for reporting and viewing trends.
+
+                Unfortunately it is not finished, but watch this space!
+
+                No doubt I'll be re-using some of this code in applications going forward.
+                </p>
         </SegmentSubSection>
     </SegmentDemo>
 );
@@ -90,10 +117,21 @@ const WriteUp = (): JSX.Element => {
                 <SegmentSubSection>
                     <ul>
                         <ul>
-                            <li>Entirely customised CSS.
+                            <li>An integrated web based camera application for visibly recording spots and direct
+                                picture taking of fish caught. Working for both IPhone and Android devices.
                             </li>
                             <li>
-                                My <a href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive React carousel NPM package.
+                                Google One Tap login for identity and securing the back-end services which provides
+                                instant account creation via an official identity provider and the latest in OAuth2
+                                technology.
+                            </li>
+                            <li>Language translated for 22 of the most widely used languages via the <a
+                                href={"https://cloud.google.com/translate"}>Google translations</a> API.</li>
+                            <li>Entirely customised CSS.</li>
+                            <li>
+                                My <a
+                                href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive
+                                React carousel NPM package.
                             </li>
                         </ul>
                     </ul>
@@ -131,8 +169,7 @@ const technology: ITechnologyInfo[] = [
 
 /*
 features:
-- camera app and file upload
-- touch screen
+- camera app and file upload on both iphone and android. using ...
 - Google Identity for identity and securing the backend API. (show screenshot) google one tap: get the link
 - scalable decentralised Sql database architecture, Postgresql multiple node, replication via PGEdge.
 - language translations
