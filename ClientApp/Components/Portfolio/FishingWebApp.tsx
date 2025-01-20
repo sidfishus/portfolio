@@ -118,7 +118,8 @@ const WriteUp = (): JSX.Element => {
                     <ul>
                         <ul>
                             <li>An integrated web based camera application for visibly recording spots and direct
-                                picture taking of fish caught. Working for both IPhone and Android devices.
+                                picture taking of fish caught and upload to the cloud. Working for both iOS and
+                                Android devices.
                             </li>
                             <li>
                                 Google One Tap login for identity and securing the back-end services which provides
@@ -127,9 +128,13 @@ const WriteUp = (): JSX.Element => {
                             </li>
                             <li>Language translated for 22 of the most widely used languages via the <a
                                 href={"https://cloud.google.com/translate"}>Google translations</a> API.</li>
-                            <li>Entirely customised CSS.</li>
-                            <li>
-                                My <a
+                            <li>Highly scalable decentralised SQL architecture using Postgresql on multiple nodes.</li>
+                            <li>Microservice REST API architecture.</li>
+                            <li>Built from the ground up to be used worldwide.</li>
+                            <li>Similar solution as described <a
+                                href={"https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c"}>here</a>
+                                for unique database ID's across multiple nodes.</li>
+                            <li>Entirely customised CSS including my <a
                                 href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive
                                 React carousel NPM package.
                             </li>
@@ -150,30 +155,48 @@ const WriteUp = (): JSX.Element => {
 
 const technology: ITechnologyInfo[] = [
     {
-        name: <>ASP .NET 6 / C#</>,
+        name: <>ASP .NET 8 / C#</>,
+        descr: <>Technology used for the backend micro services.</>
+    },
+    {
+        name: <><a href={"https://www.typescriptlang.org/"}>Typescript</a> version 5x</>,
+        descr: <>Types for Javascript.</>
+    },
+    {
+        name: <><a href={"https://react.dev/"}>React</a> version 19</>,
         descr: <>.</>
     },
     {
-        name: <>Vite</>,
-        descr: <>.</>
+        name: <><a href={"https://vite.dev/"}>Vite</a></>,
+        descr: <>Development and production client side application bundling.</>
     },
     {
-        name: <>Redux dev tools??</>,
-        descr: <>.</>
+        name: <><a href={"https://redux-toolkit.js.org/"}>Redux Tookit</a></>,
+        descr: <>Client application state management and persistence.</>
     },
     {
-        name: <>NGROK</>,
-        descr: <>.</>
+        name: <><a href={"https://ngrok.com/"}>NGROK</a></>,
+        descr: <>A very handy free tool to aid in debugging an application deployed to locally on a development
+            workstation and a remote device such as a mobile phone.</>
     },
+    {
+        name: <><a href={"https://www.postgresql.org/"}>PostgreSQL</a></>,
+        descr: <>Database technology.</>
+    },
+    {
+        name: <><a href={"https://www.npgsql.org/"}>Npgsql</a></>,
+        descr: <>ADO .NET data provider for PostgreSQL.</>,
+    },
+    {
+        name: <><a href={"https://www.pgedge.com/"}>pg Edge</a></>,
+        descr: <>Free application for providing distributed SQL replication.</>
+    },
+    {
+        name: <>navigator.mediaDevices.getUserMedia and window.ImageCapture</>,
+        descr: <>A variety of browser API's for capturing and taking images.</>
+    },
+    {
+        name: <><a href={"https://sass-lang.com/"}>Sass</a></>,
+        descr: <>A number of features that improve the use of CSS in my opinion.</>
+    }
 ];
-
-/*
-features:
-- camera app and file upload on both iphone and android. using ...
-- Google Identity for identity and securing the backend API. (show screenshot) google one tap: get the link
-- scalable decentralised Sql database architecture, Postgresql multiple node, replication via PGEdge.
-- language translations
-- worldwide
-- microservice architecture for scale
-- an implementation of https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c for multi node ID.
- */
