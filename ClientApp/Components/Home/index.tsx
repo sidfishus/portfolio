@@ -8,19 +8,45 @@ import { Code, SegmentDemo, ContainerDemo, SegmentSubSection } from "../Presenta
 import { MatchMediaResult } from "../../Library/MediaMatching";
 import { eScreenResolution } from "../Client App";
 import { CalcDurationYears } from "../../Library/DateTime";
+import {PortfolioCarousel} from "../PortfolioCarousel.tsx";
+import {CreateImage, ICarouselImg} from "../Portfolio/PortfolioBase.tsx";
+import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 interface IHomeProps extends IRoutedCompProps {
 };
 
-//TODO catalog of my favourite tunes.
-//TODO book recommendations
-//TODO: create a short video?
+//sidtodo text should include a link to the respective page??? or just use on click??
+//sidtodo have at least one image from each portfolio page.
+//sidtodo include google login
+//sidtodo auto move.
+//sidtodo onclick takes you to the page.
+const carouselImgs: ICarouselImg[] = [
+    CreateImage(CreateRepoUrl("img/fishingwebapp/spotsnap1.jpg"),
+        <>Take a picture of the fishing swim.</>),
+    CreateImage(CreateRepoUrl("img/fishingwebapp/spotsnap2.jpg"),
+        <>Use the touchscreen on the device to pinpoint the exact hot spot (x marks the spot).</>),
+    CreateImage(CreateRepoUrl("img/fishingwebapp/spotsnap3.jpg"),
+        <>Use the touchscreen on the device to pinpoint the exact hot spot (x marks the spot).</>),
+    CreateImage(CreateRepoUrl("img/fishingwebapp/editspot1.png"),
+        <>Record the details of a fishing spot.</>),
+    CreateImage(CreateRepoUrl("img/fishingwebapp/spotgallery1.jpg"),
+        <>Use the gallery to cycle between previously uploaded images and pinpoint the spot (from a mobile).</>),
+    CreateImage(CreateRepoUrl("img/fishingwebapp/spotgallery2.png"),
+        <>Use the gallery to cycle between previously uploaded images and pinpoint the spot (from a desktop device).</>),
+];
+
 export const Home = (props: IHomeProps) => {
 
     return (
         <>
             <ContainerDemo>
                 <Introduction {...props} />
+                <PortfolioCarousel
+                    carouselImgs={carouselImgs}
+                    additionalCarouselFileClass={"PortfolioCarouselResponsiveFileClass"}
+                    additionalThumbnailFileClass={"BlytheMillShedsThumbs"}
+                    showThumbnails={false}
+                />
                 <AboutThisApplication />
                 <UsefulLinks />
             </ContainerDemo>

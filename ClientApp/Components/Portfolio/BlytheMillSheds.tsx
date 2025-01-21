@@ -12,7 +12,7 @@ const carouselImgs: ICarouselImg[] = [
         <>Home page for larger devices which leverages my <a
             href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> NPM package.</>),
     CreateImage(CreateRepoUrl("img/blythemillsheds/requestaquotedesktop.png"),
-        <>Request a quote for larger devices. Quotes are sent via the SendGrid REST API.</>),
+        <>Request a quote on larger devices. Quotes are sent via the SendGrid REST API.</>),
     CreateImage(CreateRepoUrl("img/blythemillsheds/selectstyles.png"),
         <>Hand made multiple select dialog.</>, "SelectStyles"),
     CreateImage(CreateRepoUrl("img/blythemillsheds/customerreviewsdesktop.png"),

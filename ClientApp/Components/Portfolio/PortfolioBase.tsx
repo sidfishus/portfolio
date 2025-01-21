@@ -8,8 +8,9 @@ import {Carousel, CarouselFileDetails, ShowFileFromIndex} from "react-cscarousel
 import "react-cscarousel/styles.css";
 import { FileGrid } from "react-csfilegrid";
 import "react-csfilegrid/styles.css";
-import "./Styles.scss";
+import "../CarouselStyles.scss";
 import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
+import {PortfolioCarousel} from "../PortfolioCarousel.tsx";
 
 export interface ICarouselImg extends CarouselFileDetails {
     text: ReactNode;
@@ -19,21 +20,17 @@ export interface IPortfolioBaseProps extends IRoutedCompProps {
     heading: JSX.Element|null;
     writeUp: JSX.Element;
     carouselImgs: ICarouselImg[];
-    additionalCarouselFileClass?: string; //sidtodo make this mandatory
+    additionalCarouselFileClass?: string;
     additionalThumbnailFileClass?: string;
     thumbnailImgs?: string[];
-};
-
-interface IPortfolioCarouselProps {
-    mainProps: IPortfolioBaseProps;
-    SetOpenImg: (idx: number) => void;
 };
 
 export const PortfolioBase = (props: IPortfolioBaseProps) => {
 
     const [openImg, SetOpenImg] = useState<number|null>(null);
 
-    const { writeUp, carouselImgs, heading } = props;
+    const { writeUp, carouselImgs, heading,additionalCarouselFileClass, additionalThumbnailFileClass,
+        thumbnailImgs } = props;
 
     return (
         <>
@@ -49,57 +46,18 @@ export const PortfolioBase = (props: IPortfolioBaseProps) => {
                 {carouselImgs &&
                     <SegmentDemo heading="Images (click to view full screen)">
                         <PortfolioCarousel
-                            mainProps={props}
                             SetOpenImg={SetOpenImg}
+                            carouselImgs={carouselImgs}
+                            additionalCarouselFileClass={additionalCarouselFileClass}
+                            additionalThumbnailFileClass={additionalThumbnailFileClass}
+                            thumbnailImgs={thumbnailImgs}
+                            showThumbnails={true}
                         />
                     </SegmentDemo>
                 }
 
                 {writeUp}
             </ContainerDemo>
-        </>
-    );
-};
-
-const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
-
-    const { mainProps, SetOpenImg } = props;
-    const { carouselImgs, additionalCarouselFileClass,additionalThumbnailFileClass } = mainProps;
-
-    const [imageIndex, setImageIndex]=useState(0);
-
-    const carouselRef=useRef<HTMLDivElement>(null);
-
-    const thumbnails = mainProps.thumbnailImgs
-        ? mainProps.thumbnailImgs
-        : carouselImgs.map(iterImg => iterImg.src);
-
-    const getThumbnailFileClass = (isSelected: boolean) => (isSelected
-        ? "CarouselThumbnailsSelectedFile " + additionalThumbnailFileClass
-        : "CarouselThumbnailsFile " + additionalThumbnailFileClass);
-
-    return (
-        <>
-            <Carousel
-                files={carouselImgs} selectedId={carouselImgs[imageIndex].id} setSelectedFile={setImageIndex}
-                shouldLoad={true} loadingFileUrl={CreateRepoUrl("img/Spinner@1x-1.0s-200px-200px.svg")}
-                ref={carouselRef} onFileClick={idx => SetOpenImg(idx)}
-                additionalFileContainerClass={"PortfolioCarouselContainer"}
-                additionalFileClass={()=>additionalCarouselFileClass ?? ""}
-                chevronUrl={CreateRepoUrl("img/blue-chevron-left.svg")}
-            />
-
-            <div className={"CarouselImageText"}>
-                {carouselImgs[imageIndex].text}
-            </div>
-
-            <div style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                <FileGrid
-                    files={thumbnails} selectedIndex={imageIndex}
-                    onClick={idx => ShowFileFromIndex(carouselRef.current!, idx, "smooth")}
-                    overrideFileClass={getThumbnailFileClass}
-                />
-            </div>
         </>
     );
 };
