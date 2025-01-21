@@ -68,3 +68,21 @@
     background-size: calc(529px * 0.666) calc(590px * 0.666);
   }
 }
+
+@media (min-width: 600px) {
+  .Cast1 {
+    background-size: calc(581px * 0.666) calc(447px * 0.666);
+  }
+}
+
+@media (min-width: 600px) {
+  .Cast2 {
+    background-size: calc(583px * 0.666) calc(464px * 0.666);
+  }
+}
+
+@media (min-width: 600px) {
+  .RegisterSwim1 {
+    background-size: calc(582px * 0.666) calc(366px * 0.666);
+  }
+}
