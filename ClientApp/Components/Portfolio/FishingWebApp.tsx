@@ -7,7 +7,6 @@ import {SegmentDemo, SegmentSubSection} from "../Presentation.tsx";
 export interface IFishingWebAppPortfolioProps extends IRoutedCompProps {
 };
 
-//sidtodo order these with best = first
 const carouselImgs: ICarouselImg[] = [
     CreateImage(CreateRepoUrl("img/fishingwebapp/dropdownsearch1.png"),
         <>Handmade dropdown search control.</>),
@@ -30,31 +29,31 @@ const carouselImgs: ICarouselImg[] = [
     CreateImage(CreateRepoUrl("img/fishingwebapp/cast2.png"),
         <>Record the details of individual casts: bait, rig, spot.</>,"Cast2"),
     CreateImage(CreateRepoUrl("img/fishingwebapp/editspot1.png"),
-        <>Record the details of a spot.</>),
+        <>Record the details of a fishing spot.</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/editspot2.png"),
-        <>Record a spot details</>),
+        <>Record the details of a fishing spot.</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/editspot3.png"),
-        <>Record a spot details</>),
+        <>Record the details of a fishing spot.</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/editspot4.png"),
-        <>Record a spot details</>),
+        <>Record the details of a fishing spot and it's history if it changes over time.</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/spotsnap1.jpg"),
-        <>//sidtodo</>),
+        <>Take a picture of the fishing swim.</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/spotsnap2.jpg"),
-        <>//sidtodo</>),
+        <>Use the touchscreen on the device to pinpoint the exact hot spot (x marks the spot).</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/spotsnap3.jpg"),
-        <>Pinpoint the spot.</>),
+        <>Use the touchscreen on the device to pinpoint the exact hot spot (x marks the spot).</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/spotgallery1.jpg"),
         <>Use the gallery to cycle between previously uploaded images and pinpoint the spot (from a mobile).</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/spotgallery2.png"),
         <>Use the gallery to cycle between previously uploaded images and pinpoint the spot (from a desktop device).</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/createhook1.png"),
-        <>Record rig / bait attributes for generating reports!</>),
+        <>Record rig / bait attribute telemetry for generating reports and visualising trends.</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/googleidentity3.png"),
-        <>Google One Tap Identity (splash screen unfinished!)</>),
+        <>Google one tap identity login (splash screen unfinished!)</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/googleidentity2.png"),
-        <>Google One Tap Identity (splash screen unfinished!)</>),
+        <>Google one tap identity login (splash screen unfinished!)</>),
     CreateImage(CreateRepoUrl("img/fishingwebapp/googleidentity1.png"),
-        <>Google One Tap Identity (splash screen unfinished!)</>),
+        <>Google one tap identity login (splash screen unfinished!)</>),
 ];
 
 const thumbnailImgs: string[] = [
@@ -97,66 +96,69 @@ export const FishingWebAppPortfolio = (props: IFishingWebAppPortfolioProps) => {
     );
 };
 
-//sidtodo
 const heading=(
     <SegmentDemo heading="Fishing Web Application">
         <SegmentSubSection>
-            <p>Back in 2018 my partner suggested to me, "why don't you make an application for fishing". This
-                sparked the cogs ticking in my brain and a burst of ideas came to me in very quick succession.
-                A combination of my 2 biggest hobbies.
-
-                In 2022 I decided to start putting this into fruition.
-
+            <p>A synergy of my 2 favourite hobbies.</p>
+            <p>
+                Back in 2018 my partner suggested to me, "why don't you make an application for fishing".
+                With this, a burst of ideas came to me in very quick session and I began writing them down and fleshing
+                out the design. Over the next few years I thought about this a lot, and solved a lot of the issues
+                (such as scaling it) but my time was taken up by other things.</p>
+            <p>
+                In 2022 I decided to start putting my ideas into fruition.
                 This initially started as a native mobile application using React Native, but after spending a lot of
                 time getting frustrated with what felt like a very raw technology (at least at the time), I had the
-                brainwave that the web is the way to go. Ultimately, what these technologies which try to work over
-                different platforms are just trying to re-create what a feature packed browser like Chrome already
-                achieves: a cross platform way, which has deep linking built in to the operating system.
-
-                . After seeing the direction the web is going in with the explosion of new technologies
-                (Web Assembly, Svelte, local first..), and the pleasure I get from developing in web, I decided to go
-                web and not look back.
-
-                The purpose of this application is to record telemetry related to fishing, for reporting and viewing trends.
-
-                Unfortunately it is not finished, but watch this space!
-
-                No doubt I'll be re-using some of this code in applications going forward.
+                brainwave that the web is the way to go, and any technology such as React Native is just trying to
+                reinvent the wheel which the web is already working on fixing.
+                Especially with the explosion of new technologies that I am extremely excited about (Web Assembly!!,
+                Svelte, local first development..), and the pleasure I get from developing in web.
                 </p>
+            <p>
+                The purpose of this application is to record telemetry related to fishing such as the fish themselves,
+                and all the factors of how and where they are caught, so an infinite number of and reports can be
+                generated. And to create a live catch report of all fishing being caught around the globe.
+                No longer would we have to rely on anglers like Chris Ball to record the history of the sport,
+                but instead this would be provided directly by the anglers and venue owners (who would be incentivised)
+                which is secured and backed up in the cloud.
+                </p>
+            <p>
+                It has huge potential but unfortunately it is not finished at this time.
+            </p>
         </SegmentSubSection>
     </SegmentDemo>
 );
 
-//sidtodo
 const WriteUp = (): JSX.Element => {
     return (
         <>
             <SegmentDemo heading="Features">
                 <SegmentSubSection>
                     <ul>
-                        <ul>
-                            <li>An integrated web based camera application for visibly recording spots and direct
-                                picture taking of fish caught and upload to the cloud. Working for both iOS and
-                                Android devices.
-                            </li>
-                            <li>
-                                Google One Tap login for identity and securing the back-end services which provides
-                                instant account creation via an official identity provider and the latest in OAuth2
-                                technology.
-                            </li>
-                            <li>Language translated for 22 of the most widely used languages via the <a
-                                href={"https://cloud.google.com/translate"}>Google translations</a> API.</li>
-                            <li>Highly scalable decentralised SQL architecture using Postgresql on multiple nodes.</li>
-                            <li>Microservice REST API architecture.</li>
-                            <li>Built from the ground up to be used worldwide.</li>
-                            <li>Similar solution as described <a
-                                href={"https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c"}>here</a>
-                                for unique database ID's across multiple nodes.</li>
-                            <li>Entirely customised CSS including my <a
-                                href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive
-                                React carousel NPM package.
-                            </li>
-                        </ul>
+                        <li>An integrated web based camera application for visibly recording spots and the direct
+                            upload of fish caught to the cloud. Working for both iOS and Android devices.
+                        </li>
+                        <li>
+                            Google One Tap login for identity and securing the back-end services. This provides
+                            instant account creation via an official identity provider utilising bleeding edge OAuth2
+                            technology.
+                        </li>
+                        <li>Language translated for 22 of the most widely used languages via the <a
+                            href={"https://cloud.google.com/translate"}>Google translations</a> API.</li>
+                        <li>Highly scalable decentralised SQL architecture using Postgresql on multiple nodes.</li>
+                        <li>Microservice REST API architecture.</li>
+                        <li>Built from the ground up to be used around the globe.</li>
+                        <li>Similar solution as described <a
+                            href={"https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c"}>
+                            here</a> for unique database ID's across multiple nodes.</li>
+                        <li>Entirely customised CSS including my <a
+                            href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive
+                            React carousel NPM package.
+                        </li>
+                        <li>
+                            Extreme amount of attributes and data captured to provide an infinite number of reports and
+                            data visualisations.
+                        </li>
                     </ul>
                 </SegmentSubSection>
             </SegmentDemo>
@@ -174,15 +176,15 @@ const WriteUp = (): JSX.Element => {
 const technology: ITechnologyInfo[] = [
     {
         name: <>ASP .NET 8 / C#</>,
-        descr: <>Technology used for the backend micro services.</>
+        descr: <>Technology used for the backend micro services and hosting static web content.</>
     },
     {
         name: <><a href={"https://www.typescriptlang.org/"}>Typescript</a> version 5x</>,
-        descr: <>Types for Javascript.</>
+        descr: <>Types for Javascript in the client application.</>
     },
     {
         name: <><a href={"https://react.dev/"}>React</a> version 19</>,
-        descr: <>.</>
+        descr: <>Used to create reactive web based user interfaces.</>
     },
     {
         name: <><a href={"https://vite.dev/"}>Vite</a></>,
@@ -193,7 +195,7 @@ const technology: ITechnologyInfo[] = [
         descr: <>Client application state management and persistence.</>
     },
     {
-        name: <><a href={"https://ngrok.com/"}>NGROK</a></>,
+        name: <><a href={"https://ngrok.com/"}>Ngrok</a></>,
         descr: <>A very handy free tool to aid in debugging an application deployed to locally on a development
             workstation and a remote device such as a mobile phone.</>
     },
@@ -215,6 +217,6 @@ const technology: ITechnologyInfo[] = [
     },
     {
         name: <><a href={"https://sass-lang.com/"}>Sass</a></>,
-        descr: <>A number of features that improve the use of CSS in my opinion.</>
+        descr: <>Includes a number of features that improve the use of CSS in my opinion.</>
     }
 ];

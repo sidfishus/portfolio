@@ -176,8 +176,8 @@ const AboutThisApplication = () => {
                     a computer program incorporating many of the technologies I am skilled in using?</p>
                 <p>
                     When I originally started in Winter 2019 my time on this was very limited, however being furloughed for
-                    6 weeks in March 2020 gave me the wonderful opportunity to complete the&#32;
-                    <Link to="./textparse">text parse user interface</Link> example which forms the bulk of this application.
+                    6 weeks in March 2020 gave me the wonderful opportunity to complete the <Link
+                        to="./textparse">text parse user interface</Link> example which forms the bulk of this application.
                     I have been able to complete the remaining parts in my spare time whilst being a father and having a full
                     time job and the first version of the application was complete in July 2021.
                 </p>
