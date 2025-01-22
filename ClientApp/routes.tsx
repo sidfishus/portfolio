@@ -15,7 +15,6 @@ import { AboutMe } from "./Components/About Me";
 import { FrivolousBeginnings } from "./Components/History/FrivolousBeginnings";
 import { Education } from "./Components/History/Education";
 import { Career } from "./Components/History/Career";
-import { CurrentAndFuture } from "./Components/History/CurrentAndFuture";
 import { MatchMediaResult } from "./Library/MediaMatching";
 import {FishingWebAppPortfolio} from "./Components/Portfolio/FishingWebApp.tsx";
 
@@ -180,16 +179,6 @@ const CareerRouted = (props: IRoutedCompProps) => {
     );
 };
 
-const CurrentAndFutureRouted = (props: IRoutedCompProps) => {
-    return (
-        <StdPage
-            pageRender={() => <CurrentAndFuture {...props} />}
-            stdProps={props}
-            menuId={eMenuId.currentAndFuture}
-        />
-    );
-};
-
 export const Routes = (props: IRoutedCompProps) => {
 
     const routes = [
@@ -211,7 +200,6 @@ export const Routes = (props: IRoutedCompProps) => {
             <Route path="frivolousbeginnings" element={<FrivolousBeginningsRouted {...props} />} />
             <Route path="education" element={<EducationRouted {...props} />} />
             <Route path="career" element={<CareerRouted {...props} />} />
-            <Route path="currentandfuture" element={<CurrentAndFutureRouted {...props} />} />
         </Route>,
         <Route element={<NoRoutingMatch {...props} />} />
     ];

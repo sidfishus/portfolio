@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { Routes } from "../../routes";
-import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, RouterProvider, useLocation } from "react-router-dom";
 import ReactGA from "react-ga4";
 import { MatchMediaResult, MatchMedia } from "../../Library/MediaMatching";
 import useConstant from "use-constant";
@@ -22,21 +22,11 @@ export const ClientApp = (props: IAppProps) => {
     if(!IsDebug) {
         //// Google Analytics
         // Record the server loaded path
-        ReactGA.initialize("UA-179122198-1");
+        ReactGA.initialize("G-9KRNT5HBDD");
         ReactGA.send({
             hitType: "pageview",
             page: window.location.pathname + window.location.search
         });
-
-        /*
-        //sidtodo
-        // Record client-side changes
-        const history = useHistory();
-        history.listen((location: any) => {+
-            ReactGA.set({ page: location.pathname });
-            ReactGA.pageview(location.pathname);
-        });
-        */
     }
 
     const windowAsAny: any = window;

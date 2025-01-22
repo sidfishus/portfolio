@@ -12,11 +12,14 @@ interface IPortfolioCarouselProps {
     additionalThumbnailFileClass?: string;
     thumbnailImgs?: string[];
     showThumbnails: boolean;
+    autoChangeMs?: number;
+    showChevrons?: boolean;
 };
 
 export const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
 
-    const { SetOpenImg, carouselImgs, additionalCarouselFileClass,additionalThumbnailFileClass, showThumbnails } = props;
+    const { SetOpenImg, carouselImgs, additionalCarouselFileClass,additionalThumbnailFileClass, showThumbnails,
+        autoChangeMs, showChevrons } = props;
 
     const [imageIndex, setImageIndex]=useState(0);
 
@@ -38,7 +41,9 @@ export const PortfolioCarousel = (props: IPortfolioCarouselProps) => {
                 ref={carouselRef} onFileClick={(SetOpenImg ? (idx => SetOpenImg(idx)) : undefined)}
                 additionalFileContainerClass={"PortfolioCarouselContainer"}
                 additionalFileClass={()=>additionalCarouselFileClass ?? ""}
-                chevronUrl={CreateRepoUrl("img/blue-chevron-left.svg")}
+                chevronUrl={(showChevrons === false ? undefined : CreateRepoUrl("img/blue-chevron-left.svg"))}
+                autoChangeMs={autoChangeMs} overrideLeftChevronClass={"PortfolioCarouselChevronLeft"}
+                overrideRightChevronClass={"PortfolioCarouselChevronRight"}
             />
 
             <div className={"CarouselImageText"}>

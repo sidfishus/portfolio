@@ -41,6 +41,7 @@
 }
 
 .boldLink {
-  color: red;
-  font-weight: bold;
+    color: #2185D0;
+    font-weight: bold;
+    text-decoration: underline;
 }

@@ -11,11 +11,54 @@ export const Career = (_: ICareerProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
+            <ScaledMessageDeliverySystem />
             <HouseConstructionCompany />
             <ProphetPLC />
         </ContainerDemo>
     );
 };
+
+const ScaledMessageDeliverySystem = () => {
+    return (
+        <SegmentDemo heading="Current (September 2021+)">
+            <p>I am currently the technical lead and technical subject matter expert for a product oriented Agile Scrum
+                team of 6 highly skilled developers. Our product is a highly scaled Azure and .NET
+                based message routing and delivery system which allows the various organisations in the industry to
+                communicate and trade using formalised JSON and XML schema's via REST (and legacy SOAP) API endpoints.
+            </p>
+            <p>
+                We are currently in the process of converting a large legacy .NET Framework MVC application in to
+                Angular single page application with accompanying externally facing REST API, as well as expanding
+                the schema to support new business use cases and types of organisation.
+            </p>
+            <p>
+                A list of some of the technologies we use:
+                <ul>
+                    <li>A number of Azure services:
+                        <ul>
+                            <li>Azure Data Explorer and KQL</li>
+                            <li>Service Bus</li>
+                            <li>Application Insights</li>
+                            <li>Log Analytics</li>
+                            <li>Azure SQL</li>
+                            <li>Azure cache for Redis</li>
+                            <li>Storage</li>
+                            <li>Key Vault</li>
+                            <li>Serverless functions</li>
+                            <li>App services</li>
+                        </ul>
+                    </li>
+                    <li>C# / .NET Core / .NET Framework (latest versions)</li>
+                    <li>Entity Framework</li>
+                    <li>Azure DevOps</li>
+                    <li>Typescript</li>
+                    <li>Angular</li>
+                    <li>Jira</li>
+                </ul>
+            </p>
+        </SegmentDemo>
+    );
+}
 
 const HouseConstructionCompany = () => {
 

@@ -17,7 +17,6 @@
   }
 }
 
-//sidtodo here: test on different screen sizes.
 @media (max-width: 550px) {
   .PortfolioCarouselResponsiveFileClass {
     aspect-ratio: 5/8;
@@ -85,4 +84,28 @@
   .RegisterSwim1 {
     background-size: calc(582px * 0.666) calc(366px * 0.666);
   }
+}
+
+//// Chevrons
+.PortfolioCarouselChevronLeft,.PortfolioCarouselChevronRight {
+  width: 50px;
+  position: absolute;
+  z-index: 5;
+
+  top: calc(50% - (50px / 2));
+
+  cursor: pointer;
+}
+
+.PortfolioCarouselChevronLeft {
+  left: 1%;
+}
+
+.PortfolioCarouselChevronRight {
+  right: 1%;
+  transform: rotate(-180deg);
+}
+
+.PortfolioCarouselChevronLeft:active,.PortfolioCarouselChevronRight:active {
+  opacity: 25%;
 }

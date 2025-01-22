@@ -2,7 +2,8 @@
 import * as React from "react";
 import { DemoMenu, eMenuId } from "../Menu";
 import { IRoutedCompProps } from "../../routes";
-import { Button } from "semantic-ui-react";
+import {useLocation} from "react-router-dom";
+import ReactGA from "react-ga4";
 
 type IStdPageProps = {
     pageRender: () => JSX.Element,
@@ -13,6 +14,16 @@ type IStdPageProps = {
 export const StdPage = (props: IStdPageProps) => {
 
     const { stdProps, pageRender, menuId } = props;
+
+    // Record client-side changes
+    const location = useLocation();
+
+    React.useEffect(() => {
+        ReactGA.send({
+            hitType: "pageview",
+            page: location.pathname + location.search
+        });
+    }, [location]);
 
     return (
         <>

@@ -33,6 +33,16 @@ export const SkillsMatrix = (_: ISkillsMatrixProps & IRoutedCompProps): JSX.Elem
                         <p>Below is a list of the computer programming related technologies and concepts that I have used
                             with an approximation of how much experience in years, and the specific areas that I remember working on.
                         </p>
+                        <p>Note: <b>this is not the full list</b>. As time goes on and with the seemingly continual
+                            exponential
+                            increase in new technologies, I don't have the time nor inclination to update this list!
+                            To see the technologies for which I am currently using please refer to my portfolio pages
+                            (they are ordered descending) and my current role.
+                        </p>
+                        <p>
+                            Also, I feel more than ever that it's more important to understand the concepts, be adaptable,
+                            and be able to apply yourself.
+                        </p>
                         <Table sortable>
                             <Table.Header>
                                 <Table.Row>

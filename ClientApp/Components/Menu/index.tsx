@@ -29,8 +29,7 @@ export enum eMenuId {
     historyStart=frivolousBeginnings,
     education,
     career,
-    currentAndFuture,
-    historyLast=currentAndFuture
+    historyLast=career
 };
 
 enum eMenuType {
@@ -111,14 +110,6 @@ export const DemoMenu = (props: IDemoMenuProps) => {
                                 onClick: ()=> navigate("/history/career"),
                                 key: "career"
                             }),
-
-                            SubMenuItem({
-                                activeMenuId: activeMenuId,
-                                menuId: eMenuId.currentAndFuture,
-                                children: <>Current and Future</>,
-                                onClick: ()=> navigate("/history/currentandfuture"),
-                                key: "currentandfuture"
-                            })
                         ]
                     }),
 

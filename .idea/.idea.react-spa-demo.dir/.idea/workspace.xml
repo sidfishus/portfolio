@@ -9,15 +9,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22b41944-905c-40fb-ab54-b1964dd62066" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/BlytheMillSheds.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ClientApp/Components/Home/Styles.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Assets/css/carousel.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/carousel.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Assets/css/demo.css" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Assets/css/demo.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/CarouselStyles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/CarouselStyles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Client App/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Client App/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/Components/History/Career.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/History/Career.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/History/CurrentAndFuture.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Home/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Home/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/Components/Menu/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Menu/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/DPA.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/DPA.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/PortfolioBase.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/PortfolioBase.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/TextParse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/TextParse.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/PortfolioCarousel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/PortfolioCarousel.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/Components/Skills Matrix/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Skills Matrix/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Standard Page/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Standard Page/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/routes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/fishingwebapp/spotgallery1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/img/fishingwebapp/spotgallery1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/fishingwebapp/spotsnap1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/img/fishingwebapp/spotsnap1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/fishingwebapp/spotsnap2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/img/fishingwebapp/spotsnap2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/fishingwebapp/spotsnap3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/img/fishingwebapp/spotsnap3.jpg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,6 +123,7 @@
       <workItem from="1734544057011" duration="4655000" />
       <workItem from="1734687064177" duration="4283000" />
       <workItem from="1736959910467" duration="1000" />
+      <workItem from="1737551453200" duration="4696000" />
     </task>
     <task id="LOCAL-00001" summary="WIP">
       <option name="closed" value="true" />

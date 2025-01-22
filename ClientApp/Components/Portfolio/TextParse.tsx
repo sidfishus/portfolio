@@ -112,6 +112,10 @@ const carouselImgs : ICarouselImg[] = [
     CreateImage(CreateRepoUrl("img/textparse/consoleoutput1.jpg"),
         "The generated C# code is output to the console."
     ),
+
+    CreateImage(CreateRepoUrl("img/textparse/textparsemobile.jpg"),
+        "Mobile device view."
+    ),
 ];
 
 const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
