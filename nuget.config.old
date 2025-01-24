@@ -10,3 +10,9 @@
         </github>
     </packageSourceCredentials>
 </configuration>
+
+<!--
+Use 'dotnet nuget update' within Kudu to achieve this when deploying to an app service.
+If I upload this to github with the correct PAT, the PAT gets removed.
+Even with code security disabled against my user, and against the repo...
+-->
