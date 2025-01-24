@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c52b0673-8974-4185-9866-d02a17fe2422" name="Changes" comment="WIP" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+        <option value="SCSS File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dec-2024-update" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;sidfishus&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/sidfishus/react-spa-demo.git&quot;,
+    &quot;accountId&quot;: &quot;842fc2dc-ed76-4eba-a1fd-c66c053f1dfa&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2qIf3b0jZd8fwWZPllgBMKyU6XV" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "list.type.of.created.stylesheet": "SCSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.typescriptcompiler",
+    "ts.external.directory.path": "C:\\Users\\Sid\\RiderProjects\\react-spa-demo\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Sid\RiderProjects\react-spa-demo\ClientApp\Components" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23339.15" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c52b0673-8974-4185-9866-d02a17fe2422" name="Changes" comment="" />
+      <created>1734354812870</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1734354812870</updated>
+      <workItem from="1734354814247" duration="533000" />
+      <workItem from="1734355495754" duration="2536000" />
+      <workItem from="1734358058533" duration="2371000" />
+      <workItem from="1734360851477" duration="2227000" />
+      <workItem from="1734363394619" duration="664000" />
+      <workItem from="1734421886296" duration="15979000" />
+      <workItem from="1734461696122" duration="1933000" />
+      <workItem from="1734517550423" duration="10254000" />
+      <workItem from="1734599175001" duration="18067000" />
+      <workItem from="1734687089633" duration="676000" />
+      <workItem from="1734692195865" duration="2913000" />
+      <workItem from="1734701462906" duration="21000" />
+      <workItem from="1736340241254" duration="4029000" />
+      <workItem from="1736434395611" duration="1644000" />
+      <workItem from="1736436571575" duration="1337000" />
+      <workItem from="1736953182155" duration="8645000" />
+      <workItem from="1737040800901" duration="6029000" />
+      <workItem from="1737217640560" duration="2502000" />
+      <workItem from="1737284664312" duration="13103000" />
+      <workItem from="1737395059400" duration="4485000" />
+      <workItem from="1737485038723" duration="3863000" />
+      <workItem from="1737537857356" duration="18049000" />
+      <workItem from="1737636680049" duration="9876000" />
+      <workItem from="1737720138675" duration="5120000" />
+    </task>
+    <task id="LOCAL-00001" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1734462859036</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1734462859036</updated>
+    </task>
+    <task id="LOCAL-00002" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1734462947842</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734462947842</updated>
+    </task>
+    <task id="LOCAL-00003" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1734463030292</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734463030292</updated>
+    </task>
+    <task id="LOCAL-00004" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1734463638144</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1734463638144</updated>
+    </task>
+    <task id="LOCAL-00005" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1736965172722</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1736965172722</updated>
+    </task>
+    <task id="LOCAL-00006" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737219840717</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1737219840717</updated>
+    </task>
+    <task id="LOCAL-00007" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737287222988</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1737287222988</updated>
+    </task>
+    <task id="LOCAL-00008" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737287615138</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1737287615138</updated>
+    </task>
+    <task id="LOCAL-00009" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737291984496</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1737291984496</updated>
+    </task>
+    <task id="LOCAL-00010" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737397083738</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1737397083738</updated>
+    </task>
+    <task id="LOCAL-00011" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737399173282</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1737399173282</updated>
+    </task>
+    <task id="LOCAL-00012" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737399568136</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1737399568136</updated>
+    </task>
+    <task id="LOCAL-00013" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737485055547</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1737485055547</updated>
+    </task>
+    <task id="LOCAL-00014" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737487566088</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1737487566088</updated>
+    </task>
+    <task id="LOCAL-00015" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737488877330</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1737488877330</updated>
+    </task>
+    <task id="LOCAL-00016" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1737725773879</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1737725773879</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/ClientApp/Components/Client App/index.js" />
+      </list>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="WIP" />
+    <option name="LAST_COMMIT_MESSAGE" value="WIP" />
+  </component>
+</project>
