@@ -11,7 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+#if DEBUG
 const string viteCorsPolicy = "ViteCorsPolicy";
+#endif
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddControllers()
