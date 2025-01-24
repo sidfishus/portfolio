@@ -1,10 +1,10 @@
 
-import * as React from "react";
-import { Route, Switch, RouteComponentProps } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { TextParse } from "./Components/Text Parse";
 import { StdPage } from "./Components/Standard Page";
 import { Home } from "./Components/Home";
 import { eMenuId } from "./Components/Menu";
+import { BlytheMillShedsPortfolio } from "./Components/Portfolio/BlytheMillSheds.tsx";
 import { DPAPortfolio } from "./Components/Portfolio/DPA";
 import { HAndSPortfolio } from "./Components/Portfolio/HAndS";
 import { TextParsePortfolio } from "./Components/Portfolio/TextParse";
@@ -15,9 +15,8 @@ import { AboutMe } from "./Components/About Me";
 import { FrivolousBeginnings } from "./Components/History/FrivolousBeginnings";
 import { Education } from "./Components/History/Education";
 import { Career } from "./Components/History/Career";
-import { CurrentAndFuture } from "./Components/History/CurrentAndFuture";
-import { ProgrammingDiscussion } from "./Components/Programming Discussion";
 import { MatchMediaResult } from "./Library/MediaMatching";
+import {FishingWebAppPortfolio} from "./Components/Portfolio/FishingWebApp.tsx";
 
 
 export type IPrerenderData = {
@@ -25,16 +24,16 @@ export type IPrerenderData = {
 
 export type IRoutesProps = {
     prerenderData: IPrerenderData;
-    SSR: boolean;
     mediaMatching: MatchMediaResult;
+    apiRoot: string|null;
 };
 
-export type IRoutedCompProps = RouteComponentProps<any> & IRoutesProps;
+export type IRoutedCompProps = IRoutesProps;
 
-const NoRoutingMatch = (props: IRoutedCompProps) => {
+const NoRoutingMatch = (_: IRoutedCompProps) => {
     return (
         <div>
-            No Clientside Routing Match. {((props.SSR)? "Server rendered" : "Client rendered")}.
+            No Clientside Routing Match.
         </div>
     );
 };
@@ -50,11 +49,32 @@ const TextParseRouted = (props: IRoutedCompProps) => {
 };
 
 const HomeRouted = (props: IRoutedCompProps) => {
+
     return (
         <StdPage
             pageRender={() => <Home {...props} />}
             stdProps={props}
             menuId={eMenuId.home}
+        />
+    );
+};
+
+const BlytheMillShedsPortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <BlytheMillShedsPortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioBlytheMillSheds}
+        />
+    );
+};
+
+const FishingWebAppPortfolioRouted = (props: IRoutedCompProps) => {
+    return (
+        <StdPage
+            pageRender={() => <FishingWebAppPortfolio {...props} />}
+            stdProps={props}
+            menuId={eMenuId.portfolioFishingWebApp}
         />
     );
 };
@@ -159,48 +179,30 @@ const CareerRouted = (props: IRoutedCompProps) => {
     );
 };
 
-const CurrentAndFutureRouted = (props: IRoutedCompProps) => {
-    return (
-        <StdPage
-            pageRender={() => <CurrentAndFuture {...props} />}
-            stdProps={props}
-            menuId={eMenuId.currentAndFuture}
-        />
-    );
-};
+export const Routes = (props: IRoutedCompProps) => {
 
-const ProgrammingDiscussionRouted = (props: IRoutedCompProps) => {
-    return (
-        <StdPage
-            pageRender={() => <ProgrammingDiscussion {...props} />}
-            stdProps={props}
-            menuId={eMenuId.programmingDiscussion}
-        />
-    );
-};
-
-export const Routes = (props: IRoutesProps) => {
-
-    const routes = (
-        <Switch>
-            <Route exact path="/" render={(renderProps: RouteComponentProps<any>) => <HomeRouted {...renderProps} {...props} />} />
-            <Route exact path="/home" render={(renderProps: RouteComponentProps<any>) => <HomeRouted {...renderProps} {...props} />} />
-            <Route exact path="/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParseRouted {...renderProps} {...props} />} />
-            <Route exact path="/portfolio/dpa" render={(renderProps: RouteComponentProps<any>) => <DPAPortfolioRouted {...renderProps} {...props} />} />
-            <Route exact path="/portfolio/hands" render={(renderProps: RouteComponentProps<any>) => <HAndSPortfolioRouted {...renderProps} {...props} />} />
-            <Route exact path="/portfolio/textparse" render={(renderProps: RouteComponentProps<any>) => <TextParsePortfolioRouted {...renderProps} {...props} />} />
-            <Route exact path="/portfolio/scriptabletemplate" render={(renderProps: RouteComponentProps<any>) => <ScriptableTemplatePortfolioRouted {...renderProps} {...props} />} />
-            <Route exact path="/portfolio/misc" render={(renderProps: RouteComponentProps<any>) => <MiscPortfolioRouted {...renderProps} {...props} />} />
-            <Route exact path="/skillsmatrix" render={(renderProps: RouteComponentProps<any>) => <SkillsMatrixRouted {...renderProps} {...props} />} />
-            <Route exact path="/aboutme" render={(renderProps: RouteComponentProps<any>) => <AboutMeRouted {...renderProps} {...props} />} />
-            <Route exact path="/history/frivolousbeginnings" render={(renderProps: RouteComponentProps<any>) => <FrivolousBeginningsRouted {...renderProps} {...props} />} />
-            <Route exact path="/history/education" render={(renderProps: RouteComponentProps<any>) => <EducationRouted {...renderProps} {...props} />} />
-            <Route exact path="/history/career" render={(renderProps: RouteComponentProps<any>) => <CareerRouted {...renderProps} {...props} />} />
-            <Route exact path="/history/currentandfuture" render={(renderProps: RouteComponentProps<any>) => <CurrentAndFutureRouted {...renderProps} {...props} />} />
-            <Route exact path="/programmingdiscussion" render={(renderProps: RouteComponentProps<any>) => <ProgrammingDiscussionRouted {...renderProps} {...props} />} />
-            <Route render={(renderProps: RouteComponentProps<any>) => <NoRoutingMatch {...renderProps} {...props} />} />
-        </Switch>
-    );
+    const routes = [
+        <Route path="/" element={<HomeRouted {...props} />} />,
+        <Route path="/home" element={<HomeRouted {...props} />} />,
+        <Route path="/textparse" element={<TextParseRouted {...props} />} />,
+        <Route path="/portfolio">
+            <Route path="fishingwebapp" element={<FishingWebAppPortfolioRouted {...props} />} />
+            <Route path="blythemillsheds" element={<BlytheMillShedsPortfolioRouted {...props} />} />
+            <Route path="dpa" element={<DPAPortfolioRouted {...props} />} />
+            <Route path="hands" element={<HAndSPortfolioRouted {...props} />} />
+            <Route path="textparse" element={<TextParsePortfolioRouted {...props} />} />
+            <Route path="scriptabletemplate" element={<ScriptableTemplatePortfolioRouted {...props} />} />
+            <Route path="misc" element={<MiscPortfolioRouted {...props} />} />
+        </Route>,
+        <Route path="/skillsmatrix" element={<SkillsMatrixRouted {...props} />} />,
+        <Route path="/aboutme" element={<AboutMeRouted {...props} />} />,
+        <Route path="/history">
+            <Route path="frivolousbeginnings" element={<FrivolousBeginningsRouted {...props} />} />
+            <Route path="education" element={<EducationRouted {...props} />} />
+            <Route path="career" element={<CareerRouted {...props} />} />
+        </Route>,
+        <Route element={<NoRoutingMatch {...props} />} />
+    ];
 	
 	return routes;
 };

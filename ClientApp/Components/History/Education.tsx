@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export interface IEducationProps {
 };
 
-export const Education: React.FunctionComponent<IEducationProps & IRoutedCompProps> = (props) => {
+export const Education = (_: IEducationProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
@@ -16,7 +16,7 @@ export const Education: React.FunctionComponent<IEducationProps & IRoutedCompPro
     );
 };
 
-const ComputingBSc: React.FunctionComponent<{}> = () => {
+const ComputingBSc = () => {
 
     return (
         <SegmentDemo heading="Computing BSc - Coventry University 2003-2006">
@@ -109,7 +109,8 @@ const ComputingBSc: React.FunctionComponent<{}> = () => {
                 <Code inline={true}> 'void RobotSoccerStrategy::attack()'</Code>.
             </p>
 
-            <p>In June 2006 I graduated with a second class batchelors degree with honours.</p>
+            <p>In June 2006 I graduated with a second class bachelors degree with honours and within a month I started
+                a full time job as a junior programmer for <Link to={"/history/career"}>Prophet</Link>.</p>
         </SegmentDemo>
     );
 };

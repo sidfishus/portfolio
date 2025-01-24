@@ -1,17 +1,7 @@
 {
-    "compilerOptions": {
-        "noImplicitAny": true,
-        "target": "es6",
-        "jsx": "react",
-        "allowJs": true,
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
-        "sourceMap": true
-    },
-    "include": [
-        "ClientApp"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

@@ -20,7 +20,7 @@ enum eSortDirection {
     scDesc=2
 };
 
-export const SkillsMatrix: React.FunctionComponent<ISkillsMatrixProps & IRoutedCompProps> = (props) => {
+export const SkillsMatrix = (_: ISkillsMatrixProps & IRoutedCompProps): JSX.Element => {
 
     const [sortColumn, SetSortColumn] = React.useState<eSkillsMatrixSortColumn>(eSkillsMatrixSortColumn.smcTechnology);
     const [sortDirection, SetSortDirection] = React.useState<eSortDirection>(eSortDirection.sdAsc);
@@ -32,6 +32,16 @@ export const SkillsMatrix: React.FunctionComponent<ISkillsMatrixProps & IRoutedC
                     <SegmentSubSection>
                         <p>Below is a list of the computer programming related technologies and concepts that I have used
                             with an approximation of how much experience in years, and the specific areas that I remember working on.
+                        </p>
+                        <p>Note: <b>this is not the full list</b>. As time goes on and with the seemingly continual
+                            exponential
+                            increase in new technologies, I don't have the time nor inclination to update this list!
+                            To see the technologies for which I am currently using please refer to my portfolio pages
+                            (they are ordered descending) and my current role.
+                        </p>
+                        <p>
+                            Also, I feel more than ever that it's more important to understand the concepts, be adaptable,
+                            and be able to apply yourself.
                         </p>
                         <Table sortable>
                             <Table.Header>
@@ -126,7 +136,7 @@ interface ISkillRow {
     areas: JSX.Element;
 };
 
-const AreaLinkBreak: React.SFC = () => {
+const AreaLinkBreak = () => {
     return <><br/><br/></>;
 };
 
@@ -232,14 +242,14 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>Entity Framework various versions, installer/deployment system, COM interop, Windows services,
             SQL database interaction, Rosylyn compiler framework, desktop and mobile GUI applications, 
             command line utilities, SQL Server Compact Remote Data Access,
-            LINQ and LINQ extensions, dependency injection, ASP .NET (seperate heading), Razor templates,
+            LINQ and LINQ extensions, dependency injection, ASP .NET (separate heading), Razor templates,
             NUnit.</>
     },
     {
-        technology: "Unix",
-        experienceTotal: 2, 
-        experienceCommercial: 0,
-        areas: <>Emacs, GCC, complex C programs including TCP/IP sockets.</>
+        technology: "Unix / Linux",
+        experienceTotal: 3,
+        experienceCommercial: 2,
+        areas: <>Emacs, Vi, GCC, complex C programs including TCP/IP sockets, Docker.</>
     },
     {
         technology: "Microsoft Visual Studio and Team Foundation Server (TFS)",
@@ -344,18 +354,6 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>C++, C#, Javascript, Typescript.</>
     },
     {
-        technology: "Unit Testing",
-        experienceTotal: 4, 
-        experienceCommercial: 2,
-        areas: <>Adhoc unit testing, automated testing of pure functions and
-            integration with libraries for making assertions.<AreaLinkBreak/>
-            I would like to work for a company that uses the test driven development (TDD) paradigm or where unit
-            testing is a formal part of the development process.
-            I have not used a testing framework. <AreaLinkBreak/>
-            You can see examples of unit testing in my <Link to="/portfolio/textparse">text parse library</Link> and
-            my <a href="https://github.com/sidfishus/BlockAllocator">C++ heap memory management library</a>.</>
-    },
-    {
         technology: "Assembly Language",
         experienceTotal: 3, 
         experienceCommercial: 2,
@@ -428,6 +426,7 @@ const SortedSkillsMatrix = (sortColumn:eSkillsMatrixSortColumn,sortDirection:eSo
 const SkillsMatrixSortFunc = (sortColumn:eSkillsMatrixSortColumn,
     sortDirection:eSortDirection): (lhs: ISkillRow, rhs: ISkillRow) => number => {
     switch(sortColumn) {
+        default:
         case eSkillsMatrixSortColumn.smcTechnology:
             return ((sortDirection==eSortDirection.sdAsc)?(a,b) =>
                 SortSkillsMatrixByTechnology(a,b):(a,b) => SortSkillsMatrixByTechnology(b,a));
@@ -435,9 +434,6 @@ const SkillsMatrixSortFunc = (sortColumn:eSkillsMatrixSortColumn,
         case eSkillsMatrixSortColumn.smcExperience:
             return ((sortDirection==eSortDirection.sdAsc)?(a,b) =>
                 SortSkillsByExperience(a,b):(a,b) => SortSkillsByExperience(b,a));
-
-        default:
-            return null;
     }
 };
 

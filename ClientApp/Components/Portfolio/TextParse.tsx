@@ -1,117 +1,129 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg, CreateRepoUrl } from "./PortfolioBase";
+import {PortfolioBase, ICarouselImg, CreateImage} from "./PortfolioBase";
 import { Table, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Code, SegmentDemo, SegmentSubSection } from "../Presentation";
 import { eScreenResolution } from "../Client App";
+import { CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface ITextParsePortfolioProps extends IRoutedCompProps {
 };
 
-export const TextParsePortfolio: React.SFC<ITextParsePortfolioProps> = (props) => {
+export const TextParsePortfolio = (props: ITextParsePortfolioProps) => {
     return (
         <PortfolioBase
             {...props}
             writeUp={WriteUp(props)}
             carouselImgs={carouselImgs}
+            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
+            heading={heading}
         />
     );
 };
 
+const heading=(
+    <SegmentDemo heading="Text Parse Library">
+        <SegmentSubSection>
+            <p>TextParse is a .NET C# library I created for parsing and replacing text. The principal behind it is that the user uses C# class syntax to describe a series of steps that encapsulates a parse routine which is then executed iteratively in a linear fashion against the specified input text. The use case for it's creation was to create a parser that:</p>
+            <ol>
+                <li>Can parse complex formats.</li>
+                <li>Is accurate.</li>
+                <li>Terse but easily understandable for a programmer.</li>
+                <li>Gives good feedback and diagnostics.</li>
+                <li>Is easy to reuse.</li>
+                <li>Is expandable.</li>
+                <li>Can be used with automatic unit and regression testing.</li>
+            </ol>
+            <p>The full code for this library can be found at <a href="https://github.com/sidfishus/TextParse">https://github.com/sidfishus/TextParse</a>.</p>
+            <p>See below for more details.</p>
+        </SegmentSubSection>
+    </SegmentDemo>
+);
+
 const carouselImgs : ICarouselImg[] = [
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/palindromeexample.jpg"),
-        text: "Example which determines whether a word is a palindrome."
-    },
+    
+    CreateImage(CreateRepoUrl("img/textparse/palindromeexample.jpg"),
+        "Example which determines whether a word is a palindrome."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/extractpalindromeexample.jpg"),
-        text: "Example which extracts the words which are palindromes."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/extractpalindromeexample.jpg"),
+        "Example which extracts the words which are palindromes."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/captureextractexample.jpg"),
-        text: "Example which extracts values using a replace format."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/captureextractexample.jpg"),
+        "Example which extracts values using a replace format."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/replaceparenexample.jpg"),
-        text: "Example which converts VB script to VB .NET (function calls)."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/replaceparenexample.jpg"),
+        "Example which converts VB script to VB .NET (function calls)."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/statementtypes.jpg"),
-        text: "List of statement types (subset available in the UI)."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/statementtypes.jpg"),
+        "The subset list of statement types which are available in the UI."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction1.jpg"),
-        text: "Custom function creation."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customfunction1.jpg"),
+        "Custom function creation."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction2.jpg"),
-        text: "Custom functions and custom variable creation."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customfunction2.jpg"),
+        "Custom functions and custom variable creation."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction3.jpg"),
-        text: "Custom functions and custom variables."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customfunction3.jpg"),
+        "Custom functions and custom variables."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction4.jpg"),
-        text: "Custom functions and custom variables."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customfunction4.jpg"),
+        "Custom functions and custom variables."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customfunction5.jpg"),
-        text: "Custom functions and custom variables."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customfunction5.jpg"),
+        "Custom functions and custom variables."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/userdefinedvariables.jpg"),
-        text: "User defined variables."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/userdefinedvariables.jpg"),
+        "User defined variables."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison1.jpg"),
-        text: "Custom comparisons."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customcomparison1.jpg"),
+        "Custom comparisons."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison2.jpg"),
-        text: "Custom comparisons."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customcomparison2.jpg"),
+        "Custom comparisons."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison3.jpg"),
-        text: "Custom comparisons."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customcomparison3.jpg"),
+        "Custom comparisons."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison4.jpg"),
-        text: "Custom comparisons."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customcomparison4.jpg"),
+        "Custom comparisons."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/customcomparison5.jpg"),
-        text: "Custom comparisons."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/customcomparison5.jpg"),
+        "Custom comparisons."
+    ),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/textparse/consoleoutput1.jpg"),
-        text: "The generated C# code is output to the console."
-    },
+    CreateImage(CreateRepoUrl("img/textparse/consoleoutput1.jpg"),
+        "The generated C# code is output to the console."
+    ),
+
+    CreateImage(CreateRepoUrl("img/textparse/textparsemobile.jpg"),
+        "Mobile device view."
+    ),
 ];
 
 const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
 
     const { mediaMatching } = props;
 
-    if(!mediaMatching) return null;
+    if(!mediaMatching)
+        return <></>;
 
     const firstMatching =mediaMatching.FirstMatching(); 
 
@@ -120,23 +132,6 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
 
     return (
         <>
-            <SegmentDemo heading="Text Parse Library">
-                <SegmentSubSection>
-                    <p>TextParse is a .NET C# library I created for parsing and replacing text. The principal behind it is that the user uses C# class syntax to describe a series of steps that encapsulates a parse routine which is then executed iteratively in a linear fashion against the specified input text. The use case for it's creation was to create a parser that:</p>
-                    <ol>
-                    <li>Can parse complex formats.</li>
-                    <li>Is accurate.</li>
-                    <li>Terse but easily understandable for a programmer.</li>
-                    <li>Gives good feedback and diagnostics.</li>
-                    <li>Is easy to reuse.</li>
-                    <li>Is expandable.</li>
-                    <li>Can be used with automatic unit and regression testing.</li>
-                    </ol>
-                    <p>The full code for this library can be found at <a href="https://github.com/sidfishus/TextParse">https://github.com/sidfishus/TextParse</a>.</p>
-                    <p>See below for more details.</p>
-                </SegmentSubSection>
-            </SegmentDemo>
-
             <SegmentDemo heading="Concept">
                 <SegmentSubSection heading="Background">
                     <p>I was tasked with a project to convert a large ERP web application from classic ASP to ASP .NET because support for it from Microsoft was soon to expire. The application consisted of 13 modules including 100's of sourcecode files and after making the changes necessary to convert a single file it was clear that an automated process was needed.</p>
@@ -191,7 +186,7 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
         <SegmentDemo heading="Practical">
             <SegmentSubSection heading="Initial Approach">
                 <p>Now I could describe what I wanted to achieve, I needed a way of conveying that to an application so that it could be translated and executed but at the same time remain understandable to a computer programmer.</p>
-                <p>My first idea was to create a psuedo language that could be parsed and converted to a list of parse statement objects (I was heavily into OO at the time) that would make up the parse statement list (UCPA) that would be passed to the OLPA for execution. The parse statement classes would all derive from a common interface (IComparisonWithAdvance) and leverage polymorphism to allow them to be used via a reference to the interface. This is key because it allows any type, combination, or list of parse statements to be used anywhere that a single parse statement is required because everything that can be executed as part of a UCPA derives from the same interface and implements the same parse interface method. For example this is very useful for the 'or' statement which takes a list of parse statements and executes them sequentially until a match is found because it makes the following algorithm possible:</p>
+                <p>My first idea was to create a psuedo language that could be parsed and converted to a list of parse statement objects that would make up the parse statement list (UCPA) that would be passed to the OLPA for execution. The parse statement classes would all derive from a common interface (IComparisonWithAdvance) and leverage polymorphism to allow them to be used via a reference to the interface. This is key because it allows any type, combination, or list of parse statements to be used anywhere that a single parse statement is required because everything that can be executed as part of a UCPA derives from the same interface and implements the same parse interface method. For example this is very useful for the 'or' statement which takes a list of parse statements and executes them sequentially until a match is found because it makes the following algorithm possible:</p>
                 <ol>
                 <li>Compare against string 'test' (string comparison)</li>
                 <li>OR
@@ -496,9 +491,9 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
             <SegmentDemo heading="Text Parse User Interface Application">
                 <SegmentSubSection>
                     <p>I have created an extensive ASP .NET MVC Core/React/Javascript application with a rich GUI
-                    which leverages the latest features of each, as well as advertise my&#32;
-                    <a href="https://github.com/sidfishus/TextParse">text parse library</a> and demonstrate what it can achieve
-                    and how it works.
+                    which leverages the latest features of each, as well as advertise my <a
+                    href="https://github.com/sidfishus/TextParse">text parse library</a> and demonstrate what it can
+                    achieve and how it works.
                     It can be used to create and execute a UCPA visually as opposed to through lines of code and may give a different perspective and deeper understanding.</p>
                     <p>The code for the entire application can be found at <a href="https://github.com/sidfishus/react-spa-demo">https://github.com/sidfishus/react-spa-demo</a>.</p>
                 </SegmentSubSection>

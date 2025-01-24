@@ -14,7 +14,6 @@ export const CreateTextParseVariable = (name: string) => {
 };
 
 export const CopyTextParseVariable = (variable: TextParseVariable) => {
-    if(!variable) return null;
     return {
         ...variable
     };
@@ -31,7 +30,7 @@ export const VariablesMatch = (
 
 export const ffGetVariables = (statementList: TextParseStatement[]): () => TextParseVariable[] => {
 
-    let variables: TextParseVariable[]=null;
+    let variables: TextParseVariable[]|null=null;
 
     return (): TextParseVariable[] => {
 
@@ -45,7 +44,7 @@ export const ffGetVariables = (statementList: TextParseStatement[]): () => TextP
 const GetVariables_FilterMethod = (
     filteredItems: TextParseStatement[],
     iterStmt: TextParseStatement,
-    i: number
+    _: number
 ) => {
 
     // We only care about update variable type statements
@@ -54,7 +53,7 @@ const GetVariables_FilterMethod = (
             // Only get distinct names
             const stmtAsUpdateVariable = iterStmt as SetVariableStatement;
             const duplicate=filteredItems.find(duplciateIterStmt =>
-                VariablesMatch(stmtAsUpdateVariable.variable, (duplciateIterStmt as SetVariableStatement).variable));
+                VariablesMatch(stmtAsUpdateVariable.variable!, (duplciateIterStmt as SetVariableStatement).variable!));
             return (duplicate===undefined);
         }
     }
@@ -71,7 +70,7 @@ const GetVariables = (
             GetVariables_FilterMethod,
             iterItem => iterItem.Children()
         ).map(
-            iterStmt => CopyTextParseVariable((iterStmt as StorePosAsVariableStatement).variable)
+            iterStmt => CopyTextParseVariable((iterStmt as StorePosAsVariableStatement).variable!)
         );
 
     return distinctVariableList;

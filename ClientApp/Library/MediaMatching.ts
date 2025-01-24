@@ -20,7 +20,7 @@ export type MatchMediaResult = {
 };
 
 type FirstMatching = {
-    _: number;
+    _: number|null
 };
 
 // 'delayMs' means how long to wait before triggering a status change. you might want to use this to prevent multiple
@@ -106,7 +106,7 @@ export const MatchMedia = (
 		if (firstMatching._ === null) {
 			UpdateFirstMatching();
 		}
-		return firstMatching._;
+		return firstMatching._ as number;
 	};
 
 	return {

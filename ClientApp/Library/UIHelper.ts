@@ -6,20 +6,21 @@ export class SimpleDelayer {
     delayMs: number;
     timerStarted: boolean; // Has the timer started?
     restartTimer: boolean; // Restart timer needed?
-    CurrentFunction: () => void;
+    CurrentFunction: (() => void)|null;
 
     // These can be used to trigger state changes for things like disabling OK buttons when there is a call pending
-    onCallPending: () => void; // Called when the state goes from not pending to pending (optional)
-    onCallNoLongerPending: () => void; // Called when the state goes from pending to not pending (optional)
+    onCallPending: (() => void)|null|undefined; // Called when the state goes from not pending to pending (optional)
+    onCallNoLongerPending: (() => void)|null|undefined; // Called when the state goes from pending to not pending (optional)
 
     constructor(
         delayMs: number,
-        onCallPending?: () => void,
-        onCallNoLongerPending?: () => void
+        onCallPending?: (() => void)|null|undefined,
+        onCallNoLongerPending?: (() => void)|null|undefined
     ) {
         this.delayMs=delayMs;
         this.timerStarted=false;
         this.restartTimer=false;
+        this.CurrentFunction=null;
         this.ConditionalTriggerCall=this.ConditionalTriggerCall.bind(this);
         this.DelayedCall=this.DelayedCall.bind(this);
         this.ImmediateCall=this.ImmediateCall.bind(this);

@@ -45,7 +45,7 @@ const fCode_codeStyle = (props: ICodeProps) => {
 };
 
 //// Component for displaying code
-export const Code: React.FunctionComponent<ICodeProps> = (props) => {
+export const Code = (props: ICodeProps) => {
 
     const { children, inline } = props;
 
@@ -65,7 +65,7 @@ export interface ISegmentDemoProps {
     heading: React.ReactNode;
 };
 
-export const SegmentDemo: React.FunctionComponent<ISegmentDemoProps> = (props) => {
+export const SegmentDemo = (props: ISegmentDemoProps) => {
 
     const { children, heading } = props;
 
@@ -84,8 +84,9 @@ export interface IContainerDemoProps {
 };
 
 //// All pages should be wrapped by a container
-export const ContainerDemo: React.FunctionComponent<IContainerDemoProps> = (props) => {
+export const ContainerDemo = (props: IContainerDemoProps) => {
     return <Container>{props.children}</Container>
+    //return <div style={{minWidth: "calc(100vw - 20px)", marginLeft: "10px", marginRight: "10px"}}>{props.children}</div>;
 }
 
 export interface ISegmentSubSection {
@@ -94,13 +95,13 @@ export interface ISegmentSubSection {
     nested?: number;
 };
 
-export const SegmentSubSection: React.FunctionComponent<ISegmentSubSection> = (props) => {
+export const SegmentSubSection = (props: ISegmentSubSection) => {
 
     const { heading, children, nested} = props;
 
     //TODO use the nesting level - assumes max nesting level of 1.
     const Heading = (): JSX.Element => {
-        if(!heading) return null;
+        if(!heading) return <></>;
         if(nested===undefined || nested===null) return <h3>{heading}</h3>;
         return <h4>{heading}</h4>
     };
@@ -119,7 +120,7 @@ export interface IFullScreenModalImageProps {
     fClose: () => void;
 };
 
-export const FullScreenModalImage: React.FunctionComponent<IFullScreenModalImageProps> = (props) => {
+export const FullScreenModalImage = (props: IFullScreenModalImageProps): JSX.Element => {
 
     const { open, src, fClose } = props;
 

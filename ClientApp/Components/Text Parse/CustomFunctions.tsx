@@ -93,16 +93,16 @@ const _CreateTextParsefunction = (
     ID: number,
     ctrName: string,
     ctrDescr: string,
-    leftHandOper: IParseOperand,
-    rightHandOper: IParseOperand,
+    leftHandOper: IParseOperand|null,
+    rightHandOper: IParseOperand|null,
     operator: eCustomFunctionOperator): TextParseFunction => {
 
     const _ID=ID;
 
     let _name: string=ctrName;
     let _descr: string=ctrDescr;
-    let _leftHandOperand: IParseOperand=leftHandOper;
-    let _rightHandOperand: IParseOperand=rightHandOper;
+    let _leftHandOperand =leftHandOper;
+    let _rightHandOperand =rightHandOper;
     let _operator: eCustomFunctionOperator=operator;
 
     const rv: TextParseFunction = {
@@ -118,12 +118,12 @@ const _CreateTextParsefunction = (
             _descr=descr;
         },
 
-        LeftHandOperand: () => _leftHandOperand,
+        LeftHandOperand: () => _leftHandOperand!,
         SetLeftHandOperand: (oper: IParseOperand) => {
             _leftHandOperand=oper;
         },
 
-        RightHandOperand: () => _rightHandOperand,
+        RightHandOperand: () => _rightHandOperand!,
         SetRightHandOperand: (oper: IParseOperand) => {
             _rightHandOperand=oper;
         },
@@ -133,7 +133,7 @@ const _CreateTextParsefunction = (
             _operator=operator;
         },
 
-        IsValid: null,
+        IsValid: null!,
 
         Matches: (rhs: TextParseFunction) => (rhs.ID === _ID)
     };

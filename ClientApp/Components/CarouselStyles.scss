@@ -1,0 +1,111 @@
+@use "../StyleVariables" as *;
+
+.SixteenByNineAspectRatio {
+  aspect-ratio: 16/9;
+}
+
+.PortfolioCarouselContainer {
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+@media (min-width: 990px) {
+  .PortfolioCarouselResponsiveFileClass {
+    aspect-ratio: 16/9;
+  }
+}
+
+@media (max-width: 550px) {
+  .PortfolioCarouselResponsiveFileClass {
+    aspect-ratio: 5/8;
+  }
+}
+
+.CarouselThumbnailsFile,.CarouselThumbnailsSelectedFile {
+  width: 100px;
+
+  border: white solid 1.5px;
+  margin: 10px;
+
+  cursor: pointer;
+
+  object-fit: contain;
+}
+
+.CarouselThumbnailsSelectedFile {
+  box-shadow: 0 0 0 4px $blue;
+  cursor: default;
+}
+
+.CarouselImageText {
+  text-align: center;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+.BackgroundSizeOriginalSize {
+  background-size: 529px 590px;
+}
+
+.BlytheMillShedsThumbs {
+  height: 100px;
+}
+
+.FishingWebAppThumbs {
+  height: 100px;
+}
+
+//// Individual images
+// I assume the x 0.666 is because I have my desktop resolution set to 150%.
+
+// BMS
+@media (min-width: 990px) {
+  .SelectStyles {
+    background-size: calc(529px * 0.666) calc(590px * 0.666);
+  }
+}
+
+@media (min-width: 600px) {
+  .Cast1 {
+    background-size: calc(581px * 0.666) calc(447px * 0.666);
+  }
+}
+
+@media (min-width: 600px) {
+  .Cast2 {
+    background-size: calc(583px * 0.666) calc(464px * 0.666);
+  }
+}
+
+@media (min-width: 600px) {
+  .RegisterSwim1 {
+    background-size: calc(582px * 0.666) calc(366px * 0.666);
+  }
+}
+
+//// Chevrons
+.PortfolioCarouselChevronLeft,.PortfolioCarouselChevronRight {
+  width: 50px;
+  position: absolute;
+  z-index: 5;
+
+  top: calc(50% - (50px / 2));
+
+  cursor: pointer;
+}
+
+.PortfolioCarouselChevronLeft {
+  left: 1%;
+}
+
+.PortfolioCarouselChevronRight {
+  right: 1%;
+  transform: rotate(-180deg);
+}
+
+.PortfolioCarouselChevronLeft:active,.PortfolioCarouselChevronRight:active {
+  opacity: 25%;
+}
