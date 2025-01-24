@@ -1,10 +1,10 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Menu, Dropdown, Icon, Image } from "semantic-ui-react";
+import { Menu, Dropdown, Icon } from "semantic-ui-react";
 import { eScreenResolution } from "../Client App";
 import { ContainerDemo } from "../Presentation";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export interface IDemoMenuProps extends IRoutedCompProps {
     activeMenuId: eMenuId;
@@ -12,22 +12,24 @@ export interface IDemoMenuProps extends IRoutedCompProps {
 
 export enum eMenuId {
     home=1,
-    textParse=2,
-    portfolioStart=3,
-    portfolioDPA=3,
-    portfolioHAndS=4,
-    portfolioTextParse=5,
-    portfolioScriptableTemplate=6,
-    portfolioMisc=7,
-    // Keep this as the last portfolio item + 1
-    portfolioEnd=8,
-    skillsMatrix=8,
-    aboutMe=9,
-    frivolousBeginnings=10,
-    education=11,
-    career=12,
-    currentAndFuture=13,
-    programmingDiscussion=14,
+    textParse,
+    portfolioFishingWebApp,
+    portfolioStart=portfolioFishingWebApp,
+    portfolioBlytheMillSheds,
+    portfolioHAndS,
+    portfolioDPA,
+    portfolioTextParse,
+    portfolioScriptableTemplate,
+    portfolioMisc,
+    // Keep this as the last portfolio item
+    portfolioLast=portfolioMisc,
+    skillsMatrix,
+    aboutMe,
+    frivolousBeginnings,
+    historyStart=frivolousBeginnings,
+    education,
+    career,
+    historyLast=career
 };
 
 enum eMenuType {
@@ -35,11 +37,13 @@ enum eMenuType {
     menuTypeHorizontal=2
 };
 
-export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
+export const DemoMenu = (props: IDemoMenuProps) => {
 
-    const { activeMenuId, history, mediaMatching } = props;
+    const { activeMenuId, mediaMatching } = props;
 
     const [verticalOpenState,SetVerticalOpenState] = React.useState<boolean>(false);
+
+    const navigate=useNavigate();
 
     if(!mediaMatching) {
         return (
@@ -64,7 +68,7 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
                     MenuItem({
                         activeMenuId: activeMenuId,
                         menuId: eMenuId.home,
-                        onClick: ()=> history.push("/home"),
+                        onClick: ()=> navigate("/home"),
                         children: <>Home</>,
                         key: "home"
                     }),
@@ -72,19 +76,22 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
                     MenuItem({
                         activeMenuId: activeMenuId,
                         menuId: eMenuId.aboutMe,
-                        onClick: ()=> history.push("/aboutme"),
+                        onClick: ()=> navigate("/aboutme"),
                         children: <>About Me</>,
                         key: "aboutme"
                     }),
 
                     SubMenuHeader({
                         text: "History",
+                        firstMenuId: eMenuId.historyStart,
+                        lastMenuId: eMenuId.historyLast,
+                        activeMenuId: activeMenuId,
                         children: [
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.frivolousBeginnings,
                                 children: <>Frivolous Beginnings</>,
-                                onClick: ()=> history.push("/history/frivolousbeginnings"),
+                                onClick: ()=> navigate("/history/frivolousbeginnings"),
                                 key: "frivolousbeginnings"
                             }),
 
@@ -92,7 +99,7 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.education,
                                 children: <>Education</>,
-                                onClick: ()=> history.push("/history/education"),
+                                onClick: ()=> navigate("/history/education"),
                                 key: "education"
                             }),
 
@@ -100,36 +107,39 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.career,
                                 children: <>Career</>,
-                                onClick: ()=> history.push("/history/career"),
+                                onClick: ()=> navigate("/history/career"),
                                 key: "career"
                             }),
-
-                            SubMenuItem({
-                                activeMenuId: activeMenuId,
-                                menuId: eMenuId.currentAndFuture,
-                                children: <>Current and Future</>,
-                                onClick: ()=> history.push("/history/currentandfuture"),
-                                key: "currentandfuture"
-                            })
                         ]
                     }),
 
                     SubMenuHeader({
                         text: "Portfolio",
+                        firstMenuId: eMenuId.portfolioStart,
+                        lastMenuId: eMenuId.portfolioLast,
+                        activeMenuId: activeMenuId,
                         children: [
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
-                                menuId: eMenuId.portfolioDPA,
-                                children: <>Distributed SPA</>,
-                                onClick: ()=> history.push("/portfolio/dpa"),
-                                key: "dpa"
+                                menuId: eMenuId.portfolioFishingWebApp,
+                                children: <>Fishing Web App</>,
+                                onClick: ()=> navigate("/portfolio/fishingwebapp"),
+                                key: "fishingwebapp"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioBlytheMillSheds,
+                                children: <>Blythe Mill Sheds</>,
+                                onClick: ()=> navigate("/portfolio/blythemillsheds"),
+                                key: "blythemillsheds"
                             }),
 
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.portfolioHAndS,
                                 children: <>Health and Safety System</>,
-                                onClick: ()=> history.push("/portfolio/hands"),
+                                onClick: ()=> navigate("/portfolio/hands"),
                                 key: "hands"
                             }),
 
@@ -137,15 +147,23 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.portfolioTextParse,
                                 children: <>Text Parse</>,
-                                onClick: ()=> history.push("/portfolio/textparse"),
+                                onClick: ()=> navigate("/portfolio/textparse"),
                                 key: "textparse"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioDPA,
+                                children: <>Distributed SPA</>,
+                                onClick: ()=> navigate("/portfolio/dpa"),
+                                key: "dpa"
                             }),
 
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.portfolioScriptableTemplate,
                                 children: <>Scriptable Template</>,
-                                onClick: ()=> history.push("/portfolio/scriptabletemplate"),
+                                onClick: ()=> navigate("/portfolio/scriptabletemplate"),
                                 key: "scriptabletemplate"
                             }),
 
@@ -153,7 +171,7 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
                                 activeMenuId: activeMenuId,
                                 menuId: eMenuId.portfolioMisc,
                                 children: <>Miscellenaous</>,
-                                onClick: ()=> history.push("/portfolio/misc"),
+                                onClick: ()=> navigate("/portfolio/misc"),
                                 key: "misc"
                             })
                         ]
@@ -162,23 +180,15 @@ export const DemoMenu: React.FunctionComponent<IDemoMenuProps> = (props) => {
                     MenuItem({
                         activeMenuId: activeMenuId,
                         menuId: eMenuId.skillsMatrix,
-                        onClick: ()=> history.push("/skillsmatrix"),
+                        onClick: ()=> navigate("/skillsmatrix"),
                         children: <>Skills Matrix</>,
                         key: "skillsmatrix"
                     }),
 
                     MenuItem({
                         activeMenuId: activeMenuId,
-                        menuId: eMenuId.programmingDiscussion,
-                        onClick: ()=> history.push("/programmingdiscussion"),
-                        children: <>Programming Discussion</>,
-                        key: "programmingdiscussion"
-                    }),
-
-                    MenuItem({
-                        activeMenuId: activeMenuId,
                         menuId: eMenuId.textParse,
-                        onClick: ()=> history.push("/textparse"),
+                        onClick: ()=> navigate("/textparse"),
                         children: <>Text Parse Demo</>,
                         key: "textparsedemo"
                     })
@@ -261,7 +271,7 @@ interface ILogoProps {
     style?: object;
 };
 
-const Logo: React.FunctionComponent<ILogoProps> = (props)  => {
+const Logo = (props: ILogoProps)  => {
 
     const style = ((props.style)?props.style:{});
 
@@ -312,7 +322,7 @@ const MenuItemAll = (props: IMenuItemProps): JSX.Element => {
 
     const active=(menuId === activeMenuId);
 
-    const onClick=((active)?null:props.onClick);
+    const onClick=((active)?undefined:props.onClick);
     
     return (
         <Menu.Item
@@ -328,6 +338,9 @@ const MenuItemAll = (props: IMenuItemProps): JSX.Element => {
 interface ISubMenuHeaderProps {
     text: string;
     children: JSX.Element[];
+    firstMenuId: eMenuId;
+    lastMenuId: eMenuId;
+    activeMenuId: eMenuId;
 };
 
 const SubMenuHeaderVerticle = (props: ISubMenuHeaderProps): JSX.Element => {
@@ -348,8 +361,10 @@ const SubMenuHeaderHorizontal = (props: ISubMenuHeaderProps): JSX.Element => {
 
     const { children, text} = props;
 
+    const submenuIsActive = props.activeMenuId >= props.firstMenuId && props.activeMenuId <= props.lastMenuId;
+
     return (
-        <Dropdown text={text} item key={text}>
+        <Dropdown text={text} item key={text} className={(submenuIsActive ? "active" : undefined)} >
             <Dropdown.Menu>
                 {children}
             </Dropdown.Menu>
@@ -371,7 +386,7 @@ const SubMenuItemHorizontal = (props: ISubMenuItemProps): JSX.Element => {
 
     const active=(menuId === activeMenuId);
 
-    const onClick=((active)?null:props.onClick);
+    const onClick=((active)?undefined:props.onClick);
 
     return (
         <Dropdown.Item
@@ -390,7 +405,7 @@ const SubMenuItemVerticle = (props: ISubMenuItemProps): JSX.Element => {
 
     const active=(menuId === activeMenuId);
 
-    const onClick=((active)?null:props.onClick);
+    const onClick=((active)?undefined:props.onClick);
 
     return (
         <Menu.Item

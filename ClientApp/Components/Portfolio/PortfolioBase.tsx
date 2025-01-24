@@ -1,31 +1,36 @@
 
 import * as React from "react";
-import { useState } from "react";
+import {ReactNode, useRef, useState} from "react";
 import { IRoutedCompProps } from "../../routes";
-import { Table, Modal, Image } from "semantic-ui-react";
-import { Carousel } from "react-responsive-carousel";
+import { Table } from "semantic-ui-react";
 import { SegmentDemo, ContainerDemo, FullScreenModalImage } from "../Presentation";
+import {Carousel, CarouselFileDetails, ShowFileFromIndex} from "react-cscarousel";
+import "react-cscarousel/styles.css";
+import { FileGrid } from "react-csfilegrid";
+import "react-csfilegrid/styles.css";
+import "../CarouselStyles.scss";
+import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
+import {PortfolioCarousel} from "../PortfolioCarousel.tsx";
 
-export interface ICarouselImg {
-    src: string;
-    text: string;
+export interface ICarouselImg extends CarouselFileDetails {
+    text: ReactNode;
 };
 
 export interface IPortfolioBaseProps extends IRoutedCompProps {
+    heading: JSX.Element|null;
     writeUp: JSX.Element;
     carouselImgs: ICarouselImg[];
+    additionalCarouselFileClass?: string;
+    additionalThumbnailFileClass?: string;
+    thumbnailImgs?: string[];
 };
 
-interface IPortfolioCarouselProps {
-    imgs: ICarouselImg[];
-    SetOpenImg: (idx: number) => void;
-};
+export const PortfolioBase = (props: IPortfolioBaseProps) => {
 
-export const PortfolioBase: React.FunctionComponent<IPortfolioBaseProps> = (props) => {
+    const [openImg, SetOpenImg] = useState<number|null>(null);
 
-    const [openImg, SetOpenImg] = useState<number>(null);
-
-    const { writeUp, carouselImgs } = props;
+    const { writeUp, carouselImgs, heading,additionalCarouselFileClass, additionalThumbnailFileClass,
+        thumbnailImgs } = props;
 
     return (
         <>
@@ -36,60 +41,24 @@ export const PortfolioBase: React.FunctionComponent<IPortfolioBaseProps> = (prop
             />
 
             <ContainerDemo>
-                {writeUp}
+                {heading}
 
                 {carouselImgs &&
                     <SegmentDemo heading="Images (click to view full screen)">
                         <PortfolioCarousel
-                            imgs={carouselImgs}
                             SetOpenImg={SetOpenImg}
+                            carouselImgs={carouselImgs}
+                            additionalCarouselFileClass={additionalCarouselFileClass}
+                            additionalThumbnailFileClass={additionalThumbnailFileClass}
+                            thumbnailImgs={thumbnailImgs}
+                            showThumbnails={true}
                         />
                     </SegmentDemo>
                 }
+
+                {writeUp}
             </ContainerDemo>
         </>
-    );
-};
-
-const PortfolioCarousel: React.SFC<IPortfolioCarouselProps> = (props) => {
-
-    const { imgs, SetOpenImg } = props;
-
-    return (
-        <Carousel
-            showArrows={true}
-            infiniteLoop={true}
-            useKeyboardArrows={true}
-            onClickItem={(index: number, item: React.ReactNode)=>{
-                SetOpenImg(index);
-            }}
-        >
-            {imgs.map((iterImg, i) => CarouselImgJSX(iterImg, i))}
-        </Carousel>
-    );
-};
-
-// You cannot use a React component for this, you get the following error:
-// "No images found! Can't build the thumb list without images. If you don't need thumbs, set showThumbs={false} in
-//  the Carousel. Note that it's not possible to get images rendered inside custom components"
-const CarouselImgJSX: any = (img: ICarouselImg, imgIdx: number) => {
-
-    // Credits to 'https://stackoverflow.com/questions/11757537/css-image-size-how-to-fill-not-stretch/43001159' for this.
-    // It centers images that are too small to fit with the rest of the images, the key part is the 'background size'.
-    // const divStyle: React.CSSProperties = {
-    //     width: 700,
-    //     height: 394,
-    //     backgroundSize: "cover",
-    //     backgroundRepeat: "no-repeat",
-    //     backgroundPosition: "50% 50%",
-    //     margin: "auto",
-    // };
-
-    return (
-        <div key={`img-${imgIdx}`} >
-            <img src={img.src} />
-            <p className="legend">{img.text}</p>
-        </div>
     );
 };
 
@@ -124,7 +93,15 @@ export const TechnologyTable = (infoList: ITechnologyInfo[]): JSX.Element => {
     );
 }
 
-export const CreateRepoUrl = (url: string): string => {
-
-    return `https://github.com/sidfishus/react-spa-demo/blob/master/${url}?raw=true`;
-}
+export const CreateImage = (() => {
+    let id: bigint=0n;
+    return (src: string, text: ReactNode, additionalClass?: string): ICarouselImg => {
+        id = id + 1n;
+        return {
+            src: src,
+            id: id,
+            text: text,
+            additionalClass: additionalClass
+        };
+    };
+})();

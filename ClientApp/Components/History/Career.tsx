@@ -1,23 +1,67 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { ContainerDemo, SegmentDemo, SegmentSubSection } from "../Presentation";
+import { ContainerDemo, SegmentDemo } from "../Presentation";
 import { Link } from "react-router-dom";
 
 export interface ICareerProps {
 };
 
-export const Career: React.FunctionComponent<ICareerProps & IRoutedCompProps> = (props) => {
+export const Career = (_: ICareerProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
+            <ScaledMessageDeliverySystem />
             <HouseConstructionCompany />
             <ProphetPLC />
         </ContainerDemo>
     );
 };
 
-const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
+const ScaledMessageDeliverySystem = () => {
+    return (
+        <SegmentDemo heading="Current (September 2021+)">
+            <p>I am currently the technical lead and technical subject matter expert for a product oriented Agile Scrum
+                team of 6 highly skilled developers. Our product is a highly scaled Azure and .NET
+                based message routing and delivery system which allows the various organisations in the industry to
+                communicate and trade using formalised JSON and XML schema's via REST (and legacy SOAP) API endpoints.
+            </p>
+            <p>
+                We are currently in the process of converting a large legacy .NET Framework MVC application in to
+                Angular single page application with accompanying externally facing REST API, as well as expanding
+                the schema to support new business use cases and types of organisation.
+            </p>
+            <p>
+                A list of some of the technologies we use:
+                <ul>
+                    <li>A number of Azure services:
+                        <ul>
+                            <li>Azure Data Explorer and KQL</li>
+                            <li>Service Bus</li>
+                            <li>Application Insights</li>
+                            <li>Log Analytics</li>
+                            <li>Azure SQL</li>
+                            <li>Azure cache for Redis</li>
+                            <li>Azure Active Directory</li>
+                            <li>Storage</li>
+                            <li>Key Vault</li>
+                            <li>Serverless functions</li>
+                            <li>App services</li>
+                        </ul>
+                    </li>
+                    <li>C# / .NET Core / .NET Framework (latest versions)</li>
+                    <li>Entity Framework</li>
+                    <li>Azure DevOps</li>
+                    <li>Typescript</li>
+                    <li>Angular</li>
+                    <li>Jira</li>
+                </ul>
+            </p>
+        </SegmentDemo>
+    );
+}
+
+const HouseConstructionCompany = () => {
 
     return (
         <SegmentDemo heading="Westleigh/Countryside Properties (Feb 2018 to September 2021)">
@@ -39,7 +83,7 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                 Reports were web pages that contained a table consisting of rows and columns, and the ability to generate a PDF and CSV version of the same data.
                 There were large swathes of repeated code in the reports so I created (in my lunch break) and utilised
                 my <a href="https://github.com/sidfishus/ScriptableTemplate">Scriptable Template</a> to greatly speed up the process of creating reports.
-                I go in to great detail about this works <Link to="/portfolio/scriptabletemplate">here</Link>.
+                I go in to great detail about how this works <Link to="/portfolio/scriptabletemplate">here</Link>.
                 I took the aspects of the existing reports that were duplicated and moved them in to a template, and passed in the variables such as the
                 title of report, database query, and columns as parameters to the template.
                 This reduced the actual code required to produce a report to (depending on the number of columns) usually less than 100 lines of simple C# code.
@@ -85,7 +129,6 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
                 There was a silver lining though, they did not do software development in house and decided to take on the 3 of us on to take over the support and development of
                 their existing systems which were created and supported by a mish-mash of contractors and software houses.
                 They were also looking to implement new systems in the future for which they were struggling to find off-the-shelf software solutions for.
-                This is the position I am in currently.
                 The acquisition has been advantageous to me because it means I'm professionally using the very latest web and cloud technologies such as Azure, React, Typescript
                 and ASP .NET MVC Core and have a big opinion in what technologies are used going forward.
             </p>
@@ -94,7 +137,7 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
             <p>
                 When I joined, the company recently had a intranet built for them by a contractor who was leaving and this was handed over to me to develop and support.
                 This is a modern mobile friendly isomorphic web application utilising ASP .NET MVC Core, Webpack, Typescript and React and is hosted as 2 app services in Azure -
-                a ASP .NET MVC Core application that deals with authentication and renders and serves the Javascript user interface, and a seperate ASP .NET MVC Core REST API.
+                a ASP .NET MVC Core application that deals with authentication and renders and serves the Javascript user interface, and a separate ASP .NET MVC Core REST API.
             </p>
             <p>
                 It also utilises many Azure features such as:
@@ -117,8 +160,7 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
 
             <h2>Health and Safety Application</h2>
             <p>A ASP .NET MVC and React single page application which I created from scratch.
-                I go in to a lot of detail about this <Link to="/portfolio/hands">here</Link>. 
-                I'm currently working on the second phase of this project.
+                I go in to a lot of detail about this <Link to="/portfolio/hands">here</Link>.
             </p>
 
             <h2>Customer Service Application</h2>
@@ -161,7 +203,7 @@ const HouseConstructionCompany: React.FunctionComponent<{}> = () => {
     );
 };
 
-const ProphetPLC: React.FunctionComponent<{}> = () => {
+const ProphetPLC = () => {
 
     return (
         <SegmentDemo heading={<><a href="https://www.prophetize.com/">Prophet PLC</a> (2006 to Feb 2018)</>}>

@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg } from "./PortfolioBase";
+import {PortfolioBase, ICarouselImg, CreateImage} from "./PortfolioBase";
 import { Code, SegmentDemo, SegmentSubSection } from "../Presentation";
 import { Segment } from "semantic-ui-react";
 import { eScreenResolution } from "../Client App";
@@ -9,32 +9,41 @@ import { eScreenResolution } from "../Client App";
 export interface IScriptableTemplatePortfolioProps extends IRoutedCompProps {
 };
 
-export const ScriptableTemplatePortfolio: React.SFC<IScriptableTemplatePortfolioProps> = (props) => {
+export const ScriptableTemplatePortfolio = (props: IScriptableTemplatePortfolioProps) => {
     return (
         <PortfolioBase
             {...props}
             writeUp={WriteUp(props)}
             carouselImgs={carouselImgs}
+            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
+            heading={heading}
         />
     );
 };
 
-const carouselImgs : ICarouselImg[] =[
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_borders.jpg",
-        text: "This is the output file produced by the above application when viewed in a web browser."
-    },
+const heading=(
+    <SegmentDemo heading="Scriptable Template">
+        <SegmentSubSection>
+            <p>ScriptableTemplate is a .NET Framework C# library I developed to remove code and text duplication in a generic way. Duplicated code and text is held within templates. Output files are then created via embedded script within the templates as well as C# code which parameterises the script according to it's own purpose.</p>
+            <p><b>Note: I've since revisited this idea and created <a href={"https://github.com/sidfishus/RazorScriptableTemplateCore"}>RazorScriptableTemplateCore</a> which leverages Razor templates to perform the same job. I recommend using that instead considering the Razor syntax gives you full access to the .NET Framework and is officially supported by Microsoft.</b></p>
+        </SegmentSubSection>
+    </SegmentDemo>
+);
 
-    {
-        src: "https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_noborders.jpg",
-        text: "This is the output file produced by the above application but with the 'TableBorder' variable specified as 'false' in Main.cs."
-    }
+const carouselImgs : ICarouselImg[] =[
+    CreateImage("https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_borders.jpg",
+        "This is the output file produced by the above application when viewed in a web browser."),
+
+    CreateImage("https://raw.githubusercontent.com/sidfishus/scriptabletemplate/master/output_html_noborders.jpg",
+        "This is the output file produced by the above application but with the 'TableBorder' variable specified as 'false' in Main.cs.")
 ];
 
 const WriteUp = (props: IScriptableTemplatePortfolioProps): JSX.Element => {
 
     const { mediaMatching } = props;
-    if(!mediaMatching) return null;
+    if(!mediaMatching)
+        return <></>;
 
     const firstMatching = mediaMatching.FirstMatching();
     const wrapCSharp = ((firstMatching == eScreenResolution.Mobile)?
@@ -47,12 +56,6 @@ const WriteUp = (props: IScriptableTemplatePortfolioProps): JSX.Element => {
 
     return (
         <>
-            <SegmentDemo heading="Scriptable Template">
-                <SegmentSubSection>
-                    <p>ScriptableTemplate is a .NET Framework C# library I developed to remove code and text duplication in a generic way. Duplicated code and text is held within templates. Output files are then created via embedded script within the templates as well as C# code which parameterises the script according to it's own purpose.</p>
-                </SegmentSubSection>
-            </SegmentDemo>
-
             <SegmentDemo heading="Example Usage">
                 <SegmentSubSection>
                     <p>I have used this for creating classic ASP web pages which follow the same general structure and contain a lot of repeated code by deriving from the 'Template' class and using templates for the web page and child controls. The resulting .asp files are produced according to a single C# class per output file which contains the page specific values and parameters. The benefits of this are the removal of repeated code (#1 rule of pragmatic programming...), an increase in productivity, as well as the ability to make wholesale changes to an entire application by changing the intermediary templates which the application is produced from.</p>
@@ -63,7 +66,7 @@ const WriteUp = (props: IScriptableTemplatePortfolioProps): JSX.Element => {
 
             <SegmentDemo heading="Notes">
                 <SegmentSubSection>
-                    <p>I created this on my lunch break at work because I could see it being a massive benefit to the productivity of my department at the time. Particularily on the 2 classic ASP applications we supported and developed due to the large swathes of repeated / similar code they both contained. Subsequently the syntax of the template script language this uses has been centered around the ease of parsing by a computer (to arrive at a working application quicker) as opposed to the ease of readability for a human. I would definitely consider improving the syntax in future versions if it was going to be used heavily and I had the resources to do it. </p>
+                    <p>I created this on my lunch break at work because I could see it being a massive benefit to the productivity of my department at the time. Particularly on the 2 classic ASP applications we supported and developed due to the large swathes of repeated / similar code they both contained. Subsequently the syntax of the template script language this uses has been centered around the ease of parsing by a computer (to arrive at a working application quicker) as opposed to the ease of readability for a human. I would definitely consider improving the syntax in future versions if it was going to be used heavily and I had the resources to do it. </p>
                     <p>Features that are missing or that could be improved:</p>
                     <ul>
                         <li>The ability to comment the script code does not exist.</li>

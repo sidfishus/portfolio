@@ -33,7 +33,8 @@ export const Replace = (
     statements: Array<TextParseStatement>,
     replaceFormat: string,
     fGetVariables: () => TextParseVariable[],
-    functions: TextParseFunction[]
+    functions: TextParseFunction[],
+    apiRoot: string|null
 ): Promise<AxiosResponse> => {
 
     // Create the code
@@ -59,7 +60,7 @@ export const Replace = (
     ];
 
     // Call the API to do the execution
-    const url=CreateAPIURL("TextParse/ExecuteReplace");
+    const url=CreateAPIURL(apiRoot,"TextParse/ExecuteReplace");
     return axios.post(url, {
         Code: code,
         ReturnVariableName: "rv",
@@ -74,7 +75,8 @@ export const Extract = (
     matchFirstOnly: boolean,
     replaceFormat: string,
     fGetVariables: () => TextParseVariable[],
-    functions: TextParseFunction[]
+    functions: TextParseFunction[],
+    apiRoot: string|null
 ): Promise<AxiosResponse> => {
 
     let firstOnlyConditional="";
@@ -133,7 +135,7 @@ export const Extract = (
     ];
 
     // Call the API to do the execution
-    const url=CreateAPIURL("TextParse/ExecuteExtract");
+    const url=CreateAPIURL(apiRoot,"TextParse/ExecuteExtract");
     return axios.post(url, {
         Code: code,
         ReturnVariableName: "matching",
@@ -145,13 +147,16 @@ export const Match = (
     input: string,
     statements: Array<TextParseStatement>,
     fGetVariables: () => TextParseVariable[],
-    functions: TextParseFunction[]
+    functions: TextParseFunction[],
+    apiRoot: string|null
 ): Promise<AxiosResponse> => {
     // Create the code
     const code: string=
         `var parser = new Parser(null);
 
         var stmtList = new StatementList(null);
+        
+        Dictionary<string, Capture> capturing = new Dictionary<string, Capture>();
 
         ${CodeForStatements(statements, "stmtList", fGetVariables, functions)}
         
@@ -159,10 +164,12 @@ export const Match = (
         int matchingCount;
         parser.Extract(${EncodeString(input)}, null, stmtList, null, null, out matchingCount, (a,b,c)=>null, ${InitRunState(functions, fGetVariables)});`;
 
-    const usingStatements: string[] = [];
+    const usingStatements: string[] = [
+        "System.Collections.Generic"
+    ];
 
     // Call the API to do the execution
-    const url=CreateAPIURL("TextParse/ExecuteMatch");
+    const url=CreateAPIURL(apiRoot,"TextParse/ExecuteMatch");
     return axios.post(url, {
         Code: code,
         ReturnVariableName: "matchingCount",
@@ -173,11 +180,12 @@ export const Match = (
 // Execute built in example
 export const ExecuteBuiltInExample = (
     input: string,
-    type: eParseBuiltInExample
+    type: eParseBuiltInExample,
+    apiRoot: string|null
 ): Promise<AxiosResponse> => {
 
     // Call the API to do the execution
-    const url=CreateAPIURL("TextParse/ExecuteBuiltInExample");
+    const url=CreateAPIURL(apiRoot,"TextParse/ExecuteBuiltInExample");
     return axios.post(url, {
         Example: type,
         Input: input

@@ -1,47 +1,45 @@
 
 import * as React from "react";
 import { Routes } from "../../routes";
-import { useHistory } from "react-router-dom";
-import { hot } from "react-hot-loader/root";
-import ReactGA from "react-ga";
+import { createBrowserRouter, createRoutesFromElements, RouterProvider, useLocation } from "react-router-dom";
+import ReactGA from "react-ga4";
 import { MatchMediaResult, MatchMedia } from "../../Library/MediaMatching";
 import useConstant from "use-constant";
+import { IsDebug} from "../../IsDebug.ts";
 
-export type IClientAppProps = {
-    debug: boolean;
+export type IAppProps = {
+    apiRoot: string|null;
 };
 
-// Note: this is only ever called when the app is rendered in the browser. SSR does not use this component.
-const ClientApp: React.FunctionComponent<IClientAppProps> = (props) => {
+export const ClientApp = (props: IAppProps) => {
 
-    const { debug } = props;
+    const { apiRoot } = props;
 
     const ReRender = CreateRerenderAppFunction();
 
     const mediaMatching = useConstant(()=>CreateMediaMatching(ReRender));
 
-    if(!debug) {
+    if(!IsDebug) {
         //// Google Analytics
         // Record the server loaded path
-        ReactGA.initialize("UA-179122198-1");
-        ReactGA.pageview(window.location.pathname + window.location.search);
-
-        // Record client-side changes
-        const history = useHistory();
-        history.listen((location: any) => {
-            ReactGA.set({ page: location.pathname });
-            ReactGA.pageview(location.pathname);
+        ReactGA.initialize("G-9KRNT5HBDD");
+        ReactGA.send({
+            hitType: "pageview",
+            page: window.location.pathname + window.location.search
         });
     }
 
     const windowAsAny: any = window;
 
+    const router=createBrowserRouter(createRoutesFromElements(
+        Routes({
+            prerenderData: windowAsAny.prerenderData,
+            mediaMatching: mediaMatching,
+            apiRoot: apiRoot
+        })));
+
 	return (
-        <Routes
-            prerenderData={windowAsAny.prerenderData}
-            SSR={false}
-            mediaMatching={mediaMatching}
-        />
+        <RouterProvider router={router} />
     );
 };
 
@@ -71,6 +69,3 @@ const CreateMediaMatching = (ReRender: () => void): MatchMediaResult => {
 
     return MatchMedia(window, mediaQueryList, ReRender, 100);
 };
-
-// For hot module replacement: https://github.com/gaearon/react-hot-loader
-export default hot(ClientApp);

@@ -1,22 +1,48 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg, ITechnologyInfo, TechnologyTable, CreateRepoUrl } from "./PortfolioBase";
+import {
+    PortfolioBase,
+    ICarouselImg,
+    ITechnologyInfo,
+    TechnologyTable,
+    CreateImage
+} from "./PortfolioBase";
 import { Link } from "react-router-dom";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
+import { CreateRepoUrl} from "../../CreateRepoUrl.ts";
 
 export interface IHAndSPortfolioProps extends IRoutedCompProps {
 };
 
-export const HAndSPortfolio: React.SFC<IHAndSPortfolioProps> = (props) => {
+export const HAndSPortfolio = (props: IHAndSPortfolioProps) => {
     return (
         <PortfolioBase
             {...props}
             writeUp={WriteUp()}
             carouselImgs={carouselImgs}
+            additionalCarouselFileClass={"SixteenByNineAspectRatio"}
+            additionalThumbnailFileClass={"SixteenByNineAspectRatio"}
+            heading={heading}
         />
     );
 };
+
+const heading=(
+    <SegmentDemo heading="Health and Safety System (CAIRS)">
+        <SegmentSubSection>
+            <p>CAIRS is a health and safety data capture and reporting system used internally by a house construction company.</p>
+            <p>It is based on-premise and incorporates a ASP .NET MVC Framework and SQL back end with a Javascript and React single page web application front end.</p>
+            <p>It is used to record accidents and incidents, labour returns and safety observations.
+                These values are then used to calculate the accident and incident rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
+            </p>
+            <p>The application has been designed and hand crafted to work specifically with 7 different screen resolutions ranging from small phones up to full sized computer screens.</p>
+            <p>The development of the application, which including data migration from the existing system, was started from scratch and was live and in production within 9 months.
+                Except for third party libraries and extra resource from a junior front-end developer, it was created entirely by myself, and all technology choices were mine.
+            </p>
+        </SegmentSubSection>
+    </SegmentDemo>
+);
 
 const technology: ITechnologyInfo[] = [
     {
@@ -103,7 +129,7 @@ const technology: ITechnologyInfo[] = [
     {
         name: <>window.matchMedia</>,
         descr: <>Allows the application to be made responsive by querying the screen dimensions and rendering accordingly.
-            I do not use media queries/React Responsive because there are multiple copies of the same control on screen which
+            It did not use media queries/React Responsive because there are multiple copies of the same control on screen which
             can significantly impact clientside performance.</>
     },
 
@@ -142,27 +168,12 @@ const WriteUp = (): JSX.Element => {
 
     return (
         <>
-        
-            <SegmentDemo heading="Health and Safety System (CAIRS)">
-                <SegmentSubSection>
-                    <p>CAIRS is a responsive and mobile/tablet friendly data capture and reporting health and safety system used by a house construction company.</p>
-                    <p>It is based on-premise and incoorporates a ASP .NET MVC and SQL back end with a Javascript and React single page application front end.</p>
-                    <p>It is used to record accidents and incidents, labour returns and safety observations.
-                        These values are then used to calculate the accident and incident (AI) rate (AIR) across all levels of the company and is used to form a variety of tables and graphs for reports.
-                    </p>
-                    <p>The application has been designed and hand crafted to work specifically with 7 different screen resolutions ranging from small phones up to a typical computer screen of 1920 x 1200 pixels.</p>
-                    <p>The CAIRS system including data migration from the existing system was fully live within 9 months and besides help with micro adjustments to the UI layout, and third party libraries was created entirely by myself.
-                        Developed using Microsoft Visual Studio 2017 with TFS integration for source code control with all technology choices being made by myself .
-                    </p>
-                </SegmentSubSection>
-            </SegmentDemo>
-
             <SegmentDemo heading="Task / Design">
                 <SegmentSubSection>
                     <p>The concept for this came from the original 'system' which consisted of a large set of Excel spreadsheets.</p>
                     <p>
-                        AI reports were recorded by hand on a copy of the dedicated Word document template and added to accident database spreadsheet by the health and safety administrators.
-                        Labour return and safety observation figures were sent via email by the site / office managers to the administrators who would then add them to a spreadsheet.
+                        Accident and incident reports were initially recorded by hand on a copy of the dedicated Word document template, and then added to a monolithic accident database spreadsheet by the health and safety administrators.
+                        Labour return and safety observation figures were sent via email by the site / office managers to the administrators who would then add them to the same spreadsheet.
                         The totals were then extracted for the different levels of the company and used to plot the graphs that form the monthly reports.
                         This labourious task would take the administrators at least 2 days to perform per month and was clearly vulnerable to discrepancies.
                     </p>
@@ -171,27 +182,27 @@ const WriteUp = (): JSX.Element => {
             
             <SegmentDemo heading="Development">
                 <SegmentSubSection heading="User Interface">
-                    <p>The UI theme was chosen by the users and had been created for another system used by the company which runs on classic ASP and jQuery/Bootstrap.
-                        I reused the CSS and HTML/layout from this system but replaced the jQuery and Bootstrap with React and React Bootstrap.
+                    <p>The UI theme was chosen by the users, and pre-existed in another in-house system which ran on classic ASP and jQuery/Bootstrap.
+                        I reused the CSS and HTML, but replaced the Javascript / jQuery and Bootstrap with React and React Bootstrap.
                     </p>
                     <p>The AI report form was designed to match the original word document as closely as possible.
-                        Using controlled React components caused the screen to flicker and appear unresponsive due to the amount of components on screen.
-                        To get around this I used uncontrolled components where value changes were stored as a Javascript object and applied using setState approx 500ms after the final change via setTimeout.
+                        I initially used controlled React components to create the form, but this caused the screen to flicker and appear unresponsive due to the amount of components being rendered on the screen.
+                        To solve this I used uncontrolled components and propagated value changes via setTimeout and a queue which applied them a short amount of time after the final change.
                         My 'SimpleDelayer' class is a simpler version of this and can be found here <a href="https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts">https://github.com/sidfishus/react-spa-demo/blob/master/ClientApp/Library/UIHelper.ts</a>.
                     </p>
                     <p>
-                        The AI report form captures a lot of data and it was found that using media queries with up to 7 copies of each React component was significantly impeding performance.
+                        The AI report form captures lots of data and I found that using CSS media queries and up to 7 copies of each React component to suit the various layouts was significantly impeding performance.
                         To resolve this I utilised the window.matchMedia function to query which of the 7 screen resolutions most closely matched the current dimensions and held this as an enum in a Redux store.
                         Each React component has a 'switch case' on this enum and outputs JSX accordingly when rendering.
                         The window.matchMedia also allows you to be notified via a callback when the dimensions change and I used this to trigger a re-render of the application by updating the Redux store.
+                        This made the application responsive without the use of media queries by only outputting the HTML and CSS relevant to the in-use screen size.
                     </p>
                     <p>
                         I created a base component to encapsulate a generic screen for creating and displaying reports including the various filters, and base components for generic screens to list database records, select, and edit their values.
-                        This was done again to achieve consistency but also speed up development by holding any duplicated code in the base componenents.
+                        This was done to achieve consistency but also speed up development and apply the principles of <a href={"https://en.wikipedia.org/wiki/Don%27t_repeat_yourself"}>DRY</a>.
                     </p>
                     <p>
-                        Each type of input control in the application was abstracted in to their own Cairs version and parameterised in such a way as to simplify their usage and hide the details specific to their React Bootstrap implementation and achieve UI consistency.
-                        All functionality pertaining to persisting values was done within the base component so code duplication was minimised.
+                        Each type of input control in the application was abstracted in to their own CAIRS version and parameterised in such a way as to simplify their usage and hide the details specific to their React Bootstrap implementation and achieve UI consistency.
                     </p>
                 </SegmentSubSection>
                 
@@ -200,29 +211,30 @@ const WriteUp = (): JSX.Element => {
                         The SQL database was created to mirror the data that was being captured in the existing system.
                         Data was initially migrated from the spreadsheets in to the SQL database via an automated process that was ran iteratively until the figures aligned.
                     </p>
-                    <p>The client side Javascript application accesses the database and server side functionality via asynchronous HTTP messages sent to the relevant controller and method.
+                    <p>The client side Javascript application accesses the database and server side functionality via asynchronous HTTP messages sent to the relevant controller and method in the REST API.
                         The ASP .NET application holds a version GUID per each database table that constitutes static data and regenerates it upon changes to that table.
                         Static data requests made by the Javascript application are passed with an optional version GUID to represent the current version of that table that the client has cached.
                         If the client side version corresponds to the server side version then no data is returned as a performance enhancement.
                         After the static data is initially loaded by the client and persisted in a Redux store it is only reloaded when there is a change.
                     </p>
                     <p>
-                        The data used to populate the graphs and tables is calculated via executing the associated SQL stored procedure with filters such as the date range being passed as parameters.
-                        My scriptable template library which I had previously created was used to generate the report SQL stored procedures as they shared a lot of code.
+                        The data used to populate the graphs and tables is calculated via executing the associated SQL stored procedure, with the filter criteria such as the date range being passed as parameters.
+                        My <Link to={"/portfolio/scriptabletemplate"}>scriptable template</Link> library was used to refactor any repeated code used in multiple stored procedures.
                     </p>
                     <h3>Authentication and Authorisation</h3>
-                    <p>This is achieved using OAuth bearer token functionality built in to the version of ASP .NET used.
+                    <p>This is achieved using OAuth2 bearer token functionality built in to the version of ASP .NET used.
                     </p>
                     <p>
-                        User's and their access is stored in a database table and is made available to ASP .NET by my own implementation of an IUserStore which has access to the user table.
-                        Authorisation for each individual piece of functionality available in the server application is held as a boolean column against the user record. Controller method's assert that the user has the associated field set to true against the logged in user as a prerequisite to performing the task otherwise a 401 is returned the client.
+                        User's and their access is stored in SQL database tables and is made available to ASP .NET by my own implementation of an IUserStore.
+                        Authorisation for each individual piece of functionality available in the server application is held as a boolean column against the user record (see screenshots).
+                        Controller method's assert that the user has the associated field set to true against the logged in user as a prerequisite to performing the task otherwise a 401 is returned the client.
                     </p>
                 </SegmentSubSection>
             </SegmentDemo>
 
             <SegmentDemo heading="Technology">
                 <SegmentSubSection>
-                    <p>Below is the list of technology incoorporated:</p>
+                    <p>Below is the list of technology incorporated:</p>
                     {TechnologyTable(technology)}
                 </SegmentSubSection>
             </SegmentDemo>
@@ -230,129 +242,68 @@ const WriteUp = (): JSX.Element => {
     );
 };
 
+// 
+
 const carouselImgs: ICarouselImg[] = [
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/homepage1.jpg"),
-        text: "Home page which includes live graphs rendered using Recharts."
-    },
+    CreateImage(CreateRepoUrl("img/hands/homepage1.jpg"),
+        "Home page which includes live rolling graphs rendered using Recharts."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/aireport1.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport1.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/aireport2.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport2.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/aireport3.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport3.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/aireport4.jpg"),
-        text: "AI report creation."
-    },
+    CreateImage(CreateRepoUrl("img/hands/aireport4.jpg"),
+        "AI report creation."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/ailist1.jpg"),
-        text: "AI report list using React Bootstrap Data Tables."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist1.jpg"),
+        "AI report list using React Bootstrap Data Tables."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/ailist2.jpg"),
-        text: "AI report list using React Bootstrap Data Tables."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist2.jpg"),
+        "AI report list using React Bootstrap Data Tables."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/ailist3.jpg"),
-        text: "General PDF export functionality available on most screens."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist3.jpg"),
+        "General PDF export functionality available on most screens."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/ailist4.jpg"),
-        text: "General PDF export functionality available on most screens."
-    },
+    CreateImage(CreateRepoUrl("img/hands/ailist4.jpg"),
+        "General PDF export functionality available on most screens."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/boardreportfilter1.jpg"),
-        text: "Report filters."
-    },
+    CreateImage(CreateRepoUrl("img/hands/boardreportfilter1.jpg"),
+        "Report filters."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/report1.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report1.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/report2.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report2.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/report3.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report3.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/report4.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report4.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/report5.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report5.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/report6.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report6.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/report7.jpg"),
-        text: "Reporting."
-    },
+    CreateImage(CreateRepoUrl("img/hands/report7.jpg"),"Reporting."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/staticdataentry1.jpg"),
-        text: "Static data maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/staticdataentry1.jpg"),"Static data maintenance."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/staticdataentry2.jpg"),
-        text: "Static data maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/staticdataentry2.jpg"),"Static data maintenance."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/usermaintenance1.jpg"),
-        text: "User maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/usermaintenance1.jpg"),"User maintenance."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/usermaintenance2.jpg"),
-        text: "User maintenance."
-    },
+    CreateImage(CreateRepoUrl("img/hands/usermaintenance2.jpg"),"User maintenance."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/mobilehome1.jpg"),
-        text: "Mobile layout for the home page."
-    },
+    CreateImage(CreateRepoUrl("img/hands/mobilehome1.jpg"),"Mobile layout for the home page."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/mobileaireport1.jpg"),
-        text: "Mobile layout for the AI report form."
-    },
+    CreateImage(CreateRepoUrl("img/hands/mobileaireport1.jpg"),"Mobile layout for the AI report form."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/tablethome1.jpg"),
-        text: "Tablet (Ipad) layout for the home page."
-    },
+    CreateImage(CreateRepoUrl("img/hands/tablethome1.jpg"),
+        "Tablet (Ipad) layout for the home page."),
 
-    {
-        src: CreateRepoUrl("wwwroot/img/hands/tabletaireport1.jpg"),
-        text: "Tablet (Ipad) layout for the AI report form."
-    },
+    CreateImage(CreateRepoUrl("img/hands/tabletaireport1.jpg"),
+        "Tablet (Ipad) layout for the AI report form."),
 ];

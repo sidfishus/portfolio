@@ -7,8 +7,7 @@ import { CalcDurationYears } from "../../Library/DateTime";
 export interface IAboutMeProps {
 };
 
-//TODO about me section include pictures - family and fishing, kickboxing
-export const AboutMe: React.FunctionComponent<IAboutMeProps & IRoutedCompProps> = (props) => {
+export const AboutMe = (_: IAboutMeProps & IRoutedCompProps) => {
 
     return (
         <ContainerDemo>
@@ -18,8 +17,7 @@ export const AboutMe: React.FunctionComponent<IAboutMeProps & IRoutedCompProps> 
     );
 };
 
-//TODO attach my personality chart
-const AboutMeSection: React.FunctionComponent<{}> = () => {
+const AboutMeSection = () => {
 
     return (
         <SegmentDemo heading="About Me">
@@ -59,18 +57,11 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
                 in one or a few but being constrained to only those restricts your usefulness as a programmer.
                 By the time you read this
                 a significant amount of the third party code used to produce this site will be obsolete or deprecated,
-                for example I started using .NET Core MVC version 2, upgraded to version 3 and now version 5 is out.
+                for example I started using .NET Core version 2, upgraded to version 3, and most recently upgraded to version 9!
                 I believe that unless you have a photographic memory it's not feasible to be expected to remember the low
                 level details of N number of technologies in order to be effective.
                 Having a "can do" and "never give up" type attitude is a prerequisite for being a successful programmer
                 when each project you work on incorporates at least one significant technology which is new to you.
-            </p>
-            <p>
-                I consider myself a full stack developer but I have a definite preference and strength for
-                creative software design and backend development.
-                I prefer to
-                reuse a ready built user interface platform like Semantic UI React which I have used in this site
-                instead of spending valuable time making trivial presentation changes. That's just my opinion.
             </p>
             <p>If I could change anything about myself it would be to remove my need for sleep and rest.
                 There is so much that I would like to pursue but unfortunately I cannot do it all at the moment.
@@ -81,7 +72,7 @@ const AboutMeSection: React.FunctionComponent<{}> = () => {
     );
 };
 
-const Hobbies: React.FunctionComponent<{}> = () => {
+const Hobbies = () => {
     return (
         <SegmentDemo heading="Hobbies">
             <p>Besides computer programming, I have been an obsessive carp fisherman since the age of 7 and passionately fish in all weather conditions.
