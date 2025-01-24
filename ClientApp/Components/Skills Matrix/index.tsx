@@ -354,18 +354,6 @@ const skillsMatrix: ISkillRow[] = [
         areas: <>C++, C#, Javascript, Typescript.</>
     },
     {
-        technology: "Unit Testing",
-        experienceTotal: 4, 
-        experienceCommercial: 2,
-        areas: <>Adhoc unit testing, automated testing of pure functions and
-            integration with libraries for making assertions.<AreaLinkBreak/>
-            I would like to work for a company that uses the test driven development (TDD) paradigm or where unit
-            testing is a formal part of the development process.
-            I have not used a testing framework. <AreaLinkBreak/>
-            You can see examples of unit testing in my <Link to="/portfolio/textparse">text parse library</Link> and
-            my <a href="https://github.com/sidfishus/BlockAllocator">C++ heap memory management library</a>.</>
-    },
-    {
         technology: "Assembly Language",
         experienceTotal: 3, 
         experienceCommercial: 2,

@@ -137,14 +137,6 @@ export const DemoMenu = (props: IDemoMenuProps) => {
 
                             SubMenuItem({
                                 activeMenuId: activeMenuId,
-                                menuId: eMenuId.portfolioDPA,
-                                children: <>Distributed SPA</>,
-                                onClick: ()=> navigate("/portfolio/dpa"),
-                                key: "dpa"
-                            }),
-
-                            SubMenuItem({
-                                activeMenuId: activeMenuId,
                                 menuId: eMenuId.portfolioHAndS,
                                 children: <>Health and Safety System</>,
                                 onClick: ()=> navigate("/portfolio/hands"),
@@ -157,6 +149,14 @@ export const DemoMenu = (props: IDemoMenuProps) => {
                                 children: <>Text Parse</>,
                                 onClick: ()=> navigate("/portfolio/textparse"),
                                 key: "textparse"
+                            }),
+
+                            SubMenuItem({
+                                activeMenuId: activeMenuId,
+                                menuId: eMenuId.portfolioDPA,
+                                children: <>Distributed SPA</>,
+                                onClick: ()=> navigate("/portfolio/dpa"),
+                                key: "dpa"
                             }),
 
                             SubMenuItem({

@@ -251,14 +251,15 @@ const AboutThisApplication = () => {
                     I have been able to complete the remaining parts in my spare time whilst being a father and having a full
                     time job and the first version of the application was complete in July 2021. Typically, I have
                     added more features and have gone in to far more detail than I originally intended and
-                    it will only expand over time.</p>
+                    it will only expand over time. This application was last updated on January 2025.</p>
                 <p>
                     I have developed this specifically to have a good UX on mobiles, tablets, laptops and computers,
                     but it is best viewed on a large screen and this is particularly true for the <Link
                     to="/textparse">text parse user interface </Link> due to it's complexity.
                 </p>
                 <p>
-                    This application was last updated on January 2025.
+                    I recommend you start by taking a look at my latest work on the <Link
+                    className="boldLink" to={"/portfolio/fishingwebapp"}>Fishing web application</Link>.
                 </p>
             </SegmentSubSection>
 

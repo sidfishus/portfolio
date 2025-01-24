@@ -42,6 +42,7 @@ const ScaledMessageDeliverySystem = () => {
                             <li>Log Analytics</li>
                             <li>Azure SQL</li>
                             <li>Azure cache for Redis</li>
+                            <li>Azure Active Directory</li>
                             <li>Storage</li>
                             <li>Key Vault</li>
                             <li>Serverless functions</li>
@@ -82,7 +83,7 @@ const HouseConstructionCompany = () => {
                 Reports were web pages that contained a table consisting of rows and columns, and the ability to generate a PDF and CSV version of the same data.
                 There were large swathes of repeated code in the reports so I created (in my lunch break) and utilised
                 my <a href="https://github.com/sidfishus/ScriptableTemplate">Scriptable Template</a> to greatly speed up the process of creating reports.
-                I go in to great detail about this works <Link to="/portfolio/scriptabletemplate">here</Link>.
+                I go in to great detail about how this works <Link to="/portfolio/scriptabletemplate">here</Link>.
                 I took the aspects of the existing reports that were duplicated and moved them in to a template, and passed in the variables such as the
                 title of report, database query, and columns as parameters to the template.
                 This reduced the actual code required to produce a report to (depending on the number of columns) usually less than 100 lines of simple C# code.
@@ -128,7 +129,6 @@ const HouseConstructionCompany = () => {
                 There was a silver lining though, they did not do software development in house and decided to take on the 3 of us on to take over the support and development of
                 their existing systems which were created and supported by a mish-mash of contractors and software houses.
                 They were also looking to implement new systems in the future for which they were struggling to find off-the-shelf software solutions for.
-                This is the position I am in currently.
                 The acquisition has been advantageous to me because it means I'm professionally using the very latest web and cloud technologies such as Azure, React, Typescript
                 and ASP .NET MVC Core and have a big opinion in what technologies are used going forward.
             </p>
@@ -160,8 +160,7 @@ const HouseConstructionCompany = () => {
 
             <h2>Health and Safety Application</h2>
             <p>A ASP .NET MVC and React single page application which I created from scratch.
-                I go in to a lot of detail about this <Link to="/portfolio/hands">here</Link>. 
-                I'm currently working on the second phase of this project.
+                I go in to a lot of detail about this <Link to="/portfolio/hands">here</Link>.
             </p>
 
             <h2>Customer Service Application</h2>

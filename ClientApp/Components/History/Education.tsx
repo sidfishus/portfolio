@@ -109,7 +109,8 @@ const ComputingBSc = () => {
                 <Code inline={true}> 'void RobotSoccerStrategy::attack()'</Code>.
             </p>
 
-            <p>In June 2006 I graduated with a second class batchelors degree with honours.</p>
+            <p>In June 2006 I graduated with a second class bachelors degree with honours and within a month I started
+                a full time job as a junior programmer for <Link to={"/history/career"}>Prophet</Link>.</p>
         </SegmentDemo>
     );
 };

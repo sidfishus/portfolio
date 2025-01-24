@@ -79,30 +79,28 @@ const WriteUp = (): JSX.Element => {
             <SegmentDemo heading="Features">
                 <SegmentSubSection>
                     <ul>
-                        <ul>
-                            <li>
-                                Search engine optimisation (SEO) including directing search engine crawlers to static
-                                HTML output for better indexing.
-                            </li>
-                            <li>Specifically developed and tested on mobiles, tablets and a variety of desktop screen
-                                sizes.
-                            </li>
-                            <li>Entirely customised CSS.
-                            </li>
-                            <li>My <a href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive React carousel NPM package.</li>
-                            <li>An <a href={"https://elfsight.com/"}>Elf Sight</a> widget for displaying customer
-                                reviews from Facebook, Google, and Yell.
-                            </li>
-                            <li>
-                                Google maps integration.
-                            </li>
-                            <li>
-                                Email functionality provided by SendGrid and it's REST API.
-                            </li>
-                            <li>
-                                Traffic telemetry is recorded and can be visualised thanks to Google Analytics.
-                            </li>
-                        </ul>
+                        <li>
+                            Search engine optimisation (SEO) including directing search engine crawlers to static
+                            HTML output for better indexing.
+                        </li>
+                        <li>Specifically developed and tested on mobiles, tablets and a variety of desktop screen
+                            sizes.
+                        </li>
+                        <li>Entirely customised CSS.
+                        </li>
+                        <li>My <a href={"https://www.npmjs.com/package/react-cscarousel"}>react-cscarousel</a> responsive React carousel NPM package.</li>
+                        <li>An <a href={"https://elfsight.com/"}>Elf Sight</a> widget for displaying customer
+                            reviews from Facebook, Google, and Yell.
+                        </li>
+                        <li>
+                            Google maps integration.
+                        </li>
+                        <li>
+                            Email functionality provided by SendGrid and it's REST API.
+                        </li>
+                        <li>
+                            Traffic telemetry is recorded and can be visualised thanks to Google Analytics.
+                        </li>
                     </ul>
                 </SegmentSubSection>
             </SegmentDemo>
@@ -148,7 +146,8 @@ const technology: ITechnologyInfo[] = [
     },
     {
         name: <><a href={"https://sendgrid.com/"}>Send Grid</a> REST API</>,
-        descr: <>Quotes are sent from the web application through an Ionos proxy to the SendGrid and to a specified email address.</>
+        descr: <>Quotes are sent from the client application, to the backend API, and then through an Ionos proxy to
+            the SendGrid REST API to a specified email address.</>
     },
     {
         name: <><a href={"https://www.npmjs.com/package/react-ga4"}>react-ga4</a></>,

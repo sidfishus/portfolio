@@ -266,6 +266,12 @@ const CreateStatementListIfMultipleOtherwiseReturnSingle_AddStmt = (
 // Parse statement base class
 export abstract class TextParseStatement {
 
+    // Not all parse statements have children, but by holding 'children' as a member in all statement classes it allows
+    // us to copy the children (where applicable) as part of constructor initialisation.
+    // If 'children' is only contained in the derived classes, it gets initialised AFTER the call to 'super' in the
+    // constructor, and thus 'children' is reassigned to undefined.
+    children?: Array<TextParseStatement> | null=undefined;
+
     public CanSave(
         stmtList: TextParseStatement[]|null,
         checkChildren: boolean=true
@@ -333,6 +339,14 @@ export abstract class TextParseStatement {
         copy?: TextParseStatement,
         copyChildren: boolean=false,
     ) {
+        this.Heading=this.Heading.bind(this);
+        this.CanSave=this.CanSave.bind(this);
+        this.TypeDescription=this.TypeDescription.bind(this);
+        this.Copy=this.Copy.bind(this);
+        this.Description=this.Description.bind(this);
+        this.Icon=this.Icon.bind(this);
+        this.SetChildren=this.SetChildren.bind(this);
+
         if(copy) {
             this.type=copy.type;
             this.name=copy.name;
@@ -356,15 +370,7 @@ export abstract class TextParseStatement {
             this.name="";
             this.keyedDescription=null;
             this.UID=null!;
-            this.SetChildren(null);
         }
-
-        this.Heading=this.Heading.bind(this);
-        this.CanSave=this.CanSave.bind(this);
-        this.TypeDescription=this.TypeDescription.bind(this);
-        this.Copy=this.Copy.bind(this);
-        this.Description=this.Description.bind(this);
-        this.Icon=this.Icon.bind(this);
     }
 
     NumberOfLevelsDeep(): number {
@@ -607,20 +613,18 @@ export class SkipWSStatement extends TextParseStatement {
 
 export class OrComparisonStatement extends ComparisonStatement {
 
-    children!: Array<TextParseStatement> | null;
-
     constructor(
         copy?: OrComparisonStatement,
         copyChildren: boolean=true) {
 
         super(copy, copyChildren);
-        if(!copy) {
 
+        this.AddStatement=this.AddStatement.bind(this);
+
+        if(!copy) {
             this.type=eStatementType.Or_Comp;
             this.children = new Array<TextParseStatement>();
         }
-
-        this.AddStatement=this.AddStatement.bind(this);
     }
 
     CanSave(
@@ -656,7 +660,7 @@ export class OrComparisonStatement extends ComparisonStatement {
     }
 
     Children(): TextParseStatement[] | null {
-        return this.children;
+        return this.children!;
     }
 
     SetChildren(children?: TextParseStatement[]|null): void {
@@ -735,8 +739,6 @@ const CreateStatementListCode = (
 
 export class StatementListComparisonStatement extends TextParseStatement {
 
-    children!: Array<TextParseStatement>|null;
-
     constructor(
         copy?: StatementListComparisonStatement,
         copyChildren: boolean=true) {
@@ -781,7 +783,7 @@ export class StatementListComparisonStatement extends TextParseStatement {
     }
 
     Children(): TextParseStatement[] | null {
-        return this.children;
+        return this.children!;
     }
 
     SetChildren(children?: TextParseStatement[]|null): void {
@@ -799,7 +801,7 @@ export class StatementListComparisonStatement extends TextParseStatement {
 
         const listCode=CreateStatementListCode(
             name,
-            children,
+            children!,
             log,
             fGetVariables,
             functions,
@@ -997,8 +999,6 @@ export class StartOfStringComparisonStatement extends ComparisonStatement {
 
 export class CaptureComparisonStatement extends TextParseStatement {
 
-    children!: Array<TextParseStatement>|null;
-
     constructor(
         copy?: StatementListComparisonStatement,
         copyChildren: boolean=true) {
@@ -1045,7 +1045,7 @@ export class CaptureComparisonStatement extends TextParseStatement {
     }
 
     Children(): TextParseStatement[] | null {
-        return this.children;
+        return this.children!;
     }
 
     SetChildren(children?: TextParseStatement[]|null): void {
@@ -1351,7 +1351,10 @@ export class AdvanceStatement extends TextParseStatement {
 
     constructor(copy?: AdvanceStatement) {
         super(copy);
-        if(!copy) {
+        if(copy) {
+            this.advanceWhere=copy.advanceWhere;
+        }
+        else {
             this.type=eStatementType.Advance_Op;
         }
     }
@@ -1406,7 +1409,6 @@ export class AdvanceStatement extends TextParseStatement {
 
 export class AdvanceUntilComparisonStatement extends TextParseStatement {
 
-    children!: Array<TextParseStatement>|null
     forwards!: boolean; // I.e. the direction in which to move
 
     constructor(
@@ -1414,7 +1416,10 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
         copyChildren: boolean=true) {
 
         super(copy, copyChildren);
-        if(!copy) {
+        if(copy) {
+            this.forwards=copy.forwards;
+        }
+        else {
             this.type=eStatementType.AdvanceUntil_Comp;
             this.children = new Array<TextParseStatement>();
         }
@@ -1452,7 +1457,7 @@ export class AdvanceUntilComparisonStatement extends TextParseStatement {
     }
 
     Children(): TextParseStatement[] | null {
-        return this.children;
+        return this.children!;
     }
 
     SetChildren(children?: TextParseStatement[]|null): void {
@@ -1513,7 +1518,6 @@ export class CustomComparisonStatement extends TextParseStatement {
         this.rightHandOperand=null;
 
         if(!copy) {
-
             this.operator=eCustomComparisonOperator.equals;
         }
         else {

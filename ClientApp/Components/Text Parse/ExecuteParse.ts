@@ -155,6 +155,8 @@ export const Match = (
         `var parser = new Parser(null);
 
         var stmtList = new StatementList(null);
+        
+        Dictionary<string, Capture> capturing = new Dictionary<string, Capture>();
 
         ${CodeForStatements(statements, "stmtList", fGetVariables, functions)}
         
@@ -162,7 +164,9 @@ export const Match = (
         int matchingCount;
         parser.Extract(${EncodeString(input)}, null, stmtList, null, null, out matchingCount, (a,b,c)=>null, ${InitRunState(functions, fGetVariables)});`;
 
-    const usingStatements: string[] = [];
+    const usingStatements: string[] = [
+        "System.Collections.Generic"
+    ];
 
     // Call the API to do the execution
     const url=CreateAPIURL(apiRoot,"TextParse/ExecuteMatch");

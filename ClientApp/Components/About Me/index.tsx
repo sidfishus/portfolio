@@ -57,7 +57,7 @@ const AboutMeSection = () => {
                 in one or a few but being constrained to only those restricts your usefulness as a programmer.
                 By the time you read this
                 a significant amount of the third party code used to produce this site will be obsolete or deprecated,
-                for example I started using .NET Core MVC version 2, upgraded to version 3 and now version 5 is out.
+                for example I started using .NET Core version 2, upgraded to version 3, and most recently upgraded to version 9!
                 I believe that unless you have a photographic memory it's not feasible to be expected to remember the low
                 level details of N number of technologies in order to be effective.
                 Having a "can do" and "never give up" type attitude is a prerequisite for being a successful programmer

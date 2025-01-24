@@ -103,7 +103,7 @@ const heading=(
             <p>
                 Back in 2018 my partner suggested to me, "why don't you make an application for fishing".
                 With this, a burst of ideas came to me in very quick session and I began writing them down and fleshing
-                out the design. Over the next few years I thought about this a lot, and solved a lot of the issues
+                out the design. Over the next few years I thought about this a lot, and solved a lot of the complexity
                 (such as scaling it) but my time was taken up by other things.</p>
             <p>
                 In 2022 I decided to start putting my ideas into fruition.
@@ -116,14 +116,14 @@ const heading=(
                 </p>
             <p>
                 The purpose of this application is to record telemetry related to fishing such as the fish themselves,
-                and all the factors of how and where they are caught, so an infinite number of and reports can be
-                generated. And to create a live catch report of all fishing being caught around the globe.
+                and all the factors of how and where they are caught, so an infinite number of reports can be
+                generated. And to create a live catch report of all fish being caught around the globe.
                 No longer would we have to rely on anglers like Chris Ball to record the history of the sport,
                 but instead this would be provided directly by the anglers and venue owners (who would be incentivised)
                 which is secured and backed up in the cloud.
                 </p>
             <p>
-                It has huge potential but unfortunately it is not finished at this time.
+                It has huge potential but unfortunately is still a work in progress.
             </p>
         </SegmentSubSection>
     </SegmentDemo>
@@ -135,11 +135,11 @@ const WriteUp = (): JSX.Element => {
             <SegmentDemo heading="Features">
                 <SegmentSubSection>
                     <ul>
-                        <li>An integrated web based camera application for visibly recording spots and the direct
-                            upload of fish caught to the cloud. Working for both iOS and Android devices.
+                        <li>An integrated web based camera application for visibly recording spots and fish caught,
+                            and uploading them to the cloud. Working for both iOS and Android devices.
                         </li>
                         <li>
-                            Google One Tap login for identity and securing the back-end services. This provides
+                            Google One Tap login for identity and securing the back-end microservices. This provides
                             instant account creation via an official identity provider utilising bleeding edge OAuth2
                             technology.
                         </li>
@@ -213,7 +213,7 @@ const technology: ITechnologyInfo[] = [
     },
     {
         name: <>navigator.mediaDevices.getUserMedia and window.ImageCapture</>,
-        descr: <>A variety of browser API's for capturing and taking images.</>
+        descr: <>A variety of widely supported browser API's for capturing and taking images.</>
     },
     {
         name: <><a href={"https://sass-lang.com/"}>Sass</a></>,

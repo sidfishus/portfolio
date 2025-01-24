@@ -186,7 +186,7 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
         <SegmentDemo heading="Practical">
             <SegmentSubSection heading="Initial Approach">
                 <p>Now I could describe what I wanted to achieve, I needed a way of conveying that to an application so that it could be translated and executed but at the same time remain understandable to a computer programmer.</p>
-                <p>My first idea was to create a psuedo language that could be parsed and converted to a list of parse statement objects (I was heavily into OO at the time) that would make up the parse statement list (UCPA) that would be passed to the OLPA for execution. The parse statement classes would all derive from a common interface (IComparisonWithAdvance) and leverage polymorphism to allow them to be used via a reference to the interface. This is key because it allows any type, combination, or list of parse statements to be used anywhere that a single parse statement is required because everything that can be executed as part of a UCPA derives from the same interface and implements the same parse interface method. For example this is very useful for the 'or' statement which takes a list of parse statements and executes them sequentially until a match is found because it makes the following algorithm possible:</p>
+                <p>My first idea was to create a psuedo language that could be parsed and converted to a list of parse statement objects that would make up the parse statement list (UCPA) that would be passed to the OLPA for execution. The parse statement classes would all derive from a common interface (IComparisonWithAdvance) and leverage polymorphism to allow them to be used via a reference to the interface. This is key because it allows any type, combination, or list of parse statements to be used anywhere that a single parse statement is required because everything that can be executed as part of a UCPA derives from the same interface and implements the same parse interface method. For example this is very useful for the 'or' statement which takes a list of parse statements and executes them sequentially until a match is found because it makes the following algorithm possible:</p>
                 <ol>
                 <li>Compare against string 'test' (string comparison)</li>
                 <li>OR
@@ -491,9 +491,9 @@ const WriteUp = (props: ITextParsePortfolioProps): JSX.Element => {
             <SegmentDemo heading="Text Parse User Interface Application">
                 <SegmentSubSection>
                     <p>I have created an extensive ASP .NET MVC Core/React/Javascript application with a rich GUI
-                    which leverages the latest features of each, as well as advertise my&#32;
-                    <a href="https://github.com/sidfishus/TextParse">text parse library</a> and demonstrate what it can achieve
-                    and how it works.
+                    which leverages the latest features of each, as well as advertise my <a
+                    href="https://github.com/sidfishus/TextParse">text parse library</a> and demonstrate what it can
+                    achieve and how it works.
                     It can be used to create and execute a UCPA visually as opposed to through lines of code and may give a different perspective and deeper understanding.</p>
                     <p>The code for the entire application can be found at <a href="https://github.com/sidfishus/react-spa-demo">https://github.com/sidfishus/react-spa-demo</a>.</p>
                 </SegmentSubSection>

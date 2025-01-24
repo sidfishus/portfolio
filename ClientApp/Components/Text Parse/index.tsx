@@ -883,9 +883,11 @@ export const TextParse = (props: ITextParseProps & IRoutedCompProps): JSX.Elemen
         <>
             <Container>
                 <Form>
-                    <b>For an in-depth explanation of what this is see <Link to="portfolio/textparse">here</Link>.</b>
+                    <b>For an in-depth explanation of what this is see <Link to="/portfolio/textparse">here</Link>.
+                        And the code can be found <a href={"https://github.com/sidfishus/react-spa-demo/tree/master/ClientApp/Components/Text%20Parse"}>here</a> and <a
+                            href={"https://github.com/sidfishus/react-spa-demo/blob/master/Controllers/TextParseController.cs"}>here</a>.</b>
                     {isMobile &&
-                        <> Please note this is best used on a larger screen.<br/></>
+                        <> Please note this is best viewed on a larger screen.<br/></>
                     }
                     <CustomFunctions
                         {...props}
@@ -2249,7 +2251,7 @@ const CaptureComparisonInputCtrl =
 
     const statementList = props.statement as CaptureComparisonStatement;
 
-    const children=statementList.Children();
+    const children=statementList.Children() ?? [];
 
     return (
         <AddNewParseStatementCtrls
