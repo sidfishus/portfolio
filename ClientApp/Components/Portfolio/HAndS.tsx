@@ -3,7 +3,6 @@ import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
 import {
     PortfolioBase,
-    ICarouselImg,
     ITechnologyInfo,
     TechnologyTable,
     CreateImage
@@ -11,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
 import { CreateRepoUrl} from "../../CreateRepoUrl.ts";
+import {ICarouselImg} from "../PortfolioCarousel.tsx";
 
 export interface IHAndSPortfolioProps extends IRoutedCompProps {
 };

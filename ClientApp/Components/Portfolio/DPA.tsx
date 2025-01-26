@@ -1,8 +1,9 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import { PortfolioBase, ICarouselImg, CreateImage } from "./PortfolioBase";
+import { PortfolioBase, CreateImage } from "./PortfolioBase";
 import { SegmentDemo, SegmentSubSection } from "../Presentation";
+import {ICarouselImg} from "../PortfolioCarousel.tsx";
 
 export interface IDPAPortfolioProps extends IRoutedCompProps {
 };

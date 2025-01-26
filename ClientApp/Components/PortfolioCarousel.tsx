@@ -1,11 +1,15 @@
-import {useRef, useState} from "react";
-import {Carousel, ShowFileFromIndex} from "react-cscarousel";
+import {ReactNode, useRef, useState} from "react";
+import {Carousel, CarouselFileDetails, ShowFileFromIndex} from "react-cscarousel";
 import {CreateRepoUrl} from "../CreateRepoUrl.ts";
 import {FileGrid} from "react-csfilegrid";
 import * as React from "react";
-import {ICarouselImg, IPortfolioBaseProps} from "./Portfolio/PortfolioBase.tsx";
 
-interface IPortfolioCarouselProps {
+export interface ICarouselImg extends CarouselFileDetails {
+    text: ReactNode;
+    url?: string;
+};
+
+export interface IPortfolioCarouselProps {
     SetOpenImg?: (idx: number) => void;
     carouselImgs: ICarouselImg[];
     additionalCarouselFileClass?: string;

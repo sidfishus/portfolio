@@ -8,8 +8,8 @@ import { Code, SegmentDemo, ContainerDemo, SegmentSubSection } from "../Presenta
 import { MatchMediaResult } from "../../Library/MediaMatching";
 import { eScreenResolution } from "../Client App";
 import { CalcDurationYears } from "../../Library/DateTime";
-import {PortfolioCarousel} from "../PortfolioCarousel.tsx";
-import {CreateImage, ICarouselImg} from "../Portfolio/PortfolioBase.tsx";
+import {ICarouselImg, PortfolioCarousel} from "../PortfolioCarousel.tsx";
+import {CreateImage} from "../Portfolio/PortfolioBase.tsx";
 import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
 import "./Styles.scss";
 
@@ -23,7 +23,7 @@ const CreateCarouselImage = (src: string, link: string, text: string) => {
             <img src={"/img/external-link-svgrepo-com.svg"} className={"CarouselImgText"}/>
             <span style={{marginLeft: "26px"}}>{text}</span>
         </Link>
-    );
+    , undefined, link);
 }
 
 const carouselImgs: ICarouselImg[] = [
@@ -91,11 +91,8 @@ export const Home = (props: IHomeProps) => {
 };
 
 const CarouselOnClick = (navigate: NavigateFunction,idx: number) => {
-    const img=carouselImgs[idx].src.substring(5);
-    const slashIndex=img.indexOf('/');
-    const portfolioUrl="/portfolio/" + img.substring(0,slashIndex);
 
-    navigate(portfolioUrl);
+    navigate(carouselImgs[idx].url!);
 }
 
 const Introduction = (props: IHomeProps) => {

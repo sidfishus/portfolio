@@ -8,7 +8,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22b41944-905c-40fb-ab54-b1964dd62066" name="Changes" comment="" />
+    <list default="true" id="22b41944-905c-40fb-ab54-b1964dd62066" name="Changes" comment="Nuget.config PAT...">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,8 +42,15 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ead3ec14d6790e1e73ad896c8fe6d5f5d5b07e86e2fe691e8e4f9cd75fc15f/MapWhenMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a9a9a116206e125b1e297cfca4e4cd1c32ed35e33dc1c17d7dc9f7fcd2bf917f/JsonNamingPolicy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bde5a0e5fb6491e71267549d64518746e9cfebd10d35f355da6815637e3c/AuthenticationMiddleware.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f6f937e7fde51c3ca061c59112cdd35b76a72e9ef8821ac361c6ef71e90ea88/ControllerEndpointRouteBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f6f937e7fde51c3ca061c59112cdd35b76a72e9ef8821ac361c6ef71e90ea88/ControllerEndpointRouteBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../TextParse/Library/dotNETConversion.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sid/RiderProjects/react-spa-demo/nuget.config" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/package-lock.json" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -106,6 +116,7 @@
       <workItem from="1736959910467" duration="1000" />
       <workItem from="1737551453200" duration="4696000" />
       <workItem from="1737721376664" duration="4282000" />
+      <workItem from="1737730775889" duration="5510000" />
     </task>
     <task id="LOCAL-00001" summary="WIP">
       <option name="closed" value="true" />
@@ -147,7 +158,71 @@
       <option name="project" value="LOCAL" />
       <updated>1734548047747</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Fix release build.">
+      <option name="closed" value="true" />
+      <created>1737730925930</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1737730925930</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Create a new PAT for nuget.config">
+      <option name="closed" value="true" />
+      <created>1737731906733</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1737731906733</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Update nuget config again!">
+      <option name="closed" value="true" />
+      <created>1737732505525</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1737732505525</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Update nuget config again again!!">
+      <option name="closed" value="true" />
+      <created>1737732730791</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1737732730791</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Nuget.config PAT...">
+      <option name="closed" value="true" />
+      <created>1737737209489</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1737737209489</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Nuget.config PAT...">
+      <option name="closed" value="true" />
+      <created>1737737504516</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1737737504516</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Nuget.config PAT attempt number 999999">
+      <option name="closed" value="true" />
+      <created>1737738514991</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1737738514991</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Nuget.config PAT...">
+      <option name="closed" value="true" />
+      <created>1737739084589</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1737739084589</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -158,6 +233,12 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="WIP" />
-    <option name="LAST_COMMIT_MESSAGE" value="WIP" />
+    <MESSAGE value="Fix release build." />
+    <MESSAGE value="Create a new PAT for nuget.config" />
+    <MESSAGE value="Update nuget config again!" />
+    <MESSAGE value="Update nuget config again again!!" />
+    <MESSAGE value="Nuget.config PAT attempt number 999999" />
+    <MESSAGE value="Nuget.config PAT..." />
+    <option name="LAST_COMMIT_MESSAGE" value="Nuget.config PAT..." />
   </component>
 </project>

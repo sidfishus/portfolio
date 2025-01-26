@@ -1,12 +1,13 @@
 
 import * as React from "react";
 import { IRoutedCompProps } from "../../routes";
-import {PortfolioBase, ICarouselImg, CreateImage} from "./PortfolioBase";
-import { Table, Segment } from "semantic-ui-react";
+import {PortfolioBase, CreateImage} from "./PortfolioBase";
+import { Table } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Code, SegmentDemo, SegmentSubSection } from "../Presentation";
 import { eScreenResolution } from "../Client App";
 import { CreateRepoUrl} from "../../CreateRepoUrl.ts";
+import {ICarouselImg} from "../PortfolioCarousel.tsx";
 
 export interface ITextParsePortfolioProps extends IRoutedCompProps {
 };

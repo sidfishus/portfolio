@@ -1,20 +1,13 @@
 
 import * as React from "react";
-import {ReactNode, useRef, useState} from "react";
+import {ReactNode, useState} from "react";
 import { IRoutedCompProps } from "../../routes";
 import { Table } from "semantic-ui-react";
 import { SegmentDemo, ContainerDemo, FullScreenModalImage } from "../Presentation";
-import {Carousel, CarouselFileDetails, ShowFileFromIndex} from "react-cscarousel";
 import "react-cscarousel/styles.css";
-import { FileGrid } from "react-csfilegrid";
 import "react-csfilegrid/styles.css";
 import "../CarouselStyles.scss";
-import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
-import {PortfolioCarousel} from "../PortfolioCarousel.tsx";
-
-export interface ICarouselImg extends CarouselFileDetails {
-    text: ReactNode;
-};
+import {ICarouselImg, PortfolioCarousel} from "../PortfolioCarousel.tsx";
 
 export interface IPortfolioBaseProps extends IRoutedCompProps {
     heading: JSX.Element|null;
@@ -95,13 +88,14 @@ export const TechnologyTable = (infoList: ITechnologyInfo[]): JSX.Element => {
 
 export const CreateImage = (() => {
     let id: bigint=0n;
-    return (src: string, text: ReactNode, additionalClass?: string): ICarouselImg => {
+    return (src: string, text: ReactNode, additionalClass?: string, url?: string): ICarouselImg => {
         id = id + 1n;
         return {
             src: src,
             id: id,
             text: text,
-            additionalClass: additionalClass
+            additionalClass: additionalClass,
+            url: url
         };
     };
 })();

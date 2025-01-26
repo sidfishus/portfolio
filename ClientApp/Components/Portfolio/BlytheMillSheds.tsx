@@ -1,8 +1,9 @@
 import * as React from "react";
 import {IRoutedCompProps} from "../../routes";
-import {PortfolioBase, ICarouselImg, CreateImage, TechnologyTable, ITechnologyInfo} from "./PortfolioBase";
+import {PortfolioBase, CreateImage, TechnologyTable, ITechnologyInfo} from "./PortfolioBase";
 import {SegmentDemo, SegmentSubSection} from "../Presentation";
 import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
+import {ICarouselImg} from "../PortfolioCarousel.tsx";
 
 export interface IBlytheMillShedsPortfolioProps extends IRoutedCompProps {
 };

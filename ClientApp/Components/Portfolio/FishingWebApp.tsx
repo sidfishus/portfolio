@@ -1,8 +1,9 @@
 import {IRoutedCompProps} from "../../routes.tsx";
-import {CreateImage, ICarouselImg, ITechnologyInfo, PortfolioBase, TechnologyTable} from "./PortfolioBase.tsx";
+import {CreateImage, ITechnologyInfo, PortfolioBase, TechnologyTable} from "./PortfolioBase.tsx";
 import {CreateRepoUrl} from "../../CreateRepoUrl.ts";
 import * as React from "react";
 import {SegmentDemo, SegmentSubSection} from "../Presentation.tsx";
+import {ICarouselImg} from "../PortfolioCarousel.tsx";
 
 export interface IFishingWebAppPortfolioProps extends IRoutedCompProps {
 };
