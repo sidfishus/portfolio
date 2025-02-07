@@ -5,18 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c52b0673-8974-4185-9866-d02a17fe2422" name="Changes" comment="Delete compiled asset files from public">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.react-spa-demo.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/Components/Home/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Home/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/BlytheMillSheds.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/BlytheMillSheds.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/DPA.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/DPA.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/FishingWebApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/FishingWebApp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/HAndS.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/HAndS.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/Misc.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/Misc.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/PortfolioBase.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/PortfolioBase.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/ScriptableTemplate.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/ScriptableTemplate.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/Portfolio/TextParse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/Portfolio/TextParse.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientApp/Components/PortfolioCarousel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/ClientApp/Components/PortfolioCarousel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,6 +118,7 @@
       <workItem from="1737720138675" duration="5120000" />
       <workItem from="1737730420580" duration="1079000" />
       <workItem from="1737888557919" duration="607000" />
+      <workItem from="1738950627794" duration="3482000" />
     </task>
     <task id="LOCAL-00001" summary="WIP">
       <option name="closed" value="true" />
@@ -293,13 +287,11 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/ClientApp/Components/Home/index.tsx</url>
           <line>1</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/ClientApp/Components/Portfolio/DPA.tsx</url>
           <line>1</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

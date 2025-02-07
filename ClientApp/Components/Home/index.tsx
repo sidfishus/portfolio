@@ -40,6 +40,9 @@ const carouselImgs: ICarouselImg[] = [
 
     CreateCarouselImage(CreateRepoUrl("img/textparse/textparsemobile.jpg"),"/textparse","Text Parse"),
 
+    CreateCarouselImage(CreateRepoUrl("img/misc/nextjs-demo-recharts.png"),"/portfolio/misc",
+        "Next JS Weather Demo"),
+
     CreateCarouselImage(CreateRepoUrl("img/blythemillsheds/gallerydesktop.jpg"),"/portfolio/blythemillsheds",
         "Blythe Mill Sheds"),
 
@@ -56,6 +59,9 @@ const carouselImgs: ICarouselImg[] = [
 
     CreateCarouselImage(CreateRepoUrl("img/blythemillsheds/selectstyles.png"),"/portfolio/blythemillsheds",
         "Blythe Mill Sheds"),
+
+    CreateCarouselImage(CreateRepoUrl("img/misc/nextjs-demo-pagespeed.png"),"/portfolio/misc",
+        "Next JS Weather Demo"),
 
     CreateCarouselImage(CreateRepoUrl("img/hands/mobilehome1.jpg"),"/portfolio/hands","CAIRS"),
 
@@ -248,7 +254,7 @@ const AboutThisApplication = () => {
                     I have been able to complete the remaining parts in my spare time whilst being a father and having a full
                     time job and the first version of the application was complete in July 2021. Typically, I have
                     added more features and have gone in to far more detail than I originally intended and
-                    it will only expand over time. This application was last updated on January 2025.</p>
+                    it will only expand over time. This application was last updated on February 2025.</p>
                 <p>
                     I have developed this specifically to have a good UX on mobiles, tablets, laptops and computers,
                     but it is best viewed on a large screen and this is particularly true for the <Link
